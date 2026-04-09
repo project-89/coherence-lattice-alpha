@@ -1,0 +1,1393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Linked-Cluster Expansion for α — Diamond Lattice</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+    background: #0a0a1a;
+    color: #e0e0e0;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  h1 {
+    text-align: center;
+    padding: 24px 0 8px;
+    font-size: 1.6em;
+    background: linear-gradient(90deg, #4fc3f7, #ab47bc, #4fc3f7);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: 2px;
+  }
+  .subtitle {
+    text-align: center;
+    color: #888;
+    font-size: 0.85em;
+    margin-bottom: 20px;
+  }
+
+  /* Layout */
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    padding: 0 24px 24px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  .panel {
+    background: #12122a;
+    border: 1px solid #2a2a4a;
+    border-radius: 12px;
+    padding: 20px;
+    position: relative;
+  }
+  .panel-title {
+    font-size: 0.9em;
+    color: #4fc3f7;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+  }
+  .full-width { grid-column: 1 / -1; }
+
+  /* ── Digit Display ── */
+  .digit-row {
+    display: flex;
+    align-items: center;
+    margin: 6px 0;
+    font-size: 1.1em;
+  }
+  .digit-label {
+    width: 140px;
+    color: #888;
+    font-size: 0.85em;
+    text-align: right;
+    padding-right: 12px;
+  }
+  .digit-box {
+    display: inline-flex;
+    gap: 0;
+  }
+  .digit {
+    width: 18px;
+    height: 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1em;
+    border-radius: 3px;
+    transition: all 0.4s ease;
+    position: relative;
+  }
+  .digit.match { color: #4caf50; background: rgba(76,175,80,0.1); }
+  .digit.mismatch { color: #f44336; background: rgba(244,67,54,0.15); }
+  .digit.pending { color: #555; }
+  .digit.decimal { width: 10px; color: #888; }
+
+  /* ── Order Selector ── */
+  .order-bar {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin: 16px 0;
+    flex-wrap: wrap;
+  }
+  .order-btn {
+    padding: 10px 18px;
+    border: 2px solid #333;
+    border-radius: 8px;
+    background: #1a1a2e;
+    color: #aaa;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.85em;
+    transition: all 0.3s ease;
+    text-align: center;
+    min-width: 120px;
+  }
+  .order-btn:hover { border-color: #4fc3f7; color: #4fc3f7; }
+  .order-btn.active {
+    border-color: #4fc3f7;
+    background: rgba(79,195,247,0.15);
+    color: #fff;
+    box-shadow: 0 0 12px rgba(79,195,247,0.3);
+  }
+  .order-btn .btn-label { font-weight: bold; margin-bottom: 2px; }
+  .order-btn .btn-sub { font-size: 0.8em; color: #666; }
+  .order-btn.active .btn-sub { color: #999; }
+
+  /* ── Waterfall ── */
+  #waterfall-canvas, #zoom-canvas {
+    width: 100%;
+    height: 320px;
+  }
+  #convergence-canvas {
+    width: 100%;
+    height: 280px;
+  }
+
+  /* ── Subgraph SVG ── */
+  #subgraph-svg {
+    width: 100%;
+    height: 280px;
+  }
+  .sg-node {
+    fill: #4fc3f7;
+    stroke: #fff;
+    stroke-width: 1.5;
+    transition: all 0.4s ease;
+  }
+  .sg-node.inactive { fill: #333; stroke: #555; }
+  .sg-bond {
+    stroke: #4fc3f7;
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    transition: all 0.4s ease;
+  }
+  .sg-bond.inactive { stroke: #333; stroke-width: 1.5; }
+  .sg-bond.plaquette { stroke: #ab47bc; stroke-width: 3; }
+  .sg-bond.double-plaq { stroke: #ff9800; stroke-width: 3; }
+  .sg-label {
+    fill: #888;
+    font-size: 12px;
+    text-anchor: middle;
+  }
+
+  /* ── Info Panel ── */
+  .info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .info-item {
+    background: #1a1a2e;
+    border-radius: 8px;
+    padding: 12px;
+    text-align: center;
+  }
+  .info-value {
+    font-size: 1.4em;
+    font-weight: bold;
+    color: #4fc3f7;
+    margin-bottom: 4px;
+  }
+  .info-label {
+    font-size: 0.75em;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .info-value.good { color: #4caf50; }
+  .info-value.bad { color: #f44336; }
+
+  /* ── Series Panel ── */
+  .series-eq {
+    font-size: 1.05em;
+    line-height: 1.8;
+    padding: 8px 0;
+  }
+  .series-term {
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    cursor: default;
+  }
+  .series-term.active { background: rgba(79,195,247,0.2); color: #4fc3f7; }
+  .series-term.future { color: #444; }
+
+  /* ── Chain ── */
+  .chain-step {
+    display: flex;
+    align-items: center;
+    margin: 4px 0;
+    transition: opacity 0.3s ease;
+  }
+  .chain-arrow {
+    color: #4fc3f7;
+    margin: 0 8px;
+    font-size: 0.9em;
+  }
+  .chain-step.dim { opacity: 0.3; }
+  .chain-step.highlight {
+    background: rgba(79,195,247,0.08);
+    border-radius: 4px;
+    padding: 2px 6px;
+  }
+
+  /* ── Animate button ── */
+  .animate-btn {
+    display: block;
+    margin: 12px auto 0;
+    padding: 10px 28px;
+    background: linear-gradient(135deg, #4fc3f7, #ab47bc);
+    border: none;
+    border-radius: 20px;
+    color: #fff;
+    font-family: inherit;
+    font-size: 0.9em;
+    cursor: pointer;
+    letter-spacing: 1px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .animate-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(79,195,247,0.4);
+  }
+  .animate-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    .grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<h1>Linked-Cluster Expansion for &alpha;</h1>
+<p class="subtitle">Diamond lattice (z=4) &mdash; Topological series over subgraphs &mdash; Zero free parameters</p>
+
+<!-- Order Selector -->
+<div class="order-bar" id="order-bar"></div>
+
+<button class="animate-btn" id="animate-btn" onclick="animateAll()">&#9654; ANIMATE CONVERGENCE</button>
+
+<div class="grid">
+
+  <!-- Digit Comparison -->
+  <div class="panel full-width">
+    <div class="panel-title">Digit-by-Digit Comparison</div>
+    <div id="digit-display"></div>
+  </div>
+
+  <!-- Waterfall: Macro view -->
+  <div class="panel">
+    <div class="panel-title">1/&alpha; &mdash; Full Scale</div>
+    <canvas id="waterfall-canvas"></canvas>
+  </div>
+
+  <!-- Waterfall: Micro zoom (orders 1-4) -->
+  <div class="panel">
+    <div class="panel-title">1/&alpha; &mdash; Zoom (orders 1&ndash;4 vs CODATA)</div>
+    <canvas id="zoom-canvas"></canvas>
+  </div>
+
+  <!-- Subgraph Diagram -->
+  <div class="panel">
+    <div class="panel-title" id="subgraph-title">Subgraph: Star Graph</div>
+    <svg id="subgraph-svg" viewBox="0 0 400 280"></svg>
+  </div>
+
+  <!-- Key Quantities -->
+  <div class="panel">
+    <div class="panel-title">Current Order Statistics</div>
+    <div class="info-grid" id="info-grid"></div>
+  </div>
+
+  <!-- Convergence Rate -->
+  <div class="panel">
+    <div class="panel-title">Convergence Rate &mdash; |Residual| (ppm, log scale)</div>
+    <canvas id="convergence-canvas"></canvas>
+  </div>
+
+  <!-- Series & Chain -->
+  <div class="panel">
+    <div class="panel-title">Derivation Chain</div>
+    <div id="chain-display"></div>
+  </div>
+
+  <!-- Series Equation -->
+  <div class="panel full-width">
+    <div class="panel-title">The Convergent Series</div>
+    <div class="series-eq" id="series-display"></div>
+  </div>
+
+</div>
+
+<script>
+// =====================================================================
+// ALL values precomputed from Python (scipy) to avoid JS numerical issues
+// Source: double_plaquette_lce.py with scipy.integrate.quad
+// =====================================================================
+
+const PI = Math.PI;
+const z = 4;
+const R0 = 0.303202461669737;
+const V_STAR = 8.451443488731961e-03;
+const INV_ALPHA_CODATA = 137.035999;
+const G_MEASURED = 2.00231930436256;
+
+// =====================================================================
+// Orders — ALL numerical values from Python (no JS VP integration)
+// =====================================================================
+
+const orders = [
+  {
+    id: 0,
+    label: 'BKT',
+    sublabel: 'No VP',
+    name: 'BKT Formula (no VP)',
+    c: null,
+    l: 1.000000000000000,
+    invAlpha: 137.0320512366,
+    ppm: +28.808222,
+    g: 2.002319371071782,
+    gDigits: 7.48,
+    subgraph: 'bkt',
+    color: '#e74c3c',
+    cn: null,
+  },
+  {
+    id: 1,
+    label: 'Star exits',
+    sublabel: 'c\u2081 = 3',
+    name: 'Star Graph Exit Channels',
+    c: 3.0000000000,
+    l: 0.974645669533804,
+    invAlpha: 137.0359999208,
+    ppm: -0.006720,
+    g: 2.002319304339685,
+    gDigits: 10.94,
+    subgraph: 'star',
+    color: '#f39c12',
+    cn: { n: 1, val: 3, formula: 'C(z-1,1) = C(3,1) = 3' },
+  },
+  {
+    id: 2,
+    label: 'Plaquettes',
+    sublabel: 'c\u2082 = \u22123',
+    name: 'Hexagonal Plaquette Correlations',
+    c: 2.9746456695,
+    l: 0.974859950224934,
+    invAlpha: 137.0359982622,
+    ppm: +0.005384,
+    g: 2.002319304367715,
+    gDigits: 11.59,
+    subgraph: 'plaquette',
+    color: '#2ecc71',
+    cn: { n: 2, val: -3, formula: '-C(z-1,2) = -C(3,2) = -3' },
+  },
+  {
+    id: 3,
+    label: 'Double plaq',
+    sublabel: 'c\u2083 = +1',
+    name: 'Double-Plaquette 3-Body',
+    c: 2.9747170964,
+    l: 0.974859346564550,
+    invAlpha: 137.0359982668,
+    ppm: +0.005350,
+    g: 2.002319304367636,
+    gDigits: 11.60,
+    subgraph: 'double_plaq',
+    color: '#3498db',
+    cn: { n: 3, val: 1, formula: '+C(z-1,3) = +C(3,3) = +1' },
+  },
+  {
+    id: 4,
+    label: 'Resummed',
+    sublabel: 'l = (1\u2212V)\u00B3',
+    name: 'Binomial Resummation (1-vertex)',
+    c: 2.9747170964,
+    l: 0.974859346564550,
+    invAlpha: 137.0359982668,
+    ppm: +0.005350,
+    g: 2.002319304367636,
+    gDigits: 11.60,
+    subgraph: 'resummed',
+    color: '#9b59b6',
+    cn: null,
+  },
+  {
+    id: 5,
+    label: 'Two-vertex',
+    sublabel: 'Dumbbell LCE',
+    name: 'Two-Vertex Dumbbell Correction',
+    c: 2.9858256448,
+    l: 0.974765463295634,
+    invAlpha: 137.0359989935,
+    ppm: -0.001551,
+    g: 2.002319304355213,
+    gDigits: 11.40,
+    subgraph: 'twovertex',
+    color: '#2ecc71',
+    cn: { n: 'LCE', val: 0.0111, formula: '\u03B4c = R\u2080\u00B2/(z(z-1)) \u00D7 \u0394c\u209B' },
+  }
+];
+
+let currentOrder = 0;
+
+// =====================================================================
+// Build Order Buttons
+// =====================================================================
+
+const orderBar = document.getElementById('order-bar');
+orders.forEach((o, i) => {
+  const btn = document.createElement('button');
+  btn.className = 'order-btn' + (i === 0 ? ' active' : '');
+  btn.id = `order-btn-${i}`;
+  btn.innerHTML = `<div class="btn-label">${o.label}</div><div class="btn-sub">${o.sublabel}</div>`;
+  btn.onclick = () => selectOrder(i);
+  orderBar.appendChild(btn);
+});
+
+// =====================================================================
+// Digit Display
+// =====================================================================
+
+function formatNumber(val, digits) {
+  return val.toFixed(digits);
+}
+
+function renderDigits(order) {
+  const container = document.getElementById('digit-display');
+  const o = orders[order];
+  const codataStr = formatNumber(INV_ALPHA_CODATA, 10);
+  const latticeStr = formatNumber(o.invAlpha, 10);
+  const gLatticeStr = formatNumber(o.g, 15);
+  const gMeasuredStr = formatNumber(G_MEASURED, 15);
+
+  function makeRow(label, testStr, refStr) {
+    let html = `<div class="digit-row"><span class="digit-label">${label}</span><div class="digit-box">`;
+    let mismatchFound = false;
+    for (let i = 0; i < refStr.length; i++) {
+      const ch = refStr[i];
+      if (ch === '.') {
+        html += `<span class="digit decimal">.</span>`;
+        continue;
+      }
+      if (mismatchFound) {
+        html += `<span class="digit pending">${testStr[i] || '?'}</span>`;
+      } else if (testStr[i] === ch) {
+        html += `<span class="digit match">${ch}</span>`;
+      } else {
+        mismatchFound = true;
+        html += `<span class="digit mismatch">${testStr[i] || '?'}</span>`;
+      }
+    }
+    html += `</div></div>`;
+    return html;
+  }
+
+  container.innerHTML =
+    makeRow('CODATA 1/α:', codataStr, codataStr) +
+    makeRow(`Order ${order} 1/α:`, latticeStr, codataStr) +
+    '<div style="height:8px"></div>' +
+    makeRow('Measured g:', gMeasuredStr, gMeasuredStr) +
+    makeRow(`Order ${order} g:`, gLatticeStr, gMeasuredStr);
+}
+
+// =====================================================================
+// Waterfall Chart (Canvas)
+// =====================================================================
+
+function drawWaterfall(activeOrder) {
+  const canvas = document.getElementById('waterfall-canvas');
+  const rect = canvas.parentElement.getBoundingClientRect();
+  canvas.width = rect.width - 40;
+  canvas.height = 320;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+
+  ctx.clearRect(0, 0, W, H);
+
+  // Axis range: show from BKT (137.032) to just above CODATA (137.036)
+  const breakMin = 137.0315;
+  const breakMax = 137.0365;
+
+  function yToCanvas(v) {
+    const frac = (v - breakMin) / (breakMax - breakMin);
+    return H - 40 - frac * (H - 80);
+  }
+
+  const barW = Math.min(60, (W - 80) / orders.length - 10);
+  const gap = (W - 80 - barW * orders.length) / (orders.length + 1);
+
+  // CODATA line
+  const codataY = yToCanvas(INV_ALPHA_CODATA);
+  ctx.strokeStyle = '#ffffff44';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([6, 4]);
+  ctx.beginPath();
+  ctx.moveTo(40, codataY);
+  ctx.lineTo(W - 10, codataY);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  ctx.fillStyle = '#888';
+  ctx.font = '11px monospace';
+  ctx.textAlign = 'right';
+  ctx.fillText('CODATA', W - 14, codataY - 4);
+
+  // Draw bars
+  orders.forEach((o, i) => {
+    const x = 40 + gap + i * (barW + gap);
+    let y = yToCanvas(o.invAlpha);
+    let barH = codataY - y;
+
+    // Clamp for BKT which is way below
+    const clampedInvA = Math.max(o.invAlpha, breakMin);
+    y = yToCanvas(clampedInvA);
+    barH = codataY - y;
+
+    // Bar color
+    const isActive = i <= activeOrder;
+    const alpha = isActive ? 1.0 : 0.25;
+
+    ctx.fillStyle = isActive ? o.color : '#333';
+    ctx.globalAlpha = alpha;
+
+    if (barH > 0) {
+      ctx.fillRect(x, y, barW, barH);
+    } else {
+      ctx.fillRect(x, codataY, barW, -barH);
+    }
+
+    // Highlight active
+    if (i === activeOrder) {
+      ctx.strokeStyle = '#fff';
+      ctx.lineWidth = 2;
+      ctx.globalAlpha = 1;
+      if (barH > 0) {
+        ctx.strokeRect(x, y, barW, barH);
+      } else {
+        ctx.strokeRect(x, codataY, barW, -barH);
+      }
+    }
+
+    ctx.globalAlpha = 1;
+
+    // Label
+    ctx.fillStyle = isActive ? '#ddd' : '#555';
+    ctx.font = '10px monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText(o.label, x + barW / 2, H - 8);
+
+    // Value on top
+    if (isActive) {
+      ctx.fillStyle = '#fff';
+      ctx.font = '10px monospace';
+      const valY = barH > 0 ? y - 6 : codataY + Math.abs(barH) + 14;
+      ctx.fillText(o.invAlpha.toFixed(3), x + barW / 2, valY);
+    }
+
+    // ppm label
+    if (isActive && i > 0) {
+      ctx.fillStyle = Math.abs(o.ppm) < 1 ? '#4caf50' : '#f39c12';
+      ctx.font = '9px monospace';
+      const ppmY = barH > 0 ? y - 18 : codataY + Math.abs(barH) + 26;
+      const sign = o.ppm > 0 ? '+' : '';
+      ctx.fillText(`${sign}${o.ppm.toFixed(2)} ppm`, x + barW / 2, ppmY);
+    }
+  });
+
+  // Y-axis labels
+  ctx.fillStyle = '#666';
+  ctx.font = '10px monospace';
+  ctx.textAlign = 'right';
+  for (let v = 137.031; v <= 137.037; v += 0.001) {
+    const y = yToCanvas(v);
+    if (y > 20 && y < H - 40) {
+      ctx.fillText(v.toFixed(3), 36, y + 3);
+      ctx.strokeStyle = '#ffffff11';
+      ctx.lineWidth = 0.5;
+      ctx.beginPath();
+      ctx.moveTo(40, y);
+      ctx.lineTo(W - 10, y);
+      ctx.stroke();
+    }
+  }
+}
+
+// =====================================================================
+// Zoom Chart — orders 1-4 at micro scale
+// =====================================================================
+
+function drawZoom(activeOrder) {
+  const canvas = document.getElementById('zoom-canvas');
+  const rect = canvas.parentElement.getBoundingClientRect();
+  canvas.width = rect.width - 40;
+  canvas.height = 320;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  ctx.clearRect(0, 0, W, H);
+
+  // Only show orders 1-4 (the VP-corrected orders) at micro scale
+  const zoomOrders = orders.slice(1); // skip BKT
+  const vals = zoomOrders.map(o => o.invAlpha);
+  const allVals = [...vals, INV_ALPHA_CODATA];
+  const yCenter = (Math.min(...allVals) + Math.max(...allVals)) / 2;
+  const ySpan = Math.max(Math.max(...allVals) - Math.min(...allVals), 0.000005) * 3;
+  const zMin = yCenter - ySpan;
+  const zMax = yCenter + ySpan;
+
+  function yToCanvas(v) {
+    const frac = (v - zMin) / (zMax - zMin);
+    return H - 40 - frac * (H - 80);
+  }
+
+  const barW = Math.min(70, (W - 100) / zoomOrders.length - 12);
+  const gap = (W - 100 - barW * zoomOrders.length) / (zoomOrders.length + 1);
+
+  // CODATA line
+  const codataY = yToCanvas(INV_ALPHA_CODATA);
+  ctx.strokeStyle = '#ffffff55';
+  ctx.lineWidth = 1.5;
+  ctx.setLineDash([6, 4]);
+  ctx.beginPath();
+  ctx.moveTo(60, codataY);
+  ctx.lineTo(W - 10, codataY);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = '#aaa';
+  ctx.font = '11px monospace';
+  ctx.textAlign = 'right';
+  ctx.fillText('CODATA 137.035999', W - 6, codataY - 6);
+
+  // Y-axis ticks
+  ctx.fillStyle = '#555';
+  ctx.font = '9px monospace';
+  ctx.textAlign = 'right';
+  const tickStep = ySpan / 5;
+  for (let i = 0; i <= 5; i++) {
+    const v = zMin + i * (zMax - zMin) / 5;
+    const y = yToCanvas(v);
+    if (y > 15 && y < H - 35) {
+      // Show 10 decimal places to reveal differences
+      ctx.fillText(v.toFixed(7), 56, y + 3);
+      ctx.strokeStyle = '#ffffff0a';
+      ctx.lineWidth = 0.5;
+      ctx.beginPath();
+      ctx.moveTo(60, y);
+      ctx.lineTo(W - 10, y);
+      ctx.stroke();
+    }
+  }
+
+  // Draw bars
+  zoomOrders.forEach((o, i) => {
+    const x = 60 + gap + i * (barW + gap);
+    const y = yToCanvas(o.invAlpha);
+    const barH = codataY - y;
+
+    const origIdx = i + 1; // original order index
+    const isActive = origIdx <= activeOrder;
+
+    ctx.fillStyle = isActive ? o.color : '#333';
+    ctx.globalAlpha = isActive ? 1.0 : 0.25;
+
+    if (barH > 0) {
+      ctx.fillRect(x, y, barW, Math.max(barH, 1));
+    } else {
+      ctx.fillRect(x, codataY, barW, Math.max(-barH, 1));
+    }
+
+    // Highlight active
+    if (origIdx === activeOrder) {
+      ctx.strokeStyle = '#fff';
+      ctx.lineWidth = 2;
+      ctx.globalAlpha = 1;
+      const bTop = barH > 0 ? y : codataY;
+      const bH = Math.max(Math.abs(barH), 1);
+      ctx.strokeRect(x, bTop, barW, bH);
+    }
+
+    ctx.globalAlpha = 1;
+
+    // Label
+    ctx.fillStyle = isActive ? '#ddd' : '#555';
+    ctx.font = '10px monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText(o.label, x + barW / 2, H - 8);
+
+    // Value
+    if (isActive) {
+      ctx.fillStyle = '#fff';
+      ctx.font = '10px monospace';
+      const valY = barH > 0 ? Math.min(y - 6, codataY - 20) : Math.max(codataY + Math.abs(barH) + 14, codataY + 20);
+      ctx.fillText(o.invAlpha.toFixed(7), x + barW / 2, valY);
+
+      // ppm
+      ctx.fillStyle = Math.abs(o.ppm) < 0.1 ? '#4caf50' : '#f39c12';
+      ctx.font = '9px monospace';
+      ctx.fillText((o.ppm > 0 ? '+' : '') + o.ppm.toFixed(3) + ' ppm', x + barW / 2, valY - 12);
+    }
+  });
+
+  // Note about scale
+  ctx.fillStyle = '#555';
+  ctx.font = '9px monospace';
+  ctx.textAlign = 'left';
+  ctx.fillText(`Scale: \u00B1${(ySpan/2).toExponential(1)} in 1/\u03B1`, 60, H - 24);
+}
+
+// =====================================================================
+// Convergence Rate Chart (log |residual| vs order)
+// =====================================================================
+
+function drawConvergence(activeOrder) {
+  const canvas = document.getElementById('convergence-canvas');
+  const rect = canvas.parentElement.getBoundingClientRect();
+  canvas.width = rect.width - 40;
+  canvas.height = 280;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  ctx.clearRect(0, 0, W, H);
+
+  const L = 60, R = W - 20, T = 30, B = H - 40;
+  const plotW = R - L, plotH = B - T;
+
+  // Data: |ppm| for each order
+  const data = orders.map(o => ({ label: o.label, ppm: Math.abs(o.ppm), color: o.color }));
+  // log scale range
+  const logMin = -2; // 0.01 ppm
+  const logMax = 2;  // 100 ppm
+
+  function xPos(i) { return L + (i + 0.5) / data.length * plotW; }
+  function yPos(logVal) {
+    const frac = (logVal - logMin) / (logMax - logMin);
+    return B - frac * plotH;
+  }
+
+  // Grid lines
+  ctx.strokeStyle = '#ffffff0a';
+  ctx.lineWidth = 0.5;
+  ctx.fillStyle = '#555';
+  ctx.font = '9px monospace';
+  ctx.textAlign = 'right';
+  for (let lv = logMin; lv <= logMax; lv++) {
+    const y = yPos(lv);
+    ctx.beginPath();
+    ctx.moveTo(L, y);
+    ctx.lineTo(R, y);
+    ctx.stroke();
+    const label = Math.pow(10, lv);
+    ctx.fillText(label >= 1 ? label.toFixed(0) : label.toFixed(Math.abs(lv)), L - 4, y + 3);
+  }
+
+  // Draw connected line + points
+  ctx.beginPath();
+  let firstDrawn = true;
+  data.forEach((d, i) => {
+    if (i > activeOrder) return;
+    const logPpm = Math.log10(Math.max(d.ppm, 1e-4));
+    const x = xPos(i);
+    const y = yPos(Math.max(logPpm, logMin));
+    if (firstDrawn) { ctx.moveTo(x, y); firstDrawn = false; }
+    else ctx.lineTo(x, y);
+  });
+  ctx.strokeStyle = '#4fc3f788';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  // Points
+  data.forEach((d, i) => {
+    const isActive = i <= activeOrder;
+    const logPpm = Math.log10(Math.max(d.ppm, 1e-4));
+    const x = xPos(i);
+    const y = yPos(Math.max(logPpm, logMin));
+
+    ctx.beginPath();
+    ctx.arc(x, y, isActive ? 6 : 4, 0, 2 * PI);
+    ctx.fillStyle = isActive ? d.color : '#333';
+    ctx.fill();
+    if (i === activeOrder) {
+      ctx.strokeStyle = '#fff';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    }
+
+    // Label
+    ctx.fillStyle = isActive ? '#ddd' : '#555';
+    ctx.font = '10px monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText(d.label, x, B + 14);
+
+    // Value
+    if (isActive) {
+      ctx.fillStyle = d.ppm < 1 ? '#4caf50' : '#f39c12';
+      ctx.font = '10px monospace';
+      ctx.fillText(d.ppm < 0.1 ? d.ppm.toFixed(3) : d.ppm.toFixed(1), x, y - 12);
+    }
+  });
+
+  // Label
+  ctx.fillStyle = '#666';
+  ctx.font = '9px monospace';
+  ctx.textAlign = 'left';
+  ctx.fillText('|Residual| (ppm)', L, T - 10);
+
+  // Reference: 1 ppm line
+  const y1ppm = yPos(0);
+  ctx.strokeStyle = '#4caf5044';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([4, 4]);
+  ctx.beginPath();
+  ctx.moveTo(L, y1ppm);
+  ctx.lineTo(R, y1ppm);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = '#4caf50';
+  ctx.font = '9px monospace';
+  ctx.textAlign = 'left';
+  ctx.fillText('1 ppm', R - 40, y1ppm - 4);
+}
+
+// =====================================================================
+// Subgraph Diagram (SVG)
+// =====================================================================
+
+function drawSubgraph(order) {
+  const svg = document.getElementById('subgraph-svg');
+  const title = document.getElementById('subgraph-title');
+  const o = orders[order];
+  title.textContent = `Subgraph: ${o.name}`;
+
+  // Clear
+  svg.innerHTML = '';
+
+  const cx = 200, cy = 130;
+
+  if (order === 0) {
+    // BKT: just the lattice coupling
+    drawDiamondUnit(svg, cx, cy, 'bkt');
+    addSVGText(svg, cx, 260, 'K_BKT = 2/π', '#888');
+  } else if (order === 1) {
+    // Star graph: central vertex + 4 neighbors
+    drawStarGraph(svg, cx, cy, 'star');
+    addSVGText(svg, cx, 260, 'V = R₀⁴ = 0.00845', '#f39c12');
+  } else if (order === 2) {
+    // Star + plaquette highlight
+    drawStarGraph(svg, cx, cy, 'plaquette');
+    addSVGText(svg, cx, 260, '12 hexagonal plaquettes / vertex', '#2ecc71');
+  } else if (order === 3) {
+    // Double plaquette
+    drawStarGraph(svg, cx, cy, 'double_plaq');
+    addSVGText(svg, cx, 260, '66 plaquette pairs / vertex', '#3498db');
+  } else if (order === 4) {
+    // Resummed — show the (1-V)^3 picture
+    drawResummed(svg, cx, cy);
+    addSVGText(svg, cx, 260, 'l = (1−V)³: single-vertex resummed', '#9b59b6');
+  } else if (order === 5) {
+    // Two-vertex dumbbell
+    drawDumbbell(svg, cx, cy);
+    addSVGText(svg, cx, 260, 'Dumbbell: backscatter A↔B', '#2ecc71');
+  }
+}
+
+function addSVGText(svg, x, y, text, color) {
+  const t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+  t.setAttribute('x', x);
+  t.setAttribute('y', y);
+  t.setAttribute('text-anchor', 'middle');
+  t.setAttribute('fill', color || '#888');
+  t.setAttribute('font-size', '13');
+  t.setAttribute('font-family', 'monospace');
+  t.textContent = text;
+  svg.appendChild(t);
+}
+
+function addSVGLine(svg, x1, y1, x2, y2, cls) {
+  const l = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+  l.setAttribute('x1', x1); l.setAttribute('y1', y1);
+  l.setAttribute('x2', x2); l.setAttribute('y2', y2);
+  l.setAttribute('class', cls || 'sg-bond');
+  svg.appendChild(l);
+  return l;
+}
+
+function addSVGCircle(svg, x, y, r, cls) {
+  const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+  c.setAttribute('cx', x); c.setAttribute('cy', y); c.setAttribute('r', r);
+  c.setAttribute('class', cls || 'sg-node');
+  svg.appendChild(c);
+  return c;
+}
+
+function drawDiamondUnit(svg, cx, cy, mode) {
+  // Simple diamond unit cell: 2 sites + 4 bonds
+  const r = 60;
+  const nodes = [
+    [cx, cy],
+    [cx + r, cy - r * 0.6],
+    [cx - r, cy - r * 0.6],
+    [cx, cy + r],
+  ];
+
+  // Bonds
+  for (let i = 1; i < nodes.length; i++) {
+    addSVGLine(svg, nodes[0][0], nodes[0][1], nodes[i][0], nodes[i][1], 'sg-bond');
+  }
+  // Nodes
+  nodes.forEach((n, i) => {
+    addSVGCircle(svg, n[0], n[1], i === 0 ? 8 : 6, 'sg-node');
+  });
+
+  // Label
+  addSVGText(svg, cx, cy + 110, 'Diamond unit: z = 4', '#666');
+}
+
+function drawStarGraph(svg, cx, cy, mode) {
+  // Central vertex + 4 tetrahedral neighbors
+  const R = 70;
+  const angles = [-90, 30, 150, -30].map(a => a * PI / 180);
+  // Tetrahedral projection
+  const neighbors = [
+    [cx, cy - R],                    // top
+    [cx - R * 0.87, cy + R * 0.5],   // bottom-left
+    [cx + R * 0.87, cy + R * 0.5],   // bottom-right
+    [cx, cy + R * 0.15],             // front (smaller, perspective)
+  ];
+
+  // Second shell (for plaquette/double-plaq modes)
+  const shell2 = [];
+  if (mode === 'plaquette' || mode === 'double_plaq') {
+    // Extended neighbors for hex plaquette visualization
+    const R2 = 130;
+    for (let i = 0; i < 4; i++) {
+      const nx = neighbors[i][0];
+      const ny = neighbors[i][1];
+      // Each neighbor has 3 other exits
+      for (let j = 0; j < 3; j++) {
+        const a = (i * 90 + j * 120 + 45) * PI / 180;
+        const sx = nx + 45 * Math.cos(a);
+        const sy = ny + 45 * Math.sin(a);
+        shell2.push([sx, sy, i]); // track parent
+      }
+    }
+  }
+
+  // Draw exit bonds (star → 2nd shell) dim
+  if (mode === 'plaquette' || mode === 'double_plaq') {
+    shell2.forEach(s => {
+      addSVGLine(svg, neighbors[s[2]][0], neighbors[s[2]][1], s[0], s[1], 'sg-bond inactive');
+    });
+  }
+
+  // Draw plaquette highlight (hex loop)
+  if (mode === 'plaquette') {
+    // Draw a stylized hexagonal path through some shell2 nodes
+    // Use first two neighbors and their shell2 extensions
+    const hexPath = [
+      [cx, cy],
+      neighbors[0],
+      [neighbors[0][0] + 40, neighbors[0][1] + 25],
+      [neighbors[2][0] + 15, neighbors[2][1] - 50],
+      [neighbors[2][0] - 10, neighbors[2][1] - 20],
+      neighbors[2],
+    ];
+    for (let i = 0; i < hexPath.length; i++) {
+      const j = (i + 1) % hexPath.length;
+      addSVGLine(svg, hexPath[i][0], hexPath[i][1], hexPath[j][0], hexPath[j][1], 'sg-bond plaquette');
+    }
+    hexPath.forEach(p => addSVGCircle(svg, p[0], p[1], 4, 'sg-node'));
+  }
+
+  if (mode === 'double_plaq') {
+    // Two overlapping hex paths
+    const hex1 = [
+      [cx, cy],
+      neighbors[0],
+      [neighbors[0][0] + 40, neighbors[0][1] + 25],
+      [neighbors[2][0] + 15, neighbors[2][1] - 50],
+      [neighbors[2][0] - 10, neighbors[2][1] - 20],
+      neighbors[2],
+    ];
+    const hex2 = [
+      [cx, cy],
+      neighbors[1],
+      [neighbors[1][0] + 40, neighbors[1][1] - 15],
+      [neighbors[2][0] - 15, neighbors[2][1] - 40],
+      [neighbors[2][0] + 5, neighbors[2][1] - 15],
+      neighbors[2],
+    ];
+    for (let i = 0; i < hex1.length; i++) {
+      const j = (i + 1) % hex1.length;
+      addSVGLine(svg, hex1[i][0], hex1[i][1], hex1[j][0], hex1[j][1], 'sg-bond plaquette');
+    }
+    for (let i = 0; i < hex2.length; i++) {
+      const j = (i + 1) % hex2.length;
+      addSVGLine(svg, hex2[i][0], hex2[i][1], hex2[j][0], hex2[j][1], 'sg-bond double-plaq');
+    }
+    hex1.forEach(p => addSVGCircle(svg, p[0], p[1], 4, 'sg-node'));
+    hex2.forEach(p => addSVGCircle(svg, p[0], p[1], 4, 'sg-node'));
+  }
+
+  // Draw star bonds
+  const bondClass = 'sg-bond' + (mode === 'bkt' ? ' inactive' : '');
+  neighbors.forEach(n => {
+    addSVGLine(svg, cx, cy, n[0], n[1], bondClass);
+  });
+
+  // Draw exit labels
+  if (mode === 'star' || mode === 'plaquette' || mode === 'double_plaq') {
+    neighbors.forEach((n, i) => {
+      const dx = (n[0] - cx) * 0.3;
+      const dy = (n[1] - cy) * 0.3;
+      const t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      t.setAttribute('x', n[0] + dx);
+      t.setAttribute('y', n[1] + dy);
+      t.setAttribute('text-anchor', 'middle');
+      t.setAttribute('fill', '#f39c12');
+      t.setAttribute('font-size', '11');
+      t.setAttribute('font-family', 'monospace');
+      t.textContent = `e${i + 1}`;
+      svg.appendChild(t);
+    });
+  }
+
+  // Draw nodes (on top)
+  neighbors.forEach(n => addSVGCircle(svg, n[0], n[1], 6, 'sg-node'));
+  addSVGCircle(svg, cx, cy, 9, 'sg-node');  // center vertex larger
+
+  // Center label
+  const vLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+  vLabel.setAttribute('x', cx);
+  vLabel.setAttribute('y', cy + 4);
+  vLabel.setAttribute('text-anchor', 'middle');
+  vLabel.setAttribute('fill', '#0a0a1a');
+  vLabel.setAttribute('font-size', '10');
+  vLabel.setAttribute('font-weight', 'bold');
+  vLabel.setAttribute('font-family', 'monospace');
+  vLabel.textContent = 'v';
+  svg.appendChild(vLabel);
+}
+
+function drawResummed(svg, cx, cy) {
+  // Three "probability gates" in series
+  const gateW = 50, gateH = 70, gap = 30;
+  const startX = cx - 1.5 * gateW - gap;
+
+  for (let i = 0; i < 3; i++) {
+    const gx = startX + i * (gateW + gap);
+    const gy = cy - gateH / 2;
+
+    // Gate box
+    const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+    rect.setAttribute('x', gx);
+    rect.setAttribute('y', gy);
+    rect.setAttribute('width', gateW);
+    rect.setAttribute('height', gateH);
+    rect.setAttribute('rx', 6);
+    rect.setAttribute('fill', 'none');
+    rect.setAttribute('stroke', '#9b59b6');
+    rect.setAttribute('stroke-width', 2);
+    svg.appendChild(rect);
+
+    // Label: (1-V)
+    addSVGText(svg, gx + gateW / 2, cy + 4, '(1−V)', '#9b59b6');
+    addSVGText(svg, gx + gateW / 2, gy - 8, `Exit ${i + 1}`, '#666');
+
+    // Arrow between gates
+    if (i < 2) {
+      const ax = gx + gateW + 2;
+      const ax2 = ax + gap - 4;
+      addSVGLine(svg, ax, cy, ax2, cy, 'sg-bond');
+      // Arrowhead
+      const tri = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+      tri.setAttribute('points', `${ax2},${cy-4} ${ax2+8},${cy} ${ax2},${cy+4}`);
+      tri.setAttribute('fill', '#4fc3f7');
+      svg.appendChild(tri);
+    }
+  }
+
+  // Input arrow
+  addSVGLine(svg, startX - 30, cy, startX - 2, cy, 'sg-bond');
+  // Output arrow
+  const lastX = startX + 2 * (gateW + gap) + gateW;
+  addSVGLine(svg, lastX + 2, cy, lastX + 30, cy, 'sg-bond');
+
+  // Result
+  addSVGText(svg, cx, cy + gateH / 2 + 30, 'l = (1−V)¹ × (1−V)¹ × (1−V)¹ = (1−V)³', '#fff');
+}
+
+function drawDumbbell(svg, cx, cy) {
+  // Two vertices (A and B) connected by a shared bond, with exits
+  const sep = 100; // separation between vertices
+  const ax = cx - sep / 2, bx = cx + sep / 2;
+
+  // Shared bond (thick, highlighted)
+  const sharedLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+  sharedLine.setAttribute('x1', ax); sharedLine.setAttribute('y1', cy);
+  sharedLine.setAttribute('x2', bx); sharedLine.setAttribute('y2', cy);
+  sharedLine.setAttribute('stroke', '#2ecc71');
+  sharedLine.setAttribute('stroke-width', 3);
+  svg.appendChild(sharedLine);
+
+  // Label shared bond
+  addSVGText(svg, cx, cy - 14, 'R\u2080\u00B2', '#2ecc71');
+
+  // Exit bonds from A (3 exits)
+  const exitLen = 55;
+  const exitAnglesA = [-120, -60, 180].map(a => a * Math.PI / 180);
+  exitAnglesA.forEach(a => {
+    addSVGLine(svg, ax, cy, ax + exitLen * Math.cos(a), cy + exitLen * Math.sin(a), 'sg-bond');
+  });
+
+  // Exit bonds from B (3 exits)
+  const exitAnglesB = [60, -60, 0].map(a => a * Math.PI / 180);
+  exitAnglesB.forEach(a => {
+    addSVGLine(svg, bx, cy, bx + exitLen * Math.cos(a), cy + exitLen * Math.sin(a), 'sg-bond');
+  });
+
+  // Backscatter arrow (curved)
+  const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+  const arcY = cy + 40;
+  path.setAttribute('d', `M ${ax + 10} ${cy + 8} Q ${cx} ${arcY + 20} ${bx - 10} ${cy + 8}`);
+  path.setAttribute('fill', 'none');
+  path.setAttribute('stroke', '#e74c3c');
+  path.setAttribute('stroke-width', 2);
+  path.setAttribute('stroke-dasharray', '4 3');
+  path.setAttribute('marker-end', 'url(#arrowRed)');
+  svg.appendChild(path);
+
+  // Reverse arrow
+  const path2 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+  path2.setAttribute('d', `M ${bx - 10} ${cy - 8} Q ${cx} ${cy - 50} ${ax + 10} ${cy - 8}`);
+  path2.setAttribute('fill', 'none');
+  path2.setAttribute('stroke', '#e74c3c');
+  path2.setAttribute('stroke-width', 2);
+  path2.setAttribute('stroke-dasharray', '4 3');
+  path2.setAttribute('marker-end', 'url(#arrowRed)');
+  svg.appendChild(path2);
+
+  // Arrow marker def
+  const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+  const marker = document.createElementNS('http://www.w3.org/2000/svg', 'marker');
+  marker.setAttribute('id', 'arrowRed');
+  marker.setAttribute('viewBox', '0 0 10 10');
+  marker.setAttribute('refX', 8); marker.setAttribute('refY', 5);
+  marker.setAttribute('markerWidth', 6); marker.setAttribute('markerHeight', 6);
+  marker.setAttribute('orient', 'auto');
+  const mp = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+  mp.setAttribute('d', 'M 0 0 L 10 5 L 0 10 z');
+  mp.setAttribute('fill', '#e74c3c');
+  marker.appendChild(mp);
+  defs.appendChild(marker);
+  svg.insertBefore(defs, svg.firstChild);
+
+  // Vertex nodes
+  addSVGCircle(svg, ax, cy, 9, 'sg-node');
+  addSVGCircle(svg, bx, cy, 9, 'sg-node');
+
+  // Vertex labels
+  const labA = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+  labA.setAttribute('x', ax); labA.setAttribute('y', cy + 4);
+  labA.setAttribute('text-anchor', 'middle');
+  labA.setAttribute('fill', '#0a0a1a'); labA.setAttribute('font-size', '10');
+  labA.setAttribute('font-weight', 'bold'); labA.setAttribute('font-family', 'monospace');
+  labA.textContent = 'A';
+  svg.appendChild(labA);
+
+  const labB = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+  labB.setAttribute('x', bx); labB.setAttribute('y', cy + 4);
+  labB.setAttribute('text-anchor', 'middle');
+  labB.setAttribute('fill', '#0a0a1a'); labB.setAttribute('font-size', '10');
+  labB.setAttribute('font-weight', 'bold'); labB.setAttribute('font-family', 'monospace');
+  labB.textContent = 'B';
+  svg.appendChild(labB);
+
+  // Result text
+  addSVGText(svg, cx, cy + 80, 'p = (1\u2212V)(z\u22122)/(z\u22122+V)', '#fff');
+}
+
+// =====================================================================
+// Info Grid
+// =====================================================================
+
+function renderInfo(order) {
+  const o = orders[order];
+  const grid = document.getElementById('info-grid');
+
+  // Compute correction fraction: how much of the BKT→CODATA gap this order closes
+  const totalGap = INV_ALPHA_CODATA - orders[0].invAlpha; // ~0.003948
+  const closedGap = o.invAlpha - orders[0].invAlpha;
+  const fracClosed = order === 0 ? 0 : (closedGap / totalGap * 100);
+
+  // Show ppb when residual is very small
+  const residualStr = Math.abs(o.ppm) < 0.01
+    ? (o.ppm * 1000 > 0 ? '+' : '') + (o.ppm * 1000).toFixed(1) + ' ppb'
+    : (o.ppm > 0 ? '+' : '') + o.ppm.toFixed(3) + ' ppm';
+
+  const items = [
+    { label: '1/\u03B1', value: o.invAlpha.toFixed(7), cls: Math.abs(o.ppm) < 1 ? 'good' : '' },
+    { label: 'Residual', value: residualStr, cls: Math.abs(o.ppm) < 0.01 ? 'good' : (Math.abs(o.ppm) < 1 ? 'good' : 'bad') },
+    { label: 'g-factor digits', value: o.gDigits.toFixed(1), cls: o.gDigits > 10 ? 'good' : '' },
+    { label: 'Gap closed', value: fracClosed.toFixed(2) + '%', cls: fracClosed > 99 ? 'good' : '' },
+  ];
+
+  if (o.c !== null) {
+    items.push({ label: 'Coefficient c', value: o.c.toFixed(7), cls: '' });
+  }
+  if (o.cn) {
+    items.push({ label: `c\u2080${o.cn.n}`, value: o.cn.formula, cls: '' });
+  }
+
+  grid.innerHTML = items.map(it =>
+    `<div class="info-item">
+      <div class="info-value ${it.cls}">${it.value}</div>
+      <div class="info-label">${it.label}</div>
+    </div>`
+  ).join('');
+}
+
+// =====================================================================
+// Chain Display
+// =====================================================================
+
+function renderChain(order) {
+  const container = document.getElementById('chain-display');
+  const steps = [
+    { text: 'Diamond lattice (z=4)', highlight: [0,1,2,3,4,5] },
+    { text: 'K_BKT = 2/π', highlight: [0,1,2,3,4,5] },
+    { text: 'R₀ = I₁(K)/I₀(K) = 0.303', highlight: [0,1,2,3,4,5] },
+    { text: 'V = R₀⁴ = 0.00845', highlight: [1,2,3,4,5] },
+    { text: 'α_BKT (self-consistent)', highlight: [0,1,2,3,4,5] },
+    { text: order <= 4 ? `l = (1−V)^(z−1) [single-vertex LCE]` : `c = c₁ + R₀²/(z(z−1)) × Δc [two-vertex LCE]`, highlight: [1,2,3,4,5] },
+    { text: 'Q_match = Q_lat × exp(−l)', highlight: [1,2,3,4,5] },
+    { text: '1/α = 1/α_BKT + F(Q²)/(3π)', highlight: [1,2,3,4,5] },
+    { text: `1/α = ${orders[order].invAlpha.toFixed(7)}`, highlight: [0,1,2,3,4,5] },
+    { text: 'QED: aₑ = Σ Cₙ(α/π)ⁿ', highlight: [0,1,2,3,4,5] },
+    { text: `g = ${orders[order].g.toFixed(12)}`, highlight: [0,1,2,3,4,5] },
+  ];
+
+  container.innerHTML = steps.map((s, i) => {
+    const isHighlight = s.highlight.includes(order);
+    const cls = isHighlight ? 'chain-step highlight' : 'chain-step dim';
+    const arrow = i > 0 ? '<span class="chain-arrow">→</span>' : '<span style="width:22px;display:inline-block"></span>';
+    return `<div class="${cls}">${arrow}${s.text}</div>`;
+  }).join('');
+}
+
+// =====================================================================
+// Series Display
+// =====================================================================
+
+function renderSeries(order) {
+  const container = document.getElementById('series-display');
+
+  const terms = [
+    { n: 1, coeff: '+3', active: order >= 1 },
+    { n: 2, coeff: '−3V', active: order >= 2 },
+    { n: 3, coeff: '+V²', active: order >= 3 },
+  ];
+
+  let html = '<div style="margin-bottom:8px;color:#888">c = c₁ + c₂·V + c₃·V² + δc₂ᵥ &nbsp; where V = R₀⁴ = 0.00845</div>';
+  html += '<div style="font-size:1.15em">c = ';
+  terms.forEach((t, i) => {
+    const cls = t.active ? 'active' : 'future';
+    html += `<span class="series-term ${cls}">${t.coeff}</span>`;
+    if (i < terms.length - 1) html += ' ';
+  });
+  if (order >= 5) {
+    html += ' <span class="series-term active" style="color:#2ecc71">+ δc<sub>2v</sub></span>';
+  }
+  html += '</div>';
+
+  html += '<div style="margin-top:12px;color:#888;font-size:0.9em">';
+  if (order >= 5) {
+    html += '<span style="color:#2ecc71">Layer 1</span>: c₁ = (1−(1−V)³)/V &nbsp;(single-vertex binomial)';
+    html += '<br><span style="color:#2ecc71">Layer 2</span>: δc = R₀²/(z(z−1)) × Δc<sub>dumb</sub> &nbsp;(two-vertex dumbbell)';
+    html += '<br><span style="color:#4caf50">Residual: 1.5 ppb — WITHIN CODATA ±80 ppb</span>';
+  } else if (order >= 4) {
+    html += 'Binomial resummation: c = [1 − (1−V)<sup>3</sup>] / V &nbsp;→&nbsp; l = (1−V)<sup>3</sup>';
+    html += '<br><span style="color:#4caf50">Single-vertex layer TERMINATES at n = z−1 = 3</span>';
+  } else if (order >= 1) {
+    html += `Pattern: c<sub>n</sub> = (−1)<sup>n+1</sup> C(z−1, n) = (−1)<sup>n+1</sup> C(3, n)`;
+    if (order >= 2) html += '<br>Alternating signs: each order partially corrects the previous';
+  } else {
+    html += 'No VP crossover at order 0 (pure BKT)';
+  }
+  html += '</div>';
+
+  // Numerical values (precomputed from Python)
+  if (order >= 1) {
+    html += '<div style="margin-top:12px;border-top:1px solid #2a2a4a;padding-top:8px">';
+    const V = V_STAR;
+    const values = [
+      { label: 'c\u2081\u00B7V = 3V', val: 3 * V, active: order >= 1 },
+      { label: 'c\u2082\u00B7V\u00B2 = \u22123V\u00B2', val: -3 * V * V, active: order >= 2 },
+      { label: 'c\u2083\u00B7V\u00B3 = +V\u00B3', val: V * V * V, active: order >= 3 },
+    ];
+    if (order >= 5) {
+      values.push({ label: 'δc\u2082\u1D65 = R\u2080\u00B2/(z(z-1))\u00D7\u0394c', val: 0.0111085484, active: true });
+    }
+    values.forEach(v => {
+      if (v.active) {
+        const color = v.val > 0 ? '#4caf50' : '#e74c3c';
+        html += `<div style="color:${color};font-size:0.85em">${v.label} = ${v.val.toExponential(4)}</div>`;
+      }
+    });
+    html += '</div>';
+  }
+
+  container.innerHTML = html;
+}
+
+// =====================================================================
+// Master Select
+// =====================================================================
+
+function selectOrder(order) {
+  currentOrder = order;
+
+  // Update buttons
+  document.querySelectorAll('.order-btn').forEach((btn, i) => {
+    btn.classList.toggle('active', i === order);
+  });
+
+  // Update all panels
+  renderDigits(order);
+  drawWaterfall(order);
+  drawZoom(order);
+  drawConvergence(order);
+  drawSubgraph(order);
+  renderInfo(order);
+  renderChain(order);
+  renderSeries(order);
+}
+
+// =====================================================================
+// Animation
+// =====================================================================
+
+function animateAll() {
+  const btn = document.getElementById('animate-btn');
+  btn.disabled = true;
+  btn.textContent = 'ANIMATING...';
+
+  let step = 0;
+  function nextStep() {
+    if (step >= orders.length) {
+      btn.disabled = false;
+      btn.textContent = '\u25B6 ANIMATE CONVERGENCE';
+      return;
+    }
+    selectOrder(step);
+    step++;
+    setTimeout(nextStep, 1500);
+  }
+  nextStep();
+}
+
+// =====================================================================
+// Init
+// =====================================================================
+
+selectOrder(0);
+window.addEventListener('resize', () => {
+  drawWaterfall(currentOrder);
+  drawZoom(currentOrder);
+  drawConvergence(currentOrder);
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,576 @@
+{
+  "casimir_spectrum": [
+    {
+      "j": 0.0,
+      "mass_MeV": 0.0,
+      "mass_ratio": 0.0
+    },
+    {
+      "j": 0.5,
+      "mass_MeV": 0.51099895,
+      "mass_ratio": 1.0
+    },
+    {
+      "j": 1.0,
+      "mass_MeV": 0.834457791065316,
+      "mass_ratio": 1.632993161855452
+    },
+    {
+      "j": 1.5,
+      "mass_MeV": 1.142628388631016,
+      "mass_ratio": 2.23606797749979
+    },
+    {
+      "j": 2.0,
+      "mass_MeV": 1.445323290896822,
+      "mass_ratio": 2.8284271247461903
+    },
+    {
+      "j": 2.5,
+      "mass_MeV": 1.7453936940356833,
+      "mass_ratio": 3.415650255319866
+    },
+    {
+      "j": 3.0,
+      "mass_MeV": 2.0439958,
+      "mass_ratio": 4.0
+    },
+    {
+      "j": 3.5,
+      "mass_MeV": 2.3416913684179543,
+      "mass_ratio": 4.58257569495584
+    },
+    {
+      "j": 4.0,
+      "mass_MeV": 2.6387872310393017,
+      "mass_ratio": 5.163977794943222
+    },
+    {
+      "j": 4.5,
+      "mass_MeV": 2.9354654805901537,
+      "mass_ratio": 5.744562646538029
+    },
+    {
+      "j": 5.0,
+      "mass_MeV": 3.2318411279089974,
+      "mass_ratio": 6.324555320336759
+    },
+    {
+      "j": 5.5,
+      "mass_MeV": 3.527990435874113,
+      "mass_ratio": 6.904105059069326
+    },
+    {
+      "j": 6.0,
+      "mass_MeV": 3.8239659918024556,
+      "mass_ratio": 7.483314773547883
+    },
+    {
+      "j": 6.5,
+      "mass_MeV": 4.119805244009923,
+      "mass_ratio": 8.06225774829855
+    },
+    {
+      "j": 7.0,
+      "mass_MeV": 4.415535589478244,
+      "mass_ratio": 8.640987597877148
+    },
+    {
+      "j": 7.5,
+      "mass_MeV": 4.711177537154985,
+      "mass_ratio": 9.219544457292887
+    },
+    {
+      "j": 8.0,
+      "mass_MeV": 5.0067467463918955,
+      "mass_ratio": 9.797958971132712
+    },
+    {
+      "j": 8.5,
+      "mass_MeV": 5.30225538140944,
+      "mass_ratio": 10.376254944182254
+    },
+    {
+      "j": 9.0,
+      "mass_MeV": 5.59771303552909,
+      "mass_ratio": 10.954451150103322
+    },
+    {
+      "j": 9.5,
+      "mass_MeV": 5.893127376686052,
+      "mass_ratio": 11.532562594670797
+    },
+    {
+      "j": 10.0,
+      "mass_MeV": 6.188504607643785,
+      "mass_ratio": 12.110601416389967
+    },
+    {
+      "j": 10.5,
+      "mass_MeV": 6.483849800163287,
+      "mass_ratio": 12.68857754044952
+    },
+    {
+      "j": 11.0,
+      "mass_MeV": 6.779167141662317,
+      "mass_ratio": 13.2664991614216
+    },
+    {
+      "j": 11.5,
+      "mass_MeV": 7.074460119993466,
+      "mass_ratio": 13.844373104863458
+    },
+    {
+      "j": 12.0,
+      "mass_MeV": 7.369731663733036,
+      "mass_ratio": 14.422205101855956
+    },
+    {
+      "j": 12.5,
+      "mass_MeV": 7.664984249999999,
+      "mass_ratio": 15.0
+    },
+    {
+      "j": 13.0,
+      "mass_MeV": 7.96021998824996,
+      "mass_ratio": 15.57776192739723
+    },
+    {
+      "j": 13.5,
+      "mass_MeV": 8.25544068606805,
+      "mass_ratio": 16.15549442140351
+    },
+    {
+      "j": 14.0,
+      "mass_MeV": 8.550647901317694,
+      "mass_ratio": 16.73320053068151
+    },
+    {
+      "j": 14.5,
+      "mass_MeV": 8.84584298383693,
+      "mass_ratio": 17.31088289679838
+    },
+    {
+      "j": 15.0,
+      "mass_MeV": 9.141027109048128,
+      "mass_ratio": 17.88854381999832
+    },
+    {
+      "j": 15.5,
+      "mass_MeV": 9.436201305253928,
+      "mass_ratio": 18.466185312619388
+    },
+    {
+      "j": 16.0,
+      "mass_MeV": 9.731366475961456,
+      "mass_ratio": 19.043809142780933
+    },
+    {
+      "j": 16.5,
+      "mass_MeV": 10.02652341826041,
+      "mass_ratio": 19.621416870348583
+    },
+    {
+      "j": 17.0,
+      "mass_MeV": 10.321672838045671,
+      "mass_ratio": 20.199009876724155
+    },
+    {
+      "j": 17.5,
+      "mass_MeV": 10.61681536269905,
+      "mass_ratio": 20.77658938966323
+    },
+    {
+      "j": 18.0,
+      "mass_MeV": 10.91195155171167,
+      "mass_ratio": 21.354156504062622
+    },
+    {
+      "j": 18.5,
+      "mass_MeV": 11.207081905626918,
+      "mass_ratio": 21.93171219946131
+    },
+    {
+      "j": 19.0,
+      "mass_MeV": 11.502206873605832,
+      "mass_ratio": 22.50925735484551
+    },
+    {
+      "j": 19.5,
+      "mass_MeV": 11.79732685985633,
+      "mass_ratio": 23.08679276123039
+    },
+    {
+      "j": 20.0,
+      "mass_MeV": 12.092442229120525,
+      "mass_ratio": 23.664319132398465
+    },
+    {
+      "j": 20.5,
+      "mass_MeV": 12.387553311377292,
+      "mass_ratio": 24.241837114102278
+    }
+  ],
+  "particle_matches": [
+    {
+      "name": "e",
+      "mass": 0.51099895,
+      "category": "lepton",
+      "is_fundamental": true,
+      "j_exact": 0.5,
+      "j_near": 0.5,
+      "m_casimir": 0.51099895,
+      "ratio": 1.0,
+      "pct_err": 0.0
+    },
+    {
+      "name": "mu",
+      "mass": 105.6583755,
+      "category": "lepton",
+      "is_fundamental": true,
+      "j_exact": 178.5672838271987,
+      "j_near": 178.5,
+      "m_casimir": 105.61867447161983,
+      "ratio": 1.0003758902351199,
+      "pct_err": 0.03757489947418231
+    },
+    {
+      "name": "tau",
+      "mass": 1776.86,
+      "category": "lepton",
+      "is_fundamental": true,
+      "j_exact": 3010.8680667634717,
+      "j_near": 3011.0,
+      "m_casimir": 1776.9378473079091,
+      "ratio": 0.9999561901908797,
+      "pct_err": -0.004381172850377839
+    },
+    {
+      "name": "u",
+      "mass": 2.16,
+      "category": "quark",
+      "is_fundamental": true,
+      "j_exact": 3.1946906562755757,
+      "j_near": 3.0,
+      "m_casimir": 2.0439958,
+      "ratio": 1.0567536391219592,
+      "pct_err": 5.37056481481483
+    },
+    {
+      "name": "d",
+      "mass": 4.67,
+      "category": "quark",
+      "is_fundamental": true,
+      "j_exact": 7.430351202894222,
+      "j_near": 7.5,
+      "m_casimir": 4.711177537154985,
+      "ratio": 0.9912596082762248,
+      "pct_err": -0.8817459776227995
+    },
+    {
+      "name": "s",
+      "mass": 93.4,
+      "category": "quark",
+      "is_fundamental": true,
+      "j_exact": 157.79225527642956,
+      "j_near": 158.0,
+      "m_casimir": 93.52258054330692,
+      "ratio": 0.9986892946858952,
+      "pct_err": -0.13124255172046018
+    },
+    {
+      "name": "c",
+      "mass": 1270.0,
+      "category": "quark",
+      "is_fundamental": true,
+      "j_exact": 2151.8572455147732,
+      "j_near": 2152.0,
+      "m_casimir": 1270.084232395156,
+      "ratio": 0.9999336796780816,
+      "pct_err": -0.00663247205953151
+    },
+    {
+      "name": "b",
+      "mass": 4180.0,
+      "category": "quark",
+      "is_fundamental": true,
+      "j_exact": 7083.636272365257,
+      "j_near": 7083.5,
+      "m_casimir": 4179.919592386748,
+      "ratio": 1.000019236641154,
+      "pct_err": 0.001923627111285565
+    },
+    {
+      "name": "t",
+      "mass": 172760.0,
+      "category": "quark",
+      "is_fundamental": true,
+      "j_exact": 292787.8682696761,
+      "j_near": 292788.0,
+      "m_casimir": 172760.07772757811,
+      "ratio": 0.9999995500836817,
+      "pct_err": -4.499165206918164e-05
+    },
+    {
+      "name": "W",
+      "mass": 80369.0,
+      "category": "boson",
+      "is_fundamental": true,
+      "j_exact": 136206.42503814443,
+      "j_near": 136206.5,
+      "m_casimir": 80369.04423130005,
+      "ratio": 0.9999994496475543,
+      "pct_err": -5.503527486104132e-05
+    },
+    {
+      "name": "Z",
+      "mass": 91187.6,
+      "category": "boson",
+      "is_fundamental": true,
+      "j_exact": 154541.45769002504,
+      "j_near": 154541.5,
+      "m_casimir": 91187.62496503301,
+      "ratio": 0.9999997262234539,
+      "pct_err": -2.7377662103073325e-05
+    },
+    {
+      "name": "H",
+      "mass": 125250.0,
+      "category": "boson",
+      "is_fundamental": true,
+      "j_exact": 212269.37222635557,
+      "j_near": 212269.5,
+      "m_casimir": 125250.07539293634,
+      "ratio": 0.9999993980607508,
+      "pct_err": -6.019396115114871e-05
+    },
+    {
+      "name": "pi0",
+      "mass": 134.9768,
+      "category": "meson",
+      "is_fundamental": false,
+      "j_exact": 228.2551020408866,
+      "j_near": 228.5,
+      "m_casimir": 135.12130257236268,
+      "ratio": 0.9989305714967831,
+      "pct_err": -0.10705734049309416
+    },
+    {
+      "name": "pi+",
+      "mass": 139.5706,
+      "category": "meson",
+      "is_fundamental": false,
+      "j_exact": 236.04051590416825,
+      "j_near": 236.0,
+      "m_casimir": 139.5466935064268,
+      "ratio": 1.0001713153710239,
+      "pct_err": 0.017128602709458436
+    },
+    {
+      "name": "K+",
+      "mass": 493.677,
+      "category": "meson",
+      "is_fundamental": false,
+      "j_exact": 836.1688417038105,
+      "j_near": 836.0,
+      "m_casimir": 493.57737480610166,
+      "ratio": 1.0002018431131239,
+      "pct_err": 0.02018023807030951
+    },
+    {
+      "name": "K0",
+      "mass": 497.611,
+      "category": "meson",
+      "is_fundamental": false,
+      "j_exact": 842.8360634954159,
+      "j_near": 843.0,
+      "m_casimir": 497.70773087655795,
+      "ratio": 0.9998056472291729,
+      "pct_err": -0.019439055116939937
+    },
+    {
+      "name": "eta",
+      "mass": 547.862,
+      "category": "meson",
+      "is_fundamental": false,
+      "j_exact": 927.9999089758871,
+      "j_near": 928.0,
+      "m_casimir": 547.862053708855,
+      "ratio": 0.9999999019664628,
+      "pct_err": -9.803354683210157e-06
+    },
+    {
+      "name": "eta_p",
+      "mass": 957.78,
+      "category": "meson",
+      "is_fundamental": false,
+      "j_exact": 1622.7163502243297,
+      "j_near": 1622.5,
+      "m_casimir": 957.6523423790719,
+      "ratio": 1.000133302677056,
+      "pct_err": 0.013328490982069159
+    },
+    {
+      "name": "rho",
+      "mass": 775.26,
+      "category": "meson",
+      "is_fundamental": false,
+      "j_exact": 1313.3870503610933,
+      "j_near": 1313.5,
+      "m_casimir": 775.3266460254063,
+      "ratio": 0.9999140413582482,
+      "pct_err": -0.008596603127501908
+    },
+    {
+      "name": "omega",
+      "mass": 782.66,
+      "category": "meson",
+      "is_fundamental": false,
+      "j_exact": 1325.9283433096432,
+      "j_near": 1326.0,
+      "m_casimir": 782.7022810877996,
+      "ratio": 0.9999459806253013,
+      "pct_err": -0.005402229294925681
+    },
+    {
+      "name": "phi",
+      "mass": 1019.461,
+      "category": "meson",
+      "is_fundamental": false,
+      "j_exact": 1727.2514193276324,
+      "j_near": 1727.5,
+      "m_casimir": 1019.6076752214581,
+      "ratio": 0.9998561454321867,
+      "pct_err": -0.014387526492730352
+    },
+    {
+      "name": "J/psi",
+      "mass": 3096.9,
+      "category": "meson",
+      "is_fundamental": false,
+      "j_exact": 5248.031499233168,
+      "j_near": 5248.0,
+      "m_casimir": 3096.8814138533617,
+      "ratio": 1.000006001568725,
+      "pct_err": 0.0006001532706392433
+    },
+    {
+      "name": "Ups",
+      "mass": 9460.3,
+      "category": "meson",
+      "is_fundamental": false,
+      "j_exact": 16032.527330889585,
+      "j_near": 16032.5,
+      "m_casimir": 9460.283873387747,
+      "ratio": 1.0000017046647298,
+      "pct_err": 0.00017046618238602106
+    },
+    {
+      "name": "p",
+      "mass": 938.272,
+      "category": "baryon",
+      "is_fundamental": false,
+      "j_exact": 1589.654789610814,
+      "j_near": 1589.5,
+      "m_casimir": 938.1806662675693,
+      "ratio": 1.0000973519661134,
+      "pct_err": 0.009734248963063182
+    },
+    {
+      "name": "n",
+      "mass": 939.565,
+      "category": "baryon",
+      "is_fundamental": false,
+      "j_exact": 1591.8461263871695,
+      "j_near": 1592.0,
+      "m_casimir": 939.655793247082,
+      "ratio": 0.9999033760577709,
+      "pct_err": -0.00966332793174855
+    },
+    {
+      "name": "Lambda",
+      "mass": 1115.683,
+      "category": "baryon",
+      "is_fundamental": false,
+      "j_exact": 1890.3255180405092,
+      "j_near": 1890.5,
+      "m_casimir": 1115.78595321687,
+      "ratio": 0.9999077303163988,
+      "pct_err": -0.009227819808134712
+    },
+    {
+      "name": "Sigma+",
+      "mass": 1189.37,
+      "category": "baryon",
+      "is_fundamental": false,
+      "j_exact": 2015.2079895910763,
+      "j_near": 2015.0,
+      "m_casimir": 1189.2472755793806,
+      "ratio": 1.000103195040375,
+      "pct_err": 0.0103184392257503
+    },
+    {
+      "name": "Sigma0",
+      "mass": 1192.642,
+      "category": "baryon",
+      "is_fundamental": false,
+      "j_exact": 2020.7532750251182,
+      "j_near": 2021.0,
+      "m_casimir": 1192.787580264054,
+      "ratio": 0.9998779495473773,
+      "pct_err": -0.012206535075398418
+    },
+    {
+      "name": "Xi0",
+      "mass": 1314.86,
+      "category": "baryon",
+      "is_fundamental": false,
+      "j_exact": 2227.884600563681,
+      "j_near": 2228.0,
+      "m_casimir": 1314.9280915271263,
+      "ratio": 0.9999482165393186,
+      "pct_err": -0.0051786142347016745
+    },
+    {
+      "name": "Omega-",
+      "mass": 1672.45,
+      "category": "baryon",
+      "is_fundamental": false,
+      "j_exact": 2833.9171922363744,
+      "j_near": 2834.0,
+      "m_casimir": 1672.4988607848431,
+      "ratio": 0.9999707857589689,
+      "pct_err": -0.002921509452784848
+    },
+    {
+      "name": "Lam_c",
+      "mass": 2286.46,
+      "category": "baryon",
+      "is_fundamental": false,
+      "j_exact": 3874.522563589825,
+      "j_near": 3874.5,
+      "m_casimir": 2286.4466863365037,
+      "ratio": 1.0000058228619875,
+      "pct_err": 0.000582282808197797
+    }
+  ],
+  "statistics": {
+    "actual_mean_pct_err": 0.2161414967999409,
+    "actual_median_pct_err": 0.008596603127501908,
+    "random_mean_pct_err": 18.013519844144636,
+    "random_std_pct_err": 11.034755947438294,
+    "p_value_mean": 0.0,
+    "p_value_median": 0.1215
+  },
+  "koide": {
+    "Q": 0.6666605114773855,
+    "cos_eff": 0.6666666666666666,
+    "difference": 6.155189281153994e-06
+  },
+  "muon_problem": {
+    "j_exact": 178.56728383788052,
+    "j_nearest": 178.5,
+    "mass_at_nearest": 105.61867447161983,
+    "actual_mass": 105.6583755
+  }
+}

@@ -1,0 +1,21 @@
+# LaTeX build artifacts
+*.aux
+*.log
+*.out
+*.toc
+*.blg
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*Notes.bib
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Script outputs (regeneratable)
+scripts/out/
+
+# OS
+.DS_Store

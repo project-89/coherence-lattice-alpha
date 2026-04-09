@@ -1,0 +1,207 @@
+%apsrev4-2.bst 2019-01-14 (MD) hand-edited version of apsrev4-1.bst
+%Control: key (0)
+%Control: author (8) initials jnrlst
+%Control: editor formatted (1) identically to author
+%Control: production of article title (0) allowed
+%Control: page (0) single
+%Control: year (1) truncated
+%Control: production of eprint (0) enabled
+\begin{thebibliography}{17}%
+\makeatletter
+\providecommand \@ifxundefined [1]{%
+ \@ifx{#1\undefined}
+}%
+\providecommand \@ifnum [1]{%
+ \ifnum #1\expandafter \@firstoftwo
+ \else \expandafter \@secondoftwo
+ \fi
+}%
+\providecommand \@ifx [1]{%
+ \ifx #1\expandafter \@firstoftwo
+ \else \expandafter \@secondoftwo
+ \fi
+}%
+\providecommand \natexlab [1]{#1}%
+\providecommand \enquote  [1]{``#1''}%
+\providecommand \bibnamefont  [1]{#1}%
+\providecommand \bibfnamefont [1]{#1}%
+\providecommand \citenamefont [1]{#1}%
+\providecommand \href@noop [0]{\@secondoftwo}%
+\providecommand \href [0]{\begingroup \@sanitize@url \@href}%
+\providecommand \@href[1]{\@@startlink{#1}\@@href}%
+\providecommand \@@href[1]{\endgroup#1\@@endlink}%
+\providecommand \@sanitize@url [0]{\catcode `\\12\catcode `\$12\catcode
+  `\&12\catcode `\#12\catcode `\^12\catcode `\_12\catcode `\%12\relax}%
+\providecommand \@@startlink[1]{}%
+\providecommand \@@endlink[0]{}%
+\providecommand \url  [0]{\begingroup\@sanitize@url \@url }%
+\providecommand \@url [1]{\endgroup\@href {#1}{\urlprefix }}%
+\providecommand \urlprefix  [0]{URL }%
+\providecommand \Eprint [0]{\href }%
+\providecommand \doibase [0]{https://doi.org/}%
+\providecommand \selectlanguage [0]{\@gobble}%
+\providecommand \bibinfo  [0]{\@secondoftwo}%
+\providecommand \bibfield  [0]{\@secondoftwo}%
+\providecommand \translation [1]{[#1]}%
+\providecommand \BibitemOpen [0]{}%
+\providecommand \bibitemStop [0]{}%
+\providecommand \bibitemNoStop [0]{.\EOS\space}%
+\providecommand \EOS [0]{\spacefactor3000\relax}%
+\providecommand \BibitemShut  [1]{\csname bibitem#1\endcsname}%
+\let\auto@bib@innerbib\@empty
+%</preamble>
+\bibitem [{\citenamefont {Kuramoto}(1984)}]{Kuramoto1984}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {Y.}~\bibnamefont
+  {Kuramoto}},\ }\href {https://doi.org/10.1007/978-3-642-69689-3} {\emph
+  {\bibinfo {title} {Chemical Oscillations, Waves, and Turbulence}}}\ (\bibinfo
+   {publisher} {Springer},\ \bibinfo {address} {Berlin},\ \bibinfo {year}
+  {1984})\BibitemShut {NoStop}%
+\bibitem [{Note1()}]{Note1}%
+  \BibitemOpen
+  \bibinfo {note} {The full structural richness is $\rho = N_{\protect \text
+  {active}} \cdot \protect \bar {K} \cdot B_{\protect \text {fb}} \cdot (1 +
+  \beta _{\protect \text {npd}} \cdot \protect \text {NPD})$, where
+  $N_{\protect \text {active}}$ counts alive bonds, $\protect \bar {K}$ is mean
+  coupling, $B_{\protect \text {fb}} = 1 - \mu _2(P_{\protect \text {active}})$
+  is the feedback bandwidth (spectral gap of the $K$-weighted random-walk
+  matrix), and NPD is the nested phase-lock depth---the number of hierarchical
+  levels of phase-locked clustering achieved by recursive coarse-graining. For
+  the $\alpha $ derivation, the specific form of $\rho $ matters only through
+  the CLR dynamics it generates; all lattice results follow from the phase
+  alignment $I_{\protect \text {phase}}$ and the CLR equation (Sec.~\ref
+  {sec:2-2}).}\BibitemShut {Stop}%
+\bibitem [{\citenamefont {Berezinskii}(1971)}]{Berezinskii1971}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {V.~L.}\ \bibnamefont
+  {Berezinskii}},\ }\bibfield  {title} {\bibinfo {title} {Destruction of
+  long-range order in one-dimensional and two-dimensional systems having a
+  continuous symmetry group {I}. {C}lassical systems},\ }\href@noop {}
+  {\bibfield  {journal} {\bibinfo  {journal} {Sov. Phys. JETP}\ }\textbf
+  {\bibinfo {volume} {32}},\ \bibinfo {pages} {493} (\bibinfo {year}
+  {1971})}\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Kosterlitz}\ and\ \citenamefont
+  {Thouless}(1973)}]{Kosterlitz1973}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {J.~M.}\ \bibnamefont
+  {Kosterlitz}}\ and\ \bibinfo {author} {\bibfnamefont {D.~J.}\ \bibnamefont
+  {Thouless}},\ }\bibfield  {title} {\bibinfo {title} {Ordering, metastability
+  and phase transitions in two-dimensional systems},\ }\href
+  {https://doi.org/10.1088/0022-3719/6/7/010} {\bibfield  {journal} {\bibinfo
+  {journal} {J. Phys. C: Solid State Phys.}\ }\textbf {\bibinfo {volume} {6}},\
+  \bibinfo {pages} {1181} (\bibinfo {year} {1973})}\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Skyrme}(1962)}]{Skyrme1962}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {T.~H.~R.}\
+  \bibnamefont {Skyrme}},\ }\bibfield  {title} {\bibinfo {title} {A unified
+  field theory of mesons and baryons},\ }\href
+  {https://doi.org/10.1016/0029-5582(62)90775-7} {\bibfield  {journal}
+  {\bibinfo  {journal} {Nucl. Phys.}\ }\textbf {\bibinfo {volume} {31}},\
+  \bibinfo {pages} {556} (\bibinfo {year} {1962})}\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Williamson}\ and\ \citenamefont {van~der
+  Mark}(1997)}]{Williamson1997}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {J.~G.}\ \bibnamefont
+  {Williamson}}\ and\ \bibinfo {author} {\bibfnamefont {M.~B.}\ \bibnamefont
+  {van~der Mark}},\ }\bibfield  {title} {\bibinfo {title} {Is the electron a
+  photon with toroidal topology?},\ }\href@noop {} {\bibfield  {journal}
+  {\bibinfo  {journal} {Ann. Fond. Louis de Broglie}\ }\textbf {\bibinfo
+  {volume} {22}},\ \bibinfo {pages} {133} (\bibinfo {year} {1997})}\BibitemShut
+  {NoStop}%
+\bibitem [{\citenamefont {Wyler}(1969)}]{Wyler1969}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {A.}~\bibnamefont
+  {Wyler}},\ }\bibfield  {title} {\bibinfo {title} {L'espace sym{\'e}trique du
+  groupe des {\'e}quations de {Maxwell}},\ }\href@noop {} {\bibfield  {journal}
+  {\bibinfo  {journal} {C. R. Acad. Sci. Paris}\ }\textbf {\bibinfo {volume}
+  {269A}},\ \bibinfo {pages} {743} (\bibinfo {year} {1969})}\BibitemShut
+  {NoStop}%
+\bibitem [{\citenamefont {Morel}\ \emph {et~al.}(2020)\citenamefont {Morel},
+  \citenamefont {Yao}, \citenamefont {Clad{\'e}},\ and\ \citenamefont
+  {Guellati-Kh{\'e}lifa}}]{Morel2020}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {L.}~\bibnamefont
+  {Morel}}, \bibinfo {author} {\bibfnamefont {Z.}~\bibnamefont {Yao}}, \bibinfo
+  {author} {\bibfnamefont {P.}~\bibnamefont {Clad{\'e}}},\ and\ \bibinfo
+  {author} {\bibfnamefont {S.}~\bibnamefont {Guellati-Kh{\'e}lifa}},\
+  }\bibfield  {title} {\bibinfo {title} {Determination of the fine-structure
+  constant with an accuracy of 81 parts per trillion},\ }\href
+  {https://doi.org/10.1038/s41586-020-2964-7} {\bibfield  {journal} {\bibinfo
+  {journal} {Nature}\ }\textbf {\bibinfo {volume} {588}},\ \bibinfo {pages}
+  {61} (\bibinfo {year} {2020})}\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Kosterlitz}(1974)}]{Kosterlitz1974}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {J.~M.}\ \bibnamefont
+  {Kosterlitz}},\ }\bibfield  {title} {\bibinfo {title} {The critical
+  properties of the two-dimensional {XY} model},\ }\href
+  {https://doi.org/10.1088/0022-3719/7/6/005} {\bibfield  {journal} {\bibinfo
+  {journal} {J. Phys. C: Solid State Phys.}\ }\textbf {\bibinfo {volume} {7}},\
+  \bibinfo {pages} {1046} (\bibinfo {year} {1974})}\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Nelson}\ and\ \citenamefont
+  {Kosterlitz}(1977)}]{NelsonKosterlitz1977}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {D.~R.}\ \bibnamefont
+  {Nelson}}\ and\ \bibinfo {author} {\bibfnamefont {J.~M.}\ \bibnamefont
+  {Kosterlitz}},\ }\bibfield  {title} {\bibinfo {title} {Universal jump in the
+  superfluid density of two-dimensional superfluids},\ }\href
+  {https://doi.org/10.1103/PhysRevLett.39.1201} {\bibfield  {journal} {\bibinfo
+   {journal} {Phys. Rev. Lett.}\ }\textbf {\bibinfo {volume} {39}},\ \bibinfo
+  {pages} {1201} (\bibinfo {year} {1977})}\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Eddington}(1929)}]{Eddington1929}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {A.~S.}\ \bibnamefont
+  {Eddington}},\ }\href@noop {} {\emph {\bibinfo {title} {The Nature of the
+  Physical World}}}\ (\bibinfo  {publisher} {Cambridge University Press},\
+  \bibinfo {address} {Cambridge},\ \bibinfo {year} {1929})\BibitemShut
+  {NoStop}%
+\bibitem [{\citenamefont {Schwinger}(1948)}]{Schwinger1948}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {J.}~\bibnamefont
+  {Schwinger}},\ }\bibfield  {title} {\bibinfo {title} {On
+  quantum-electrodynamics and the magnetic moment of the electron},\ }\href
+  {https://doi.org/10.1103/PhysRev.73.416} {\bibfield  {journal} {\bibinfo
+  {journal} {Phys. Rev.}\ }\textbf {\bibinfo {volume} {73}},\ \bibinfo {pages}
+  {416} (\bibinfo {year} {1948})}\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Fan}\ \emph {et~al.}(2023)\citenamefont {Fan},
+  \citenamefont {Myers}, \citenamefont {Sukra},\ and\ \citenamefont
+  {Gabrielse}}]{Fan2023}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {X.}~\bibnamefont
+  {Fan}}, \bibinfo {author} {\bibfnamefont {T.~G.}\ \bibnamefont {Myers}},
+  \bibinfo {author} {\bibfnamefont {B.~A.~D.}\ \bibnamefont {Sukra}},\ and\
+  \bibinfo {author} {\bibfnamefont {G.}~\bibnamefont {Gabrielse}},\ }\bibfield
+  {title} {\bibinfo {title} {Measurement of the electron magnetic moment},\
+  }\href {https://doi.org/10.1103/PhysRevLett.130.071801} {\bibfield  {journal}
+  {\bibinfo  {journal} {Phys. Rev. Lett.}\ }\textbf {\bibinfo {volume} {130}},\
+  \bibinfo {pages} {071801} (\bibinfo {year} {2023})}\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Wilson}(1974)}]{Wilson1974}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {K.~G.}\ \bibnamefont
+  {Wilson}},\ }\bibfield  {title} {\bibinfo {title} {Confinement of quarks},\
+  }\href {https://doi.org/10.1103/PhysRevD.10.2445} {\bibfield  {journal}
+  {\bibinfo  {journal} {Phys. Rev. D}\ }\textbf {\bibinfo {volume} {10}},\
+  \bibinfo {pages} {2445} (\bibinfo {year} {1974})}\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Haldane}(2017)}]{Haldane2017}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {F.~D.~M.}\
+  \bibnamefont {Haldane}},\ }\bibfield  {title} {\bibinfo {title} {Nobel
+  {Lecture}: {Topological} quantum matter},\ }\href
+  {https://doi.org/10.1103/RevModPhys.89.040502} {\bibfield  {journal}
+  {\bibinfo  {journal} {Rev. Mod. Phys.}\ }\textbf {\bibinfo {volume} {89}},\
+  \bibinfo {pages} {040502} (\bibinfo {year} {2017})}\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {{LHAASO Collaboration}}(2022)}]{LHAASO2021}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibnamefont {{LHAASO
+  Collaboration}}},\ }\bibfield  {title} {\bibinfo {title} {Exploring {Lorentz}
+  invariance violation from ultrahigh-energy $\gamma$ rays observed by
+  {LHAASO}},\ }\href {https://doi.org/10.1103/PhysRevLett.128.051102}
+  {\bibfield  {journal} {\bibinfo  {journal} {Phys. Rev. Lett.}\ }\textbf
+  {\bibinfo {volume} {128}},\ \bibinfo {pages} {051102} (\bibinfo {year}
+  {2022})}\BibitemShut {NoStop}%
+\bibitem [{\citenamefont {Polyakov}(1987)}]{Polyakov1987}%
+  \BibitemOpen
+  \bibfield  {author} {\bibinfo {author} {\bibfnamefont {A.~M.}\ \bibnamefont
+  {Polyakov}},\ }\href@noop {} {\emph {\bibinfo {title} {Gauge Fields and
+  Strings}}}\ (\bibinfo  {publisher} {Harwood Academic Publishers},\ \bibinfo
+  {address} {Chur, Switzerland},\ \bibinfo {year} {1987})\BibitemShut {NoStop}%
+\end{thebibliography}%

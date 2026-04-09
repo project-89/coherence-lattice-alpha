@@ -1,0 +1,44 @@
+# License
+
+This work consists of two components with separate licenses:
+
+## Paper Text and Figures (paper.tex, figures/*)
+
+Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)
+
+Copyright (c) 2026 Michael Sharpe
+
+You are free to:
+- Share — copy and redistribute the material in any medium or format
+- Adapt — remix, transform, and build upon the material
+
+Under the following terms:
+- Attribution — You must give appropriate credit, provide a link to the license,
+  and indicate if changes were made.
+- NonCommercial — You may not use the material for commercial purposes.
+
+Full license: https://creativecommons.org/licenses/by-nc/4.0/
+
+## Code and Scripts (scripts/*)
+
+GNU Affero General Public License v3.0 (AGPL-3.0)
+
+Copyright (c) 2026 Michael Sharpe
+
+This program is free software: you can redistribute it and/or modify it under
+the terms of the GNU Affero General Public License as published by the Free
+Software Foundation, either version 3 of the License, or (at your option) any
+later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License along
+with this program. If not, see <https://www.gnu.org/licenses/>.
+
+Key AGPL requirement: If you run a modified version of this code on a server
+and let users interact with it, you must make your modified source code
+available to those users.
+
+Full license: https://www.gnu.org/licenses/agpl-3.0.html
