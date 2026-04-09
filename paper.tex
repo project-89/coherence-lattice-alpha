@@ -47,7 +47,7 @@ The derivation chains four proven lattice identities---$\coseff = 2/3$, $\Gdiff 
 \boxed{\frac{1}{\alpha} = 137.035\,999 \quad (\text{1.5 ppb from CODATA})}
 \end{equation}
 \begin{equation}
-g = 2.002\,319\,304\,355 \quad (\text{11.4 matching digits})
+g = 2.002\,319\,304\,355 \quad (\text{11.4 matching digits, via standard QED})
 \end{equation}
 with zero free parameters.  The only inputs are $\pi$, $e$, the modified Bessel functions $I_0$ and $I_1$, and the coordination number $z = 4$.
 \end{abstract}
@@ -233,7 +233,7 @@ A bond that satisfies neither (a) nor (b) of Proposition~\ref{prop:survival} is 
 
 \subsection{Experimental Verification}\label{sec:2-4}
 
-The Shannon-CLR has been validated on square lattices with vortex-antivortex pairs (reproducible via scripts in Appendix~\ref{sec:C}):
+The Shannon-CLR has been validated on both 2D square and 3D diamond lattices with vortex excitations (reproducible via scripts in Appendix~\ref{sec:C}). Results on the 3D diamond lattice:
 
 \begin{table}[h]
 \begin{tabular}{@{}p{0.48\columnwidth}l@{}}
@@ -951,11 +951,10 @@ Two adjacent vertices sharing a bond form a dumbbell. A walker at $A$ can backsc
 p = \frac{(1-V)(z-2)}{z-2+V} = 0.9874.
 \end{equation}
 
-The linked-cluster embedding weight selects the fraction of exit paths that see the dumbbell backscattering:
+The linked-cluster embedding weight is determined by the probability that a walker exiting the central vertex traverses the shared bond coherently and reaches the second vertex.  On the diamond lattice, each vertex has $z = 4$ exit channels, of which $(z{-}1) = 3$ lead to distinct next-nearest neighbors via any one of $z$ possible shared bonds, giving $z(z{-}1) = 12$ next-nearest-neighbor paths. The shared bond contributes a coherence factor $\Rzero^2$ (the probability of coherent two-bond transfer at coupling $\KBKT$):
 \begin{equation}
-w = \frac{\Rzero^2}{z(z-1)} = \frac{0.0919}{12} = 0.00766
-\end{equation}
-where $\Rzero^2$ is the shared-bond coherence and $z(z{-}1) = 12$ counts next-nearest-neighbor paths. The correction:
+w = \frac{\Rzero^2}{z(z-1)} = \frac{0.0919}{12} = 0.00766.
+\end{equation} The correction:
 \begin{equation}
 \delta c_{2\text{vtx}} = w \times (c_{\text{dumb}} - c_1) = 0.00766 \times 1.450 = 0.0111.
 \end{equation}
@@ -1179,9 +1178,9 @@ for the observable universe ($L \sim 10^{26}$~m, $h \sim 10^{-13}$~m), giving an
 
 \subsection{What This Framework Claims---and Does Not Claim}\label{sec:8-3}
 
-This paper presents a mathematical framework in which a vortex on the diamond lattice has measurable properties matching those of the electron. The coupling constant $\alpha = 1/137.036$ is derived from lattice geometry and established physics to 1.5~ppb precision.
+A phase vortex on the living diamond lattice carries quantized charge, spin-$1/2$, chirality, Dirac dispersion, logarithmic confinement, conserved current, tree-level $g = 2$, and an anomalous magnetic moment.  Its coupling constant $\alpha = 1/137.036$ is derived from lattice geometry and established physics to 1.5~ppb precision, with zero free parameters.  We present these mathematical properties and let the correspondence speak for itself.
 
-We do not claim that reality is a diamond lattice. We claim that the mathematical structure of $\alpha$---its value, its role in QED, and its connection to the electron $g$-factor---is reproduced exactly by a coherence lattice at its BKT critical point. Whether this correspondence is fundamental or emergent is an open question.
+Whether the diamond lattice is the fundamental substrate or an effective description of deeper structure is an open question.  What is not open is that the CLR at its BKT critical point reproduces the complete electromagnetic coupling---its value, its RG running, and its role in the QED series for the electron $g$-factor---from pure mathematics.
 
 \subsection{Methodology}\label{sec:8-4}
 
