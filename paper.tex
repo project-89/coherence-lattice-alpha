@@ -1,4 +1,4 @@
-\documentclass[aps,prd,onecolumn,superscriptaddress,showpacs,12pt]{revtex4-2}
+\documentclass[aps,prd,onecolumn,superscriptaddress,floatfix,12pt]{revtex4-2}
 
 \usepackage{lmodern}
 \usepackage[T1]{fontenc}
@@ -37,7 +37,7 @@ From Coupled Oscillators to the Fine Structure Constant}
 \author{Michael Sharpe}
 \affiliation{Project 89 / Green Loom Association}
 
-\date{March 2026}
+\date{April 2026}
 
 \begin{abstract}
 We derive the fine structure constant $\alpha = 1/137.036$ from a single dynamical principle---the Coherence Learning Rule (CLR)---operating on coupled oscillators arranged on the diamond lattice ($z = 4$). The CLR makes the lattice \emph{living}: bond couplings $K_{ij}(t)$ are dynamical variables that self-organize into a binary field---alive bonds at $\Kbulk \to 16/\pi^2$ (the BKT critical coupling) and dead bonds at $K \approx 0$---spontaneously generating topological vortex defects. These vortices carry quantized charge, sublattice chirality, and Dirac-like bound states with tree-level $g = 2$. The fine structure constant emerges at the topologically constrained optimum of the CLR---a byproduct of coherence maximization, not itself a target.
@@ -1403,7 +1403,7 @@ The lattice carries two independent order parameters per site: a phase $\theta_i
 
 On each bond $(ij)$, the SE(3)-covariant coupling $\cos(\Delta\theta_{ij}) \cdot \text{tr}(R_i^T R_j)/3$ (Sec.~\ref{sec:4-6}) correlates the two sectors. At the vortex core, the phase winding $\Delta\theta = \pi$ forces $\cos\Delta\theta = -1$, which reverses the sign of the frame coupling. Transporting the frame around the vortex therefore accumulates a sign flip: $R \to -R$, i.e., a $2\pi$ rotation in SO(3) that is contractible in SO(3) but \emph{non-contractible} when lifted to the double cover SU(2). Formally, the holonomy of the frame connection around the vortex core lies in $\pi_1(\text{SO}(3)) = \mathbb{Z}_2$.
 
-The frame sector's Hilbert space decomposes by Peter-Weyl (Sec.~\ref{sec:6-2}) into representations labeled by $j = 0, 1/2, 1, 3/2, \ldots$ Half-integer $j$ representations are precisely those carrying the nontrivial $\mathbb{Z}_2$ holonomy: under a $2\pi$ rotation, states with half-integer $j$ acquire a phase $(-1)^{2j} = -1$, while integer $j$ states are invariant. Since the vortex holonomy is nontrivial, the bound state must live in a half-integer representation. The lowest is $j = 1/2$, with Casimir eigenvalue $j(j+1) = 3/4$.
+The frame sector's Hilbert space $L^2(\text{SO}(3))$ decomposes by Peter-Weyl into representations labeled by $j = 0, 1/2, 1, 3/2, \ldots$ Half-integer $j$ representations are precisely those carrying the nontrivial $\mathbb{Z}_2$ holonomy: under a $2\pi$ rotation, states with half-integer $j$ acquire a phase $(-1)^{2j} = -1$, while integer $j$ states are invariant. Since the vortex holonomy is nontrivial, the bound state must live in a half-integer representation. The lowest is $j = 1/2$, with Casimir eigenvalue $j(j+1) = 3/4$.
 
 The mass gap between $j = 1/2$ and $j = 3/2$ is $m_{3/2}/m_{1/2} = \sqrt{(15/4)/(3/4)} = \sqrt{5} \approx 2.24$, so the ground state is well-separated from higher representations.
 \end{proof}
@@ -1488,7 +1488,7 @@ Script & Purpose \\
 \texttt{electron\_mass\_from\_lattice.py} & Lattice spacing $h$ \\
 \texttt{running\_alpha\_curve.py} & Running $\alpha(Q)$ \\
 \texttt{living\_vs\_static\_alpha.py} & Living vs static: CLR necessity \\
-\texttt{casimir\_mass\_spectrum.py} & Casimir mass tower \\
+\texttt{fiedler\_proof.py} & Fiedler sensitivity scaling \\
 \bottomrule
 \end{tabular}
 \end{table}
