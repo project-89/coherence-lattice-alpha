@@ -1,0 +1,2122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spontaneous vortices — The Living Lattice</title>
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<div class="page">
+
+<nav class="breadcrumb">
+  <a href="../index.html">&larr; contents</a>
+  <span class="sep">·</span>
+  <span class="section-num">section 07 / 15</span>
+</nav>
+
+<h1>Spontaneous vortices<span class="subtitle">How topology emerges from dynamics — and why the lattice must fight to keep it</span></h1>
+
+<p class="lead">Up to this point, the lattice has been sorting itself out locally. Bonds choose alive or dead, PLMs assemble, the K-field freezes. Now something strange happens. If you run the CLR from random initial conditions on a plain, featureless grid, <em>topological defects appear</em>. Vortices &mdash; points around which the phase winds by a full turn &mdash; nucleate spontaneously out of the noise. Nobody placed them. Nothing about the lattice geometry demands them. They form because the dynamics had no other way to reconcile the phases.</p>
+
+<p>This is the hinge of the whole derivation. Everything before this chapter is about how couplings organize themselves. Everything after is about what the presence of vortices <em>forces</em> the CLR to do. The fine structure constant lives in that forcing.</p>
+
+<p>Let's start where topology starts: with a loop.</p>
+
+<h2>What is a winding number?</h2>
+
+<p>There are two circles involved, and keeping them straight is the whole game. The first is the <em>loop you walk</em> &mdash; a path through space, closing back on itself. The second is the <em>phase circle</em> &mdash; the space of possible angles any one oscillator could be pointing in. Every point along the loop has an oscillator sitting on it, and that oscillator's phase is a point on the phase circle. So walking the loop traces a second walk, over on the phase circle.</p>
+
+<p>The <strong>winding number</strong> answers a simple question: as you walk once around the loop, how many times does the phase circle complete its own lap? If it wobbles and returns to where it started, the answer is <em>zero</em>. If it ticks off one full revolution of the phase circle by the time you finish the loop, the answer is <em>+1</em>. Two revolutions, <em>+2</em>. One backwards, <em>&minus;1</em>. The number is always an integer, because coming back to your starting point on the loop means coming back to the same spot on the phase circle &mdash; and you can only get there by completing a whole number of laps.</p>
+
+<div class="equation-block" id="eq-winding">
+  <div class="eq-display">
+    <span class="eq-symbol state" data-symbol="n">n</span>
+    &nbsp;=&nbsp;
+    <span class="eq-symbol op" data-symbol="factor">1/(2π)</span>
+    &nbsp;
+    <span class="eq-symbol struct" data-symbol="loopint">∮<sub>C</sub> dθ</span>
+    &nbsp;∈&nbsp;
+    <span class="eq-symbol param" data-symbol="integers">ℤ</span>
+  </div>
+  <p class="eq-prompt">Click any symbol to see what it means.</p>
+  <div class="eq-detail"></div>
+  <div class="eq-howitworks">
+    <span class="label">In words</span>
+    The compact notation on the left is the same thing spelled out: walk the loop <em>C</em>, sum up the tiny phase changes <em>dθ</em> you pick up along the way, and divide by <em>2π</em> to convert total phase rotation into number-of-full-revolutions. The answer is always a whole number, not because we rounded, but because the phase lives on a closed circle and walking a closed path in the phase circle <em>must</em> cover an integer number of laps. This is the topology of <em>π<sub>1</sub>(S¹) = ℤ</em>.
+  </div>
+</div>
+
+<p>Easier to see than to read. Below, the loop on the left has twelve oscillators spaced around it. Each one's colour is its phase &mdash; the hue directly encodes its angle on the phase circle, so red means <em>0</em>, yellow is a quarter turn ahead, green is half a turn, and so on, coming back to red after a full lap. On the right sits the phase circle itself. A slow walker travels around the loop; a pointer on the phase circle shows what phase the walker is seeing right now. Watch how many times the pointer laps its circle while the walker does <em>one</em> lap of its own.</p>
+
+<figure id="fig-winding">
+  <canvas id="canvas-winding" width="680" height="560"></canvas>
+  <div class="controls">
+    <button id="wind-p0" class="primary">n = 0 (aligned)</button>
+    <button id="wind-pp1">n = +1 (one turn)</button>
+    <button id="wind-pm1">n = &minus;1 (one turn backwards)</button>
+    <button id="wind-pp2">n = +2 (two turns)</button>
+    <button id="wind-oscillate">▶ Let them oscillate</button>
+    <button id="wind-wobble">Shake the phases</button>
+    <button id="wind-reset">Randomise</button>
+  </div>
+  <figcaption>
+    Two circles. <strong>Left</strong>: the loop you walk. Twelve oscillators arranged around it; colour encodes each oscillator's phase. A bright walker traverses the loop slowly. <strong>Drag any oscillator</strong> to change its phase (watch its colour rotate through the spectrum). <strong>Right</strong>: the phase circle itself. A pointer shows the phase at the walker's current position; a fading trail shows where the pointer has been since the walker started its current lap. The lap counter to the right of the phase circle ticks up every time the pointer completes a full turn &mdash; and ticks down if it goes backwards. <strong>When the walker finishes one lap of the loop, the counter's value is exactly the winding number.</strong>
+    <br><br>
+    Try <em>n = 0</em> first and watch the pointer wobble around but return home. Then <em>n = +1</em>: the pointer now makes one clean lap of the phase circle for every lap of the loop. The big <em>n</em> below counts it live.
+    <br><br>
+    Then play: drag individual oscillators, or hit <em>Shake the phases</em> to rattle them all at once. The pointer trail will writhe. The winding number won't move &mdash; unless you drag a single phase past half a turn relative to its neighbour, which forces an instantaneous jump across the phase circle. <em>That's</em> the moment winding can change.
+  </figcaption>
+</figure>
+
+<p class="aside">
+  <span class="label">A note on time</span>
+  A fair question at this point: <em>these are oscillators, so shouldn't their phases be turning?</em> Yes. What you've been seeing is the system in its <em>co-rotating frame</em> &mdash; a view where we subtract the shared rotation rate and show only the relative phases. Hit <em>Let them oscillate</em> on the figure above: the oscillators on the left now tick forward in the lab frame, and you'll see every cell's colour cycle continuously through the spectrum. That's the oscillation &mdash; oscillators oscillating. The phase circle on the right, though, keeps showing the topology: the pointer tracks the <em>spatial</em> winding only, unaffected by the common rotation. After every complete lap of the walker, the pointer has completed exactly <em>n</em> full turns, even while all twelve cells have been cycling around the colour wheel many times over. That is the precise sense in which the winding is a topological invariant: the oscillators can do whatever they like in time, and the integer <em>n</em> sits there unmoved.
+</p>
+
+<p>Winding is <em>quantized</em>. You cannot smoothly dial it from 0 to 1, or anywhere in between. It is <em>protected</em>: any continuous deformation of the phases leaves it alone. Noise cannot rub it out. Only a discontinuous event &mdash; some bond's phase difference crossing past half a turn &mdash; can flip it. That protection is what gives vortices their astonishing robustness. Once a vortex has formed somewhere on a lattice, you cannot get rid of it by gentle jostling; you have to shove phases past the cut, which costs real energy.</p>
+
+<h2>A vortex at rest</h2>
+
+<p>Now promote the loop to a 2D grid. A <strong>vortex</strong> is a configuration of phases on the plane where <em>every</em> loop surrounding a particular point has non-zero winding. The point is the <em>vortex core</em>. The phase there is undefined &mdash; there is no consistent angle you can assign the central site without breaking continuity with its neighbours. Around the core, the phases arrange themselves into a pinwheel: walk any path encircling the core and the phase turns through a full revolution by the time you return.</p>
+
+<p>Below is a 16&times;16 grid with a <em>+1</em> vortex seeded at its centre and then relaxed so the phases smooth out into a clean pinwheel. Each cell's colour is its phase, same mapping as before. The small burgundy mark in the middle is the vortex core &mdash; the one spot on the grid where no consistent phase can be assigned. On top of the grid sits a moveable rectangular loop (the burgundy outline). Drag it anywhere. The number above it is the winding computed by summing phase differences around its perimeter.</p>
+
+<p class="aside" style="margin-bottom: 1.2em;">
+  <span class="label">A note on geometry</span>
+  The real system we're building toward is the 3D diamond lattice, whose 2D slices are honeycomb. We're using a square grid here only because winding is easier to read off a rectangle and square lattices are what most readers have intuition for. The <em>topology</em> of what a vortex is, and of how winding is counted around a loop, is identical on any 2D lattice. The argument for <em>why diamond</em> and not any of the other possibilities is the whole story of Chapter 8.
+</p>
+
+<figure id="fig-vortex-anatomy">
+  <canvas id="canvas-vortex" width="680" height="540"></canvas>
+  <div class="controls">
+    <button id="vort-pos" class="primary">+1 vortex</button>
+    <button id="vort-neg">&minus;1 antivortex</button>
+    <button id="vort-pair">vortex / antivortex pair</button>
+    <button id="vort-uniform">uniform phases</button>
+    <button id="vort-shake">Smooth perturbation</button>
+    <button id="vort-bonds">Bonds: ON</button>
+    <button id="vort-reset">Reset</button>
+  </div>
+  <figcaption>
+    Drag the burgundy loop around the grid. Its winding number &mdash; the sum of phase differences along its perimeter, divided by <em>2π</em> &mdash; updates live and sits above it. <strong>Move the loop off the core:</strong> winding drops to zero. <strong>Shrink it to the tightest possible square around the core:</strong> still <em>+1</em>. <strong>Expand it to span the whole grid:</strong> still <em>+1</em>. The winding depends only on whether the loop encloses the defect &mdash; not on how big, what shape, or where precisely it sits. That is what it means to be topological.
+    <br><br>
+    The faint lines between adjacent cells are the <em>bonds</em> of the lattice; their darkness tracks how well-aligned the two cells are. On a relaxed +1 vortex every bond is only mildly tilted &mdash; the full 2π of winding has been spread as evenly as possible around the core, so no single bond bears a large share of the total. The bond picture will change dramatically in a moment when we turn the CLR loose on a grid that starts from noise rather than a pre-relaxed defect.
+    <br><br>
+    Hit <em>Smooth perturbation</em> to shake every phase by a little continuous noise. The colours shimmer, the bonds dim and brighten &mdash; and the winding on your loop holds fixed, as long as you haven't enclosed a new defect. This is topological protection in action.
+  </figcaption>
+</figure>
+
+<h3>Vortex and antivortex</h3>
+
+<p>The buttons offer two other configurations worth walking through. A <strong>&minus;1 antivortex</strong> is a vortex of opposite sign: walk a loop around it and the phase winds the <em>other</em> way, through one full turn backwards. The rainbow still pinwheels around the core, only now it cycles the opposite direction. Same topological object, opposite charge.</p>
+
+<p>The <strong>vortex / antivortex pair</strong> is where the physics starts showing its hand. On a finite region with uniform boundary conditions, the total winding of the whole region is fixed at zero. Sum the winding of every plaquette on the grid and interior contributions cancel in pairs; what survives is just the winding around the outer boundary, which we've set to zero. So any vortex that shows up <em>must</em> come with an antivortex as a partner. You cannot make one without the other. They are born together, and when they eventually meet they annihilate together &mdash; the <em>+1</em> and the <em>−1</em> collide, their windings cancel, and the stored topological energy is released as a burst of phase waves.</p>
+
+<p>Click the pair preset and try it with the loop. Enclose just the <em>+</em> core &mdash; winding reads <em>+1</em>. Move the loop over to enclose just the <em>−</em> core &mdash; <em>−1</em>. Then grow the loop until it encloses <em>both</em> cores at once &mdash; it reads <em>0</em>, exactly. From outside the pair, the two defects cancel each other. There is no topology there at all.</p>
+
+<p>This pairing law is going to matter in a moment. When vortices nucleate out of random noise, they do not appear one at a time. They emerge as balanced pairs &mdash; always one <em>+1</em> with one <em>−1</em>, always conserving the total. The question the CLR is about to face is not <em>can a vortex exist</em>, but <em>once a pair has nucleated, will the Shannon channel keep the pair alive, or will it destroy it</em>.</p>
+
+<h2>Nucleation from noise</h2>
+
+<p>We are about to do something that feels almost magical the first time you see it. Start the grid with completely random phases and a small, random initial coupling on every bond &mdash; no structure at all. Run the Kuramoto equation for the phases and the Shannon part of the CLR for the couplings, in lockstep. Without any guidance or seeding, <em>vortices form</em>. They are not put there. They emerge because the phases, trying to align locally with their neighbours, find themselves in a pattern whose contradictions can only be resolved by winding.</p>
+
+<p>And then, a few thousand steps later, something else happens. The same CLR that let the vortices form now starts to <em>kill them</em>. You can watch it happen.</p>
+
+<figure id="fig-nucleation">
+  <canvas id="canvas-nucleation" width="680" height="580"></canvas>
+  <div class="controls">
+    <button id="nuc-reset" class="primary">Reset (new random seed)</button>
+    <button id="nuc-play">▶ Play</button>
+    <button id="nuc-step">Step forward</button>
+    <button id="nuc-fast">Fast forward</button>
+  </div>
+  <figcaption>
+    A 20&times;20 grid with periodic boundaries. Every oscillator starts with a random phase; every bond starts with a small random coupling. Hit <em>Play</em> and watch four things happen in sequence:
+    <br><br>
+    <strong>(1)&nbsp;Random soup.</strong> Colours are scattered, bonds are thin and faint. The system has no structure at all.
+    <br>
+    <strong>(2)&nbsp;Local alignment.</strong> Within a few hundred steps, neighbours start pulling each other into agreement. Bonds where the pull succeeds thicken (the Shannon channel rewards alignment); bonds where it doesn't begin to fade. The grid starts to show organised regions of colour.
+    <br>
+    <strong>(3)&nbsp;Vortex pairs nucleate.</strong> Wherever the random initial conditions happened to contain enough phase twist in one spot, the alignment cannot resolve it smoothly. A <em>+1</em> and <em>−1</em> pair pop out &mdash; you'll see their cores marked live as small burgundy and blue circles. They come in pairs, as we said they must.
+    <br>
+    <strong>(4)&nbsp;The core bonds die.</strong> Around each vortex the phase differences across nearby bonds exceed the Shannon threshold (<em>cos Δθ &lt; 4/r</em>). Those bonds' couplings decay to zero. Watch the ring of black lines around each core thin and fade. When every bond through the core is dead, the grid is locally disconnected; the vortex has been pruned off from the rest of the lattice, the I<sub>phase</sub> trace crashes, and coherence capital collapses.
+    <br><br>
+    The same rule built the vortex and then destroyed it. The Shannon channel knows how to reward alignment but has no way of knowing that a vortex is a useful object to protect. That is the problem the Fiedler channel is about to solve.
+  </figcaption>
+</figure>
+
+<h2>The Fiedler channel saves the vortex</h2>
+
+<p>Before the figure, the picture to hold in your head. A vortex is a <em>ring</em> of phases winding by 2π around a central point. Near that central point, the phases cannot agree: neighbouring oscillators have large phase differences, and the Shannon channel looks at those mismatched bonds and rules them <em>unfit</em>. It kills them. So Shannon, acting alone, carves out a <em>dead hole</em> at each vortex core &mdash; a small region where the graph has no live bonds at all. And that hole wants to spread: its edges are still where the phase field is stressed. Left unchecked, the damage radiates outward and eats away more and more of the lattice.</p>
+
+<p>The Fiedler channel's job is to stop the spread. It looks at the graph's algebraic connectivity &mdash; the Laplacian's second eigenvector <em>v</em><sub>2</sub> &mdash; which lights up wherever the graph is about to sever. Then it pushes coupling back into the bonds at that boundary, keeping them barely alive. The result is a <em>protective ring</em> of weak bonds around the would-be hole: enough to keep the graph connected, but not enough to flatten the vortex's phase winding (which is what we want to preserve for the BKT physics).</p>
+
+<p>We run it twice, side by side, same initial conditions. The left grid uses the Shannon channel alone. The right grid uses the full CLR &mdash; Shannon plus Fiedler.</p>
+
+<figure id="fig-fiedler-save">
+  <canvas id="canvas-fiedler" width="680" height="640"></canvas>
+  <div class="controls">
+    <button id="fie-reset" class="primary">Reset</button>
+    <button id="fie-play">▶ Play</button>
+    <button id="fie-fast">Fast forward</button>
+  </div>
+  <figcaption>
+    Two 32&times;32 periodic grids, same <em>atan2</em> pinwheel seed. Both evolve Kuramoto phases + Shannon-CLR. The right grid adds the Fiedler channel.
+    <br><br>
+    <strong>Reading the picture.</strong>
+    Cell <em>colour</em> = oscillator phase (red, yellow-green, cyan, magenta, round to red). Cell <em>darkness</em> = local bond health; a vortex core where bonds have died shows up as a dark blob carved out of the rainbow.
+    <em>Black lines</em> are alive bulk bonds.
+    <em>Orange dashes</em> are weak bonds &mdash; the Fiedler-maintained protective ring that prevents the core from severing.
+    <em>Red X</em> marks are dead bonds.
+    <em>Burgundy / blue discs</em> mark ± vortex charges on plaquettes.
+    <br><br>
+    <strong>Left (Shannon only):</strong> red Xs bloom at each vortex core, the cells around them darken, a dark hole forms and stabilises. The ± markers stay pinned &mdash; dead bonds are the walls trapping them.
+    <strong>Right (Shannon + Fiedler):</strong> no dark hole. An orange ring of weak bonds sits where the hole would be, held just above the death threshold. Because nothing pins them, the ± markers are free to drift across the intact graph; the rainbow compresses to a few pixels at each marker while the rest of the lattice synchronises. The ± counts stay at <em>+2 / −2</em>.
+    <br><br>
+    Let the Fiedler run long enough, however, and the +1 and −1 vortices will drift together through their mutual 2D logarithmic attraction and annihilate around step 40,000, collapsing the grid to uniform phase. <strong>This is not Fiedler failing &mdash; it is a feature of 2D.</strong> Point defects in 2D diffuse and always eventually find their partners. Filter 5 of the diamond-selection theorem (Chapter 8) rules 2D out <em>precisely for this reason</em>: no physics worth deriving can live on a lattice where the topological constraint dissolves on finite time. We need at least 3D, where vortices become lines instead of points &mdash; and lines cannot annihilate without collapsing along their entire length simultaneously. That's the bridge to Chapter 8.
+  </figcaption>
+</figure>
+
+<p>The Fiedler vector <em>v</em><sub>2</sub> is the smooth function on the graph that minimises the weighted gradient subject to orthogonality with the constant mode &mdash; the direction along which the graph is easiest to cut. On a uniform lattice it is a smooth wave; near a would-be bottleneck it concentrates dramatically on the cut. The CLR reads that eigenvector and uses the squared gradient <em>(v<sub>i</sub> − v<sub>j</sub>)</em><sup>2</sup> as a per-bond structural score: bonds at bottlenecks score high, bulk bonds score near-zero, and after mean-subtraction the total push is exactly zero. Everything it adds somewhere, it subtracts somewhere else.</p>
+
+<h2>Where this leaves us</h2>
+
+<p>Two things have to happen before the α derivation can fire, and we have just seen that both are genuine requirements, not assumptions.</p>
+
+<p><strong>First, the lattice must be at least three-dimensional.</strong> Our 2D demo produced the right vortex dynamics for the first thirty thousand steps &mdash; Fiedler held the cores alive, Shannon tried to kill them, the contest resolved exactly as the paper claims. And then the vortex pair drifted into each other and annihilated. Point defects in 2D <em>always</em> eventually find their partners; the topological constraint dissolves in finite time. In 3D, vortices are <em>lines</em> (the topology is <em>π<sub>1</sub>(S¹) = ℤ</em> on circles transverse to a line rather than on spheres around a point). Lines cannot collide pointwise; they have to collapse along their whole length, which costs energy scaling with length. That is why the paper needs a 3D lattice &mdash; and we'll see in Chapter 8 that the five independent filters it must satisfy select <em>diamond</em> uniquely.</p>
+
+<p><strong>Second, the CLR needs a ceiling.</strong> The CLR wants K as high as possible. The vortex we saved cannot survive above a specific critical coupling called <em>K<sub>BKT</sub> = 2/π</em>: above it, the vortex unbinds from its partner and the topology is gone; below it, stable. So the CLR climbs and the vortex caps, and the equilibrium sits <em>exactly at the wall</em>. That meeting point is where <em>α</em> lives. Chapter 9 derives the value.</p>
+
+<nav class="nav-links">
+  <a href="06-plm-npd.html" class="prev">Phase-locked modes</a>
+  <a href="../index.html" class="up">contents</a>
+  <a href="08-diamond.html" class="next">Why the diamond lattice</a>
+</nav>
+
+</div>
+<script type="module">
+import { setupHiDPICanvas, wireEquation, runWhenVisible, R0, K_BULK } from '../js/common.js';
+import { computeFiedler, gridLaplacian, gridFiedlerSensitivity } from '../js/fiedler.js';
+
+// --- Equation block ----------------------------------------------------
+
+wireEquation('eq-winding', {
+  n: {
+    name: 'Winding number n',
+    pronounce: 'n',
+    description: 'The integer count of how many times the phase wraps around the full circle as you walk once around the closed loop <em>C</em>. It is defined only modulo the choice of orientation: reversing the walking direction flips the sign.'
+  },
+  factor: {
+    name: 'Normalization 1/(2π)',
+    pronounce: 'one over two pi',
+    description: 'Converts the total phase accumulation (measured in radians) into the number of full revolutions. A complete turn is <em>2π</em> radians, so dividing by <em>2π</em> gives whole turns.'
+  },
+  loopint: {
+    name: 'Loop integral of dθ',
+    pronounce: 'contour integral of d theta',
+    description: 'Walk around the loop <em>C</em> once, summing the small phase change <em>dθ</em> at every step. On a smooth field this is an integral; on the lattice it is the finite sum of the nearest-neighbor phase differences around the loop.'
+  },
+  integers: {
+    name: 'The integers ℤ',
+    pronounce: 'the integers, zed or zee',
+    description: 'The result is <em>always</em> an integer. This is not an approximation. The phase lives on a circle <em>S¹</em>, and the first homotopy group of the circle is <em>ℤ</em>: the set of inequivalent ways to walk a loop on the circle is exactly the integers, labelled by how many times you went around.'
+  },
+});
+
+// --- FIGURE 1: two circles — the loop and the phase circle S^1 -------
+(() => {
+  const canvas = document.getElementById('canvas-winding');
+  if (!canvas) return;
+  const W = 680, H = 560;
+  const ctx = setupHiDPICanvas(canvas, W, H);
+
+  // Geometry
+  const N = 12;                          // cells around the loop
+  const loopCx = 160, loopCy = 230, loopR = 118;
+  const cellR = 14;
+  const phiCx = 510, phiCy = 230, phiR = 95;
+
+  // State
+  let phases = new Array(N).fill(0);
+  let walker = 0;                        // ∈ [0, 1): fraction around the loop
+  const walkerSpeed = 1 / 480;           // ≈ 8 sec/lap at 60 fps
+  let accumPhase = 0;                    // unwrapped phase seen so far this lap
+  let accumStart = 0;                    // phase at s=0 of current lap (reference)
+  let prevPhaseAtWalker = 0;             // previous sampled phase (for unwrap)
+  let pointerLaps = 0;                   // full turns of pointer so far this lap
+  let lastFinishedWinding = 0;           // winding recorded at last lap closure
+  let trail = [];                        // {angle, age} on phase circle
+  let wobbleAmp = 0;
+  let wobbleTimer = 0;
+  let phaseBase = phases.slice();
+  let oscillating = false;
+  const omegaCommon = 0.011;             // rad/frame — shared intrinsic frequency
+  let commonRotOffset = 0;               // total common rotation accumulated
+
+  // --- Helpers ---------------------------------------------------------
+
+  function wrapPi(x) {
+    return ((x + Math.PI) % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI) - Math.PI;
+  }
+
+  function cellPos(i) {
+    const a = -Math.PI / 2 + (2 * Math.PI * i) / N;
+    return [loopCx + loopR * Math.cos(a), loopCy + loopR * Math.sin(a)];
+  }
+
+  function walkerPos(s) {
+    const a = -Math.PI / 2 + 2 * Math.PI * s;
+    return [loopCx + loopR * Math.cos(a), loopCy + loopR * Math.sin(a)];
+  }
+
+  // Phase at continuous walker position — interpolate with shortest-path
+  function phaseAt(s) {
+    const idxF = s * N;
+    const i0 = Math.floor(idxF) % N;
+    const i1 = (i0 + 1) % N;
+    const t = idxF - Math.floor(idxF);
+    const d = wrapPi(phases[i1] - phases[i0]);
+    return phases[i0] + t * d;
+  }
+
+  // Discrete (instant) winding — ground truth from the phase array
+  function discreteWinding() {
+    let s = 0;
+    for (let i = 0; i < N; i++) s += wrapPi(phases[(i + 1) % N] - phases[i]);
+    return Math.round(s / (2 * Math.PI));
+  }
+
+  // Phase → hue (0..360). θ = 0 → red, π/2 → green, π → cyan, −π/2 → magenta-ish
+  function phaseToHue(th) {
+    const deg = ((th * 180 / Math.PI) % 360 + 360) % 360;
+    return deg;
+  }
+  function phaseToColor(th, l = 55) {
+    return `hsl(${phaseToHue(th).toFixed(1)}, 75%, ${l}%)`;
+  }
+
+  function setPreset(n) {
+    for (let i = 0; i < N; i++) phases[i] = (2 * Math.PI * n * i) / N;
+    resetAccumulators();
+  }
+
+  function resetAccumulators() {
+    walker = 0;
+    trail = [];
+    accumPhase = 0;
+    accumStart = phaseAt(0);
+    prevPhaseAtWalker = accumStart;
+    pointerLaps = 0;
+  }
+
+  // --- Drawing ---------------------------------------------------------
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = '#f5f0e4';
+    ctx.fillRect(0, 0, W, H);
+
+    drawLoop();
+    drawPhaseCircle();
+    drawCenterConnector();
+    drawReadout();
+  }
+
+  function drawLoop() {
+    // Title
+    ctx.fillStyle = '#2a2a2a';
+    ctx.font = '13px "Charter", serif';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'alphabetic';
+    ctx.fillText('the loop you walk', 30, 28);
+    ctx.fillStyle = '#888';
+    ctx.font = 'italic 11.5px "Charter", serif';
+    ctx.fillText('drag any oscillator to rotate its phase', 30, 45);
+
+    // Guide ring
+    ctx.strokeStyle = '#d8d4c8';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([3, 4]);
+    ctx.beginPath();
+    ctx.arc(loopCx, loopCy, loopR, 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Cells
+    for (let i = 0; i < N; i++) {
+      const [x, y] = cellPos(i);
+      // Outer stroke — darker if cell is being dragged
+      ctx.fillStyle = phaseToColor(phases[i]);
+      ctx.strokeStyle = (i === draggingIdx) ? '#2a2a2a' : '#55504a';
+      ctx.lineWidth = (i === draggingIdx) ? 2.5 : 1.2;
+      ctx.beginPath();
+      ctx.arc(x, y, cellR, 0, 2 * Math.PI);
+      ctx.fill();
+      ctx.stroke();
+
+      // Small phase tick — a short line pointing in the phase direction
+      const th = phases[i];
+      const tx = x + (cellR - 4) * Math.cos(th);
+      const ty = y + (cellR - 4) * Math.sin(th);
+      ctx.strokeStyle = 'rgba(0,0,0,0.65)';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+      ctx.lineTo(tx, ty);
+      ctx.stroke();
+    }
+
+    // Walker — a bright pip on the loop between cells
+    const [wx, wy] = walkerPos(walker);
+    // Halo
+    ctx.fillStyle = 'rgba(217, 114, 54, 0.25)';
+    ctx.beginPath();
+    ctx.arc(wx, wy, 14, 0, 2 * Math.PI);
+    ctx.fill();
+    // Core
+    ctx.fillStyle = '#d97236';
+    ctx.strokeStyle = '#fdfaf3';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(wx, wy, 7, 0, 2 * Math.PI);
+    ctx.fill();
+    ctx.stroke();
+
+    // Arrow under walker pointing forward
+    const fwdA = -Math.PI / 2 + 2 * Math.PI * walker + Math.PI / 2;
+    const ahX = wx + 14 * Math.cos(fwdA);
+    const ahY = wy + 14 * Math.sin(fwdA);
+    ctx.strokeStyle = '#d97236';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(wx + 8 * Math.cos(fwdA), wy + 8 * Math.sin(fwdA));
+    ctx.lineTo(ahX, ahY);
+    ctx.stroke();
+
+    // Central caption — walker progress
+    ctx.fillStyle = '#888';
+    ctx.font = 'italic 11px "Charter", serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('walker has completed', loopCx, loopCy - 8);
+    ctx.fillStyle = '#d97236';
+    ctx.font = '600 17px "SF Mono", monospace';
+    ctx.fillText(walker.toFixed(2) + ' / 1.00', loopCx, loopCy + 12);
+    ctx.fillStyle = '#888';
+    ctx.font = 'italic 10px "Charter", serif';
+    ctx.fillText('loops', loopCx, loopCy + 28);
+  }
+
+  function drawPhaseCircle() {
+    // Title
+    ctx.fillStyle = '#2a2a2a';
+    ctx.font = '13px "Charter", serif';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'alphabetic';
+    ctx.fillText('the phase circle S¹', 392, 28);
+    ctx.fillStyle = '#888';
+    ctx.font = 'italic 11.5px "Charter", serif';
+    ctx.fillText('where the walker\u2019s phase lives', 392, 45);
+
+    // Background fill — rainbow-ish ring so the hue-encoding is visible
+    for (let k = 0; k < 60; k++) {
+      const a1 = -Math.PI / 2 + (2 * Math.PI * k) / 60;
+      const a2 = -Math.PI / 2 + (2 * Math.PI * (k + 1)) / 60;
+      // The phase at the top (−π/2 from the centre, so drawn at angle θ measured from
+      // centre, translated so θ=0 is at right) — easier: the hue at polar angle α.
+      const th = a1 + Math.PI / 2;  // map canvas angle back to phase
+      ctx.strokeStyle = phaseToColor(th, 72);
+      ctx.lineWidth = 14;
+      ctx.beginPath();
+      ctx.arc(phiCx, phiCy, phiR, a1, a2);
+      ctx.stroke();
+    }
+
+    // Guide outline
+    ctx.strokeStyle = '#55504a';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.arc(phiCx, phiCy, phiR + 7, 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(phiCx, phiCy, phiR - 7, 0, 2 * Math.PI);
+    ctx.stroke();
+
+    // Tick labels at θ = 0, π/2, π, −π/2
+    const tickLabels = [['0', 0], ['π/2', Math.PI / 2], ['±π', Math.PI], ['−π/2', -Math.PI / 2]];
+    ctx.fillStyle = '#2a2a2a';
+    ctx.font = '600 10px "SF Mono", monospace';
+    for (const [t, th] of tickLabels) {
+      const a = th - Math.PI / 2;  // convert phase to canvas angle
+      const lx = phiCx + (phiR + 22) * Math.cos(a);
+      const ly = phiCy + (phiR + 22) * Math.sin(a);
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(t, lx, ly);
+    }
+
+    // Trail of pointer
+    for (const p of trail) {
+      const a = p.angle - Math.PI / 2;
+      const px = phiCx + phiR * Math.cos(a);
+      const py = phiCy + phiR * Math.sin(a);
+      const alpha = Math.max(0, 1 - p.age / 120);
+      ctx.fillStyle = `rgba(125, 45, 79, ${0.6 * alpha})`;
+      ctx.beginPath();
+      ctx.arc(px, py, 3 + alpha * 1.5, 0, 2 * Math.PI);
+      ctx.fill();
+    }
+
+    // The pointer — current phase at walker, in the co-rotating frame
+    // (so it matches the "full turns" counter below, which is spatial only).
+    const thNow = displayPhase(walker);
+    const aNow = thNow - Math.PI / 2;
+    const ptX = phiCx + phiR * Math.cos(aNow);
+    const ptY = phiCy + phiR * Math.sin(aNow);
+
+    // Line from centre to pointer
+    ctx.strokeStyle = '#7d2d4f';
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    ctx.moveTo(phiCx, phiCy);
+    ctx.lineTo(ptX, ptY);
+    ctx.stroke();
+    // Pointer head
+    ctx.fillStyle = '#7d2d4f';
+    ctx.strokeStyle = '#fdfaf3';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.arc(ptX, ptY, 8, 0, 2 * Math.PI);
+    ctx.fill();
+    ctx.stroke();
+
+    // Central caption — pointer laps
+    ctx.fillStyle = '#888';
+    ctx.font = 'italic 11px "Charter", serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('pointer has completed', phiCx, phiCy - 8);
+    ctx.fillStyle = '#7d2d4f';
+    ctx.font = '600 17px "SF Mono", monospace';
+    const lapsFloat = accumPhase / (2 * Math.PI);
+    const lapsStr = (lapsFloat >= 0 ? '+' : '') + lapsFloat.toFixed(2);
+    ctx.fillText(lapsStr, phiCx, phiCy + 12);
+    ctx.fillStyle = '#888';
+    ctx.font = 'italic 10px "Charter", serif';
+    ctx.fillText('full turns', phiCx, phiCy + 28);
+  }
+
+  function drawCenterConnector() {
+    // A light "equals" hint between the two completions — no, actually a subtle hint
+    // that the two counters should match at lap end (for n=1) or diverge (for n=0).
+    const y = loopCy;
+    ctx.strokeStyle = '#c8c0ad';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([2, 4]);
+    ctx.beginPath();
+    ctx.moveTo(loopCx + loopR + 28, y);
+    ctx.lineTo(phiCx - phiR - 28, y);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Small arrow in middle, "mapped to"
+    const mx = (loopCx + phiCx) / 2;
+    ctx.fillStyle = '#888';
+    ctx.font = 'italic 11px "Charter", serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'bottom';
+    ctx.fillText('maps onto', mx, y - 6);
+  }
+
+  function drawReadout() {
+    const n = discreteWinding();
+    const cx = W / 2;
+
+    // Frame
+    ctx.fillStyle = '#fdfaf3';
+    ctx.strokeStyle = '#c8c0ad';
+    ctx.lineWidth = 1;
+    ctx.fillRect(180, 400, 320, 140);
+    ctx.strokeRect(180, 400, 320, 140);
+
+    // Label
+    ctx.fillStyle = '#555';
+    ctx.font = '11px "Charter", serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'alphabetic';
+    ctx.fillText('W I N D I N G   N U M B E R', cx, 423);
+
+    const absn = Math.abs(n);
+    let color;
+    if (absn === 0) color = '#a8a39a';
+    else if (absn === 1) color = '#d97236';
+    else if (absn === 2) color = '#7d2d4f';
+    else color = '#2a2a2a';
+
+    ctx.fillStyle = color;
+    ctx.font = '600 78px "Latin Modern Math", Georgia, serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText((n > 0 ? '+' : '') + String(n), cx, 480);
+
+    ctx.font = 'italic 11px "Charter", serif';
+    ctx.fillStyle = '#888';
+    ctx.textBaseline = 'alphabetic';
+    const msg = absn === 0 ? 'pointer returns home after one loop'
+              : absn === 1 ? 'pointer completes one full turn per loop'
+              : absn === 2 ? 'pointer completes two full turns per loop'
+              : 'high winding — rare in physics, common in math';
+    ctx.fillText(msg, cx, 522);
+  }
+
+  // --- Walker update ---------------------------------------------------
+
+  function advance() {
+    const prevW = walker;
+    const newW = walker + walkerSpeed;
+
+    if (newW >= 1) {
+      // Closing the lap — delta from prevW to position 0 (equivalently s=1).
+      // Use current-time phases on both endpoints so common rotation cancels.
+      const dthLast = wrapPi(phaseAt(0) - phaseAt(prevW));
+      accumPhase += dthLast;
+      lastFinishedWinding = Math.round(accumPhase / (2 * Math.PI));
+      walker = newW - 1;
+      accumPhase = 0;
+      trail = [];
+    } else {
+      // Spatial (Δs) phase difference at current time — common rotation cancels.
+      const dth = wrapPi(phaseAt(newW) - phaseAt(prevW));
+      accumPhase += dth;
+      walker = newW;
+    }
+
+    // Trail snapshot (co-rotating frame, matches pointer on right panel)
+    trail.push({ angle: phaseAt(walker) - commonRotOffset, age: 0 });
+    for (const p of trail) p.age += 1;
+    while (trail.length > 180) trail.shift();
+  }
+
+  // --- Interaction ------------------------------------------------------
+
+  let draggingIdx = -1;
+
+  function eventPos(e) {
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = W / rect.width;
+    const scaleY = H / rect.height;
+    const cx = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+    const cy = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
+    return [cx * scaleX, cy * scaleY];
+  }
+
+  function hitTest(mx, my) {
+    let best = -1, bestD = 1e9;
+    for (let i = 0; i < N; i++) {
+      const [x, y] = cellPos(i);
+      const d = Math.hypot(mx - x, my - y);
+      if (d < cellR + 14 && d < bestD) {
+        bestD = d;
+        best = i;
+      }
+    }
+    return best;
+  }
+
+  function onDown(e) {
+    const [mx, my] = eventPos(e);
+    const idx = hitTest(mx, my);
+    if (idx >= 0) {
+      draggingIdx = idx;
+      e.preventDefault();
+      canvas.style.cursor = 'grabbing';
+      onMove(e);
+    }
+  }
+
+  function onMove(e) {
+    if (draggingIdx < 0) {
+      const [mx, my] = eventPos(e);
+      canvas.style.cursor = hitTest(mx, my) >= 0 ? 'grab' : 'default';
+      return;
+    }
+    const [mx, my] = eventPos(e);
+    const [x, y] = cellPos(draggingIdx);
+    phases[draggingIdx] = Math.atan2(my - y, mx - x);
+    e.preventDefault();
+  }
+
+  function onUp() {
+    draggingIdx = -1;
+    canvas.style.cursor = 'default';
+  }
+
+  canvas.addEventListener('mousedown', onDown);
+  window.addEventListener('mousemove', onMove);
+  window.addEventListener('mouseup', onUp);
+  canvas.addEventListener('touchstart', onDown, { passive: false });
+  window.addEventListener('touchmove', onMove, { passive: false });
+  window.addEventListener('touchend', onUp);
+
+  // Buttons
+  document.getElementById('wind-p0').addEventListener('click', () => { setPreset(0); wobbleAmp = 0; });
+  document.getElementById('wind-pp1').addEventListener('click', () => { setPreset(1); wobbleAmp = 0; });
+  document.getElementById('wind-pm1').addEventListener('click', () => { setPreset(-1); wobbleAmp = 0; });
+  document.getElementById('wind-pp2').addEventListener('click', () => { setPreset(2); wobbleAmp = 0; });
+  document.getElementById('wind-reset').addEventListener('click', () => {
+    for (let i = 0; i < N; i++) phases[i] = Math.random() * 2 * Math.PI - Math.PI;
+    wobbleAmp = 0;
+    resetAccumulators();
+  });
+  document.getElementById('wind-wobble').addEventListener('click', () => {
+    wobbleAmp = 1.0;
+    wobbleTimer = 0;
+    phaseBase = phases.slice();
+  });
+  const oscBtn = document.getElementById('wind-oscillate');
+  oscBtn.addEventListener('click', () => {
+    oscillating = !oscillating;
+    oscBtn.textContent = oscillating ? '■ Freeze (co-rotating frame)' : '▶ Let them oscillate';
+    oscBtn.classList.toggle('primary', oscillating);
+  });
+
+  function step() {
+    if (wobbleAmp > 0 && draggingIdx < 0) {
+      wobbleTimer += 1;
+      const amp = 0.22 * wobbleAmp;
+      for (let i = 0; i < N; i++) {
+        phases[i] = phaseBase[i]
+                  + amp * Math.sin(wobbleTimer * 0.06 + i * 0.9)
+                  + amp * 0.6 * Math.sin(wobbleTimer * 0.11 + i * 1.7);
+      }
+      wobbleAmp *= 0.996;
+      if (wobbleAmp < 0.02) { wobbleAmp = 0; }
+    }
+    if (oscillating && draggingIdx < 0) {
+      // Common rotation: every phase advances by the same ω·dt.
+      // LEFT panel (cells) shows the lab-frame hue cycle — that's the oscillation.
+      // RIGHT panel subtracts commonRotOffset so the pointer tracks the spatial
+      // winding only, keeping it consistent with the "full turns" counter.
+      for (let i = 0; i < N; i++) phases[i] += omegaCommon;
+      phaseBase = phaseBase.map((v) => v + omegaCommon);
+      commonRotOffset += omegaCommon;
+    }
+    advance();
+    draw();
+  }
+
+  // Phase as displayed in the RIGHT panel (co-rotating frame).
+  function displayPhase(s) {
+    return phaseAt(s) - commonRotOffset;
+  }
+
+  setPreset(0);
+  runWhenVisible(canvas, step);
+})();
+
+// --- FIGURE 2: seeded 2D vortex anatomy ------------------------------
+(() => {
+  const canvas = document.getElementById('canvas-vortex');
+  if (!canvas) return;
+  const W = 680, H = 540;
+  const ctx = setupHiDPICanvas(canvas, W, H);
+
+  const L = 16;
+  const cellPx = 26;
+  const gridX0 = 40, gridY0 = 60;
+  const gridW = L * cellPx;
+  const gridH = L * cellPx;
+
+  // Phase data
+  let phases = new Float64Array(L * L);
+  let noise = new Float64Array(L * L);   // for the shake animation
+  let shakeT = 0;
+  let shakeAmp = 0;
+  let showBonds = true;
+
+  // Vortex core positions — updated by each seeder so we can mark them.
+  // Each entry: { x, y, charge }. (x, y) in fractional cell coords.
+  let cores = [];
+
+  // Loop state — half-widths in cell units; centre is in cell units too
+  const loop = { cx: 7.5, cy: 7.5, hw: 3, hh: 3 };
+
+  // --- Utilities ------------------------------------------------------
+
+  function wrapPi(x) {
+    return ((x + Math.PI) % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI) - Math.PI;
+  }
+
+  function idx(x, y) { return y * L + x; }
+
+  function phaseColor(th, l = 55) {
+    const deg = ((th * 180 / Math.PI) % 360 + 360) % 360;
+    return `hsl(${deg.toFixed(1)}, 75%, ${l}%)`;
+  }
+
+  function totalPhase(x, y) {
+    return phases[idx(x, y)] + noise[idx(x, y)];
+  }
+
+  // --- Seeders --------------------------------------------------------
+
+  // Relax the seeded pattern with a few Kuramoto steps. The winding is
+  // preserved (all single-bond Δθ stay well below π during relaxation),
+  // and the phase field smooths out into a much cleaner pinwheel —
+  // no visible branch-cut seam from the atan2 initial condition.
+  function relaxKuramoto(iters = 260, K = 1.0, dt = 0.06) {
+    const next = new Float64Array(L * L);
+    for (let it = 0; it < iters; it++) {
+      for (let y = 0; y < L; y++) {
+        for (let x = 0; x < L; x++) {
+          const ii = idx(x, y);
+          let f = 0;
+          if (x + 1 < L) f += Math.sin(phases[idx(x + 1, y)] - phases[ii]);
+          if (x - 1 >= 0) f += Math.sin(phases[idx(x - 1, y)] - phases[ii]);
+          if (y + 1 < L) f += Math.sin(phases[idx(x, y + 1)] - phases[ii]);
+          if (y - 1 >= 0) f += Math.sin(phases[idx(x, y - 1)] - phases[ii]);
+          next[ii] = phases[ii] + dt * K * f;
+        }
+      }
+      phases.set(next);
+    }
+  }
+
+  function seedVortex(charge) {
+    const cx = (L - 1) / 2, cy = (L - 1) / 2;
+    for (let y = 0; y < L; y++) {
+      for (let x = 0; x < L; x++) {
+        phases[idx(x, y)] = charge * Math.atan2(y - cy, x - cx);
+      }
+    }
+    relaxKuramoto();
+    cores = [{ x: cx, y: cy, charge }];
+    noise.fill(0);
+  }
+
+  function seedVortexPair() {
+    const cyT = (L - 1) / 2;
+    const cx1 = L / 2 - 3, cx2 = L / 2 + 3;
+    for (let y = 0; y < L; y++) {
+      for (let x = 0; x < L; x++) {
+        const a = Math.atan2(y - cyT, x - cx1);
+        const b = Math.atan2(y - cyT, x - cx2);
+        phases[idx(x, y)] = a - b;
+      }
+    }
+    relaxKuramoto();
+    cores = [
+      { x: cx1, y: cyT, charge: +1 },
+      { x: cx2, y: cyT, charge: -1 },
+    ];
+    noise.fill(0);
+  }
+
+  function seedUniform() {
+    for (let i = 0; i < L * L; i++) phases[i] = 0;
+    cores = [];
+    noise.fill(0);
+  }
+
+  // --- Loop path & winding --------------------------------------------
+
+  // Returns the sequence of integer cell coordinates walked clockwise around
+  // the rectangular loop's perimeter. Uses round() on centre ± hw.
+  function loopPath() {
+    const x0 = Math.max(0, Math.round(loop.cx - loop.hw));
+    const x1 = Math.min(L - 1, Math.round(loop.cx + loop.hw));
+    const y0 = Math.max(0, Math.round(loop.cy - loop.hh));
+    const y1 = Math.min(L - 1, Math.round(loop.cy + loop.hh));
+    const p = [];
+    for (let x = x0; x < x1; x++) p.push([x, y0]);
+    for (let y = y0; y < y1; y++) p.push([x1, y]);
+    for (let x = x1; x > x0; x--) p.push([x, y1]);
+    for (let y = y1; y > y0; y--) p.push([x0, y]);
+    return p;
+  }
+
+  function computeLoopWinding() {
+    const p = loopPath();
+    if (p.length < 4) return 0;
+    let sum = 0;
+    for (let i = 0; i < p.length; i++) {
+      const [xa, ya] = p[i];
+      const [xb, yb] = p[(i + 1) % p.length];
+      sum += wrapPi(totalPhase(xb, yb) - totalPhase(xa, ya));
+    }
+    return Math.round(sum / (2 * Math.PI));
+  }
+
+  // --- Drawing --------------------------------------------------------
+
+  function cellToPx(cx, cy) {
+    return [gridX0 + cx * cellPx, gridY0 + cy * cellPx];
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = '#f5f0e4';
+    ctx.fillRect(0, 0, W, H);
+
+    drawTitles();
+    drawGrid();
+    if (showBonds) drawBonds();
+    drawCores();
+    drawLoop();
+    drawReadout();
+  }
+
+  function drawCores() {
+    for (const c of cores) {
+      const [px, py] = cellToPx(c.x + 0.5, c.y + 0.5);
+      const color = c.charge > 0 ? '#7d2d4f' : '#2a5f8f';
+      // Ring + crosshair
+      ctx.fillStyle = '#fdfaf3';
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(px, py, 7, 0, 2 * Math.PI);
+      ctx.fill();
+      ctx.stroke();
+      // Tiny charge glyph
+      ctx.fillStyle = color;
+      ctx.font = '600 11px "SF Mono", monospace';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(c.charge > 0 ? '+' : '−', px, py + 0.5);
+      // Label below, but only on the very first draw frame feels heavy —
+      // always draw, short text.
+      ctx.fillStyle = color;
+      ctx.font = '600 10px "Charter", serif';
+      ctx.fillText('core', px, py + 18);
+    }
+  }
+
+  function drawTitles() {
+    ctx.fillStyle = '#2a2a2a';
+    ctx.font = '13px "Charter", serif';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'alphabetic';
+    ctx.fillText('16 × 16 grid with a seeded +1 vortex', gridX0, 30);
+    ctx.fillStyle = '#888';
+    ctx.font = 'italic 11.5px "Charter", serif';
+    ctx.fillText('colour = phase; drag the burgundy loop to measure its winding', gridX0, 47);
+  }
+
+  function drawGrid() {
+    for (let y = 0; y < L; y++) {
+      for (let x = 0; x < L; x++) {
+        const [px, py] = cellToPx(x, y);
+        ctx.fillStyle = phaseColor(totalPhase(x, y));
+        ctx.fillRect(px, py, cellPx, cellPx);
+      }
+    }
+    // Thin grid outlines
+    ctx.strokeStyle = 'rgba(0, 0, 0, 0.08)';
+    ctx.lineWidth = 1;
+    for (let i = 0; i <= L; i++) {
+      ctx.beginPath();
+      ctx.moveTo(gridX0 + i * cellPx, gridY0);
+      ctx.lineTo(gridX0 + i * cellPx, gridY0 + gridH);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(gridX0, gridY0 + i * cellPx);
+      ctx.lineTo(gridX0 + gridW, gridY0 + i * cellPx);
+      ctx.stroke();
+    }
+  }
+
+  function drawBonds() {
+    // Bond alpha = 1 - |Δθ|/π  (dead at π, alive at 0)
+    // Draw as a thicker black line between cell centres.
+    for (let y = 0; y < L; y++) {
+      for (let x = 0; x < L; x++) {
+        const [px, py] = cellToPx(x, y);
+        const cxp = px + cellPx / 2, cyp = py + cellPx / 2;
+        // Horizontal bond (x, y) — (x+1, y)
+        if (x + 1 < L) {
+          const d = Math.abs(wrapPi(totalPhase(x + 1, y) - totalPhase(x, y)));
+          const alpha = Math.max(0, 1 - d / Math.PI);
+          ctx.strokeStyle = `rgba(20, 20, 20, ${0.65 * alpha})`;
+          ctx.lineWidth = 1.5 + alpha * 1;
+          ctx.beginPath();
+          ctx.moveTo(cxp, cyp);
+          ctx.lineTo(cxp + cellPx, cyp);
+          ctx.stroke();
+        }
+        // Vertical bond (x, y) — (x, y+1)
+        if (y + 1 < L) {
+          const d = Math.abs(wrapPi(totalPhase(x, y + 1) - totalPhase(x, y)));
+          const alpha = Math.max(0, 1 - d / Math.PI);
+          ctx.strokeStyle = `rgba(20, 20, 20, ${0.65 * alpha})`;
+          ctx.lineWidth = 1.5 + alpha * 1;
+          ctx.beginPath();
+          ctx.moveTo(cxp, cyp);
+          ctx.lineTo(cxp, cyp + cellPx);
+          ctx.stroke();
+        }
+      }
+    }
+  }
+
+  function drawLoop() {
+    const p = loopPath();
+    if (p.length < 4) return;
+
+    // Perimeter outline
+    ctx.strokeStyle = '#7d2d4f';
+    ctx.lineWidth = 3;
+    ctx.lineJoin = 'round';
+    ctx.beginPath();
+    for (let i = 0; i < p.length; i++) {
+      const [px, py] = cellToPx(p[i][0] + 0.5, p[i][1] + 0.5);
+      if (i === 0) ctx.moveTo(px, py);
+      else ctx.lineTo(px, py);
+    }
+    ctx.closePath();
+    ctx.stroke();
+
+    // Corner resize handles
+    const x0 = Math.round(loop.cx - loop.hw);
+    const x1 = Math.round(loop.cx + loop.hw);
+    const y0 = Math.round(loop.cy - loop.hh);
+    const y1 = Math.round(loop.cy + loop.hh);
+    const corners = [[x0, y0], [x1, y0], [x0, y1], [x1, y1]];
+    for (const [cx, cy] of corners) {
+      const [px, py] = cellToPx(cx + 0.5, cy + 0.5);
+      ctx.fillStyle = '#fdfaf3';
+      ctx.strokeStyle = '#7d2d4f';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(px, py, 5, 0, 2 * Math.PI);
+      ctx.fill();
+      ctx.stroke();
+    }
+
+    // Winding badge above the loop
+    const [bx, by] = cellToPx(loop.cx, y0 - 0.3);
+    const n = computeLoopWinding();
+    const absn = Math.abs(n);
+    const color = absn === 0 ? '#a8a39a'
+                : absn === 1 ? '#d97236'
+                : '#7d2d4f';
+    ctx.fillStyle = '#fdfaf3';
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 1.5;
+    const badgeW = 74, badgeH = 26;
+    ctx.fillRect(bx - badgeW / 2, by - badgeH, badgeW, badgeH);
+    ctx.strokeRect(bx - badgeW / 2, by - badgeH, badgeW, badgeH);
+    ctx.fillStyle = '#888';
+    ctx.font = '10px "Charter", serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'alphabetic';
+    ctx.fillText('winding', bx, by - badgeH + 11);
+    ctx.fillStyle = color;
+    ctx.font = '600 14px "SF Mono", monospace';
+    ctx.fillText((n > 0 ? '+' : '') + String(n), bx, by - 6);
+  }
+
+  function drawReadout() {
+    // Footer hint about how to interact
+    const ty = gridY0 + gridH + 22;
+    ctx.fillStyle = '#888';
+    ctx.font = 'italic 11.5px "Charter", serif';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'alphabetic';
+    ctx.fillText('drag inside the loop to move · drag a corner handle to resize',
+                 gridX0, ty);
+
+    // Instant list of readouts on the right gutter
+    const rx = gridX0 + gridW + 22;
+    let ry = gridY0 + 8;
+
+    ctx.fillStyle = '#2a2a2a';
+    ctx.font = '13px "Charter", serif';
+    ctx.fillText('this loop', rx, ry); ry += 20;
+
+    ctx.font = '11px "SF Mono", monospace';
+    ctx.fillStyle = '#888';
+    ctx.fillText(`centre  (${loop.cx.toFixed(1)}, ${loop.cy.toFixed(1)})`, rx, ry); ry += 16;
+    ctx.fillText(`size    ${2 * loop.hw + 1}×${2 * loop.hh + 1} cells`, rx, ry); ry += 16;
+    const p = loopPath();
+    ctx.fillText(`perim   ${p.length} bonds`, rx, ry); ry += 26;
+
+    const n = computeLoopWinding();
+    const absn = Math.abs(n);
+    const color = absn === 0 ? '#a8a39a'
+                : absn === 1 ? '#d97236'
+                : '#7d2d4f';
+    ctx.fillStyle = '#555';
+    ctx.font = '11px "Charter", serif';
+    ctx.fillText('winding number', rx, ry); ry += 8;
+    ctx.fillStyle = color;
+    ctx.font = '600 46px "Latin Modern Math", Georgia, serif';
+    ctx.textBaseline = 'alphabetic';
+    ctx.fillText((n > 0 ? '+' : '') + String(n), rx, ry + 40); ry += 56;
+
+    ctx.fillStyle = '#888';
+    ctx.font = 'italic 11px "Charter", serif';
+    const msg = absn === 0
+      ? 'loop encloses no defect'
+      : absn === 1
+        ? (n > 0 ? 'encloses one vortex (+1)' : 'encloses one antivortex (−1)')
+        : 'encloses multiple defects';
+    ctx.fillText(msg, rx, ry); ry += 26;
+
+    ctx.fillStyle = '#888';
+    ctx.font = 'italic 10.5px "Charter", serif';
+    ctx.fillText('try: enclose the core,', rx, ry); ry += 14;
+    ctx.fillText('then move the loop off,', rx, ry); ry += 14;
+    ctx.fillText('then grow or shrink it.', rx, ry); ry += 14;
+  }
+
+  // --- Interaction ----------------------------------------------------
+
+  let drag = null;  // { mode: 'move'|'nw'|'ne'|'sw'|'se', start: [cx, cy], loop0: {...} }
+
+  function eventPos(e) {
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = W / rect.width;
+    const scaleY = H / rect.height;
+    const px = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+    const py = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
+    return [px * scaleX, py * scaleY];
+  }
+
+  function pxToCell(px, py) {
+    return [(px - gridX0) / cellPx - 0.5, (py - gridY0) / cellPx - 0.5];
+  }
+
+  function nearestCorner(cx, cy) {
+    const x0 = Math.round(loop.cx - loop.hw);
+    const x1 = Math.round(loop.cx + loop.hw);
+    const y0 = Math.round(loop.cy - loop.hh);
+    const y1 = Math.round(loop.cy + loop.hh);
+    const corners = [
+      { key: 'nw', x: x0, y: y0 },
+      { key: 'ne', x: x1, y: y0 },
+      { key: 'sw', x: x0, y: y1 },
+      { key: 'se', x: x1, y: y1 },
+    ];
+    for (const c of corners) {
+      const d = Math.hypot(cx - c.x, cy - c.y);
+      if (d < 0.9) return c.key;
+    }
+    return null;
+  }
+
+  function insideLoop(cx, cy) {
+    return Math.abs(cx - loop.cx) < loop.hw - 0.3 && Math.abs(cy - loop.cy) < loop.hh - 0.3;
+  }
+
+  function onDown(e) {
+    const [mx, my] = eventPos(e);
+    const [cx, cy] = pxToCell(mx, my);
+    const corner = nearestCorner(cx, cy);
+    if (corner) {
+      drag = { mode: corner, start: [cx, cy], loop0: { ...loop } };
+      canvas.style.cursor = 'nwse-resize';
+      e.preventDefault();
+    } else if (insideLoop(cx, cy)) {
+      drag = { mode: 'move', start: [cx, cy], loop0: { ...loop } };
+      canvas.style.cursor = 'grabbing';
+      e.preventDefault();
+    }
+  }
+
+  function onMove(e) {
+    const [mx, my] = eventPos(e);
+    const [cx, cy] = pxToCell(mx, my);
+    if (!drag) {
+      if (nearestCorner(cx, cy)) canvas.style.cursor = 'nwse-resize';
+      else if (insideLoop(cx, cy)) canvas.style.cursor = 'grab';
+      else canvas.style.cursor = 'default';
+      return;
+    }
+    const dx = cx - drag.start[0];
+    const dy = cy - drag.start[1];
+    if (drag.mode === 'move') {
+      loop.cx = Math.max(loop.hw, Math.min(L - 1 - loop.hw, drag.loop0.cx + dx));
+      loop.cy = Math.max(loop.hh, Math.min(L - 1 - loop.hh, drag.loop0.cy + dy));
+    } else {
+      // Resize: drag corner outward increases half-width toward that corner
+      const nx = drag.loop0.cx + ((drag.mode === 'ne' || drag.mode === 'se') ? dx : -dx) * 0;
+      // Simpler: each corner pins the opposite corner and moves this one.
+      // Compute new half-widths from cursor position relative to pinned centre.
+      const signX = (drag.mode === 'ne' || drag.mode === 'se') ? 1 : -1;
+      const signY = (drag.mode === 'sw' || drag.mode === 'se') ? 1 : -1;
+      const newHwReq = Math.max(0.5, drag.loop0.hw + signX * dx);
+      const newHhReq = Math.max(0.5, drag.loop0.hh + signY * dy);
+      loop.hw = Math.max(1, Math.min((L - 1) / 2, Math.round(newHwReq)));
+      loop.hh = Math.max(1, Math.min((L - 1) / 2, Math.round(newHhReq)));
+      // Keep centre within bounds
+      loop.cx = Math.max(loop.hw, Math.min(L - 1 - loop.hw, loop.cx));
+      loop.cy = Math.max(loop.hh, Math.min(L - 1 - loop.hh, loop.cy));
+    }
+    e.preventDefault();
+  }
+
+  function onUp() {
+    drag = null;
+    canvas.style.cursor = 'default';
+  }
+
+  canvas.addEventListener('mousedown', onDown);
+  window.addEventListener('mousemove', onMove);
+  window.addEventListener('mouseup', onUp);
+  canvas.addEventListener('touchstart', onDown, { passive: false });
+  window.addEventListener('touchmove', onMove, { passive: false });
+  window.addEventListener('touchend', onUp);
+
+  // --- Controls --------------------------------------------------------
+
+  document.getElementById('vort-pos').addEventListener('click', () => { seedVortex(+1); shakeAmp = 0; });
+  document.getElementById('vort-neg').addEventListener('click', () => { seedVortex(-1); shakeAmp = 0; });
+  document.getElementById('vort-pair').addEventListener('click', () => { seedVortexPair(); shakeAmp = 0; });
+  document.getElementById('vort-uniform').addEventListener('click', () => { seedUniform(); shakeAmp = 0; });
+  document.getElementById('vort-shake').addEventListener('click', () => { shakeAmp = 1.0; shakeT = 0; });
+  document.getElementById('vort-reset').addEventListener('click', () => {
+    seedVortex(+1);
+    shakeAmp = 0;
+    loop.cx = 7.5; loop.cy = 7.5; loop.hw = 3; loop.hh = 3;
+  });
+  const bondsBtn = document.getElementById('vort-bonds');
+  bondsBtn.addEventListener('click', () => {
+    showBonds = !showBonds;
+    bondsBtn.textContent = 'Bonds: ' + (showBonds ? 'ON' : 'OFF');
+  });
+
+  function step() {
+    if (shakeAmp > 0) {
+      shakeT += 1;
+      const amp = 0.5 * shakeAmp;
+      // Low-frequency smooth noise field, bounded well below π everywhere.
+      for (let y = 0; y < L; y++) {
+        for (let x = 0; x < L; x++) {
+          noise[idx(x, y)] = amp * (
+              0.6 * Math.sin(0.28 * x + 0.05 * shakeT) * Math.cos(0.32 * y + 0.03 * shakeT)
+            + 0.4 * Math.sin(0.17 * x + 0.19 * y + 0.04 * shakeT)
+          );
+        }
+      }
+      shakeAmp *= 0.995;
+      if (shakeAmp < 0.02) { shakeAmp = 0; noise.fill(0); }
+    }
+    draw();
+  }
+
+  seedVortex(+1);
+  runWhenVisible(canvas, step);
+})();
+
+// --- FIGURE 3: spontaneous nucleation + death (Shannon-only CLR) -----
+(() => {
+  const canvas = document.getElementById('canvas-nucleation');
+  if (!canvas) return;
+  const W = 680, H = 580;
+  const ctx = setupHiDPICanvas(canvas, W, H);
+
+  // --- Lattice & dynamics parameters ---
+  const L = 20;
+  const N = L * L;
+  const cellPx = 18;
+  const gridX0 = 30, gridY0 = 70;
+  const dt = 0.05;
+  const eta = 0.02;
+  const rParam = 5.9;
+  const aliveThresh = 0.1;
+
+  // --- State ---
+  let phases = new Float64Array(N);
+  let Kh = new Float64Array(N);   // Kh[y*L+x] : bond (x,y)-((x+1)%L,y)
+  let Kv = new Float64Array(N);   // Kv[y*L+x] : bond (x,y)-(x,(y+1)%L)
+  let step = 0;
+  let running = false;
+  let fastMode = false;
+  const history = { I: [], alive: [], nv: [] };
+  const HIST_MAX = 360;
+
+  // --- Utilities ---
+  function idx(x, y) { return y * L + x; }
+  function wrapPi(x) {
+    return ((x + Math.PI) % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI) - Math.PI;
+  }
+  function phaseColor(th) {
+    const deg = ((th * 180 / Math.PI) % 360 + 360) % 360;
+    return `hsl(${deg.toFixed(1)}, 75%, 55%)`;
+  }
+
+  // --- Init ---
+  function reset() {
+    for (let i = 0; i < N; i++) {
+      phases[i] = (Math.random() * 2 - 1) * Math.PI;
+      Kh[i] = 0.05 + Math.random() * 0.1;
+      Kv[i] = 0.05 + Math.random() * 0.1;
+    }
+    step = 0;
+    history.I.length = 0;
+    history.alive.length = 0;
+    history.nv.length = 0;
+  }
+
+  // --- One micro-step of co-evolution ---
+  const dthBuf = new Float64Array(N);
+  const dKhBuf = new Float64Array(N);
+  const dKvBuf = new Float64Array(N);
+  function doMicroStep() {
+    // Kuramoto: θ̇_i = Σ_j K_ij sin(θ_j - θ_i)
+    for (let y = 0; y < L; y++) {
+      for (let x = 0; x < L; x++) {
+        const i = idx(x, y);
+        const xp = (x + 1) % L, xm = (x - 1 + L) % L;
+        const yp = (y + 1) % L, ym = (y - 1 + L) % L;
+        let f = 0;
+        f += Kh[idx(x, y)] * Math.sin(phases[idx(xp, y)] - phases[i]);
+        f += Kh[idx(xm, y)] * Math.sin(phases[idx(xm, y)] - phases[i]);
+        f += Kv[idx(x, y)] * Math.sin(phases[idx(x, yp)] - phases[i]);
+        f += Kv[idx(x, ym)] * Math.sin(phases[idx(x, ym)] - phases[i]);
+        dthBuf[i] = f;
+      }
+    }
+    // Shannon-CLR: K̇ = η[R₀(K) cos Δθ - 2K/r]
+    for (let y = 0; y < L; y++) {
+      for (let x = 0; x < L; x++) {
+        const i = idx(x, y);
+        const dthH = phases[idx((x + 1) % L, y)] - phases[i];
+        const dthV = phases[idx(x, (y + 1) % L)] - phases[i];
+        dKhBuf[i] = R0(Kh[i]) * Math.cos(dthH) - 2 * Kh[i] / rParam;
+        dKvBuf[i] = R0(Kv[i]) * Math.cos(dthV) - 2 * Kv[i] / rParam;
+      }
+    }
+    // Integrate
+    for (let i = 0; i < N; i++) {
+      phases[i] += dt * dthBuf[i];
+      Kh[i] += dt * eta * dKhBuf[i];
+      Kv[i] += dt * eta * dKvBuf[i];
+      if (Kh[i] < 0) Kh[i] = 0;
+      if (Kv[i] < 0) Kv[i] = 0;
+    }
+    step += 1;
+  }
+
+  // --- Measurements ---
+  function plaquetteCharge(x, y) {
+    const xp = (x + 1) % L, yp = (y + 1) % L;
+    const t1 = phases[idx(x, y)];
+    const t2 = phases[idx(xp, y)];
+    const t3 = phases[idx(xp, yp)];
+    const t4 = phases[idx(x, yp)];
+    const w = wrapPi(t2 - t1) + wrapPi(t3 - t2) + wrapPi(t4 - t3) + wrapPi(t1 - t4);
+    return Math.round(w / (2 * Math.PI));
+  }
+
+  function computeMetrics() {
+    let Isum = 0, aliveCount = 0, nPos = 0, nNeg = 0;
+    for (let y = 0; y < L; y++) {
+      for (let x = 0; x < L; x++) {
+        const i = idx(x, y);
+        const dthH = wrapPi(phases[idx((x + 1) % L, y)] - phases[i]);
+        const dthV = wrapPi(phases[idx(x, (y + 1) % L)] - phases[i]);
+        Isum += Math.cos(dthH) + Math.cos(dthV);
+        if (Kh[i] > aliveThresh) aliveCount++;
+        if (Kv[i] > aliveThresh) aliveCount++;
+        const c = plaquetteCharge(x, y);
+        if (c > 0) nPos++;
+        else if (c < 0) nNeg++;
+      }
+    }
+    return {
+      I: Isum / (2 * N),
+      alive: aliveCount / (2 * N),
+      nPos, nNeg,
+    };
+  }
+
+  function recordHistory(m) {
+    history.I.push((m.I + 1) / 2);
+    history.alive.push(m.alive);
+    history.nv.push(Math.min(1, (m.nPos + m.nNeg) / 30));
+    while (history.I.length > HIST_MAX) history.I.shift();
+    while (history.alive.length > HIST_MAX) history.alive.shift();
+    while (history.nv.length > HIST_MAX) history.nv.shift();
+  }
+
+  // --- Drawing ---
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = '#f5f0e4';
+    ctx.fillRect(0, 0, W, H);
+
+    // Title
+    ctx.fillStyle = '#2a2a2a';
+    ctx.font = '13px "Charter", serif';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'alphabetic';
+    ctx.fillText('co-evolution: Kuramoto + Shannon-CLR on a 20×20 periodic grid', gridX0, 28);
+    ctx.fillStyle = '#888';
+    ctx.font = 'italic 11.5px "Charter", serif';
+    ctx.fillText('coloured cells: phase · black lines: coupling K · ± circles: detected vortices', gridX0, 47);
+
+    drawGrid();
+    drawBonds();
+    drawVortices();
+
+    const m = computeMetrics();
+    drawRightPanel(m);
+  }
+
+  function drawGrid() {
+    for (let y = 0; y < L; y++) {
+      for (let x = 0; x < L; x++) {
+        ctx.fillStyle = phaseColor(phases[idx(x, y)]);
+        ctx.fillRect(gridX0 + x * cellPx, gridY0 + y * cellPx, cellPx, cellPx);
+      }
+    }
+    // Grid outline
+    ctx.strokeStyle = '#c8c0ad';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(gridX0, gridY0, L * cellPx, L * cellPx);
+  }
+
+  function drawBonds() {
+    // Draw all bonds with opacity/thickness scaling with K.
+    // Skip wrap-around bonds visually to keep the image clean.
+    for (let y = 0; y < L; y++) {
+      for (let x = 0; x < L; x++) {
+        const i = idx(x, y);
+        const cx = gridX0 + (x + 0.5) * cellPx;
+        const cy = gridY0 + (y + 0.5) * cellPx;
+        if (x + 1 < L) {
+          const K = Kh[i];
+          if (K > 0.02) {
+            const t = Math.min(1, K / K_BULK);
+            ctx.strokeStyle = `rgba(20,20,20,${0.18 + 0.72 * t})`;
+            ctx.lineWidth = 0.6 + 2.3 * t;
+            ctx.beginPath();
+            ctx.moveTo(cx, cy);
+            ctx.lineTo(cx + cellPx, cy);
+            ctx.stroke();
+          }
+        }
+        if (y + 1 < L) {
+          const K = Kv[i];
+          if (K > 0.02) {
+            const t = Math.min(1, K / K_BULK);
+            ctx.strokeStyle = `rgba(20,20,20,${0.18 + 0.72 * t})`;
+            ctx.lineWidth = 0.6 + 2.3 * t;
+            ctx.beginPath();
+            ctx.moveTo(cx, cy);
+            ctx.lineTo(cx, cy + cellPx);
+            ctx.stroke();
+          }
+        }
+      }
+    }
+  }
+
+  function drawVortices() {
+    for (let y = 0; y < L; y++) {
+      for (let x = 0; x < L; x++) {
+        const c = plaquetteCharge(x, y);
+        if (c === 0) continue;
+        // Place the marker at the plaquette centre
+        const cx = gridX0 + (x + 1) * cellPx;
+        const cy = gridY0 + (y + 1) * cellPx;
+        const color = c > 0 ? '#7d2d4f' : '#2a5f8f';
+        ctx.fillStyle = '#fdfaf3';
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.arc(cx, cy, 5.5, 0, 2 * Math.PI);
+        ctx.fill();
+        ctx.stroke();
+        ctx.fillStyle = color;
+        ctx.font = '600 9px "SF Mono", monospace';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(c > 0 ? '+' : '−', cx, cy + 0.5);
+      }
+    }
+  }
+
+  function drawRightPanel(m) {
+    const rx = gridX0 + L * cellPx + 30;
+    let ry = gridY0;
+
+    // Step header
+    ctx.fillStyle = '#2a2a2a';
+    ctx.font = '13px "Charter", serif';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'alphabetic';
+    ctx.fillText('step ' + step, rx, ry); ry += 6;
+    ctx.strokeStyle = '#c8c0ad';
+    ctx.beginPath(); ctx.moveTo(rx, ry); ctx.lineTo(rx + 220, ry); ctx.stroke();
+    ry += 16;
+
+    // Metrics
+    ctx.font = '11px "SF Mono", monospace';
+    ctx.fillStyle = '#555';
+    const rows = [
+      ['I_phase', m.I.toFixed(3), '#2a5f8f'],
+      ['alive', (m.alive * 100).toFixed(0) + '%', '#d97236'],
+      ['vortices', '+' + m.nPos + ' / −' + m.nNeg, '#7d2d4f'],
+    ];
+    for (const [label, value, color] of rows) {
+      ctx.fillStyle = '#888';
+      ctx.fillText(label.padEnd(10, ' '), rx, ry);
+      ctx.fillStyle = color;
+      ctx.fillText(value, rx + 85, ry);
+      ry += 17;
+    }
+    ry += 12;
+
+    // Narrative
+    const msg = narrativeForStep(step, m);
+    ctx.font = 'italic 11.5px "Charter", serif';
+    ctx.fillStyle = '#444';
+    const usedLines = wrapText(ctx, msg, rx, ry, 220, 15);
+    ry += usedLines * 15 + 12;
+
+    // Traces
+    drawTrace(rx, ry, 220, 50, 'I_phase', history.I, 1.0, '#2a5f8f'); ry += 60;
+    drawTrace(rx, ry, 220, 50, 'alive bonds', history.alive, 1.0, '#d97236'); ry += 60;
+    drawTrace(rx, ry, 220, 50, 'vortex count', history.nv, 1.0, '#7d2d4f'); ry += 50;
+  }
+
+  function drawTrace(x, y, w, h, label, data, ymax, color) {
+    ctx.fillStyle = '#fdfaf3';
+    ctx.strokeStyle = '#c8c0ad';
+    ctx.lineWidth = 1;
+    ctx.fillRect(x, y, w, h);
+    ctx.strokeRect(x, y, w, h);
+    ctx.fillStyle = '#888';
+    ctx.font = 'italic 10px "Charter", serif';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'top';
+    ctx.fillText(label, x + 4, y + 2);
+    if (data.length < 2) return;
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    for (let i = 0; i < data.length; i++) {
+      const px = x + (i / (HIST_MAX - 1)) * w;
+      const py = y + h - Math.min(1, data[i] / ymax) * h;
+      if (i === 0) ctx.moveTo(px, py);
+      else ctx.lineTo(px, py);
+    }
+    ctx.stroke();
+  }
+
+  function wrapText(ctx, text, x, y, maxW, lineH) {
+    const words = text.split(/\s+/);
+    let line = '', lines = 0;
+    for (const w of words) {
+      const test = line ? line + ' ' + w : w;
+      if (ctx.measureText(test).width > maxW && line) {
+        ctx.fillText(line, x, y + lines * lineH);
+        lines += 1;
+        line = w;
+      } else {
+        line = test;
+      }
+    }
+    if (line) { ctx.fillText(line, x, y + lines * lineH); lines += 1; }
+    return lines;
+  }
+
+  function narrativeForStep(step, m) {
+    if (step < 40) {
+      return 'Random soup. Every oscillator points in a different direction; every bond is uncommitted.';
+    }
+    if (step < 400) {
+      return 'Local alignment begins. Neighbours pull each other into agreement and the bonds that find it strengthen.';
+    }
+    if (m.nPos + m.nNeg > 0 && step < 1800) {
+      return 'Vortex pairs have nucleated. Walk any small loop around a marked core: phase winds a full turn. ± charges come in balanced pairs.';
+    }
+    if (step < 3500 && m.alive > 0.5) {
+      return 'The Shannon channel is cutting away the bonds at the cores. Watch the lines near each ± circle thin out. The dead zone is spreading.';
+    }
+    if (m.nPos + m.nNeg === 0) {
+      return 'Vortices annihilated. Without topological defects left to forbid it, the CLR pushes every surviving bond toward its bulk equilibrium.';
+    }
+    return 'The graph is shattering. Each vortex is cordoned off by a ring of dead bonds. I_phase collapses. The CLR has destroyed what it built.';
+  }
+
+  // --- Controls ---
+
+  const playBtn = document.getElementById('nuc-play');
+  const fastBtn = document.getElementById('nuc-fast');
+
+  function updatePlayLabel() {
+    playBtn.textContent = running ? '■ Pause' : '▶ Play';
+    playBtn.classList.toggle('primary', running);
+  }
+
+  document.getElementById('nuc-reset').addEventListener('click', () => {
+    reset();
+    running = false;
+    fastMode = false;
+    fastBtn.textContent = 'Fast forward';
+    updatePlayLabel();
+  });
+  playBtn.addEventListener('click', () => {
+    running = !running;
+    if (!running) { fastMode = false; fastBtn.textContent = 'Fast forward'; }
+    updatePlayLabel();
+  });
+  document.getElementById('nuc-step').addEventListener('click', () => {
+    if (!running) {
+      for (let i = 0; i < 40; i++) doMicroStep();
+      recordHistory(computeMetrics());
+    }
+  });
+  fastBtn.addEventListener('click', () => {
+    fastMode = !fastMode;
+    fastBtn.textContent = fastMode ? '■ Stop fast' : 'Fast forward';
+    if (fastMode) { running = true; updatePlayLabel(); }
+  });
+
+  function frame() {
+    if (running) {
+      const reps = fastMode ? 30 : 8;
+      for (let i = 0; i < reps; i++) doMicroStep();
+      recordHistory(computeMetrics());
+    }
+    draw();
+  }
+
+  reset();
+  runWhenVisible(canvas, frame);
+})();
+
+// --- FIGURE 4: Fiedler saves the vortex ---
+//
+// Two 16×16 periodic grids. Both seeded with atan2 pinwheel vortex
+// (topology locked on torus). Both run Kuramoto + Shannon-CLR.
+// The right grid also runs the Fiedler channel: computes v_2 via
+// Lanczos eigensolver, applies η·I_phase·(v_i − v_j)² (mean-subtracted).
+//
+// Verified by node test (node fiedler.test.mjs + fiedler_save_test.js):
+//   Shannon alone  → ~40 dead bonds at core after 6000 steps
+//   Shannon+Fiedler → 0 dead bonds, vortex preserved
+(() => {
+  const canvas = document.getElementById('canvas-fiedler');
+  if (!canvas) return;
+  const W = 680, H = 640;
+  const ctx = setupHiDPICanvas(canvas, W, H);
+
+  const L = 32;         // large enough that the vortex-image pair's
+                        // logarithmic attraction takes ~50k+ steps to
+                        // bring them together (at L=16: ~5k; L=24: ~25k)
+  const N = L * L;
+  const cellPx = 8;
+  const gridSize = L * cellPx;            // 256
+  const leftX = 60, rightX = 340;
+  const gridY = 80;
+
+  const DT_THETA = 0.1;
+  const PHASE_SUBS = 5;
+  const ETA_K = 0.005;
+  const R_PARAM = 6.0;
+  const K_INIT = 0.1;
+  const K_EQ  = 2.17;
+  const ALIVE_THRESH = 0.01;
+
+  // Fiedler channel parameters — chosen so the vortex cores survive
+  // (verified by fiedler_save_test.js with atan2 seed: at this gain,
+  // Shannon alone → 40 dead bonds, Shannon+Fiedler → 0 dead bonds).
+  // Fiedler sensitivity (v_i - v_j)^2 scales as O(1/N) because v_2 is
+  // unit-normalized, so the per-bond push weakens with grid size. At
+  // L=32 (N=1024) we need ~6× the L=24 gain to keep cores alive.
+  const FIEDLER_GAIN = 30.0;
+  const FIEDLER_STRIDE = 4;   // recompute v_2 every 4 K-steps
+  const FIEDLER_M = 34;       // Krylov subspace dim (enough for N=1024)
+
+  let step = 0;
+  let running = false;
+  let fastMode = false;
+  const HIST_MAX = 480;
+
+  // --- Seeded PRNG (Mulberry32) ---------------------------------------
+  function mulberry32(a) {
+    return () => {
+      let t = a += 0x6D2B79F5;
+      t = Math.imul(t ^ (t >>> 15), t | 1);
+      t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+
+  function makeSim(kind, useFiedler) {
+    return {
+      kind,
+      useFiedler,
+      phases: new Float64Array(N),
+      Kh: new Float64Array(N),
+      Kv: new Float64Array(N),
+      fv: null,   // cached Fiedler eigenvector
+      hist: { K: [], dead: [] },
+    };
+  }
+
+  const simA = makeSim('shannon',        false);   // Shannon only
+  const simB = makeSim('shannon-fiedler', true);   // Shannon + Fiedler
+
+  function reset() {
+    const cx = (L - 1) / 2, cy = (L - 1) / 2;
+    for (const sim of [simA, simB]) {
+      for (let y = 0; y < L; y++) {
+        for (let x = 0; x < L; x++) {
+          sim.phases[idx(x, y)] = Math.atan2(y - cy, x - cx);
+        }
+      }
+      for (let i = 0; i < N; i++) { sim.Kh[i] = K_INIT; sim.Kv[i] = K_INIT; }
+      sim.fv = null;
+      sim.hist.K.length = 0;
+      sim.hist.dead.length = 0;
+    }
+    step = 0;
+  }
+
+  // --- Utilities ---
+  function idx(x, y) { return y * L + x; }
+  function wrapPi(x) {
+    return ((x + Math.PI) % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI) - Math.PI;
+  }
+  function phaseColor(th) {
+    const deg = ((th * 180 / Math.PI) % 360 + 360) % 360;
+    return `hsl(${deg.toFixed(1)}, 75%, 55%)`;
+  }
+
+  // --- Dynamics (clr_bkt_convergence protocol) -----------------------
+  //
+  // One K-step = PHASE_SUBS phase sub-steps (Kuramoto + optional
+  // thermal noise) + one Shannon-CLR update on K. This is the adiabatic
+  // regime used by the reference script, and it produces the published
+  // K_bulk → K_BKT convergence in the vortex sector and K_bulk → K_eq
+  // in the trivial sector.
+
+  const dthBuf = new Float64Array(N);
+  const dKhBuf = new Float64Array(N);
+  const dKvBuf = new Float64Array(N);
+
+  function doPhaseSubstep(sim) {
+    for (let y = 0; y < L; y++) {
+      for (let x = 0; x < L; x++) {
+        const i = idx(x, y);
+        const xp = (x + 1) % L, xm = (x - 1 + L) % L;
+        const yp = (y + 1) % L, ym = (y - 1 + L) % L;
+        let f = 0;
+        f += sim.Kh[idx(x, y)] * Math.sin(sim.phases[idx(xp, y)] - sim.phases[i]);
+        f += sim.Kh[idx(xm, y)] * Math.sin(sim.phases[idx(xm, y)] - sim.phases[i]);
+        f += sim.Kv[idx(x, y)] * Math.sin(sim.phases[idx(x, yp)] - sim.phases[i]);
+        f += sim.Kv[idx(x, ym)] * Math.sin(sim.phases[idx(x, ym)] - sim.phases[i]);
+        dthBuf[i] = f;
+      }
+    }
+    const twoPi = 2 * Math.PI;
+    for (let i = 0; i < N; i++) {
+      let th = sim.phases[i] + DT_THETA * dthBuf[i];
+      th = ((th % twoPi) + twoPi) % twoPi;
+      sim.phases[i] = th;
+    }
+  }
+
+  function doKStep(sim) {
+    // PHASE_SUBS phase sub-steps first (adiabatic — phases relax fast)
+    for (let s = 0; s < PHASE_SUBS; s++) doPhaseSubstep(sim);
+
+    // Shannon-CLR update on K (common to both sims)
+    let Isum = 0;
+    for (let y = 0; y < L; y++) {
+      for (let x = 0; x < L; x++) {
+        const i = idx(x, y);
+        const dthH = sim.phases[idx((x + 1) % L, y)] - sim.phases[i];
+        const dthV = sim.phases[idx(x, (y + 1) % L)] - sim.phases[i];
+        const cH = Math.cos(dthH), cV = Math.cos(dthV);
+        Isum += cH + cV;
+        dKhBuf[i] = R0(sim.Kh[i]) * cH - 2 * sim.Kh[i] / R_PARAM;
+        dKvBuf[i] = R0(sim.Kv[i]) * cV - 2 * sim.Kv[i] / R_PARAM;
+      }
+    }
+
+    // Fiedler channel for simB only
+    if (sim.useFiedler) {
+      // Refresh v_2 periodically (expensive — Lanczos + eigensolve)
+      if (sim.fv === null || step % FIEDLER_STRIDE === 0) {
+        const { applyL } = gridLaplacian({ L, Kh: sim.Kh, Kv: sim.Kv });
+        const res = computeFiedler({ applyL, N, m: FIEDLER_M, seed: 1 });
+        sim.fv = res.v_2;
+      }
+      const { Sh, Sv } = gridFiedlerSensitivity({ L, v: sim.fv });
+      const Iphase = Math.max(0, Isum / (2 * N));
+      for (let i = 0; i < N; i++) {
+        dKhBuf[i] += FIEDLER_GAIN * Iphase * Sh[i];
+        dKvBuf[i] += FIEDLER_GAIN * Iphase * Sv[i];
+      }
+    }
+
+    for (let i = 0; i < N; i++) {
+      sim.Kh[i] = Math.max(0, sim.Kh[i] + ETA_K * dKhBuf[i]);
+      sim.Kv[i] = Math.max(0, sim.Kv[i] + ETA_K * dKvBuf[i]);
+    }
+  }
+
+  function plaquetteCharge(sim, x, y) {
+    const xp = (x + 1) % L, yp = (y + 1) % L;
+    const t1 = sim.phases[idx(x, y)];
+    const t2 = sim.phases[idx(xp, y)];
+    const t3 = sim.phases[idx(xp, yp)];
+    const t4 = sim.phases[idx(x, yp)];
+    const w = wrapPi(t2 - t1) + wrapPi(t3 - t2) + wrapPi(t4 - t3) + wrapPi(t1 - t4);
+    return Math.round(w / (2 * Math.PI));
+  }
+
+  function metrics(sim) {
+    let aliveCount = 0, kSum = 0, nPos = 0, nNeg = 0;
+    for (let y = 0; y < L; y++) {
+      for (let x = 0; x < L; x++) {
+        const i = idx(x, y);
+        if (sim.Kh[i] > ALIVE_THRESH) { aliveCount++; kSum += sim.Kh[i]; }
+        if (sim.Kv[i] > ALIVE_THRESH) { aliveCount++; kSum += sim.Kv[i]; }
+        const c = plaquetteCharge(sim, x, y);
+        if (c > 0) nPos++;
+        else if (c < 0) nNeg++;
+      }
+    }
+    const totalBonds = 2 * N;
+    return {
+      kBulk: aliveCount > 0 ? kSum / aliveCount : 0,
+      deadFrac: (totalBonds - aliveCount) / totalBonds,
+      nPos, nNeg,
+    };
+  }
+
+  function recordHistory(sim, m) {
+    sim.hist.K.push(m.kBulk);
+    sim.hist.dead.push(m.deadFrac);
+    while (sim.hist.K.length > HIST_MAX) sim.hist.K.shift();
+    while (sim.hist.dead.length > HIST_MAX) sim.hist.dead.shift();
+  }
+
+  // --- Drawing ---
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = '#f5f0e4';
+    ctx.fillRect(0, 0, W, H);
+
+    // Title + step counter
+    ctx.fillStyle = '#2a2a2a';
+    ctx.font = '13px "Charter", serif';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'alphabetic';
+    ctx.fillText('same atan2 vortex seed, same Shannon-CLR — one extra structural term', 30, 24);
+
+    ctx.textAlign = 'right';
+    ctx.fillStyle = '#888';
+    ctx.font = '12px "SF Mono", monospace';
+    ctx.fillText('K-step ' + step, W - 30, 24);
+
+    // Grid titles
+    ctx.fillStyle = '#7d2d4f';
+    ctx.font = '600 13px "Charter", serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'alphabetic';
+    ctx.fillText('Shannon channel alone', leftX + gridSize / 2, 60);
+    ctx.fillStyle = '#2d9d5f';
+    ctx.fillText('Shannon  +  Fiedler', rightX + gridSize / 2, 60);
+
+    ctx.fillStyle = '#888';
+    ctx.font = 'italic 11px "Charter", serif';
+    ctx.fillText('the core dies', leftX + gridSize / 2, 74);
+    ctx.fillText('the core is saved', rightX + gridSize / 2, 74);
+
+    drawOneGrid(simA, leftX, gridY);
+    drawOneGrid(simB, rightX, gridY);
+
+    const mA = metrics(simA), mB = metrics(simB);
+    drawMetricsRow(mA, leftX, gridY + gridSize + 10, '#7d2d4f');
+    drawMetricsRow(mB, rightX, gridY + gridSize + 10, '#2d9d5f');
+
+    drawOverlayTrace(mA, mB);
+  }
+
+  function drawOneGrid(sim, x0, y0) {
+    // Cell colours with K-health overlay: each cell is filled with its
+    // phase colour, then darkened according to the minimum K among its
+    // four incident bonds. The "dead hole" at a vortex core where the
+    // Shannon channel has killed surrounding bonds shows up as a dark
+    // blob carved out of the rainbow.
+    for (let y = 0; y < L; y++) {
+      for (let x = 0; x < L; x++) {
+        const i = idx(x, y);
+        const xm = (x - 1 + L) % L, ym = (y - 1 + L) % L;
+        const kMin = Math.min(
+          sim.Kh[idx(x, y)],   // east bond
+          sim.Kh[idx(xm, y)],  // west bond
+          sim.Kv[idx(x, y)],   // south bond
+          sim.Kv[idx(x, ym)],  // north bond
+        );
+        // Darkness: 0 when all bonds healthy (K > 0.5), ramps to 0.85
+        // when everything around this cell is dead.
+        const health = Math.min(1, kMin / 0.5);
+        const dark = 0.85 * (1 - health);
+        // Phase color
+        const ph = sim.phases[i];
+        const deg = ((ph * 180 / Math.PI) % 360 + 360) % 360;
+        // Drop lightness as health drops
+        const L_hsl = Math.round(55 * (1 - 0.7 * dark));
+        ctx.fillStyle = `hsl(${deg.toFixed(1)}, ${Math.round(75 * (1 - 0.6 * dark))}%, ${L_hsl}%)`;
+        ctx.fillRect(x0 + x * cellPx, y0 + y * cellPx, cellPx, cellPx);
+      }
+    }
+
+    // Bonds — alive bonds as black lines (thickness ~ K), dead bonds
+    // explicitly drawn as a bright red X so you can SEE what the CLR
+    // has killed vs kept alive.
+    for (let y = 0; y < L; y++) {
+      for (let x = 0; x < L; x++) {
+        const i = idx(x, y);
+        const cx = x0 + (x + 0.5) * cellPx;
+        const cy = y0 + (y + 0.5) * cellPx;
+        if (x + 1 < L) drawBond(sim.Kh[i], cx, cy, cx + cellPx, cy);
+        if (y + 1 < L) drawBond(sim.Kv[i], cx, cy, cx, cy + cellPx);
+      }
+    }
+
+    // Vortex markers — big burgundy/blue badges with charge so the user
+    // can see the topology survived even when phases compress.
+    for (let y = 0; y < L; y++) {
+      for (let x = 0; x < L; x++) {
+        const c = plaquetteCharge(sim, x, y);
+        if (c === 0) continue;
+        const cx = x0 + (x + 1) * cellPx;
+        const cy = y0 + (y + 1) * cellPx;
+        const color = c > 0 ? '#7d2d4f' : '#2a5f8f';
+        // Outer halo (makes marker pop on any background)
+        ctx.fillStyle = 'rgba(253, 250, 243, 0.92)';
+        ctx.beginPath(); ctx.arc(cx, cy, 7, 0, 2 * Math.PI); ctx.fill();
+        // Inner ring
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.arc(cx, cy, 6, 0, 2 * Math.PI); ctx.stroke();
+        // Charge glyph
+        ctx.fillStyle = color;
+        ctx.font = '700 10px "SF Mono", monospace';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(c > 0 ? '+' : '−', cx, cy + 0.5);
+      }
+    }
+
+    // Grid outline
+    ctx.strokeStyle = '#c8c0ad';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(x0, y0, gridSize, gridSize);
+  }
+
+  function drawBond(K, x1, y1, x2, y2) {
+    if (K < 0.02) {
+      // DEAD bond — bright red X overlaying the bond.
+      const mx = (x1 + x2) / 2, my = (y1 + y2) / 2;
+      const r = Math.min(cellPx * 0.28, 4.5);
+      ctx.strokeStyle = '#c62828';
+      ctx.lineWidth = 2.0;
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.moveTo(mx - r, my - r); ctx.lineTo(mx + r, my + r);
+      ctx.moveTo(mx - r, my + r); ctx.lineTo(mx + r, my - r);
+      ctx.stroke();
+    } else if (K < 0.35) {
+      // WEAK bond — orange dashed line. This is the Fiedler-maintained
+      // near-core regime: K kept just above the Shannon survival
+      // threshold by the structural channel. Visible in the Fiedler
+      // grid as an orange halo around each vortex.
+      const t = K / 0.35;
+      ctx.strokeStyle = `rgba(217, 114, 54, ${0.5 + 0.4 * t})`;
+      ctx.lineWidth = 1.1;
+      ctx.setLineDash([2, 2]);
+      ctx.beginPath();
+      ctx.moveTo(x1, y1); ctx.lineTo(x2, y2);
+      ctx.stroke();
+      ctx.setLineDash([]);
+    } else {
+      // ALIVE bulk bond — black, thickness and opacity scale with K.
+      const t = Math.min(1, K / 1.6);
+      ctx.strokeStyle = `rgba(20, 20, 20, ${0.25 + 0.65 * t})`;
+      ctx.lineWidth = 0.8 + 1.8 * t;
+      ctx.beginPath();
+      ctx.moveTo(x1, y1); ctx.lineTo(x2, y2);
+      ctx.stroke();
+    }
+  }
+
+  function drawMetricsRow(m, x, y, labelColor) {
+    ctx.font = '11px "SF Mono", monospace';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'alphabetic';
+    // Headline: prominent dead-bond count (huge if there are many)
+    const deadBonds = Math.round(m.deadFrac * 2 * N);
+    ctx.font = '600 11px "Charter", serif';
+    ctx.fillStyle = '#888';
+    ctx.fillText('dead bonds', x, y + 14);
+    ctx.font = '700 20px "SF Mono", monospace';
+    ctx.fillStyle = deadBonds > 0 ? '#c62828' : '#2d9d5f';
+    ctx.fillText(String(deadBonds), x, y + 34);
+    // Secondary metrics
+    const x2 = x + 90;
+    ctx.font = '11px "SF Mono", monospace';
+    const cols = [
+      ['K_bulk', m.kBulk.toFixed(3)],
+      ['vortices ±', '+' + m.nPos + ' / −' + m.nNeg],
+    ];
+    let cx = x2;
+    for (const [label, value] of cols) {
+      ctx.fillStyle = '#888';
+      ctx.fillText(label, cx, y + 14);
+      ctx.fillStyle = labelColor;
+      ctx.fillText(value, cx, y + 28);
+      cx += 100;
+    }
+  }
+
+  function drawOverlayTrace(mA, mB) {
+    // Two stacked panels: dead-bond fraction and K_bulk
+    drawTracePanel({
+      x: 60, y: 450, w: 580, h: 70,
+      title: 'dead-bond fraction (bonds with K < 0.01)',
+      dataA: simA.hist.dead, colorA: '#7d2d4f',
+      dataB: simB.hist.dead, colorB: '#2d9d5f',
+      yMax: 0.15,
+      ticks: [[0, '0%'], [0.05, '5%'], [0.1, '10%']],
+    });
+    drawTracePanel({
+      x: 60, y: 540, w: 580, h: 70,
+      title: 'K_bulk (mean over alive bonds)',
+      dataA: simA.hist.K, colorA: '#7d2d4f',
+      dataB: simB.hist.K, colorB: '#2d9d5f',
+      yMax: 2.6,
+      targetLines: [[K_EQ, 'K_eq', '#888']],
+      ticks: [[0, '0.0'], [K_EQ, 'K_eq']],
+    });
+
+    // Legend under both panels
+    ctx.font = '600 11px "Charter", serif';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'alphabetic';
+    ctx.fillStyle = '#7d2d4f';
+    ctx.fillRect(60, 620, 14, 3);
+    ctx.fillText('Shannon alone', 78, 625);
+    ctx.fillStyle = '#2d9d5f';
+    ctx.fillRect(220, 620, 14, 3);
+    ctx.fillText('Shannon + Fiedler', 238, 625);
+  }
+
+  function drawTracePanel({ x, y, w, h, title, dataA, colorA, dataB, colorB, yMax, targetLines, ticks }) {
+    ctx.fillStyle = '#fdfaf3';
+    ctx.strokeStyle = '#c8c0ad';
+    ctx.lineWidth = 1;
+    ctx.fillRect(x, y, w, h);
+    ctx.strokeRect(x, y, w, h);
+
+    ctx.fillStyle = '#555';
+    ctx.font = 'italic 11px "Charter", serif';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'alphabetic';
+    ctx.fillText(title, x + 10, y + 14);
+
+    const plotX = x + 45, plotY = y + 22, plotW = w - 58, plotH = h - 30;
+    const yToPx = (v) => plotY + plotH - (Math.min(yMax, Math.max(0, v)) / yMax) * plotH;
+
+    // Target lines
+    if (targetLines) {
+      ctx.setLineDash([3, 3]);
+      for (const [val, , color] of targetLines) {
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(plotX, yToPx(val));
+        ctx.lineTo(plotX + plotW, yToPx(val));
+        ctx.stroke();
+      }
+      ctx.setLineDash([]);
+    }
+
+    // Tick labels
+    ctx.fillStyle = '#888';
+    ctx.font = '10px "SF Mono", monospace';
+    ctx.textAlign = 'right';
+    ctx.textBaseline = 'middle';
+    for (const [v, label] of ticks) ctx.fillText(label, x + 42, yToPx(v));
+
+    function plot(data, color) {
+      if (data.length < 2) return;
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 2.0;
+      ctx.beginPath();
+      for (let i = 0; i < data.length; i++) {
+        const px = plotX + (i / (HIST_MAX - 1)) * plotW;
+        const py = yToPx(data[i]);
+        if (i === 0) ctx.moveTo(px, py);
+        else ctx.lineTo(px, py);
+      }
+      ctx.stroke();
+    }
+    plot(dataA, colorA);
+    plot(dataB, colorB);
+  }
+
+  // --- Controls -------------------------------------------------------
+
+  const playBtn = document.getElementById('fie-play');
+  const fastBtn = document.getElementById('fie-fast');
+
+  function updatePlayLabel() {
+    playBtn.textContent = running ? '■ Pause' : '▶ Play';
+    playBtn.classList.toggle('primary', running);
+  }
+
+  document.getElementById('fie-reset').addEventListener('click', () => {
+    reset();
+    running = false;
+    fastMode = false;
+    fastBtn.textContent = 'Fast forward';
+    updatePlayLabel();
+  });
+  playBtn.addEventListener('click', () => {
+    running = !running;
+    if (!running) { fastMode = false; fastBtn.textContent = 'Fast forward'; }
+    updatePlayLabel();
+  });
+  fastBtn.addEventListener('click', () => {
+    fastMode = !fastMode;
+    fastBtn.textContent = fastMode ? '■ Stop fast' : 'Fast forward';
+    if (fastMode) { running = true; updatePlayLabel(); }
+  });
+
+  function frame() {
+    if (running) {
+      const reps = fastMode ? 10 : 2;
+      for (let i = 0; i < reps; i++) {
+        doKStep(simA);
+        doKStep(simB);
+        step += 1;
+      }
+      recordHistory(simA, metrics(simA));
+      recordHistory(simB, metrics(simB));
+    }
+    draw();
+  }
+
+  reset();
+  runWhenVisible(canvas, frame);
+})();
+
+</script>
+
+</body>
+</html>

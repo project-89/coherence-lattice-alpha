@@ -31,9 +31,9 @@ A three-act structure:
 | 02 | Oscillators on a graph | ✅ DONE |
 | 03 | Coherence capital | ✅ DONE |
 | 04 | The Coherence Learning Rule | ✅ DONE |
-| 05 | How a binary field emerges | TODO |
+| 05 | How a binary field emerges | ✅ DONE |
 | 06 | Phase-locked modes: geometry and memory | ✅ DONE |
-| 07 | Spontaneous vortices | TODO |
+| 07 | Spontaneous vortices | ✅ DONE |
 | 08 | Why the diamond lattice | TODO |
 | 09 | The BKT wall | TODO |
 | 10 | Living versus static | TODO |
@@ -101,27 +101,11 @@ Aside teases Sections 5–15.
 
 **Note:** A frequency-entrainment playground was prototyped but removed — the corner/perimeter-driver physics was unclear and didn't demonstrate frequency learning cleanly on a uniform 2D lattice. Revisit if a cleaner temporal-drive demo is needed later.
 
----
-
-## TODO sections — planned content
-
 ### 07 — Spontaneous vortices
 
-**Core idea:** Topology emerges from dynamics. Start with random phases, run the CLR, and phase vortices nucleate spontaneously. They are topologically protected: cannot be removed by smooth deformation.
+**Completed.** Four figures: (1) two-circles winding interactive — twelve phase dots on a loop, phase-circle S¹ pointer with lap counter, "let them oscillate" toggle demonstrating topology invariance under common rotation. (2) 16×16 atan2-seeded vortex with draggable/resizable loop that computes live winding on any rectangular perimeter; vortex/antivortex and pair presets; smooth-perturbation demo of topological protection. (3) 20×20 spontaneous nucleation from random phases under Kuramoto + Shannon-CLR, guided narrative from random soup → local alignment → vortex nucleation → core death. (4) 32×32 side-by-side Shannon vs Shannon+Fiedler on atan2 seed, with **real Lanczos-based Fiedler eigensolver** (`explorable/js/fiedler.js` + 17 passing tests in `fiedler.test.mjs`); cells darken where bonds die (K-health overlay); red X marks dead bonds; orange dashes mark Fiedler-maintained weak bonds; ± plaquette markers show topology preserved; 2D annihilation at ~step 40k explicitly flagged as the §08 segue (vortex lines require d ≥ 3).
 
-**Interactives:**
-- **Spontaneous nucleation:** 2D grid running CLR from random initial conditions. Vortex cores highlighted as they form. Watch winding numbers appear. Live readout of ±1 charges.
-- **Vortex anatomy:** zoom in on one vortex. Color-coded phase wheel around core. Show the dead bonds at the core (Fiedler-protected). Show I_phase_local dropping inside the core, recovering outside.
-- **Winding number demonstration:** trace a loop on the grid. Show the integer winding number = 2π n. Interactive: draw a loop with mouse, get the winding.
-
-**Prose:**
-- Topological defects: what they are, why they matter
-- Vortex = phase winds by 2π around a loop
-- Quantized: winding must be an integer
-- Show spontaneous formation — NOT hand-placed
-- The Fiedler channel: protects core bonds. Without Fiedler, core collapses.
-- Charge quantization = topological quantization
-- Setup for 3D (diamond): vortices are *lines* in 3D, more stable than in 2D
+**Physics covered:** π₁(S¹) = ℤ topology; winding integrality under smooth deformation; budget-conserving Fiedler sensitivity (v_{2,i} − v_{2,j})²; Proposition 2.3 (Generalized Survival) made visible — Fiedler keeps would-be-dead core bonds above threshold; 2D point-defect annihilation as the empirical reason diamond must be 3D.
 
 ---
 
