@@ -76,9 +76,8 @@
   \bibfield  {author} {\bibinfo {author} {\bibfnamefont {M.}~\bibnamefont
   {Sharpe}},\ }\bibfield  {title} {\bibinfo {title} {The coherence theorem: A
   substrate-agnostic law of self-organization}} (\bibinfo {year} {2026}),\
-  \bibinfo {note} {companion paper establishing the intelligence flux $I(t) \ge
-  0$ principle applied in the present work; Project 89 / Green Loom
-  Association}\BibitemShut {NoStop}%
+  \bibinfo {note} {in preparation. Companion paper formalizing the intelligence
+  flux $I(t) \ge 0$ principle applied in the present work.}\BibitemShut {Stop}%
 \bibitem [{\citenamefont {Berezinskii}(1971)}]{Berezinskii1971}%
   \BibitemOpen
   \bibfield  {author} {\bibinfo {author} {\bibfnamefont {V.~L.}\ \bibnamefont
