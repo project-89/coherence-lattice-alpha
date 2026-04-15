@@ -9,7 +9,11 @@
 <body>
 <div class="page">
 
-<p style="color: var(--text-faint); font-size: 0.88em; margin-bottom: 0;"><a href="../index.html" style="border-bottom: none;">&larr; contents</a> &nbsp;·&nbsp; section 01 of 15</p>
+<nav class="breadcrumb">
+  <a href="../index.html">&larr; contents</a>
+  <span class="sep">·</span>
+  <span class="section-num">section 01 / 15</span>
+</nav>
 
 <h1>Prelude<span class="subtitle">What it means for a lattice to be alive</span></h1>
 
@@ -124,7 +128,7 @@
 </div>
 
 <script type="module">
-import { setupHiDPICanvas, R0 } from '../js/common.js';
+import { setupHiDPICanvas, R0, runWhenVisible } from '../js/common.js';
 
 // ============================================================
 // FIGURE 1: One oscillator + sine wave
@@ -249,12 +253,7 @@ import { setupHiDPICanvas, R0 } from '../js/common.js';
     return a;
   }
 
-  function loop() {
-    step();
-    draw();
-    requestAnimationFrame(loop);
-  }
-  loop();
+  runWhenVisible(canvas, () => { step(); draw(); });
 })();
 
 // ============================================================
@@ -366,12 +365,7 @@ import { setupHiDPICanvas, R0 } from '../js/common.js';
     ctx.fillText(label, x0 + 6, y0 - r - 4);
   }
 
-  function loop() {
-    step();
-    draw();
-    requestAnimationFrame(loop);
-  }
-  loop();
+  runWhenVisible(canvas, () => { step(); draw(); });
 })();
 
 // ============================================================
@@ -571,12 +565,7 @@ import { setupHiDPICanvas, R0 } from '../js/common.js';
     ctx.fillText(label, x0 + 6, y0 - r - 4);
   }
 
-  function loop() {
-    step();
-    draw();
-    requestAnimationFrame(loop);
-  }
-  loop();
+  runWhenVisible(canvas, () => { step(); draw(); });
 })();
 
 // ============================================================
@@ -777,12 +766,7 @@ import { setupHiDPICanvas, R0 } from '../js/common.js';
     ctx.fillText(label, x0 + 6, y0 - r - 4);
   }
 
-  function loop() {
-    step();
-    draw();
-    requestAnimationFrame(loop);
-  }
-  loop();
+  runWhenVisible(canvas, () => { step(); draw(); });
 })();
 </script>
 

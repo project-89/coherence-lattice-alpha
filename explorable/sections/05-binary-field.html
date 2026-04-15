@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How a binary field emerges — The Living Lattice</title>
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<div class="page">
+
+<nav class="breadcrumb">
+  <a href="../index.html">&larr; contents</a>
+  <span class="sep">·</span>
+  <span class="section-num">section 05 / 15</span>
+</nav>
+
+<h1>How a binary field emerges<span class="subtitle">What the Coherence Theorem looks like when you let go of a whole network</span></h1>
+
+<p class="lead">Chapter 4 gave us a rule for one bond and an inequality for one network: <em>I ≥ 0</em>. Now we want to <em>see</em> it. We will run the CLR on a grid, from random initial conditions, and watch the theorem play out. Every bond is deciding, locally. The whole is climbing, globally. Nothing is directed from above.</p>
+
+<h2>Two bonds sharing a node</h2>
+
+<p>Before a whole grid, pause at the simplest case where bonds can influence each other: three oscillators in a chain, two bonds. Call them A–B and B–C. Bond AB sees the alignment of A and B; bond BC sees the alignment of B and C. Both run the CLR. Neither one can see the other directly. But they share node B — so whatever phase B settles into, both bonds feel.</p>
+
+<figure id="fig-two-bonds">
+  <canvas id="canvas-two-bonds" width="680" height="360"></canvas>
+  <div class="controls">
+    <div class="control">
+      <label>ω<sub>A</sub> <span class="val" id="tb-wa-val">0.95</span></label>
+      <input type="range" id="tb-wa-slider" min="0.2" max="1.6" step="0.01" value="0.95">
+    </div>
+    <div class="control">
+      <label>ω<sub>B</sub> <span class="val" id="tb-wb-val">0.80</span></label>
+      <input type="range" id="tb-wb-slider" min="0.2" max="1.6" step="0.01" value="0.80">
+    </div>
+    <div class="control">
+      <label>ω<sub>C</sub> <span class="val" id="tb-wc-val">0.65</span></label>
+      <input type="range" id="tb-wc-slider" min="0.2" max="1.6" step="0.01" value="0.65">
+    </div>
+    <button id="tb-reset">Reset</button>
+  </div>
+  <figcaption>Three oscillators, two living bonds. Each bond's K is evolving under the CLR, seeing only its own two endpoints. But the shared middle oscillator couples them implicitly. Set ω<sub>B</sub> near ω<sub>A</sub> — bond AB thrives while BC may struggle. Set all three nearly equal — both bonds come alive. Spread the ω's apart — B gets pulled in two directions, both bonds weaken. <span id="tb-readout" class="readout">K_AB = 0.00, K_BC = 0.00</span></figcaption>
+</figure>
+
+<p>The two bonds make independent local decisions but their outcomes are entangled. What B does reflects the tug-of-war between A and C. This is how a whole lattice's dynamics composes out of atomic bond-level rules.</p>
+
+<h2>A small ring</h2>
+
+<p>Scale up. Six oscillators in a ring, six bonds, every one living. Each bond sees only its two endpoints. But every oscillator sits between two bonds, so every decision ripples.</p>
+
+<figure id="fig-ring">
+  <canvas id="canvas-ring" width="680" height="440"></canvas>
+  <div class="controls">
+    <button id="ring-reset" class="primary">Reset (random K and phases)</button>
+    <div class="control">
+      <label>ω spread <span class="val" id="ring-spread-val">0.40</span></label>
+      <input type="range" id="ring-spread-slider" min="0" max="1.2" step="0.01" value="0.4">
+    </div>
+  </div>
+  <figcaption>Six oscillators on a ring. Each bond's K is a small live number; the whole ring is running the CLR. Watch what happens as K's evolve: some bonds strengthen to K*, some die to zero, and the ring settles into a specific pattern of live bonds. Reset repeatedly to see the basin structure — same dynamics, different final topologies depending on initial conditions. <span id="ring-readout" class="readout">alive = 0, dead = 0</span></figcaption>
+</figure>
+
+<p>Notice: the ring settles on a pattern. Not the same pattern every time — resets give different outcomes. But every outcome is <em>binary</em>. No bond lingers in the middle. Each one chooses alive or dead, and the choices compose into a coherent-enough structure for the ring's frequencies to lock.</p>
+
+<h2>The aggregate form of I ≥ 0</h2>
+
+<p>Chapter 4 proved the Coherence Theorem globally: <em>I(t) = dC/dt ≥ 0</em>. But there is a more concrete way to see why it must hold, which becomes important now that many bonds are evolving at once. The global flux decomposes exactly into per-bond fluxes:</p>
+
+<div class="equation-block" id="eq-aggregate">
+  <div class="eq-display">
+    <span class="eq-symbol state" data-symbol="Iglobal">I(t)</span>
+    &nbsp;=&nbsp;
+    <span class="eq-symbol struct" data-symbol="sumbonds">∑<sub>(i,j) ∈ E</sub></span>
+    &nbsp;
+    <span class="eq-symbol state" data-symbol="Iij">I<sub>ij</sub>(t)</span>
+    &nbsp;,&nbsp; with &nbsp;
+    <span class="eq-symbol state" data-symbol="Iij">I<sub>ij</sub>(t)</span>
+    &nbsp;≥&nbsp; 0 for each bond
+  </div>
+  <p class="eq-prompt">Click any symbol to see what it means.</p>
+  <div class="eq-detail"></div>
+  <div class="eq-howitworks">
+    <span class="label">In words</span>
+    The global intelligence flux I(t) is the sum of every single bond's own contribution. Each bond's contribution I<sub>ij</sub>(t) is non-negative by the construction of the CLR — every bond is performing gradient ascent on its piece of coherence capital. When you sum non-negative numbers, the sum is non-negative. That's the theorem at the level of locality: no bond cheats, so the whole can't lose. This is why a global ascent is enforced by purely local rules. Each bond, acting on information only about its own endpoints, pushes the same global quantity upward.
+  </div>
+</div>
+
+<h2>Two attractors, everywhere</h2>
+
+<p>Recall the death threshold from Chapter 4: a bond survives only if <em>cos(Δθ) &gt; 4/r</em>. Below that threshold the potential has no interior well; the only stable K is zero. Above it, there's a single well at K = K*. Every bond is solving the same simple equation at equilibrium:</p>
+
+<div class="equation-block" id="eq-fixedpoint">
+  <div class="eq-display">
+    <span class="eq-symbol op" data-symbol="R0star">R<sub>0</sub>(K*)</span>
+    &nbsp;·&nbsp;
+    <span class="eq-symbol op" data-symbol="cosdtheta">cos(Δθ)</span>
+    &nbsp;=&nbsp;
+    <span class="eq-symbol struct" data-symbol="cost">2K* / r</span>
+  </div>
+  <p class="eq-prompt">Click any symbol to see what it means.</p>
+  <div class="eq-detail"></div>
+  <div class="eq-howitworks">
+    <span class="label">In words</span>
+    At equilibrium, each bond balances two forces. On the left: the pull toward alignment — the Bessel ratio R<sub>0</sub>(K*) scaled by the observed alignment cos(Δθ). On the right: the regularization cost of maintaining a strong coupling, 2K*/r. When alignment is high enough, the equation has a positive solution K* &gt; 0 (alive). When alignment is too low, the only solution is K* = 0 (dead). There is no continuum of intermediate states. Every single bond in a network, after the CLR has finished running, sits at one of these two attractors.
+  </div>
+</div>
+
+<p>When a whole network of bonds runs the CLR, each bond finds one of these two attractors for itself. The result, aggregated over thousands of bonds, is a <strong>binary field</strong>: a distribution of K values with two sharp peaks and almost nothing in between.</p>
+
+<h2>The full simulation</h2>
+
+<p>Here is a proper grid — 14 by 14 oscillators, each connected to its four neighbors, every bond living. Start from random initial K's and random phases. Let go. Watch the field polarize.</p>
+
+<p class="aside"><span class="label">A note on the controls</span><em>ω spread</em> sets how much the oscillators' natural frequencies disagree — the wider the spread, the harder it is for bonds to lock. <em>r</em> is the regularization parameter inside the CLR, the signal-to-noise ratio that sets the death threshold cos(Δθ) &gt; 4/<em>r</em>. In the full theory on the diamond lattice with vortex topology, <em>r</em> is not a free parameter — it is determined self-consistently (≈ 5.9) by the requirement that bulk couplings equal 16/π². In this standalone grid we expose it as a slider so you can feel how it shapes the bifurcation. <em>Phases</em> / <em>bonds</em> / <em>both</em> toggles what you see: phase-colored cells, the K-field as line thickness, or both at once.</p>
+
+<figure id="fig-grid">
+  <canvas id="canvas-grid" width="680" height="520"></canvas>
+  <div class="controls">
+    <button id="grid-reset" class="primary">Reset (random K and phases)</button>
+    <div class="control">
+      <label>ω spread <span class="val" id="grid-spread-val">0.60</span></label>
+      <input type="range" id="grid-spread-slider" min="0" max="1.5" step="0.01" value="0.6">
+    </div>
+    <div class="control">
+      <label>r (regularization) <span class="val" id="grid-r-val">5.9</span></label>
+      <input type="range" id="grid-r-slider" min="2" max="10" step="0.05" value="5.9">
+    </div>
+    <div class="control">
+      <label>view</label>
+      <div style="display: flex; gap: 6px; margin-top: 2px;">
+        <button id="grid-view-phases" style="padding: 4px 10px; font-size: 0.85em;">phases</button>
+        <button id="grid-view-bonds" style="padding: 4px 10px; font-size: 0.85em;">bonds</button>
+        <button id="grid-view-both" class="primary" style="padding: 4px 10px; font-size: 0.85em;">both</button>
+      </div>
+    </div>
+  </div>
+  <figcaption>Top: the grid — in <em>phases</em> mode, cells colored by each oscillator's phase; in <em>bonds</em> mode, cells dim and every bond drawn as a line whose opacity is proportional to K (dead bonds fade, alive bonds glow); in <em>both</em> mode, combined. Bottom: the live K histogram (watch it crystallize bimodal) and the coherence-capital / intelligence-flux traces. Reset repeatedly to see the basin structure. <span id="grid-readout" class="readout">I_phase = 0.00, C = 0.000</span></figcaption>
+</figure>
+
+<h2>The field is the memory</h2>
+
+<p>What you are looking at — the particular pattern of alive bonds at the end of a run — is the network's <em>learned connectivity</em>. It was not imposed. It was produced by the dynamics, from initial conditions that did not know what pattern was going to emerge. The CLR found a structure consistent with the current natural frequencies and locked it in. If you hit reset and run again, a different pattern forms. If you wait long enough, each pattern stays stable — the binary nature of the attractor provides its own inertia.</p>
+
+<p>A network that has found a stable K-field has, in a very literal sense, formed a <em>memory</em> of the frequencies and the topology it was given. Its pattern of alive bonds holds that memory even when the oscillators' motion is interrupted.</p>
+
+<p>This is already remarkable. But a memory is only as useful as what you can do with it. In the next chapter we ask: <em>what if we drive the network with a specific pattern?</em> What if we shape its natural frequencies externally, or apply a stimulus? Does the CLR learn a specific pattern and retain it when the stimulus is removed? Does it recognize the pattern when shown it again? The answer, as you might by now suspect, is yes — and the analogy to both Chladni plates and neural memory gets very tight, very fast.</p>
+
+<div class="nav-links">
+  <a href="04-clr.html" class="prev">The Coherence Learning Rule</a>
+  <a href="06-plm-npd.html" class="next">Phase-locked modes: geometry and memory</a>
+</div>
+
+</div>
+
+<script type="module">
+import { setupHiDPICanvas, wireEquation, R0, runWhenVisible } from '../js/common.js';
+
+// ============================================================
+// Interactive equation blocks
+// ============================================================
+
+wireEquation('eq-aggregate', {
+  Iglobal: {
+    name: 'I(t) — the global intelligence flux',
+    pronounce: '"eye of t"',
+    description: 'The rate at which the whole network is climbing coherence capital. Defined as the time derivative of C = I<sub>phase</sub>·ρ. The Coherence Theorem from Chapter 4 says this is always ≥ 0 under CLR dynamics and legality. Here we see why: it\'s the sum of things that are each ≥ 0.',
+  },
+  sumbonds: {
+    name: '∑_(i,j) ∈ E — sum over every bond in the graph',
+    pronounce: '"sum over i-j in E"',
+    description: 'The big Σ adds up contributions from every bond in the edge set E. One term per bond. A grid with 392 bonds contributes 392 terms. The global flux is a vote by all bonds.',
+  },
+  Iij: {
+    name: 'I_ij(t) — this one bond\'s contribution to the flux',
+    pronounce: '"eye sub i-j of t"',
+    description: 'The single bond (i,j)\'s push on coherence capital at time t. Because the CLR performs gradient ascent on coherence capital at each bond, this quantity is non-negative. Think of it as the little upward nudge this particular bond provides right now; the global ascent is the sum of all these nudges.',
+  },
+});
+
+wireEquation('eq-fixedpoint', {
+  R0star: {
+    name: 'R₀(K*) — expected alignment at equilibrium coupling',
+    pronounce: '"R naught of K star"',
+    description: 'The Bessel ratio I₁(K*)/I₀(K*), evaluated at the equilibrium coupling K*. It tells you how aligned the endpoints would be if the bond had strength K* and nothing else was happening. The bond\'s own prediction of its own alignment.',
+  },
+  cosdtheta: {
+    name: 'cos(Δθ) — observed alignment',
+    pronounce: '"cosine of delta theta"',
+    description: 'What the endpoints actually look like, averaged over a cycle. Between −1 and 1. This is the driving signal of the Shannon channel.',
+  },
+  cost: {
+    name: '2K* / r — coupling cost at equilibrium',
+    pronounce: '"two K over r"',
+    description: 'The price in potential energy the bond pays to maintain coupling of strength K*. At the balance point, the observed alignment times the prediction exactly matches this cost. Any more alignment and the bond would grow. Any less and it would shrink.',
+  },
+});
+
+// ============================================================
+// FIGURE A: Two bonds sharing a node (A–B–C chain)
+// ============================================================
+
+(() => {
+  const canvas = document.getElementById('canvas-two-bonds');
+  const ctx = setupHiDPICanvas(canvas, 680, 360);
+  const waSlider = document.getElementById('tb-wa-slider');
+  const wbSlider = document.getElementById('tb-wb-slider');
+  const wcSlider = document.getElementById('tb-wc-slider');
+  const waVal = document.getElementById('tb-wa-val');
+  const wbVal = document.getElementById('tb-wb-val');
+  const wcVal = document.getElementById('tb-wc-val');
+  const resetBtn = document.getElementById('tb-reset');
+  const readout = document.getElementById('tb-readout');
+
+  let tA, tB, tC;
+  let Kab, Kbc;
+  let wA = 0.95, wB = 0.80, wC = 0.65;
+  const histKab = new Array(300).fill(null);
+  const histKbc = new Array(300).fill(null);
+
+  function reset() {
+    tA = Math.random() * Math.PI * 2;
+    tB = Math.random() * Math.PI * 2;
+    tC = Math.random() * Math.PI * 2;
+    Kab = 0.3 + Math.random() * 0.4;
+    Kbc = 0.3 + Math.random() * 0.4;
+    histKab.fill(null);
+    histKbc.fill(null);
+  }
+  reset();
+
+  waSlider.addEventListener('input', () => { wA = parseFloat(waSlider.value); waVal.textContent = wA.toFixed(2); });
+  wbSlider.addEventListener('input', () => { wB = parseFloat(wbSlider.value); wbVal.textContent = wB.toFixed(2); });
+  wcSlider.addEventListener('input', () => { wC = parseFloat(wcSlider.value); wcVal.textContent = wC.toFixed(2); });
+  resetBtn.addEventListener('click', reset);
+
+  function step() {
+    const dt = 0.05;
+    const eta = 0.5;
+    const r = 5.9;
+
+    const dAB = tB - tA;
+    const dBC = tC - tB;
+
+    // Phases
+    tA += (wA + Kab * Math.sin(dAB)) * dt;
+    tB += (wB + Kab * Math.sin(-dAB) + Kbc * Math.sin(dBC)) * dt;
+    tC += (wC + Kbc * Math.sin(-dBC)) * dt;
+
+    // CLR on each bond's K
+    const dKab = eta * (R0(Kab) * Math.cos(dAB) - 2 * Kab / r) * dt;
+    const dKbc = eta * (R0(Kbc) * Math.cos(dBC) - 2 * Kbc / r) * dt;
+    Kab = Math.max(0, Kab + dKab);
+    Kbc = Math.max(0, Kbc + dKbc);
+
+    histKab.push(Kab); histKab.shift();
+    histKbc.push(Kbc); histKbc.shift();
+  }
+
+  function drawOsc(cx, cy, r, theta, label, color) {
+    ctx.strokeStyle = '#c8c0ad';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.stroke();
+    const px = cx + Math.cos(theta) * r;
+    const py = cy + Math.sin(theta) * r;
+    ctx.strokeStyle = '#c0cde0';
+    ctx.lineWidth = 1.2;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy); ctx.lineTo(px, py);
+    ctx.stroke();
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.arc(px, py, 7, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#888';
+    ctx.font = '14px serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(label, cx, cy + r + 22);
+  }
+
+  function drawBond(x1, y1, x2, y2, K, label) {
+    const Knorm = Math.min(1, K / 2);
+    ctx.strokeStyle = `rgba(217, 114, 54, ${0.12 + Knorm * 0.85})`;
+    ctx.lineWidth = 1 + Knorm * 6;
+    ctx.beginPath();
+    ctx.moveTo(x1, y1); ctx.lineTo(x2, y2);
+    ctx.stroke();
+    ctx.fillStyle = '#555';
+    ctx.font = 'italic 11px serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(label, (x1 + x2) / 2, (y1 + y2) / 2 - 10);
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, 680, 360);
+
+    // Oscillators in a horizontal chain
+    const r = 36;
+    const cy = 90;
+    const xA = 140, xB = 340, xC = 540;
+
+    drawBond(xA + r, cy, xB - r, cy, Kab, `K_AB = ${Kab.toFixed(2)}`);
+    drawBond(xB + r, cy, xC - r, cy, Kbc, `K_BC = ${Kbc.toFixed(2)}`);
+
+    drawOsc(xA, cy, r, tA, 'A', '#2a5f8f');
+    drawOsc(xB, cy, r, tB, 'B', '#d97236');
+    drawOsc(xC, cy, r, tC, 'C', '#7d2d4f');
+
+    // K(t) history plot
+    const sx0 = 60, sy0 = 200, sw = 560, sh = 130;
+    const Kmax = 2.5;
+
+    ctx.fillStyle = '#fdfaf3';
+    ctx.strokeStyle = '#c8c0ad';
+    ctx.lineWidth = 1;
+    ctx.fillRect(sx0, sy0, sw, sh);
+    ctx.strokeRect(sx0, sy0, sw, sh);
+
+    // Gridlines at K=1,2
+    [0.5, 1, 1.5, 2].forEach(v => {
+      const y = sy0 + sh - (v / Kmax) * sh;
+      ctx.strokeStyle = '#e0dbcb';
+      ctx.setLineDash([2, 3]);
+      ctx.beginPath();
+      ctx.moveTo(sx0, y); ctx.lineTo(sx0 + sw, y);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle = '#b0a998';
+      ctx.font = 'italic 10px serif';
+      ctx.textAlign = 'left';
+      ctx.fillText(v.toFixed(1), sx0 + sw + 4, y + 3);
+    });
+
+    // K_AB trace
+    ctx.strokeStyle = '#2a5f8f';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    let started = false;
+    for (let i = 0; i < histKab.length; i++) {
+      if (histKab[i] == null) continue;
+      const x = sx0 + (i / histKab.length) * sw;
+      const y = sy0 + sh - (histKab[i] / Kmax) * sh;
+      if (!started) { ctx.moveTo(x, y); started = true; }
+      else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+
+    // K_BC trace
+    ctx.strokeStyle = '#7d2d4f';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    started = false;
+    for (let i = 0; i < histKbc.length; i++) {
+      if (histKbc[i] == null) continue;
+      const x = sx0 + (i / histKbc.length) * sw;
+      const y = sy0 + sh - (histKbc[i] / Kmax) * sh;
+      if (!started) { ctx.moveTo(x, y); started = true; }
+      else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+
+    // Labels
+    ctx.fillStyle = '#2a5f8f';
+    ctx.font = 'italic 12px serif';
+    ctx.textAlign = 'left';
+    ctx.fillText('K_AB', sx0 + 8, sy0 + 16);
+    ctx.fillStyle = '#7d2d4f';
+    ctx.fillText('K_BC', sx0 + 62, sy0 + 16);
+    ctx.fillStyle = '#888';
+    ctx.textAlign = 'center';
+    ctx.fillText('coupling over time', sx0 + sw / 2, sy0 + sh + 20);
+
+    readout.textContent = `K_AB = ${Kab.toFixed(3)}, K_BC = ${Kbc.toFixed(3)}`;
+
+    step();
+  }
+
+  runWhenVisible(canvas, draw);
+})();
+
+// ============================================================
+// FIGURE B: Small ring of 6 oscillators
+// ============================================================
+
+(() => {
+  const canvas = document.getElementById('canvas-ring');
+  const ctx = setupHiDPICanvas(canvas, 680, 440);
+  const resetBtn = document.getElementById('ring-reset');
+  const spreadSlider = document.getElementById('ring-spread-slider');
+  const spreadVal = document.getElementById('ring-spread-val');
+  const readout = document.getElementById('ring-readout');
+
+  const N = 6;
+  let thetas = new Array(N);
+  let omegas = new Array(N);
+  let Ks = new Array(N); // bond i connects oscillator i to (i+1) mod N
+  let spread = 0.4;
+
+  function reset() {
+    for (let i = 0; i < N; i++) {
+      thetas[i] = Math.random() * Math.PI * 2;
+      omegas[i] = 0.8 + (Math.random() - 0.5) * spread * 2;
+      Ks[i] = 0.3 + Math.random() * 0.5;
+    }
+  }
+  reset();
+
+  resetBtn.addEventListener('click', reset);
+  spreadSlider.addEventListener('input', () => {
+    spread = parseFloat(spreadSlider.value);
+    spreadVal.textContent = spread.toFixed(2);
+  });
+
+  function step() {
+    const dt = 0.04;
+    const eta = 0.5;
+    const r = 5.9;
+
+    const newT = thetas.slice();
+    for (let i = 0; i < N; i++) {
+      const left = (i - 1 + N) % N;
+      const right = (i + 1) % N;
+      const dLeft = thetas[left] - thetas[i];
+      const dRight = thetas[right] - thetas[i];
+      newT[i] = thetas[i] + (omegas[i] + Ks[left] * Math.sin(dLeft) + Ks[i] * Math.sin(dRight)) * dt;
+    }
+    thetas = newT;
+
+    for (let i = 0; i < N; i++) {
+      const right = (i + 1) % N;
+      const dphi = thetas[right] - thetas[i];
+      const cosd = Math.cos(dphi);
+      const dK = eta * (R0(Ks[i]) * cosd - 2 * Ks[i] / r) * dt;
+      Ks[i] = Math.max(0, Ks[i] + dK);
+    }
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, 680, 440);
+
+    const cx = 340, cy = 180, Rring = 130, rOsc = 32;
+
+    // Ring guide
+    ctx.strokeStyle = '#e0dbcb';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.arc(cx, cy, Rring, 0, Math.PI * 2);
+    ctx.stroke();
+
+    // Bonds
+    for (let i = 0; i < N; i++) {
+      const ang1 = (i / N) * Math.PI * 2 - Math.PI / 2;
+      const ang2 = ((i + 1) / N) * Math.PI * 2 - Math.PI / 2;
+      const x1 = cx + Math.cos(ang1) * Rring;
+      const y1 = cy + Math.sin(ang1) * Rring;
+      const x2 = cx + Math.cos(ang2) * Rring;
+      const y2 = cy + Math.sin(ang2) * Rring;
+      const Knorm = Math.min(1, Ks[i] / 2);
+      ctx.strokeStyle = `rgba(217, 114, 54, ${0.10 + Knorm * 0.85})`;
+      ctx.lineWidth = 1 + Knorm * 7;
+      ctx.beginPath();
+      ctx.moveTo(x1, y1); ctx.lineTo(x2, y2);
+      ctx.stroke();
+    }
+
+    // Oscillators
+    let aliveCount = 0, deadCount = 0;
+    for (let i = 0; i < N; i++) {
+      const ang = (i / N) * Math.PI * 2 - Math.PI / 2;
+      const x = cx + Math.cos(ang) * Rring;
+      const y = cy + Math.sin(ang) * Rring;
+      const brightness = (Math.cos(thetas[i]) + 1) / 2;
+      const rc = 40 + brightness * 215;
+      const gc = 40 + brightness * 170;
+      const bc = 50 + brightness * 80;
+
+      // Glow
+      const glowR = rOsc + brightness * 8;
+      const grad = ctx.createRadialGradient(x, y, rOsc * 0.6, x, y, glowR);
+      grad.addColorStop(0, `rgba(255, 210, 120, ${brightness * 0.6})`);
+      grad.addColorStop(1, `rgba(255, 210, 120, 0)`);
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(x, y, glowR, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = `rgb(${rc}, ${gc}, ${bc})`;
+      ctx.beginPath();
+      ctx.arc(x, y, rOsc - 4, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // Count alive/dead
+    for (let i = 0; i < N; i++) {
+      if (Ks[i] > 0.1) aliveCount++; else deadCount++;
+    }
+
+    // K bars below
+    const bx0 = 40, by0 = 360, bw = 600, bh = 24;
+    const barW = (bw - 10 * N) / N;
+    for (let i = 0; i < N; i++) {
+      const x = bx0 + i * (barW + 10);
+      const Knorm = Math.min(1, Ks[i] / 2);
+      ctx.fillStyle = '#fdfaf3';
+      ctx.strokeStyle = '#c8c0ad';
+      ctx.lineWidth = 1;
+      ctx.fillRect(x, by0, barW, bh);
+      ctx.strokeRect(x, by0, barW, bh);
+      ctx.fillStyle = Ks[i] > 0.1 ? '#d97236' : '#a8a39a';
+      ctx.fillRect(x, by0, Knorm * barW, bh);
+      ctx.fillStyle = '#555';
+      ctx.font = 'italic 10px serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(`K${i}: ${Ks[i].toFixed(2)}`, x + barW / 2, by0 + bh + 12);
+    }
+
+    readout.textContent = `alive = ${aliveCount}, dead = ${deadCount}`;
+
+    step();
+  }
+
+  runWhenVisible(canvas, draw);
+})();
+
+// ============================================================
+// FIGURE D: Full grid simulation with K histogram and I(t) trace
+// ============================================================
+
+(() => {
+  const canvas = document.getElementById('canvas-grid');
+  const ctx = setupHiDPICanvas(canvas, 680, 520);
+  const resetBtn = document.getElementById('grid-reset');
+  const spreadSlider = document.getElementById('grid-spread-slider');
+  const rSlider = document.getElementById('grid-r-slider');
+  const spreadVal = document.getElementById('grid-spread-val');
+  const rVal = document.getElementById('grid-r-val');
+  const readout = document.getElementById('grid-readout');
+  const viewPhasesBtn = document.getElementById('grid-view-phases');
+  const viewBondsBtn = document.getElementById('grid-view-bonds');
+  const viewBothBtn = document.getElementById('grid-view-both');
+
+  let viewMode = 'both'; // 'phases', 'bonds', 'both'
+
+  function setView(mode) {
+    viewMode = mode;
+    [viewPhasesBtn, viewBondsBtn, viewBothBtn].forEach(b => b.classList.remove('primary'));
+    if (mode === 'phases') viewPhasesBtn.classList.add('primary');
+    if (mode === 'bonds') viewBondsBtn.classList.add('primary');
+    if (mode === 'both') viewBothBtn.classList.add('primary');
+  }
+  viewPhasesBtn.addEventListener('click', () => setView('phases'));
+  viewBondsBtn.addEventListener('click', () => setView('bonds'));
+  viewBothBtn.addEventListener('click', () => setView('both'));
+
+  const L = 14;
+  const N = L * L;
+  // Horizontal bonds: L*L, vertical bonds: L*L (periodic)
+  const Nbonds = 2 * L * L;
+  let thetas = new Float32Array(N);
+  let omegas = new Float32Array(N);
+  let Kh = new Float32Array(L * L); // K for horizontal bond: Kh[y*L+x] = bond (x,y)-(x+1,y)
+  let Kv = new Float32Array(L * L); // K for vertical bond: Kv[y*L+x] = bond (x,y)-(x,y+1)
+  let spread = 0.6;
+  let r = 5.9;
+
+  const histI = new Array(300).fill(null);
+  const histC = new Array(300).fill(null);
+
+  function reset() {
+    for (let i = 0; i < N; i++) {
+      thetas[i] = Math.random() * Math.PI * 2;
+      omegas[i] = 0.8 + (Math.random() - 0.5) * spread * 2;
+    }
+    for (let i = 0; i < L * L; i++) {
+      Kh[i] = 0.1 + Math.random() * 0.6;
+      Kv[i] = 0.1 + Math.random() * 0.6;
+    }
+    histI.fill(null);
+    histC.fill(null);
+  }
+  reset();
+
+  resetBtn.addEventListener('click', reset);
+  spreadSlider.addEventListener('input', () => {
+    spread = parseFloat(spreadSlider.value);
+    spreadVal.textContent = spread.toFixed(2);
+  });
+  rSlider.addEventListener('input', () => {
+    r = parseFloat(rSlider.value);
+    rVal.textContent = r.toFixed(1);
+  });
+
+  let lastC = 0;
+
+  function step() {
+    const dt = 0.04;
+    const eta = 0.5;
+
+    const newT = new Float32Array(N);
+    for (let y = 0; y < L; y++) {
+      for (let x = 0; x < L; x++) {
+        const i = y * L + x;
+        const xm = (x - 1 + L) % L;
+        const xp = (x + 1) % L;
+        const ym = (y - 1 + L) % L;
+        const yp = (y + 1) % L;
+        // Bond strengths
+        const K_right = Kh[y * L + x];         // bond (x,y)-(x+1,y)
+        const K_left  = Kh[y * L + xm];         // bond (xm,y)-(x,y)
+        const K_down  = Kv[y * L + x];         // bond (x,y)-(x,y+1)
+        const K_up    = Kv[ym * L + x];         // bond (x,ym)-(x,y)
+        const d =
+          omegas[i] +
+          K_right * Math.sin(thetas[y * L + xp] - thetas[i]) +
+          K_left  * Math.sin(thetas[y * L + xm] - thetas[i]) +
+          K_down  * Math.sin(thetas[yp * L + x] - thetas[i]) +
+          K_up    * Math.sin(thetas[ym * L + x] - thetas[i]);
+        newT[i] = thetas[i] + d * dt;
+      }
+    }
+    thetas = newT;
+
+    // CLR on each bond
+    for (let y = 0; y < L; y++) {
+      for (let x = 0; x < L; x++) {
+        const i = y * L + x;
+        const ih = y * L + ((x + 1) % L);
+        const iv = ((y + 1) % L) * L + x;
+        // Horizontal bond
+        const dphiH = thetas[ih] - thetas[i];
+        const dKh = eta * (R0(Kh[y * L + x]) * Math.cos(dphiH) - 2 * Kh[y * L + x] / r) * dt;
+        Kh[y * L + x] = Math.max(0, Kh[y * L + x] + dKh);
+        // Vertical bond
+        const dphiV = thetas[iv] - thetas[i];
+        const dKv = eta * (R0(Kv[y * L + x]) * Math.cos(dphiV) - 2 * Kv[y * L + x] / r) * dt;
+        Kv[y * L + x] = Math.max(0, Kv[y * L + x] + dKv);
+      }
+    }
+  }
+
+  function computeMetrics() {
+    // I_phase: average cos(Δθ) over bonds, weighted equally
+    let s = 0, nb = 0;
+    for (let y = 0; y < L; y++) {
+      for (let x = 0; x < L; x++) {
+        const i = y * L + x;
+        const ih = y * L + ((x + 1) % L);
+        const iv = ((y + 1) % L) * L + x;
+        s += Math.cos(thetas[ih] - thetas[i]);
+        s += Math.cos(thetas[iv] - thetas[i]);
+        nb += 2;
+      }
+    }
+    const Iphase = s / nb;
+    // Structural richness: fraction of alive bonds
+    let alive = 0;
+    for (let i = 0; i < L * L; i++) {
+      if (Kh[i] > 0.2) alive++;
+      if (Kv[i] > 0.2) alive++;
+    }
+    const fAlive = alive / Nbonds;
+    // Crude C: combine alignment and activity
+    const C = (1 + Iphase) / 2 * fAlive;
+    return { Iphase, fAlive, C };
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, 680, 520);
+
+    // Compute metrics and update histories
+    const m = computeMetrics();
+    const dC = m.C - lastC;
+    lastC = m.C;
+    histI.push(Math.max(0, dC * 60));  // Rough proxy for I(t)
+    histI.shift();
+    histC.push(m.C);
+    histC.shift();
+
+    // --- TOP: grid view with bonds ---
+    const cell = 22;
+    const gridW = L * cell;
+    const x0 = (680 - gridW) / 2;
+    const y0 = 20;
+
+    // Oscillator cells (phase color)
+    const showPhases = viewMode === 'phases' || viewMode === 'both';
+    const showBonds = viewMode === 'bonds' || viewMode === 'both';
+    for (let y = 0; y < L; y++) {
+      for (let x = 0; x < L; x++) {
+        const i = y * L + x;
+        if (showPhases) {
+          const b = (Math.cos(thetas[i]) + 1) / 2;
+          const rc = 40 + b * 215;
+          const gc = 40 + b * 170;
+          const bc = 50 + b * 80;
+          ctx.fillStyle = `rgb(${rc}, ${gc}, ${bc})`;
+        } else {
+          ctx.fillStyle = '#f5f0e4'; // dim cream when phases hidden
+        }
+        ctx.fillRect(x0 + x * cell, y0 + y * cell, cell, cell);
+      }
+    }
+
+    // Bonds as overlays (lines between cell centers), only if enabled
+    if (showBonds) {
+      const halfCell = cell / 2;
+      for (let y = 0; y < L; y++) {
+        for (let x = 0; x < L; x++) {
+          const x1 = x0 + x * cell + halfCell;
+          const y1 = y0 + y * cell + halfCell;
+          const K = Kh[y * L + x];
+          if (x + 1 < L) {
+            const x2 = x0 + (x + 1) * cell + halfCell;
+            const Knorm = Math.min(1, K / 2);
+            // In bonds-only mode, boost contrast; in both, be gentler
+            const baseA = showPhases ? 0.05 : 0.08;
+            const rangeA = showPhases ? 0.6 : 0.9;
+            ctx.strokeStyle = `rgba(217, 114, 54, ${baseA + Knorm * rangeA})`;
+            ctx.lineWidth = 0.8 + Knorm * (showPhases ? 2.8 : 4);
+            ctx.beginPath();
+            ctx.moveTo(x1, y1); ctx.lineTo(x2, y1);
+            ctx.stroke();
+          }
+          const K2 = Kv[y * L + x];
+          if (y + 1 < L) {
+            const y2 = y0 + (y + 1) * cell + halfCell;
+            const Knorm = Math.min(1, K2 / 2);
+            const baseA = showPhases ? 0.05 : 0.08;
+            const rangeA = showPhases ? 0.6 : 0.9;
+            ctx.strokeStyle = `rgba(217, 114, 54, ${baseA + Knorm * rangeA})`;
+            ctx.lineWidth = 0.8 + Knorm * (showPhases ? 2.8 : 4);
+            ctx.beginPath();
+            ctx.moveTo(x1, y1); ctx.lineTo(x1, y2);
+            ctx.stroke();
+          }
+        }
+      }
+    }
+
+    ctx.strokeStyle = '#c8c0ad';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(x0, y0, gridW, gridW);
+
+    // --- BOTTOM-LEFT: K histogram ---
+    const hx0 = 30, hy0 = 360, hw = 310, hh = 130;
+    ctx.fillStyle = '#fdfaf3';
+    ctx.strokeStyle = '#c8c0ad';
+    ctx.lineWidth = 1;
+    ctx.fillRect(hx0, hy0, hw, hh);
+    ctx.strokeRect(hx0, hy0, hw, hh);
+
+    // Build histogram: 30 bins from K=0 to K=3
+    const nbins = 30;
+    const Kmax = 3;
+    const bins = new Array(nbins).fill(0);
+    for (let i = 0; i < L * L; i++) {
+      const b1 = Math.min(nbins - 1, Math.floor((Kh[i] / Kmax) * nbins));
+      const b2 = Math.min(nbins - 1, Math.floor((Kv[i] / Kmax) * nbins));
+      bins[b1]++;
+      bins[b2]++;
+    }
+    let maxBin = 1;
+    for (let i = 0; i < nbins; i++) if (bins[i] > maxBin) maxBin = bins[i];
+
+    const barW = hw / nbins;
+    for (let i = 0; i < nbins; i++) {
+      const barH = (bins[i] / maxBin) * (hh - 20);
+      const Kmid = (i + 0.5) / nbins * Kmax;
+      const Knorm = Math.min(1, Kmid / 2);
+      ctx.fillStyle = Kmid < 0.15 ? '#a8a39a' : `rgba(217, 114, 54, ${0.4 + Knorm * 0.5})`;
+      ctx.fillRect(hx0 + i * barW + 1, hy0 + hh - barH - 6, barW - 2, barH);
+    }
+
+    // Axis
+    ctx.fillStyle = '#888';
+    ctx.font = 'italic 11px serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('K distribution (all bonds)', hx0 + hw / 2, hy0 + 14);
+    [0, 1, 2, 3].forEach(K => {
+      const x = hx0 + (K / Kmax) * hw;
+      ctx.fillStyle = '#b0a998';
+      ctx.font = 'italic 10px serif';
+      ctx.fillText(String(K), x, hy0 + hh + 12);
+    });
+
+    // --- BOTTOM-RIGHT: I(t) and C(t) traces ---
+    const tx0 = 370, ty0 = 360, tw = 280, th = 130;
+    ctx.fillStyle = '#fdfaf3';
+    ctx.strokeStyle = '#c8c0ad';
+    ctx.lineWidth = 1;
+    ctx.fillRect(tx0, ty0, tw, th);
+    ctx.strokeRect(tx0, ty0, tw, th);
+
+    // Zero line
+    const zeroY = ty0 + th - 10;
+    ctx.strokeStyle = '#e0dbcb';
+    ctx.setLineDash([2, 3]);
+    ctx.beginPath();
+    ctx.moveTo(tx0, zeroY); ctx.lineTo(tx0 + tw, zeroY);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // C(t) trace (scaled)
+    ctx.strokeStyle = '#2a5f8f';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    let started = false;
+    for (let i = 0; i < histC.length; i++) {
+      if (histC[i] == null) continue;
+      const x = tx0 + (i / histC.length) * tw;
+      const y = ty0 + th - 10 - histC[i] * (th - 20);
+      if (!started) { ctx.moveTo(x, y); started = true; }
+      else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+
+    // I(t) trace (scaled)
+    ctx.strokeStyle = '#d97236';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    started = false;
+    for (let i = 0; i < histI.length; i++) {
+      if (histI[i] == null) continue;
+      const x = tx0 + (i / histI.length) * tw;
+      const y = ty0 + th - 10 - Math.max(0, histI[i]) * 40;
+      if (!started) { ctx.moveTo(x, y); started = true; }
+      else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+
+    // Labels
+    ctx.fillStyle = '#2a5f8f';
+    ctx.font = 'italic 11px serif';
+    ctx.textAlign = 'left';
+    ctx.fillText('C(t)', tx0 + 6, ty0 + 14);
+    ctx.fillStyle = '#d97236';
+    ctx.fillText('I(t) ≥ 0', tx0 + 50, ty0 + 14);
+    ctx.fillStyle = '#888';
+    ctx.textAlign = 'center';
+    ctx.fillText('coherence climbing →', tx0 + tw / 2, ty0 + th + 12);
+
+    readout.textContent = `I_phase = ${((m.Iphase + 1) / 2).toFixed(3)},  C = ${m.C.toFixed(3)},  alive ${(m.fAlive * 100).toFixed(0)}%`;
+
+    step();
+  }
+
+  runWhenVisible(canvas, draw);
+})();
+</script>
+
+</body>
+</html>

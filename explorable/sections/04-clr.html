@@ -9,7 +9,11 @@
 <body>
 <div class="page">
 
-<p style="color: var(--text-faint); font-size: 0.88em; margin-bottom: 0;"><a href="../index.html" style="border-bottom: none;">&larr; contents</a> &nbsp;·&nbsp; section 04 of 15</p>
+<nav class="breadcrumb">
+  <a href="../index.html">&larr; contents</a>
+  <span class="sep">·</span>
+  <span class="section-num">section 04 / 15</span>
+</nav>
 
 <h1>The Coherence Learning Rule<span class="subtitle">What you get when you ask each bond to help maximize C</span></h1>
 
@@ -78,7 +82,7 @@
   <li><strong>The marble</strong> — the bond's <em>current</em> K. Not separate from the physics: the marble <em>is</em> K, plotted on this landscape. As the CLR updates K, the marble slides along the curve. Gradient descent on V(K) is mathematically identical to the CLR's Shannon channel — two ways of saying the same thing.</li>
 </ul>
 
-<p>When cos(Δθ) is high, the curve has a nice valley at some K* > 0 and the marble settles there — alive. When cos(Δθ) drops below a threshold, the valley flattens out and the marble rolls all the way to K = 0 — dead. Here's the real dynamic on a pair of coupled oscillators:</p>
+<p>When cos(Δθ) is high, the curve has a nice valley at some K* &gt; 0 and the marble settles there — alive. When cos(Δθ) drops below a threshold, the valley flattens out and the marble rolls all the way to K = 0 — dead. Here's the real dynamic on a pair of coupled oscillators:</p>
 
 <figure id="fig-live-bond">
   <canvas id="canvas-live-bond" width="680" height="480"></canvas>
@@ -101,7 +105,7 @@
 
 <h2>The death threshold</h2>
 
-<p>Something remarkable happens at a critical value of <span class="eqn">cos(Δθ)</span>. Above it, the potential has a nice interior minimum at some <span class="eqn">K* > 0</span> — the bond is alive, its coupling finds a stable positive value. Below it, the only minimum is at <span class="eqn">K = 0</span> — the bond dies, its coupling decays to zero and stays there. The transition between these two regimes is not gradual. It is a <em>bifurcation</em>: a sharp point where the shape of the solution set changes qualitatively.</p>
+<p>Something remarkable happens at a critical value of <span class="eqn">cos(Δθ)</span>. Above it, the potential has a nice interior minimum at some <span class="eqn">K* &gt; 0</span> — the bond is alive, its coupling finds a stable positive value. Below it, the only minimum is at <span class="eqn">K = 0</span> — the bond dies, its coupling decays to zero and stays there. The transition between these two regimes is not gradual. It is a <em>bifurcation</em>: a sharp point where the shape of the solution set changes qualitatively.</p>
 
 <p>You can read the threshold off a short linearization near <span class="eqn">K = 0</span>. The bond can revive from zero coupling only when:</p>
 
@@ -178,7 +182,7 @@
 </div>
 
 <script type="module">
-import { setupHiDPICanvas, wireEquation, R0 } from '../js/common.js';
+import { setupHiDPICanvas, wireEquation, R0, runWhenVisible } from '../js/common.js';
 
 // ============================================================
 // Interactive equation: CLR
@@ -502,11 +506,7 @@ function findKstar(cosdth, r) {
     step();
   }
 
-  function loop() {
-    draw();
-    requestAnimationFrame(loop);
-  }
-  loop();
+  runWhenVisible(canvas, draw);
 })();
 
 // Shared drawOsc helper
@@ -686,11 +686,7 @@ function drawOsc(ctx, cx, cy, r, theta, label, color) {
     readout.style.color = probeAlive ? '#d97236' : '#7d2d4f';
   }
 
-  function loop() {
-    draw();
-    requestAnimationFrame(loop);
-  }
-  loop();
+  runWhenVisible(canvas, draw);
 })();
 </script>
 

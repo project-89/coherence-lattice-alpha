@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Phase-Locked Modes: geometry and memory — The Living Lattice</title>
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<div class="page">
+
+<nav class="breadcrumb">
+  <a href="../index.html">&larr; contents</a>
+  <span class="sep">·</span>
+  <span class="section-num">section 06 / 15</span>
+</nav>
+
+<h1>Phase-locked modes<span class="subtitle">How a lattice remembers — geometry, Chladni plates, and the K-field as memory</span></h1>
+
+<p class="lead">The grid at the end of Chapter 5 polarized into something. Some region of bonds alive, the rest dead. A pattern. What is that pattern, exactly? It is not a single thing. It is a <em>collection of phase-locked regions</em> — pockets of oscillators that have agreed to share a common rhythm. Each pocket is called a <strong>phase-locked mode</strong>, or PLM. The K-field is a map of which oscillators have agreed with which others. And that map, as we are about to see, is a memory.</p>
+
+<h2>Defining a PLM</h2>
+
+<p>A phase-locked mode is the simplest possible collective — a maximal group of oscillators, connected through alive bonds, that have all synchronized to a single common effective frequency. Formally:</p>
+
+<div class="equation-block" id="eq-plm">
+  <div class="eq-display">
+    <span class="eq-symbol state" data-symbol="thetadot">θ̇<sub>i</sub></span>
+    &nbsp;=&nbsp;
+    <span class="eq-symbol state" data-symbol="Omega">Ω</span>
+    &nbsp; for all &nbsp;
+    <span class="eq-symbol struct" data-symbol="cluster">i ∈ cluster</span>
+    &nbsp; connected by &nbsp;
+    <span class="eq-symbol param" data-symbol="alivebonds">alive bonds (K &gt; 0)</span>
+  </div>
+  <p class="eq-prompt">Click any symbol to see what it means.</p>
+  <div class="eq-detail"></div>
+  <div class="eq-howitworks">
+    <span class="label">In words</span>
+    A PLM is what emerges when a set of oscillators, tied together by living couplings, have all chosen the same rhythm. They can have <em>different phases</em> — one might always sit ahead of another — but they rotate at the same speed. The K-field tells you which oscillators are in the same PLM: any pair connected by a path of alive bonds. Each cluster in the grid's alive-bond graph is one PLM.
+  </div>
+</div>
+
+<p>To <em>see</em> the PLMs in a running network, we color every oscillator by its cluster. Two oscillators get the same color when they are connected through alive bonds. Two oscillators get different colors when the path between them runs through even one dead bond.</p>
+
+<figure id="fig-plm-view">
+  <canvas id="canvas-plm-view" width="680" height="500"></canvas>
+  <div class="controls">
+    <button id="plm-reset" class="primary">Reset (random K and phases)</button>
+    <button id="plm-bonds-btn">Bonds: ON</button>
+    <div class="control">
+      <label>ω spread <span class="val" id="plm-spread-val">0.60</span></label>
+      <input type="range" id="plm-spread-slider" min="0" max="1.5" step="0.01" value="0.6">
+    </div>
+    <div class="control">
+      <label>K threshold <span class="val" id="plm-thresh-val">0.30</span></label>
+      <input type="range" id="plm-thresh-slider" min="0.05" max="1.5" step="0.01" value="0.3">
+    </div>
+  </div>
+  <figcaption>Top: the grid, with each oscillator colored by which PLM it belongs to. Every color is a distinct cluster of oscillators connected through alive bonds. Bottom: a bar showing the <em>size distribution</em> of PLMs — tall bars mean a few big PLMs; many short bars mean lots of small fragments. As the CLR runs, fragments fuse into larger PLMs, and eventually the grid may settle on a few dominant ones. Slide the K-threshold to change what counts as an "alive" bond for clustering purposes. <span id="plm-readout" class="readout">PLMs: 0 &nbsp; largest: 0%</span></figcaption>
+</figure>
+
+<p>Watch the cluster colors evolve. Early on, the grid is a speckle of many small PLMs. As bonds come alive, fragments merge. Late in the run, a few dominant colors take over. The lattice is organizing itself into a handful of coherent regions — <em>it is deciding how to be structured</em>.</p>
+
+<h2>The PLM Freezing Lemma</h2>
+
+<p>Here is the key fact that makes PLMs more than a passing shape. Once a PLM has formed — once a cluster of oscillators has agreed on a common frequency — the coupling on every bond <em>inside</em> that PLM converges exponentially to a unique fixed value determined only by the locked phase difference. The bond settles. The K stops changing. The CLR falls silent.</p>
+
+<div class="equation-block" id="eq-freezing">
+  <div class="eq-display">
+    At a PLM: &nbsp;
+    <span class="eq-symbol state" data-symbol="Kij">K<sub>ij</sub>(t)</span>
+    &nbsp;→&nbsp;
+    <span class="eq-symbol op" data-symbol="Kstar">K*<sub>ij</sub></span>
+    &nbsp; exponentially, uniquely determined by &nbsp;
+    <span class="eq-symbol op" data-symbol="cosfrozen">cos(Δθ<sub>ij</sub>)</span>
+  </div>
+  <p class="eq-prompt">Click any symbol to see what it means.</p>
+  <div class="eq-detail"></div>
+  <div class="eq-howitworks">
+    <span class="label">In words</span>
+    When a cluster of oscillators all share a common rhythm, the phase differences between them stop changing. The phase differences are now constants. Feed those constants into the CLR, and every bond inside the cluster is driven by a fixed cos(Δθ<sub>ij</sub>), which produces a unique stable K. The coupling locks in. What was moments ago a field of updating parameters becomes a <em>frozen</em> field — static geometry encoding the relationships that the oscillators chose to keep. This is the paper's PLM Freezing Lemma (Lemma 5.1), and it is why the α derivation can evaluate everything at the fixed point rather than integrating over the trajectory.
+  </div>
+</div>
+
+<p>A frozen K-field is the network's learned connectivity. It is not a transient state. It is a <em>geometry</em> — one that persists as long as the PLMs it codifies persist. That is the door to memory.</p>
+
+<h2>Memory in the K-field</h2>
+
+<p>Here is the central claim of this chapter, which you are about to see demonstrated: <strong>the K-field <em>is</em> the lattice's memory</strong>. When a pattern of activity has imprinted itself on the coupling field, and the PLM freezing lemma has locked the K-values in place, the memory of that pattern persists even after the activity has gone. Turn the oscillators off and back on — scramble their phases. The K-field still says which oscillators belong together. The phases re-lock into the same pattern immediately, because the geometry is already there.</p>
+
+<p>Consider a <strong>Chladni plate</strong>. A violin bow scrapes the edge of a metal plate; the plate vibrates; fine sand thrown on top migrates to the nodes of the standing wave and stays there. Drive the plate at a different frequency, different pattern. Each driving frequency has its own set of nodes, its own pattern in the sand. Chladni plates are pattern-storage through forced resonance: the driving frequency selects a specific geometry. Ours is more interesting. Our lattice <em>remembers</em> the pattern in its K-field — it doesn't need the drive to stay on. Turn the drive off. The K-field persists. Put the drive back on. The pattern snaps into place faster than it did the first time, because the geometry is already there.</p>
+
+<figure id="fig-memory">
+  <canvas id="canvas-memory" width="680" height="480"></canvas>
+  <div id="mem-narrative" style="padding: 16px 18px; margin: 14px 0 12px; background: var(--bg); border: 1px solid var(--panel-border); border-radius: 3px; min-height: 92px; font-size: 0.98em; line-height: 1.55;">
+    <div id="mem-step-label" style="font-size: 0.72em; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent); font-weight: 700; margin-bottom: 6px;">Step 0 of 5 · Ready</div>
+    <div id="mem-step-text">Press <em>Next step</em> to begin. We will drive the network with a spatial pattern, let the CLR learn it, and then find out whether the learned geometry can reconstitute that pattern without the drive.</div>
+  </div>
+  <div class="controls">
+    <button id="mem-prev">← Previous</button>
+    <button id="mem-next" class="primary">Next step →</button>
+    <button id="mem-reset">Reset tour</button>
+    <button id="mem-bonds-btn" class="primary">Bonds: ON</button>
+  </div>
+  <figcaption>A grid of oscillators running the CLR. Cell color shows the drive pattern each oscillator is receiving (blue to orange along the drive sinusoid); when the drive is off, cells fade to neutral. Cell brightness modulates with each oscillator's instantaneous phase. Bonds are drawn as orange overlay lines, thickness proportional to K — this is the live K-field, the lattice's memory. <span id="mem-readout" class="readout">I_phase = 0.00</span></figcaption>
+</figure>
+
+<p>The tour walks through five states. The core thing to notice: in steps 3 and 4, the drive is <em>off</em>, but the K-field still holds the imprinted pattern — and in step 4, scrambling the phases does nothing to that held pattern. The oscillators re-lock into exactly the same striped geometry the drive put there in step 2, because that geometry now lives in the connections, not in the motion.</p>
+
+<p>This is how a neuron learns. Not by storing values in registers, but by sculpting its own connectivity to respond faster to signals it has seen before. <em>Cells that fire together, wire together</em>. Here, bonds that align together thicken together — and the thickening persists. We call this <strong>K-field memory</strong>. It is geometry as storage. It is the simplest substrate capable of recognition without a controller.</p>
+
+<h2>Many patterns, one K-field</h2>
+
+<p>One pattern is already remarkable. But the wilder leap — and the one that takes longest to really grok — is that a <em>single</em> K-field can hold more than one learned pattern at the same time. There is only one set of bonds. Only one set of K values. And yet those K values, correctly shaped, can support multiple distinct phase patterns. When you present one of them as a drive, the phases lock to that pattern. When you present another, they lock to that one instead. The K-field has become a palimpsest of rhythms, each one retrievable.</p>
+
+<p>Here is a playground to let you feel this. Six preset drive patterns sit on the left. You can turn the drive on or off, and you can turn learning on or off, independently. Try this:</p>
+
+<ol style="margin: 0.4em 0 1em 1.6em; line-height: 1.7; color: var(--text-soft);">
+  <li><em>Reset K</em>. Pick pattern V, turn drive ON, learning ON. Wait a few seconds — K absorbs V.</li>
+  <li>Still learning: pick pattern H. Watch K partially rewire. Some of V is preserved; some is overwritten.</li>
+  <li>Alternate between V, H, Diagonal for a while. K settles into a richer state that supports several of them partially.</li>
+  <li>Turn learning OFF. Now try each pattern, drive ON. The ones the K-field retained will lock fast. The ones that got overwritten won't lock cleanly. <em>That</em> is the shape of what it remembers.</li>
+  <li>Teach a single pattern for a long time, then test others. Notice how sharp the preference becomes for the one it knows.</li>
+</ol>
+
+<figure id="fig-playground">
+  <canvas id="canvas-playground" width="680" height="560"></canvas>
+  <div class="controls" style="flex-direction: column; align-items: stretch; gap: 12px;">
+    <div>
+      <div style="font-size: 0.85em; color: var(--text-soft); margin-bottom: 6px;">drive pattern:</div>
+      <div id="pg-patterns" style="display: flex; flex-wrap: wrap; gap: 6px;"></div>
+    </div>
+    <div style="display: flex; flex-wrap: wrap; gap: 14px; align-items: center;">
+      <button id="pg-drive-btn">Drive: OFF</button>
+      <button id="pg-learn-btn">Learning: OFF</button>
+      <button id="pg-reset">Reset K</button>
+      <button id="pg-bonds-btn" class="primary">Bonds: ON</button>
+      <span id="pg-status" style="color: var(--text-soft); font-size: 0.9em; font-style: italic;"></span>
+    </div>
+  </div>
+  <figcaption>Six drive patterns. Select one by clicking. <em>Drive</em> toggle applies the selected pattern as a spatial ω modulation. <em>Learning</em> toggle lets the CLR update the K-field; when off, K is frozen. Cell color shows the drive pattern's signature (warm for high-ω cells, cool for low-ω), but <em>only where the lattice has actually locked</em> — unlocked regions fade to neutral cream. So when you see the grid bloom into the pattern's colors, the lattice has recognized it. Bonds show the K-field structure that stores the memory. <span id="pg-readout" class="readout">I_phase = 0.00</span></figcaption>
+</figure>
+
+<p>What you are playing with is the simplest form of associative memory. A Hopfield network, made of oscillators, trained by a dynamics principle you can write in three symbols (<em>I ≥ 0</em>). It holds several patterns at once, imperfectly but measurably, and the measure of imperfection — how much one pattern overwrites another — is itself a function of training order, duration, and orthogonality between patterns. Everything a cognitive scientist would expect from a memory substrate is already present, and it comes for free from the Coherence Theorem.</p>
+
+<h2>Nested Phase-Lock Depth (NPD)</h2>
+
+<p>PLMs can themselves become oscillators. A large phase-locked region has a single effective frequency and a single effective phase. Viewed from a coarser scale, it is one unit. Two large PLMs can lock <em>with each other</em>, across a thin bridge of bonds, forming a <em>PLM of PLMs</em>. Apply the same coarse-graining trick again. The result is a hierarchy of phase-locked structure, with depth we call <strong>Nested Phase-Lock Depth</strong> or NPD.</p>
+
+<div style="text-align: center; margin: 1.4em 0;">
+  <svg width="560" height="180" viewBox="0 0 560 180" style="max-width: 100%;">
+    <!-- Level 0 -->
+    <g>
+      <text x="16" y="22" fill="#888" style="font: italic 12px serif">Level 0: oscillators</text>
+      <g fill="#2a5f8f">
+        <circle cx="40" cy="50" r="5"/>
+        <circle cx="60" cy="50" r="5"/>
+        <circle cx="80" cy="50" r="5"/>
+        <circle cx="100" cy="50" r="5"/>
+        <circle cx="140" cy="50" r="5"/>
+        <circle cx="160" cy="50" r="5"/>
+        <circle cx="180" cy="50" r="5"/>
+        <circle cx="220" cy="50" r="5"/>
+        <circle cx="240" cy="50" r="5"/>
+        <circle cx="260" cy="50" r="5"/>
+        <circle cx="280" cy="50" r="5"/>
+        <circle cx="320" cy="50" r="5"/>
+        <circle cx="340" cy="50" r="5"/>
+        <circle cx="380" cy="50" r="5"/>
+        <circle cx="400" cy="50" r="5"/>
+        <circle cx="440" cy="50" r="5"/>
+        <circle cx="460" cy="50" r="5"/>
+        <circle cx="480" cy="50" r="5"/>
+        <circle cx="500" cy="50" r="5"/>
+        <circle cx="520" cy="50" r="5"/>
+      </g>
+    </g>
+    <!-- Level 1 groupings -->
+    <g>
+      <text x="16" y="102" fill="#888" style="font: italic 12px serif">Level 1: PLMs</text>
+      <rect x="30" y="40" width="80" height="20" rx="10" fill="none" stroke="#d97236" stroke-width="1.5" opacity="0.7"/>
+      <rect x="130" y="40" width="60" height="20" rx="10" fill="none" stroke="#d97236" stroke-width="1.5" opacity="0.7"/>
+      <rect x="210" y="40" width="80" height="20" rx="10" fill="none" stroke="#d97236" stroke-width="1.5" opacity="0.7"/>
+      <rect x="310" y="40" width="40" height="20" rx="10" fill="none" stroke="#d97236" stroke-width="1.5" opacity="0.7"/>
+      <rect x="370" y="40" width="40" height="20" rx="10" fill="none" stroke="#d97236" stroke-width="1.5" opacity="0.7"/>
+      <rect x="430" y="40" width="100" height="20" rx="10" fill="none" stroke="#d97236" stroke-width="1.5" opacity="0.7"/>
+    </g>
+    <!-- Level 2 super-groupings -->
+    <g>
+      <text x="16" y="152" fill="#888" style="font: italic 12px serif">Level 2: PLMs of PLMs</text>
+      <rect x="22" y="32" width="280" height="36" rx="18" fill="none" stroke="#7d2d4f" stroke-width="1.5" opacity="0.6" stroke-dasharray="4,3"/>
+      <rect x="302" y="32" width="240" height="36" rx="18" fill="none" stroke="#7d2d4f" stroke-width="1.5" opacity="0.6" stroke-dasharray="4,3"/>
+    </g>
+  </svg>
+</div>
+
+<p>NPD is the number of levels you can climb the hierarchy before you run out of nested structure. A grid in pure unison has NPD = 1 (one giant PLM). A grid in noise has NPD = 0 (no PLMs). A grid that has organized into many regions that have themselves started cross-locking in pairs has NPD = 2 or 3. In a real lattice running the CLR with rich enough dynamics, NPD can keep climbing — patterns within patterns within patterns. Each level contributes to structural richness ρ, and therefore to coherence capital C.</p>
+
+<p>This is how the Coherence Theorem, <em>I ≥ 0</em>, recruits structure at every available scale. Once small PLMs have formed and frozen, they become the building blocks of larger PLMs, and the intelligence flux keeps climbing by finding more and more ways for the network to coordinate without collapsing into trivial unison. The hierarchy is the whole point.</p>
+
+<h2>Why this matters for the α derivation</h2>
+
+<p>For α specifically, two things from this chapter will do the heavy lifting in later chapters:</p>
+
+<ul style="margin: 0.4em 0 1.2em 1.6em; line-height: 1.7; color: var(--text-soft);">
+  <li><strong>The PLM Freezing Lemma</strong> is what allows the α formula to be <em>evaluated at the CLR attractor</em> rather than <em>integrated along the trajectory</em>. A static lattice gives 1/α = 143 (wrong by 4.4%). A living lattice whose K's have frozen at PLM fixed points gives 1/α = 137. This distinction — made possible only by the lemma we just met — is the single mathematical fact that distinguishes this framework from standard lattice field theory. (Chapter 10.)</li>
+  <li><strong>The geometry of PLMs on the diamond lattice</strong> is what supports the topological defects — the vortices — that carry charge and mass. The K-field memory we saw here is what makes those defects stable enough to persist. Without it, topology couldn't survive the noise. (Chapter 7.)</li>
+</ul>
+
+<p>The lattice has learned how to organize itself. Now we are ready to ask what <em>kinds</em> of organization it can support — and what happens when the patterns that form are ones that cannot be continuously undone. That is the meaning of topology, and it is the next chapter.</p>
+
+<div class="nav-links">
+  <a href="05-binary-field.html" class="prev">How a binary field emerges</a>
+  <a href="07-vortices.html" class="next">Spontaneous vortices</a>
+</div>
+
+</div>
+
+<script type="module">
+import { setupHiDPICanvas, wireEquation, R0, runWhenVisible, coherenceMetrics, drawMetricsStrip } from '../js/common.js';
+
+// ============================================================
+// Interactive equation blocks
+// ============================================================
+
+wireEquation('eq-plm', {
+  thetadot: {
+    name: 'θ̇ᵢ — rate of change of oscillator i\'s phase',
+    pronounce: '"theta dot sub i"',
+    description: 'How fast oscillator <em>i</em> is rotating right now. Inside a PLM, this is the same number for every member.',
+  },
+  Omega: {
+    name: 'Ω — the PLM\'s common effective frequency',
+    pronounce: '"big omega" (Greek uppercase)',
+    description: 'The single rhythm that every member of the PLM has agreed on. It generally differs from any individual ω<sub>i</sub> — it is the negotiated average, determined by the ω distribution and the K-field connectivity. All members share it exactly. Ω is what makes the cluster a single collective instead of a pile of separate oscillators.',
+  },
+  cluster: {
+    name: 'i ∈ cluster — membership',
+    pronounce: '"i in cluster"',
+    description: 'The PLM is a specific set of oscillators. Membership is defined by connectivity through alive bonds: two oscillators belong to the same PLM if there exists a path between them using only bonds with K > 0.',
+  },
+  alivebonds: {
+    name: 'alive bonds (K > 0) — the PLM\'s skeleton',
+    pronounce: '—',
+    description: 'The K-field determines which oscillators are in communication. A dead bond (K = 0) is a wall; no phase information passes through it. Only alive bonds contribute to clustering. The alive-bond subgraph of the network is the skeleton of the PLM structure.',
+  },
+});
+
+wireEquation('eq-freezing', {
+  Kij: {
+    name: 'Kᵢⱼ(t) — the coupling of bond (i, j) over time',
+    pronounce: '"K sub i j of t"',
+    description: 'The live, evolving coupling of a specific bond. Before a PLM forms, Kᵢⱼ(t) is updating every instant as phases shift. After a PLM forms, Kᵢⱼ(t) stops moving.',
+  },
+  Kstar: {
+    name: 'K*ᵢⱼ — the frozen equilibrium value',
+    pronounce: '"K star sub i j"',
+    description: 'The unique coupling strength determined by the balance equation R₀(K*) · cos(Δθ) = 2K*/r from Chapter 4. At a PLM, the cos(Δθ) is constant, so this equation has exactly one stable solution, and K converges to it exponentially.',
+  },
+  cosfrozen: {
+    name: 'cos(Δθᵢⱼ) — the frozen phase difference',
+    pronounce: '"cosine of delta theta sub i j"',
+    description: 'Because all PLM members share a common frequency Ω, the phase difference Δθᵢⱼ between any two of them is constant in time. Its cosine is therefore a constant driving signal. This is what lets the K-field settle: the drive no longer shifts, so the response no longer shifts.',
+  },
+});
+
+// ============================================================
+// Helpers
+// ============================================================
+
+const plmPalette = [
+  '#d97236', '#2a5f8f', '#7d2d4f', '#2d7d4f', '#a86d1a',
+  '#6b4a8c', '#c2185b', '#00796b', '#455a64', '#bf360c',
+  '#5d4037', '#1565c0', '#558b2f', '#8e24aa', '#00838f',
+];
+
+function connectedComponents(Kh, Kv, L, threshold) {
+  const N = L * L;
+  const parent = new Array(N);
+  for (let i = 0; i < N; i++) parent[i] = i;
+  function find(x) {
+    while (parent[x] !== x) { parent[x] = parent[parent[x]]; x = parent[x]; }
+    return x;
+  }
+  function union(a, b) {
+    const ra = find(a), rb = find(b);
+    if (ra !== rb) parent[ra] = rb;
+  }
+  for (let y = 0; y < L; y++) {
+    for (let x = 0; x < L; x++) {
+      const i = y * L + x;
+      if (Kh[y * L + x] > threshold && x + 1 < L) union(i, y * L + (x + 1));
+      if (Kv[y * L + x] > threshold && y + 1 < L) union(i, (y + 1) * L + x);
+    }
+  }
+  const compOfNode = new Array(N);
+  const sizes = new Map();
+  for (let i = 0; i < N; i++) {
+    const r = find(i);
+    compOfNode[i] = r;
+    sizes.set(r, (sizes.get(r) || 0) + 1);
+  }
+  // Assign color indices, with biggest components getting earliest palette entries
+  const sortedRoots = [...sizes.entries()].sort((a, b) => b[1] - a[1]).map(e => e[0]);
+  const colorIdx = new Map();
+  sortedRoots.forEach((r, idx) => colorIdx.set(r, idx));
+  const colors = new Array(N);
+  for (let i = 0; i < N; i++) colors[i] = colorIdx.get(compOfNode[i]);
+  const sizeArr = sortedRoots.map(r => sizes.get(r));
+  return { colors, sizes: sizeArr, count: sortedRoots.length };
+}
+
+function shadePhase(baseHex, brightness) {
+  // Return the base color dimmed/lightened by brightness (0..1)
+  // Map 0 → dark version, 1 → light saturated version
+  const r = parseInt(baseHex.slice(1, 3), 16);
+  const g = parseInt(baseHex.slice(3, 5), 16);
+  const b = parseInt(baseHex.slice(5, 7), 16);
+  const k = 0.35 + brightness * 0.65; // brightness scales base color
+  return `rgb(${Math.round(r * k)}, ${Math.round(g * k)}, ${Math.round(b * k)})`;
+}
+
+// ============================================================
+// FIGURE A: PLM detection and visualization
+// ============================================================
+
+(() => {
+  const canvas = document.getElementById('canvas-plm-view');
+  const ctx = setupHiDPICanvas(canvas, 680, 500);
+  const resetBtn = document.getElementById('plm-reset');
+  const spreadSlider = document.getElementById('plm-spread-slider');
+  const spreadVal = document.getElementById('plm-spread-val');
+  const threshSlider = document.getElementById('plm-thresh-slider');
+  const threshVal = document.getElementById('plm-thresh-val');
+  const bondsBtn = document.getElementById('plm-bonds-btn');
+  const readout = document.getElementById('plm-readout');
+
+  const L = 16;
+  const N = L * L;
+  let thetas = new Float32Array(N);
+  let omegas = new Float32Array(N);
+  let Kh = new Float32Array(N), Kv = new Float32Array(N);
+  let spread = 0.6;
+  let threshold = 0.3;
+  let showBonds = true;
+  const r = 5.9;
+
+  bondsBtn.addEventListener('click', () => {
+    showBonds = !showBonds;
+    bondsBtn.textContent = `Bonds: ${showBonds ? 'ON' : 'OFF'}`;
+    bondsBtn.classList.toggle('primary', showBonds);
+  });
+
+  function reset() {
+    for (let i = 0; i < N; i++) {
+      thetas[i] = Math.random() * Math.PI * 2;
+      omegas[i] = 0.8 + (Math.random() - 0.5) * spread * 2;
+      Kh[i] = 0.1 + Math.random() * 0.6;
+      Kv[i] = 0.1 + Math.random() * 0.6;
+    }
+  }
+  reset();
+  resetBtn.addEventListener('click', reset);
+  spreadSlider.addEventListener('input', () => {
+    spread = parseFloat(spreadSlider.value);
+    spreadVal.textContent = spread.toFixed(2);
+  });
+  threshSlider.addEventListener('input', () => {
+    threshold = parseFloat(threshSlider.value);
+    threshVal.textContent = threshold.toFixed(2);
+  });
+
+  function step() {
+    const dt = 0.04;
+    const eta = 0.5;
+    const newT = new Float32Array(N);
+    for (let y = 0; y < L; y++) {
+      for (let x = 0; x < L; x++) {
+        const i = y * L + x;
+        const xm = (x - 1 + L) % L, xp = (x + 1) % L;
+        const ym = (y - 1 + L) % L, yp = (y + 1) % L;
+        const Kr_ = Kh[y * L + x], Kl_ = Kh[y * L + xm];
+        const Kd_ = Kv[y * L + x], Ku_ = Kv[ym * L + x];
+        newT[i] = thetas[i] + (
+          omegas[i] +
+          Kr_ * Math.sin(thetas[y * L + xp] - thetas[i]) +
+          Kl_ * Math.sin(thetas[y * L + xm] - thetas[i]) +
+          Kd_ * Math.sin(thetas[yp * L + x] - thetas[i]) +
+          Ku_ * Math.sin(thetas[ym * L + x] - thetas[i])
+        ) * dt;
+      }
+    }
+    thetas = newT;
+    for (let y = 0; y < L; y++) {
+      for (let x = 0; x < L; x++) {
+        const i = y * L + x;
+        const ih = y * L + ((x + 1) % L);
+        const iv = ((y + 1) % L) * L + x;
+        const dH = thetas[ih] - thetas[i];
+        const dV = thetas[iv] - thetas[i];
+        Kh[y * L + x] = Math.max(0, Kh[y * L + x] + eta * (R0(Kh[y * L + x]) * Math.cos(dH) - 2 * Kh[y * L + x] / r) * dt);
+        Kv[y * L + x] = Math.max(0, Kv[y * L + x] + eta * (R0(Kv[y * L + x]) * Math.cos(dV) - 2 * Kv[y * L + x] / r) * dt);
+      }
+    }
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, 680, 500);
+    const cell = 22;
+    const gridW = L * cell;
+    const x0 = (680 - gridW) / 2;
+    const y0 = 20;
+
+    const { colors, sizes, count } = connectedComponents(Kh, Kv, L, threshold);
+
+    // Cells colored by PLM, shaded by phase
+    for (let y = 0; y < L; y++) {
+      for (let x = 0; x < L; x++) {
+        const i = y * L + x;
+        const b = (Math.cos(thetas[i]) + 1) / 2;
+        const colIdx = colors[i];
+        const base = plmPalette[colIdx % plmPalette.length];
+        ctx.fillStyle = shadePhase(base, b);
+        ctx.fillRect(x0 + x * cell, y0 + y * cell, cell, cell);
+      }
+    }
+
+    // Draw alive bonds as outlines between cells — thin, subtle
+    if (showBonds) {
+      const halfCell = cell / 2;
+      for (let y = 0; y < L; y++) {
+        for (let x = 0; x < L; x++) {
+          const x1 = x0 + x * cell + halfCell;
+          const y1 = y0 + y * cell + halfCell;
+          const K = Kh[y * L + x];
+          if (x + 1 < L && K > threshold) {
+            const x2 = x0 + (x + 1) * cell + halfCell;
+            const Knorm = Math.min(1, K / 2);
+            ctx.strokeStyle = `rgba(255, 255, 255, ${0.2 + Knorm * 0.4})`;
+            ctx.lineWidth = 1 + Knorm * 1.5;
+            ctx.beginPath();
+            ctx.moveTo(x1, y1); ctx.lineTo(x2, y1);
+            ctx.stroke();
+          }
+          const K2 = Kv[y * L + x];
+          if (y + 1 < L && K2 > threshold) {
+            const y2 = y0 + (y + 1) * cell + halfCell;
+            const Knorm = Math.min(1, K2 / 2);
+            ctx.strokeStyle = `rgba(255, 255, 255, ${0.2 + Knorm * 0.4})`;
+            ctx.lineWidth = 1 + Knorm * 1.5;
+            ctx.beginPath();
+            ctx.moveTo(x1, y1); ctx.lineTo(x1, y2);
+            ctx.stroke();
+          }
+        }
+      }
+    }
+
+    ctx.strokeStyle = '#c8c0ad';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(x0, y0, gridW, gridW);
+
+    // PLM size bar chart
+    const bx0 = 40, by0 = 420, bw = 600, bh = 50;
+    ctx.fillStyle = '#fdfaf3';
+    ctx.strokeStyle = '#c8c0ad';
+    ctx.fillRect(bx0, by0, bw, bh);
+    ctx.strokeRect(bx0, by0, bw, bh);
+
+    const maxShown = Math.min(sizes.length, 20);
+    const barW = bw / maxShown;
+    const maxSize = sizes[0] || 1;
+    for (let i = 0; i < maxShown; i++) {
+      const h = (sizes[i] / maxSize) * (bh - 6);
+      ctx.fillStyle = plmPalette[i % plmPalette.length];
+      ctx.fillRect(bx0 + i * barW + 1, by0 + bh - h - 3, barW - 2, h);
+    }
+    ctx.fillStyle = '#888';
+    ctx.font = 'italic 11px serif';
+    ctx.textAlign = 'left';
+    ctx.fillText(`${count} PLM${count === 1 ? '' : 's'} total — largest has ${sizes[0] || 0} members`, bx0, by0 - 6);
+
+    const largestPct = sizes[0] ? Math.round(100 * sizes[0] / N) : 0;
+    readout.textContent = `PLMs: ${count}  largest: ${largestPct}%`;
+
+    step();
+  }
+
+  runWhenVisible(canvas, draw);
+})();
+
+// ============================================================
+// FIGURE B: Memory demo — guided narrative tour
+// ============================================================
+
+(() => {
+  const canvas = document.getElementById('canvas-memory');
+  const ctx = setupHiDPICanvas(canvas, 680, 480);
+  const prevBtn = document.getElementById('mem-prev');
+  const nextBtn = document.getElementById('mem-next');
+  const resetBtn = document.getElementById('mem-reset');
+  const bondsBtn = document.getElementById('mem-bonds-btn');
+  const readout = document.getElementById('mem-readout');
+  const stepLabel = document.getElementById('mem-step-label');
+  const stepText = document.getElementById('mem-step-text');
+
+  let showBonds = true;
+  bondsBtn.addEventListener('click', () => {
+    showBonds = !showBonds;
+    bondsBtn.textContent = `Bonds: ${showBonds ? 'ON' : 'OFF'}`;
+    bondsBtn.classList.toggle('primary', showBonds);
+  });
+
+  const L = 16;
+  const N = L * L;
+  let thetas = new Float32Array(N);
+  let omegas = new Float32Array(N);
+  let drivePattern = new Float32Array(N); // -1..+1, the drive signature per cell (used for coloring)
+  let Kh = new Float32Array(N), Kv = new Float32Array(N);
+  const r = 5.9;
+
+  // Fixed drive pattern (vertical stripes, kx=1, ky=0)
+  const kx = 1, ky = 0;
+  const amp = 0.9;
+  function computeDriveSignature() {
+    for (let y = 0; y < L; y++) {
+      for (let x = 0; x < L; x++) {
+        drivePattern[y * L + x] = Math.sin(kx * 2 * Math.PI * x / L + ky * 2 * Math.PI * y / L);
+      }
+    }
+  }
+  computeDriveSignature();
+
+  let stepIdx = 0;
+  let driveOn = false;
+
+  const steps = [
+    {
+      label: 'Step 0 of 5 · Ready',
+      text: `Press <em>Next step</em> to begin. We will drive the network with a spatial pattern (vertical stripes), let the CLR learn it, and then find out whether the learned geometry can reconstitute that pattern without the drive.`,
+      onEnter() {
+        driveOn = false;
+        for (let i = 0; i < N; i++) {
+          thetas[i] = Math.random() * Math.PI * 2;
+          omegas[i] = 0.8;
+          Kh[i] = 0.1 + Math.random() * 0.2;
+          Kv[i] = 0.1 + Math.random() * 0.2;
+        }
+      },
+    },
+    {
+      label: 'Step 1 of 5 · Drive on',
+      text: `The drive is now active. Each oscillator's natural frequency varies across the grid in a vertical stripe pattern — columns of same-colored cells want to rotate at the same speed. Watch the bonds in the K-field: horizontal bonds start to weaken (they connect columns that want different speeds), vertical bonds start to strengthen (they connect oscillators that agree).`,
+      onEnter() {
+        driveOn = true;
+        for (let i = 0; i < N; i++) omegas[i] = 0.8 + amp * drivePattern[i];
+      },
+    },
+    {
+      label: 'Step 2 of 5 · Pattern imprinted',
+      text: `The CLR has imprinted the pattern in the K-field. Vertical bonds are thick (alive), horizontal bonds are thin (dead). The network has <em>learned</em> the stripe geometry. This specific pattern of alive and dead bonds — the K-field — is the memory of the drive. It lives in the connections.`,
+      onEnter() {
+        // Let the dynamics run long enough to settle — no state change, just let sim continue
+        driveOn = true;
+        for (let i = 0; i < N; i++) omegas[i] = 0.8 + amp * drivePattern[i];
+      },
+    },
+    {
+      label: 'Step 3 of 5 · Drive off',
+      text: `The drive is turned off — every oscillator's natural frequency goes back to the same neutral value. The cell colors fade. But look at the K-field. The bonds that were alive are <em>still alive</em>. The pattern is not in the natural frequencies anymore. It is in the connections.`,
+      onEnter() {
+        driveOn = false;
+        for (let i = 0; i < N; i++) omegas[i] = 0.8;
+      },
+    },
+    {
+      label: 'Step 4 of 5 · Scramble phases',
+      text: `Phases scrambled — every oscillator has been randomized to a new phase. We did <em>not</em> touch the K-field. Watch what happens: the phases re-settle into the same vertical-stripe pattern, even though the drive is still off. The K-field is pulling them back into the geometry it learned. The memory reconstitutes the behavior from a cold start.`,
+      onEnter() {
+        driveOn = false;
+        for (let i = 0; i < N; i++) {
+          omegas[i] = 0.8;
+          thetas[i] = Math.random() * Math.PI * 2;
+        }
+      },
+    },
+    {
+      label: 'Step 5 of 5 · Drive returns',
+      text: `The drive comes back on with the same pattern. Notice it snaps into place almost immediately — much faster than the first time in Step 1. The K-field was already configured to support this pattern, so the oscillators only have to get on board with it. Recognition is faster than initial learning. That is memory, in the simplest substrate that supports it.`,
+      onEnter() {
+        driveOn = true;
+        for (let i = 0; i < N; i++) omegas[i] = 0.8 + amp * drivePattern[i];
+      },
+    },
+  ];
+
+  function applyStep() {
+    const s = steps[stepIdx];
+    stepLabel.textContent = s.label;
+    stepText.innerHTML = s.text;
+    s.onEnter();
+    prevBtn.disabled = stepIdx === 0;
+    nextBtn.disabled = stepIdx === steps.length - 1;
+  }
+  applyStep();
+
+  prevBtn.addEventListener('click', () => { if (stepIdx > 0) { stepIdx--; applyStep(); } });
+  nextBtn.addEventListener('click', () => { if (stepIdx < steps.length - 1) { stepIdx++; applyStep(); } });
+  resetBtn.addEventListener('click', () => { stepIdx = 0; applyStep(); });
+
+  function step() {
+    const dt = 0.04;
+    const eta = 0.5;
+    const newT = new Float32Array(N);
+    for (let y = 0; y < L; y++) {
+      for (let x = 0; x < L; x++) {
+        const i = y * L + x;
+        const xm = (x - 1 + L) % L, xp = (x + 1) % L;
+        const ym = (y - 1 + L) % L, yp = (y + 1) % L;
+        newT[i] = thetas[i] + (
+          omegas[i] +
+          Kh[y * L + x]  * Math.sin(thetas[y * L + xp] - thetas[i]) +
+          Kh[y * L + xm] * Math.sin(thetas[y * L + xm] - thetas[i]) +
+          Kv[y * L + x]  * Math.sin(thetas[yp * L + x] - thetas[i]) +
+          Kv[ym * L + x] * Math.sin(thetas[ym * L + x] - thetas[i])
+        ) * dt;
+      }
+    }
+    thetas = newT;
+    for (let y = 0; y < L; y++) {
+      for (let x = 0; x < L; x++) {
+        const i = y * L + x;
+        const ih = y * L + ((x + 1) % L);
+        const iv = ((y + 1) % L) * L + x;
+        const dH = thetas[ih] - thetas[i];
+        const dV = thetas[iv] - thetas[i];
+        Kh[y * L + x] = Math.max(0, Kh[y * L + x] + eta * (R0(Kh[y * L + x]) * Math.cos(dH) - 2 * Kh[y * L + x] / r) * dt);
+        Kv[y * L + x] = Math.max(0, Kv[y * L + x] + eta * (R0(Kv[y * L + x]) * Math.cos(dV) - 2 * Kv[y * L + x] / r) * dt);
+      }
+    }
+  }
+
+  function compute_I_phase() {
+    let s = 0, n = 0;
+    for (let y = 0; y < L; y++) {
+      for (let x = 0; x < L; x++) {
+        const i = y * L + x;
+        const ih = y * L + ((x + 1) % L);
+        const iv = ((y + 1) % L) * L + x;
+        s += Math.cos(thetas[ih] - thetas[i]);
+        s += Math.cos(thetas[iv] - thetas[i]);
+        n += 2;
+      }
+    }
+    return (1 + s / n) / 2;
+  }
+
+  // Blend drive-pattern color (cool → warm) with phase brightness
+  function cellColor(i) {
+    const p = drivePattern[i]; // −1..+1
+    const phaseBright = (Math.cos(thetas[i]) + 1) / 2; // 0..1
+    // Cool blue for negative drive, warm orange for positive drive, neutral cream when drive off
+    let r, g, b;
+    if (driveOn) {
+      if (p >= 0) {
+        // warm side (orange)
+        r = 120 + p * 140;
+        g = 90 + p * 70;
+        b = 70 + p * 0;
+      } else {
+        // cool side (blue)
+        r = 80 + (1 + p) * 60;
+        g = 100 + (1 + p) * 60;
+        b = 140 + (1 + p) * 40;
+      }
+    } else {
+      // neutral cream
+      r = 170; g = 160; b = 140;
+    }
+    // Phase pulse: modulate brightness
+    const pulse = 0.55 + phaseBright * 0.45;
+    return `rgb(${Math.round(r * pulse)}, ${Math.round(g * pulse)}, ${Math.round(b * pulse)})`;
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, 680, 480);
+
+    const cell = 24;
+    const gridW = L * cell;
+    const x0 = (680 - gridW) / 2;
+    const y0 = 30;
+
+    // Cells
+    for (let y = 0; y < L; y++) {
+      for (let x = 0; x < L; x++) {
+        const i = y * L + x;
+        ctx.fillStyle = cellColor(i);
+        ctx.fillRect(x0 + x * cell, y0 + y * cell, cell, cell);
+      }
+    }
+
+    // Bonds (K-field) as overlay
+    if (showBonds) {
+      const halfCell = cell / 2;
+      for (let y = 0; y < L; y++) {
+        for (let x = 0; x < L; x++) {
+          const cxA = x0 + x * cell + halfCell;
+          const cyA = y0 + y * cell + halfCell;
+          const K = Kh[y * L + x];
+          if (x + 1 < L) {
+            const cxB = x0 + (x + 1) * cell + halfCell;
+            const Knorm = Math.min(1, K / 2);
+            ctx.strokeStyle = `rgba(250, 215, 170, ${0.1 + Knorm * 0.85})`;
+            ctx.lineWidth = 1 + Knorm * 4;
+            ctx.beginPath();
+            ctx.moveTo(cxA, cyA); ctx.lineTo(cxB, cyA);
+            ctx.stroke();
+          }
+          const K2 = Kv[y * L + x];
+          if (y + 1 < L) {
+            const cyB = y0 + (y + 1) * cell + halfCell;
+            const Knorm = Math.min(1, K2 / 2);
+            ctx.strokeStyle = `rgba(250, 215, 170, ${0.1 + Knorm * 0.85})`;
+            ctx.lineWidth = 1 + Knorm * 4;
+            ctx.beginPath();
+            ctx.moveTo(cxA, cyA); ctx.lineTo(cxA, cyB);
+            ctx.stroke();
+          }
+        }
+      }
+    }
+
+    ctx.strokeStyle = '#c8c0ad';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(x0, y0, gridW, gridW);
+
+    // Legend
+    ctx.fillStyle = driveOn ? '#d97236' : '#888';
+    ctx.font = 'italic 13px serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(
+      driveOn
+        ? 'drive ON · cells colored by drive pattern, bonds show learned K-field'
+        : 'drive OFF · cells neutral, bonds show persistent K-field',
+      340, y0 + gridW + 24
+    );
+
+    const Iphat = compute_I_phase();
+    readout.textContent = `I_phase = ${Iphat.toFixed(3)}`;
+
+    step();
+  }
+
+  runWhenVisible(canvas, draw);
+})();
+
+// ============================================================
+// FIGURE C: Memory playground — many patterns, one K-field
+// ============================================================
+
+(() => {
+  const canvas = document.getElementById('canvas-playground');
+  const ctx = setupHiDPICanvas(canvas, 680, 560);
+  const patternsBar = document.getElementById('pg-patterns');
+  const driveBtn = document.getElementById('pg-drive-btn');
+  const learnBtn = document.getElementById('pg-learn-btn');
+  const resetBtn = document.getElementById('pg-reset');
+  const bondsBtn = document.getElementById('pg-bonds-btn');
+  const statusEl = document.getElementById('pg-status');
+  const readout = document.getElementById('pg-readout');
+
+  let showBonds = true;
+  bondsBtn.addEventListener('click', () => {
+    showBonds = !showBonds;
+    bondsBtn.textContent = `Bonds: ${showBonds ? 'ON' : 'OFF'}`;
+    bondsBtn.classList.toggle('primary', showBonds);
+  });
+
+  const L = 16;
+  const N = L * L;
+  const r = 5.9;
+
+  const PATTERNS = [
+    { id: 'V',    label: 'V stripes',   fn: (x, y) => Math.sin(2 * Math.PI * x / L) },
+    { id: 'H',    label: 'H stripes',   fn: (x, y) => Math.sin(2 * Math.PI * y / L) },
+    { id: 'DIAG', label: 'Diagonal',    fn: (x, y) => Math.sin(2 * Math.PI * (x + y) / L) },
+    { id: 'CHK',  label: 'Checker',     fn: (x, y) => ((x + y) % 2 === 0 ? 1 : -1) * 0.95 },
+    { id: '2V',   label: '2× V',        fn: (x, y) => Math.sin(4 * Math.PI * x / L) },
+    { id: 'RAD',  label: 'Radial',      fn: (x, y) => Math.sin(2 * Math.PI * Math.hypot(x - L / 2, y - L / 2) / L) },
+  ];
+
+  let thetas = new Float32Array(N);
+  let omegas = new Float32Array(N);
+  let Kh = new Float32Array(N), Kv = new Float32Array(N);
+  let driveSig = new Float32Array(N); // current drive pattern signature
+  let currentPatternId = 'V';
+  let driveOn = false;
+  let learningOn = false;
+  const HIST_C = 200;
+  const cHistory = new Array(HIST_C).fill(null);
+
+  function resetAll() {
+    for (let i = 0; i < N; i++) {
+      thetas[i] = Math.random() * Math.PI * 2;
+      Kh[i] = 0.1 + Math.random() * 0.2;
+      Kv[i] = 0.1 + Math.random() * 0.2;
+    }
+  }
+  resetAll();
+
+  function selectPattern(id) {
+    currentPatternId = id;
+    const p = PATTERNS.find(pp => pp.id === id);
+    for (let y = 0; y < L; y++) {
+      for (let x = 0; x < L; x++) {
+        driveSig[y * L + x] = p.fn(x, y);
+      }
+    }
+    applyDriveToOmegas();
+    buildPatternButtons();
+  }
+
+  function applyDriveToOmegas() {
+    for (let i = 0; i < N; i++) {
+      omegas[i] = driveOn ? 0.8 + 0.9 * driveSig[i] : 0.8;
+    }
+  }
+
+  function buildPatternButtons() {
+    patternsBar.innerHTML = '';
+    PATTERNS.forEach(p => {
+      const btn = document.createElement('button');
+      btn.textContent = p.label;
+      btn.style.padding = '5px 12px';
+      btn.style.fontSize = '0.85em';
+      if (p.id === currentPatternId) btn.classList.add('primary');
+      btn.addEventListener('click', () => selectPattern(p.id));
+      patternsBar.appendChild(btn);
+    });
+  }
+
+  driveBtn.addEventListener('click', () => {
+    driveOn = !driveOn;
+    driveBtn.textContent = `Drive: ${driveOn ? 'ON' : 'OFF'}`;
+    driveBtn.classList.toggle('primary', driveOn);
+    applyDriveToOmegas();
+    updateStatus();
+  });
+
+  learnBtn.addEventListener('click', () => {
+    learningOn = !learningOn;
+    learnBtn.textContent = `Learning: ${learningOn ? 'ON' : 'OFF'}`;
+    learnBtn.classList.toggle('primary', learningOn);
+    updateStatus();
+  });
+
+  resetBtn.addEventListener('click', () => {
+    for (let i = 0; i < N; i++) {
+      Kh[i] = 0.1 + Math.random() * 0.2;
+      Kv[i] = 0.1 + Math.random() * 0.2;
+      thetas[i] = Math.random() * Math.PI * 2;
+    }
+  });
+
+  function updateStatus() {
+    const p = PATTERNS.find(pp => pp.id === currentPatternId);
+    let parts = [];
+    if (driveOn) parts.push(`driving ${p.label}`);
+    else parts.push('drive off');
+    if (learningOn) parts.push('learning');
+    else parts.push('K frozen');
+    statusEl.textContent = parts.join(' · ');
+  }
+
+  selectPattern('V');
+  updateStatus();
+
+  function step() {
+    const dt = 0.04;
+    const eta = 0.5;
+
+    const newT = new Float32Array(N);
+    for (let y = 0; y < L; y++) {
+      for (let x = 0; x < L; x++) {
+        const i = y * L + x;
+        const xm = (x - 1 + L) % L, xp = (x + 1) % L;
+        const ym = (y - 1 + L) % L, yp = (y + 1) % L;
+        newT[i] = thetas[i] + (
+          omegas[i] +
+          Kh[y * L + x]  * Math.sin(thetas[y * L + xp] - thetas[i]) +
+          Kh[y * L + xm] * Math.sin(thetas[y * L + xm] - thetas[i]) +
+          Kv[y * L + x]  * Math.sin(thetas[yp * L + x] - thetas[i]) +
+          Kv[ym * L + x] * Math.sin(thetas[ym * L + x] - thetas[i])
+        ) * dt;
+      }
+    }
+    thetas = newT;
+
+    if (learningOn) {
+      for (let y = 0; y < L; y++) {
+        for (let x = 0; x < L; x++) {
+          const i = y * L + x;
+          const ih = y * L + ((x + 1) % L);
+          const iv = ((y + 1) % L) * L + x;
+          const dH = thetas[ih] - thetas[i];
+          const dV = thetas[iv] - thetas[i];
+          Kh[y * L + x] = Math.max(0, Kh[y * L + x] + eta * (R0(Kh[y * L + x]) * Math.cos(dH) - 2 * Kh[y * L + x] / r) * dt);
+          Kv[y * L + x] = Math.max(0, Kv[y * L + x] + eta * (R0(Kv[y * L + x]) * Math.cos(dV) - 2 * Kv[y * L + x] / r) * dt);
+        }
+      }
+    }
+  }
+
+  function compute_I_phase() {
+    let s = 0, n = 0;
+    for (let y = 0; y < L; y++) {
+      for (let x = 0; x < L; x++) {
+        const i = y * L + x;
+        const ih = y * L + ((x + 1) % L);
+        const iv = ((y + 1) % L) * L + x;
+        s += Math.cos(thetas[ih] - thetas[i]);
+        s += Math.cos(thetas[iv] - thetas[i]);
+        n += 2;
+      }
+    }
+    return (1 + s / n) / 2;
+  }
+
+  // Drive-pattern coloring modulated by local lock quality.
+  // Each cell's color hue = the drive pattern value (warm for +, cool for −).
+  // Saturation = the cell's local coherence with its neighbors (0 = unlocked
+  // = cream; 1 = fully locked = saturated drive color). Result: cells bloom
+  // into the pattern's colors as the lattice learns; they fade to neutral
+  // when the lattice is out of lock.
+  function localCoherence(i) {
+    const x = i % L, y = (i / L) | 0;
+    let s = 0, n = 0;
+    if (x + 1 < L) { s += Math.cos(thetas[y * L + x + 1] - thetas[i]); n++; }
+    if (x > 0)     { s += Math.cos(thetas[y * L + x - 1] - thetas[i]); n++; }
+    if (y + 1 < L) { s += Math.cos(thetas[(y + 1) * L + x] - thetas[i]); n++; }
+    if (y > 0)     { s += Math.cos(thetas[(y - 1) * L + x] - thetas[i]); n++; }
+    return n > 0 ? Math.max(0, s / n) : 0;
+  }
+
+  function cellColor(i) {
+    const p = driveSig[i];          // drive pattern value at this cell, [-1, 1]
+    const q = localCoherence(i);    // local lock quality, [0, 1]
+    const signal = p * q;           // combined, [-1, 1]
+    if (signal >= 0) {
+      const r = 180 + signal * 75;
+      const g = 150 - signal * 10;
+      const bc = 115 - signal * 75;
+      return `rgb(${Math.round(r)}, ${Math.round(g)}, ${Math.round(bc)})`;
+    } else {
+      const s = -signal;
+      const r = 180 - s * 95;
+      const g = 150 - s * 30;
+      const bc = 115 + s * 75;
+      return `rgb(${Math.round(r)}, ${Math.round(g)}, ${Math.round(bc)})`;
+    }
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, 680, 560);
+
+    const cell = 22;
+    const gridW = L * cell;
+    const x0 = (680 - gridW) / 2;
+    const y0 = 30;
+
+    // Drive label above grid (tells you what's being presented)
+    const pLabel = PATTERNS.find(pp => pp.id === currentPatternId).label;
+    ctx.fillStyle = driveOn ? '#d97236' : '#888';
+    ctx.font = 'italic 12px serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(
+      driveOn ? `driving: ${pLabel}` : `drive off · selected: ${pLabel}`,
+      340, y0 - 10
+    );
+
+    for (let y = 0; y < L; y++) {
+      for (let x = 0; x < L; x++) {
+        const i = y * L + x;
+        ctx.fillStyle = cellColor(i);
+        ctx.fillRect(x0 + x * cell, y0 + y * cell, cell, cell);
+      }
+    }
+
+    if (showBonds) {
+      const halfCell = cell / 2;
+      for (let y = 0; y < L; y++) {
+        for (let x = 0; x < L; x++) {
+          const cxA = x0 + x * cell + halfCell;
+          const cyA = y0 + y * cell + halfCell;
+          const K = Kh[y * L + x];
+          if (x + 1 < L) {
+            const cxB = x0 + (x + 1) * cell + halfCell;
+            const Knorm = Math.min(1, K / 2);
+            ctx.strokeStyle = `rgba(250, 215, 170, ${0.1 + Knorm * 0.85})`;
+            ctx.lineWidth = 1 + Knorm * 3.5;
+            ctx.beginPath();
+            ctx.moveTo(cxA, cyA); ctx.lineTo(cxB, cyA);
+            ctx.stroke();
+          }
+          const K2 = Kv[y * L + x];
+          if (y + 1 < L) {
+            const cyB = y0 + (y + 1) * cell + halfCell;
+            const Knorm = Math.min(1, K2 / 2);
+            ctx.strokeStyle = `rgba(250, 215, 170, ${0.1 + Knorm * 0.85})`;
+            ctx.lineWidth = 1 + Knorm * 3.5;
+            ctx.beginPath();
+            ctx.moveTo(cxA, cyA); ctx.lineTo(cxA, cyB);
+            ctx.stroke();
+          }
+        }
+      }
+    }
+
+    ctx.strokeStyle = '#c8c0ad';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(x0, y0, gridW, gridW);
+
+    // Metrics: compute full coherence capital set
+    const m = coherenceMetrics(thetas, L);
+    cHistory.push(m.C); cHistory.shift();
+    readout.textContent = `I_phase = ${m.Iphat.toFixed(3)},  ρ = ${m.rho.toFixed(3)},  C = ${m.C.toFixed(3)}`;
+
+    // Status line below the grid
+    ctx.fillStyle = '#888';
+    ctx.font = 'italic 12px serif';
+    ctx.textAlign = 'center';
+    let statusLine;
+    if (driveOn && learningOn) statusLine = `driving ${pLabel} · K-field adapting`;
+    else if (driveOn && !learningOn) statusLine = `driving ${pLabel} · K-field frozen (testing recall)`;
+    else if (!driveOn && learningOn) statusLine = `drive off · K-field adapting to silence`;
+    else statusLine = `drive off · K-field frozen`;
+    ctx.fillText(statusLine, 340, y0 + gridW + 18);
+
+    // Metrics strip
+    drawMetricsStrip(ctx, 40, y0 + gridW + 36, 600, 76, m, cHistory);
+
+    step();
+  }
+
+  runWhenVisible(canvas, draw);
+})();
+
+</script>
+
+</body>
+</html>

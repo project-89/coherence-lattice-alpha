@@ -32,7 +32,7 @@ A three-act structure:
 | 03 | Coherence capital | ✅ DONE |
 | 04 | The Coherence Learning Rule | ✅ DONE |
 | 05 | How a binary field emerges | TODO |
-| 06 | Phase-locked modes: geometry and memory | TODO |
+| 06 | Phase-locked modes: geometry and memory | ✅ DONE |
 | 07 | Spontaneous vortices | TODO |
 | 08 | Why the diamond lattice | TODO |
 | 09 | The BKT wall | TODO |
@@ -91,51 +91,19 @@ Binary K-field aside.
 "Arrow of coherence" — negative entropy, intelligence as self-organization, "The universe, climbing."
 Aside teases Sections 5–15.
 
+### 05 — How a binary field emerges
+
+**Completed.** Three progressive figures (two bonds sharing a node → small ring → full 14×14 grid). Two interactive equation blocks (aggregate I(t) and fixed-point K*). Full grid has bonds toggle (phases / bonds / both), K-histogram, I(t) and C(t) traces. Sets up the idea of K-field as the lattice's learned connectivity.
+
+### 06 — Phase-locked modes: geometry and memory
+
+**Completed.** Four figures: PLM detection with connected-component coloring (16×16 grid, PLM-size bar chart, K-threshold slider), guided 5-step memory tour (drive on → imprinted → drive off → scramble phases → pattern reforms), patterns playground (6 preset drives, drive/learning toggles, drive-pattern × local-coherence coloring), coherence capital tracking on playgrounds. Two interactive equation blocks (PLM definition, PLM Freezing Lemma). SVG NPD hierarchy diagram. Bonds-toggle on every figure.
+
+**Note:** A frequency-entrainment playground was prototyped but removed — the corner/perimeter-driver physics was unclear and didn't demonstrate frequency learning cleanly on a uniform 2D lattice. Revisit if a cleaner temporal-drive demo is needed later.
+
 ---
 
 ## TODO sections — planned content
-
-### 05 — How a binary field emerges
-
-**Core idea:** Run the CLR at scale. Every bond on a grid has its own living K. Watch the binary K-field crystallize from randomness.
-
-**Interactives:**
-- **Main:** 24×24 grid with full CLR (Shannon + optional Fiedler). Each bond is drawn with alpha/thickness proportional to K. Start from random initial K's and random phases. Watch bonds decide alive or dead. Alive bonds form clusters.
-- **Coherence ascent trace:** plot I_phase, ρ, C, and **I(t)** over time. The `I(t)` trace is the headline — watch it stay non-negative, climbing to an asymptote.
-- **Histogram of K values:** starts as a broad random distribution, collapses to bimodal (peak near 0 + peak near K*). Live-updating histogram.
-
-**Prose:**
-- Recap Section 4: rule is derived, death threshold, bistability
-- Now: run it on a network
-- What happens? Binary field emerges. Bonds decide.
-- Show the histogram collapsing to bimodal
-- Show I(t) climbing
-- "Coherence ascent" as the learning process
-- The K-field is now the lattice's *memory*. Teases Section 6.
-
-**Key math to make clickable:** the aggregated I(t) = sum over bonds.
-
----
-
-### 06 — Phase-locked modes: geometry and memory in the K-field
-
-**Core idea (user's big realization):** PLMs are like Chladni plate patterns. Drive a network with a frequency, a pattern forms. The CLR *remembers* the pattern in the K-field. Remove the drive — memory persists. Reapply the drive — pattern reforms instantly. Add hierarchy (NPD): PLMs of PLMs.
-
-**Interactives:**
-- **Chladni-inspired drive:** Grid of oscillators driven by a spatial standing wave. Patterns form. Toggle drive off — K-field remembers. Turn drive back on — pattern reforms faster than from scratch.
-- **PLM visualization:** cluster detection on the grid. Each PLM rendered as a cohesive region with its own "super-oscillator" arrow. Watch PLMs merge/split as K changes.
-- **NPD stack:** hierarchical clustering visualization. Level 0 = oscillators, Level 1 = PLMs, Level 2 = PLMs of PLMs. Live depth readout.
-
-**Prose:**
-- PLMs defined formally (Def 1.3 in paper)
-- Chladni plate analogy (visually identical to what we're about to see)
-- Memory demonstration: drive → pattern → remove drive → K-field retains → reapply drive → instant pattern
-- This is neuroplasticity. "Cells that fire together, wire together."
-- NPD: the hierarchy. PLMs coupling to PLMs all the way up
-- "The universe's pattern library"
-- Foreshadow vortices: what about patterns you *can't* undo without moving through the cores?
-
----
 
 ### 07 — Spontaneous vortices
 
@@ -328,8 +296,8 @@ explorable/
     ├── 02-oscillators.html    ✅
     ├── 03-coherence.html      ✅
     ├── 04-clr.html            ✅
-    ├── 05-binary-field.html   TODO
-    ├── 06-plm-npd.html        TODO
+    ├── 05-binary-field.html   ✅
+    ├── 06-plm-npd.html        ✅
     ├── 07-vortices.html       TODO
     ├── 08-diamond.html        TODO
     ├── 09-bkt-wall.html       TODO

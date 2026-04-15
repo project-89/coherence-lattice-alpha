@@ -35,41 +35,80 @@ html, body {
 .page {
   max-width: 720px;
   margin: 0 auto;
-  padding: 64px 32px 128px;
+  padding: 96px 32px 128px;
 }
 
 .wide {
   max-width: 960px;
 }
 
+/* Breadcrumb row above the title — sits in its own horizontal band */
+.breadcrumb {
+  font-size: 0.85em;
+  color: var(--text-faint);
+  letter-spacing: 0.02em;
+  margin: 0 0 3.2em;
+  padding-bottom: 0.6em;
+  border-bottom: 1px solid var(--rule);
+  display: flex;
+  align-items: baseline;
+  gap: 0.8em;
+}
+
+.breadcrumb a {
+  color: var(--text-soft);
+  border-bottom: none;
+}
+
+.breadcrumb a:hover {
+  color: var(--accent);
+}
+
+.breadcrumb .sep {
+  color: var(--rule);
+}
+
+.breadcrumb .section-num {
+  font-family: "SF Mono", "Menlo", "Consolas", monospace;
+  font-size: 0.9em;
+  color: var(--text-faint);
+  letter-spacing: 0.06em;
+}
+
 h1 {
-  font-size: 2.4em;
-  line-height: 1.1;
+  font-size: 2.6em;
+  line-height: 1.08;
   font-weight: 600;
-  letter-spacing: -0.01em;
-  margin: 0 0 0.2em;
+  letter-spacing: -0.015em;
+  margin: 0 0 0.4em;
   color: var(--text);
 }
 
 h1 .subtitle {
   display: block;
-  font-size: 0.48em;
+  font-size: 0.46em;
   font-weight: 400;
   font-style: italic;
   color: var(--text-soft);
-  margin-top: 0.4em;
+  margin-top: 0.6em;
   letter-spacing: 0;
+  line-height: 1.35;
+}
+
+/* A consistent gap between the title block and the first body paragraph */
+h1 + p, h1 + .lead {
+  margin-top: 1.8em;
 }
 
 h2 {
-  font-size: 1.6em;
-  margin: 2.4em 0 0.6em;
+  font-size: 1.55em;
+  margin: 2.6em 0 0.7em;
   font-weight: 600;
   letter-spacing: -0.005em;
 }
 
 h3 {
-  font-size: 1.15em;
+  font-size: 1.1em;
   margin: 2em 0 0.4em;
   font-weight: 600;
   font-style: italic;
@@ -89,11 +128,16 @@ p + p {
   text-indent: 0;
 }
 
+/* Lead paragraph: same size as body, visually distinguished by weight + drop-cap space */
 .lead {
-  font-size: 1.15em;
-  line-height: 1.5;
+  font-size: 1em;
+  line-height: 1.6;
   color: var(--text);
   margin-bottom: 1.4em;
+}
+
+.lead::first-letter {
+  font-weight: 600;
 }
 
 a {
@@ -369,6 +413,114 @@ nav.toc .status {
 
 .katex { font-size: 1.05em; }
 .katex-display { margin: 1.2em 0; }
+
+/* --- Interactive equations --- */
+
+.equation-block {
+  margin: 2em 0;
+  background: var(--bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 4px;
+  padding: 18px 24px 20px;
+}
+
+.eq-display {
+  text-align: center;
+  font-size: 1.4em;
+  font-family: "Latin Modern Math", "STIX Two Math", "Cambria Math", serif;
+  font-style: italic;
+  padding: 0.4em 0 0.8em;
+  line-height: 1.7;
+  color: var(--text);
+}
+
+.eq-display sub, .eq-display sup { font-style: normal; font-size: 0.75em; }
+
+.eq-symbol {
+  display: inline-block;
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 3px;
+  transition: background 0.12s, box-shadow 0.12s;
+  user-select: none;
+}
+
+.eq-symbol:hover {
+  background: rgba(244, 228, 168, 0.55);
+}
+
+.eq-symbol.active {
+  background: rgba(244, 228, 168, 0.9);
+  box-shadow: 0 0 0 1px var(--accent-light);
+}
+
+.eq-symbol.state { color: #2a5f8f; }     /* dynamical variables */
+.eq-symbol.param { color: #2d7d4f; }     /* parameters/constants */
+.eq-symbol.struct { color: #d97236; }    /* sums, indices, topology */
+.eq-symbol.op { color: #7d2d4f; }        /* functions, operators */
+
+.eq-prompt {
+  text-align: center;
+  color: var(--text-faint);
+  font-style: italic;
+  font-size: 0.9em;
+  margin: 0.4em 0 0;
+}
+
+.eq-detail {
+  margin-top: 1.2em;
+  padding: 14px 18px;
+  background: var(--bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 3px;
+  min-height: 72px;
+  font-size: 0.96em;
+  display: none;
+}
+
+.eq-detail.visible { display: block; }
+
+.eq-detail .name {
+  font-weight: 600;
+  font-size: 1.05em;
+  margin-bottom: 2px;
+  color: var(--text);
+}
+
+.eq-detail .pronounce {
+  color: var(--text-soft);
+  font-style: italic;
+  font-size: 0.88em;
+  margin-bottom: 8px;
+}
+
+.eq-detail .description {
+  color: var(--text);
+  line-height: 1.5;
+}
+
+.eq-detail .description em {
+  color: var(--alive);
+  font-style: italic;
+}
+
+.eq-howitworks {
+  margin-top: 1.4em;
+  padding-top: 1em;
+  border-top: 1px dashed var(--panel-border);
+  font-size: 0.98em;
+  color: var(--text);
+  line-height: 1.55;
+}
+
+.eq-howitworks .label {
+  font-size: 0.72em;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  font-weight: 700;
+  margin-right: 0.5em;
+}
 
 /* --- Responsive --- */
 
