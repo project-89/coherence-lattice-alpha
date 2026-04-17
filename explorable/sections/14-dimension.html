@@ -159,11 +159,34 @@ function alphaAtDim(d) {
   return a;
 }
 
-// Shared state — the one dimension slider drives both figures below.
+// Shared state — both figures have their own slider; either updates `shared.d`
+// and the other slider's DOM stays in sync.
 const shared = {
   d: 3.0,
   listeners: [],
-  setD(v) { this.d = v; this.listeners.forEach(f => f(v)); },
+  setD(v) {
+    if (v === this.d) return;
+    this.d = v;
+    // Push the new value into every slider on the page (skip ones already at
+    // the target value so we don't fight the user's ongoing drag).
+    document.querySelectorAll('.controls input[type="range"]').forEach(inp => {
+      const f = parseFloat(inp.value);
+      if (Math.abs(f - v) > 1e-6) {
+        inp.value = v;
+        const lbl = inp.closest('.control')?.querySelector('.val');
+        if (lbl) lbl.textContent = v.toFixed(2);
+      }
+    });
+    // Highlight the snap button(s) matching this d (on both figures at once).
+    const dInt = Math.round(v);
+    if (Math.abs(v - dInt) < 1e-6) {
+      document.querySelectorAll('[class*="dsnap-"]').forEach(b => b.classList.remove('primary'));
+      document.querySelectorAll(`.dsnap-${dInt}`).forEach(b => b.classList.add('primary'));
+    } else {
+      document.querySelectorAll('[class*="dsnap-"]').forEach(b => b.classList.remove('primary'));
+    }
+    this.listeners.forEach(f => f(v));
+  },
   onChange(fn) { this.listeners.push(fn); },
 };
 
@@ -187,17 +210,13 @@ const ALPHA_REF = alphaAtDim(3);  // ~ 1/137.03
     onChange: (v) => { shared.setD(v); refreshCards(); },
   });
 
-  // Snap buttons
+  // Snap buttons — the `dsnap-N` class lets other figures' sliders highlight
+  // the right button when shared.d hits an integer.
   function snapBtn(label, dVal) {
     const b = document.createElement('button');
     b.textContent = label;
-    if (Math.abs(dVal - 3) < 1e-6) b.classList.add('primary');
-    b.addEventListener('click', () => {
-      shared.setD(dVal);
-      const input = controls.querySelector('input[type="range"]');
-      if (input) { input.value = dVal; const v = controls.querySelector('.val'); if (v) v.textContent = dVal.toFixed(2); }
-      refreshCards();
-    });
+    b.classList.add(`dsnap-${dVal}`);
+    b.addEventListener('click', () => shared.setD(dVal));
     controls.appendChild(b);
     return b;
   }
@@ -422,6 +441,27 @@ const ALPHA_REF = alphaAtDim(3);  // ~ 1/137.03
   const ctx = setupHiDPICanvas(canvas, W, H);
 
   const controls = document.getElementById('atoms-controls');
+  // Local slider, in sync with the d-dial's slider via `shared`.
+  const atomsSlider = makeSlider(controls, {
+    label: 'dimension <em>d</em>',
+    min: 2.0, max: 5.0, step: 0.01,
+    value: shared.d,
+    format: (v) => v.toFixed(2),
+    onChange: (v) => { shared.setD(v); },
+  });
+  // Snap buttons for quick d = 2/3/4/5 (same class system as the dial above so
+  // a single listener below updates the highlight on both rows).
+  function snapBtnA(label, dVal) {
+    const b = document.createElement('button');
+    b.textContent = label;
+    b.classList.add(`dsnap-${dVal}`);
+    b.addEventListener('click', () => { shared.setD(dVal); });
+    controls.appendChild(b);
+  }
+  snapBtnA('d=2', 2);
+  snapBtnA('d=3', 3);
+  snapBtnA('d=4', 4);
+  snapBtnA('d=5', 5);
   const playBtn = document.createElement('button');
   playBtn.textContent = '\u23F8 Pause';
   playBtn.className = 'primary';
@@ -429,10 +469,6 @@ const ALPHA_REF = alphaAtDim(3);  // ~ 1/137.03
   const resetBtn = document.createElement('button');
   resetBtn.textContent = 'Reset atoms';
   controls.appendChild(resetBtn);
-  const hint = document.createElement('span');
-  hint.style.cssText = 'flex: 1; color: var(--text-faint); font-style: italic; font-size: 12px; text-align: right;';
-  hint.textContent = 'uses the slider above';
-  controls.appendChild(hint);
 
   // Proton positions — widely spaced so each orbit is dominated by its home
   // proton. Cross-proton perturbation is ~1% at d=3 so orbits are visibly circular.
@@ -639,6 +675,13 @@ const ALPHA_REF = alphaAtDim(3);  // ~ 1/137.03
     requestAnimationFrame(loop);
   }
   loop();
+})();
+
+// Initial UI sync: highlight the d=3 snap buttons across both figures.
+(() => {
+  // Force the primary class on d=3 snap buttons without going through setD
+  // (which short-circuits when value is unchanged).
+  document.querySelectorAll('.dsnap-3').forEach(b => b.classList.add('primary'));
 })();
 </script>
 </body>
