@@ -1,0 +1,5 @@
+# Netlify redirects — preserve previously shared links now that the α essay
+# lives under /alpha/ and the site root is the library lander.
+
+# Old chapter URLs (shared before 2026-04-17) → new /alpha/ paths
+/sections/*              /alpha/sections/:splat         301

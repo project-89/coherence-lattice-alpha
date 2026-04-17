@@ -3,15 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>The Living Lattice — An Explorable Explanation</title>
+<title>The Living Lattice</title>
 <!-- BEGIN AUTO-INJECTED META -->
-<meta name="description" content="What if intelligence is what the universe does at every scale? An interactive essay built on one inequality, one lattice, and zero free parameters.">
+<meta name="description" content="Explorables of the intelligence theorem — an interactive library of essays on coherence, from the vacuum to mind.">
 <meta name="author" content="Michael Sharpe">
 <link rel="canonical" href="https://lattice.project89.org/">
 <link rel="icon" type="image/svg+xml" href="./favicon.svg">
 <link rel="apple-touch-icon" href="./apple-touch-icon.png">
 <meta property="og:title" content="The Living Lattice">
-<meta property="og:description" content="What if intelligence is what the universe does at every scale? An interactive essay built on one inequality, one lattice, and zero free parameters.">
+<meta property="og:description" content="Explorables of the intelligence theorem — an interactive library of essays on coherence, from the vacuum to mind.">
 <meta property="og:url" content="https://lattice.project89.org/">
 <meta property="og:site_name" content="The Living Lattice">
 <meta property="og:type" content="article">
@@ -21,7 +21,7 @@
 <meta property="og:image:alt" content="The Living Lattice — one inequality, one lattice, zero free parameters">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="The Living Lattice">
-<meta name="twitter:description" content="What if intelligence is what the universe does at every scale? An interactive essay built on one inequality, one lattice, and zero free parameters.">
+<meta name="twitter:description" content="Explorables of the intelligence theorem — an interactive library of essays on coherence, from the vacuum to mind.">
 <meta name="twitter:image" content="https://lattice.project89.org/og-image.png">
 <!-- PostHog -->
 <script>
@@ -31,45 +31,162 @@ posthog.init('phc_kRX9iHZstABjgFqEWJBMok2S3hW9R8QMHbNao4EsNz2g', {api_host: 'htt
 <!-- END AUTO-INJECTED META -->
 <link rel="stylesheet" href="css/style.css">
 <script type="module">import './js/common.js';</script>
+<style>
+.page.lander { max-width: 920px; padding: 64px 32px 96px; }
+
+.hero {
+  text-align: center;
+  margin: 1.4em 0 3em;
+}
+.hero h1 {
+  font-size: 3.4em;
+  margin: 0 0 0.25em;
+  letter-spacing: -0.02em;
+}
+.hero .tagline {
+  font: italic 1.2em "Charter", serif;
+  color: var(--text-soft);
+  max-width: 560px;
+  margin: 0 auto;
+  line-height: 1.5;
+}
+.hero .intro {
+  max-width: 620px;
+  margin: 1.6em auto 0;
+  color: var(--text);
+  line-height: 1.6;
+  font-size: 1em;
+}
+
+.essay-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+  margin: 2.4em 0 3em;
+}
+.essay-card {
+  display: block;
+  padding: 22px 26px 24px;
+  background: var(--bg-soft);
+  border: 1px solid var(--panel-border);
+  border-radius: 8px;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.15s, transform 0.12s, background 0.15s;
+}
+.essay-card.live:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  background: var(--bg);
+}
+.essay-card.coming {
+  opacity: 0.72;
+  cursor: default;
+}
+.essay-card.coming:hover {
+  border-color: var(--panel-border);
+  transform: none;
+}
+.essay-card .status {
+  display: inline-block;
+  font: 600 10px "SF Mono", monospace;
+  text-transform: uppercase; letter-spacing: 0.12em;
+  padding: 3px 10px;
+  border-radius: 12px;
+  margin-bottom: 14px;
+}
+.essay-card .status.shipped     { background: rgba(109, 196, 143, 0.16); color: #6dc48f; }
+.essay-card .status.in-research { background: rgba(239, 165, 122, 0.18); color: #efa57a; }
+.essay-card .status.planning    { background: rgba(125, 179, 221, 0.18); color: #7db3dd; }
+.essay-card h2 {
+  font-size: 1.4em;
+  margin: 0 0 0.2em;
+  line-height: 1.25;
+}
+.essay-card .card-subtitle {
+  font: italic 0.95em "Charter", serif;
+  color: var(--text-soft);
+  margin-bottom: 0.9em;
+}
+.essay-card .card-description {
+  line-height: 1.55;
+  color: var(--text);
+  font-size: 0.98em;
+}
+
+.lander-footer {
+  margin: 4em 0 0;
+  padding-top: 2em;
+  border-top: 1px solid var(--rule);
+  text-align: center;
+  color: var(--text-faint);
+  font-size: 0.92em;
+  line-height: 1.7;
+}
+.lander-footer a {
+  color: var(--text-soft);
+}
+.lander-footer a:hover { color: var(--accent); }
+
+@media (max-width: 720px) {
+  .hero h1 { font-size: 2.4em; }
+  .hero .tagline { font-size: 1.05em; }
+  .essay-grid { grid-template-columns: 1fr; gap: 16px; }
+}
+</style>
 </head>
 <body>
-<div class="page">
+<div class="page lander">
 
-<h1>The Living Lattice<span class="subtitle">An explorable explanation of the coherence lattice, and how the fine structure constant falls out of it</span></h1>
+<section class="hero">
+  <h1>The Living Lattice</h1>
+  <p class="tagline">Explorables of the intelligence theorem.</p>
+  <p class="intro">A library of interactive essays built around a single inequality &mdash; <em>I</em>&nbsp;&ge;&nbsp;0, the Coherence Theorem &mdash; and what happens when you run it on different substrates. Each piece is self-contained, written in the browser, and pursues one idea to its consequence.</p>
+</section>
 
-<p class="lead">Standard physics treats the coupling between two oscillators as a fixed number you tune by hand. This essay is about what happens when you let it be alive instead.</p>
+<div class="essay-grid">
 
-<p>When couplings evolve according to a single principle — maximize coherence — they spontaneously organize into a binary field of alive and dead bonds. Topological defects nucleate out of random initial conditions. The system settles at the BKT critical point, not because we put it there, but because that is where topology and dynamics meet. And the fine structure constant <span class="mono">α = 1/137.036</span>, the thing physicists have stared at for a century, drops out as a byproduct of all of this — with zero free parameters.</p>
+  <a class="essay-card live" href="alpha/">
+    <div class="status shipped">shipped &middot; 17 chapters</div>
+    <h2>&alpha; from first principles</h2>
+    <div class="card-subtitle">The fine structure constant from coupling alone.</div>
+    <p class="card-description">
+      Starts from one inequality on the diamond lattice. Derives the fine structure constant to 1.5 parts per billion and the electron&rsquo;s <em>g</em>-factor to eleven matching digits with the most precise measurement in physics. Zero free parameters.
+    </p>
+  </a>
 
-<p>This is a story best told with moving pictures. Each section below is short, interactive, and self-contained. Read in order, or skip to what draws you.</p>
+  <div class="essay-card coming">
+    <div class="status in-research">in research</div>
+    <h2>The proton mass</h2>
+    <div class="card-subtitle">Frame-sector SU(2) and the Skyrmion.</div>
+    <p class="card-description">
+      The next physics chapter: extending the same machinery from electrons to hadrons. Frame-sector dynamics on the diamond lattice, Skyrmion topology, and the proton&rsquo;s mass as the target.
+    </p>
+  </div>
 
-<nav class="toc">
-  <ol>
-    <li><a href="sections/01-prelude.html">Prelude: what it means for a lattice to be alive</a></li>
-    <li><a href="sections/02-oscillators.html">Oscillators on a graph</a></li>
-    <li><a href="sections/03-coherence.html">Coherence capital</a></li>
-    <li><a href="sections/04-clr.html">The Coherence Learning Rule</a></li>
-    <li><a href="sections/05-binary-field.html">How a binary field emerges</a></li>
-    <li><a href="sections/06-plm-npd.html">Phase-locked modes: geometry and memory in the K-field</a></li>
-    <li><a href="sections/07-vortices.html">Spontaneous vortices</a></li>
-    <li><a href="sections/08-diamond.html">Why the diamond lattice</a></li>
-    <li><a href="sections/09-electron.html">The electron (identity & topology)</a></li>
-    <li><a href="sections/10-fermion.html">How the lattice makes it a fermion</a></li>
-    <li><a href="sections/11-bkt-wall.html">The BKT wall</a></li>
-    <li><a href="sections/12-living-vs-static.html">Living versus static</a></li>
-    <li><a href="sections/13-alpha-formula.html">The α formula, piece by piece</a></li>
-    <li><a href="sections/14-dimension.html">Why three dimensions</a></li>
-    <li><a href="sections/15-lce.html">Closing the gap with linked clusters</a></li>
-    <li><a href="sections/16-g-factor.html">From α to g</a></li>
-    <li><a href="sections/17-coda.html">Coda: what just happened</a></li>
-  </ol>
-</nav>
+  <div class="essay-card coming">
+    <div class="status planning">planning</div>
+    <h2>Life as an entropy pump</h2>
+    <div class="card-subtitle">The duality between entropy and coherence.</div>
+    <p class="card-description">
+      The mathematics of ordered systems paying for their order in exported heat. From lattices to cells to minds, every coherent process is an entropy pump. Biological examples for the math.
+    </p>
+  </div>
 
-<hr>
+  <div class="essay-card coming">
+    <div class="status planning">planning</div>
+    <h2>A primer on coherence</h2>
+    <div class="card-subtitle">What <em>is</em> <em>I</em>&nbsp;&ge;&nbsp;0?</div>
+    <p class="card-description">
+      The inequality at the heart of the paradigm, for anyone who hasn&rsquo;t done graduate-level physics. Coupled oscillators, phase-locking, and why the universe has a direction.
+    </p>
+  </div>
 
-<p class="aside"><span class="label">A note on interaction</span>Numbers in the prose that look <span class="tune">like this</span> can be dragged left and right to change them. Watch the figures respond. Sliders in panels work the usual way. Everything runs in your browser — no data leaves your machine.</p>
+</div>
 
-<p style="color: var(--text-faint); font-size: 0.9em; margin-top: 4em;">Companion to the paper <em>The Coherence Learning Rule on the Diamond Lattice: From Coupled Oscillators to the Fine Structure Constant</em>, Sharpe 2026. Source at <a href="https://github.com/project-89/coherence-lattice-alpha">github.com/project-89/coherence-lattice-alpha</a>.</p>
+<footer class="lander-footer">
+  <p>Part of <a href="https://project89.org" target="_blank" rel="noopener">Project 89</a>. Source on <a href="https://github.com/project-89/coherence-lattice-alpha" target="_blank" rel="noopener">GitHub</a>.</p>
+</footer>
 
 </div>
 </body>

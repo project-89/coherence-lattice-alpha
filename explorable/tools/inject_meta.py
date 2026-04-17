@@ -52,101 +52,134 @@ ANALYTICS_SNIPPET = _posthog_snippet(POSTHOG_KEY, POSTHOG_HOST)
 # ---------------------------------------------------------------------------
 # Per-page metadata
 # ---------------------------------------------------------------------------
-DEFAULT_DESCRIPTION = (
+LANDER_DESCRIPTION = (
+    "Explorables of the intelligence theorem — an interactive library "
+    "of essays on coherence, from the vacuum to mind."
+)
+
+ALPHA_DESCRIPTION = (
     "What if intelligence is what the universe does at every scale? "
     "An interactive essay built on one inequality, one lattice, and zero free parameters."
 )
 
+# Per-page og_image: leave blank to use the default /og-image.png; override
+# per-essay to point at an essay-specific card.
 PAGES = {
+    # --- Site root: the library lander ---
     "index.html": {
         "title": "The Living Lattice",
-        "desc":  DEFAULT_DESCRIPTION,
+        "desc":  LANDER_DESCRIPTION,
         "path":  "/",
+        "og_image": "/og-image.png",
     },
-    "sections/01-prelude.html": {
+    # --- α essay ---
+    "alpha/index.html": {
+        "title": "The Living Lattice — α from first principles",
+        "desc":  ALPHA_DESCRIPTION,
+        "path":  "/alpha/",
+        "og_image": "/alpha/og-image.png",
+    },
+    "alpha/sections/01-prelude.html": {
         "title": "Prelude — The Living Lattice",
         "desc":  "One oscillator to two to coupled to living K. The intuition for the Coherence Learning Rule — where the essay begins.",
-        "path":  "/sections/01-prelude.html",
+        "path":  "/alpha/sections/01-prelude.html",
+        "og_image": "/alpha/og-image.png",
     },
-    "sections/02-oscillators.html": {
+    "alpha/sections/02-oscillators.html": {
         "title": "Oscillators on a graph — The Living Lattice",
         "desc":  "Phases, couplings, and the alignment integral. The von Mises distribution and R₀(K).",
-        "path":  "/sections/02-oscillators.html",
+        "path":  "/alpha/sections/02-oscillators.html",
+        "og_image": "/alpha/og-image.png",
     },
-    "sections/03-coherence.html": {
+    "alpha/sections/03-coherence.html": {
         "title": "Coherence capital — The Living Lattice",
         "desc":  "C = I_phase · ρ. Neither a seizure nor silence — the universe's compromise between synchrony and richness.",
-        "path":  "/sections/03-coherence.html",
+        "path":  "/alpha/sections/03-coherence.html",
+        "og_image": "/alpha/og-image.png",
     },
-    "sections/04-clr.html": {
+    "alpha/sections/04-clr.html": {
         "title": "The Coherence Learning Rule — The Living Lattice",
         "desc":  "The full CLR, the potential landscape, the death threshold, and the Coherence Theorem.",
-        "path":  "/sections/04-clr.html",
+        "path":  "/alpha/sections/04-clr.html",
+        "og_image": "/alpha/og-image.png",
     },
-    "sections/05-binary-field.html": {
+    "alpha/sections/05-binary-field.html": {
         "title": "How a binary field emerges — The Living Lattice",
         "desc":  "Alive and dead bonds crystallise from CLR dynamics. The K-field as a learned lattice connectivity.",
-        "path":  "/sections/05-binary-field.html",
+        "path":  "/alpha/sections/05-binary-field.html",
+        "og_image": "/alpha/og-image.png",
     },
-    "sections/06-plm-npd.html": {
+    "alpha/sections/06-plm-npd.html": {
         "title": "Phase-locked modes — The Living Lattice",
         "desc":  "Phase-locked modes as the atoms of form. Geometry and memory in the K-field.",
-        "path":  "/sections/06-plm-npd.html",
+        "path":  "/alpha/sections/06-plm-npd.html",
+        "og_image": "/alpha/og-image.png",
     },
-    "sections/07-vortices.html": {
+    "alpha/sections/07-vortices.html": {
         "title": "Spontaneous vortices — The Living Lattice",
         "desc":  "Topological defects nucleate from random phases. Winding as a conserved charge; the electron begins here.",
-        "path":  "/sections/07-vortices.html",
+        "path":  "/alpha/sections/07-vortices.html",
+        "og_image": "/alpha/og-image.png",
     },
-    "sections/08-diamond.html": {
+    "alpha/sections/08-diamond.html": {
         "title": "Why the diamond lattice — The Living Lattice",
         "desc":  "Five structural filters uniquely select diamond among all 3D lattices. z = 4, bipartite, tetrahedral.",
-        "path":  "/sections/08-diamond.html",
+        "path":  "/alpha/sections/08-diamond.html",
+        "og_image": "/alpha/og-image.png",
     },
-    "sections/09-electron.html": {
+    "alpha/sections/09-electron.html": {
         "title": "The electron — The Living Lattice",
         "desc":  "A vortex with integer charge, directed current, and chirality. The electron as topology.",
-        "path":  "/sections/09-electron.html",
+        "path":  "/alpha/sections/09-electron.html",
+        "og_image": "/alpha/og-image.png",
     },
-    "sections/10-fermion.html": {
+    "alpha/sections/10-fermion.html": {
         "title": "How the lattice makes it a fermion — The Living Lattice",
         "desc":  "Dirac dispersion, spin-½, and the vacuum's response. g = 2 drops out of bipartite symmetry.",
-        "path":  "/sections/10-fermion.html",
+        "path":  "/alpha/sections/10-fermion.html",
+        "og_image": "/alpha/og-image.png",
     },
-    "sections/11-bkt-wall.html": {
+    "alpha/sections/11-bkt-wall.html": {
         "title": "The BKT wall — The Living Lattice",
         "desc":  "Where the CLR's push meets a topological ceiling. K = 2/π, and where α operationally lives.",
-        "path":  "/sections/11-bkt-wall.html",
+        "path":  "/alpha/sections/11-bkt-wall.html",
+        "og_image": "/alpha/og-image.png",
     },
-    "sections/12-living-vs-static.html": {
+    "alpha/sections/12-living-vs-static.html": {
         "title": "Living versus static — The Living Lattice",
         "desc":  "How 1/α goes from 143 to 137 through a single choice about where to evaluate the Debye-Waller factor.",
-        "path":  "/sections/12-living-vs-static.html",
+        "path":  "/alpha/sections/12-living-vs-static.html",
+        "og_image": "/alpha/og-image.png",
     },
-    "sections/13-alpha-formula.html": {
+    "alpha/sections/13-alpha-formula.html": {
         "title": "The α formula, piece by piece — The Living Lattice",
         "desc":  "α = R₀(2/π)⁴ × (π/4)^(1/√e + α/2π). Every factor clickable; every factor on the lattice.",
-        "path":  "/sections/13-alpha-formula.html",
+        "path":  "/alpha/sections/13-alpha-formula.html",
+        "og_image": "/alpha/og-image.png",
     },
-    "sections/14-dimension.html": {
+    "alpha/sections/14-dimension.html": {
         "title": "Why three dimensions — The Living Lattice",
         "desc":  "Only d = 3 produces a physical α. Watch atoms collapse or drift at other dimensions.",
-        "path":  "/sections/14-dimension.html",
+        "path":  "/alpha/sections/14-dimension.html",
+        "og_image": "/alpha/og-image.png",
     },
-    "sections/15-lce.html": {
+    "alpha/sections/15-lce.html": {
         "title": "Closing the gap with linked clusters — The Living Lattice",
         "desc":  "A linked-cluster expansion over diamond subgraphs closes the gap to 1.5 parts per billion.",
-        "path":  "/sections/15-lce.html",
+        "path":  "/alpha/sections/15-lce.html",
+        "og_image": "/alpha/og-image.png",
     },
-    "sections/16-g-factor.html": {
+    "alpha/sections/16-g-factor.html": {
         "title": "From α to g — The Living Lattice",
         "desc":  "Plug the lattice α into the standard QED series. Eleven matching digits with the most precise measurement in physics.",
-        "path":  "/sections/16-g-factor.html",
+        "path":  "/alpha/sections/16-g-factor.html",
+        "og_image": "/alpha/og-image.png",
     },
-    "sections/17-coda.html": {
+    "alpha/sections/17-coda.html": {
         "title": "Coda: what just happened — The Living Lattice",
         "desc":  "The arrow of intelligence, entropy-coherence duality, and an invitation beyond physics.",
-        "path":  "/sections/17-coda.html",
+        "path":  "/alpha/sections/17-coda.html",
+        "og_image": "/alpha/og-image.png",
     },
 }
 
@@ -167,7 +200,7 @@ def build_block(page_rel: str, meta: dict) -> str:
     desc  = meta["desc"]
     title = meta["title"]
     root  = rel_root(page_rel)
-    og_image = BASE_URL + "/og-image.png"
+    og_image = BASE_URL + meta.get("og_image", "/og-image.png")
     lines = [
         START_MARK,
         f'<meta name="description" content="{desc}">',

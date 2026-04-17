@@ -2,7 +2,7 @@
   <!-- Background -->
   <rect width="1200" height="630" fill="#18160f"/>
 
-  <!-- Very faint diamond-lattice pattern as backdrop -->
+  <!-- Faint diamond-lattice backdrop -->
   <g opacity="0.06" stroke="#efa57a" stroke-width="1.2" fill="none">
     <line x1="0" y1="100" x2="1200" y2="100"/>
     <line x1="0" y1="200" x2="1200" y2="200"/>
@@ -12,42 +12,66 @@
   </g>
 
   <!-- Title -->
-  <text x="600" y="180" text-anchor="middle"
+  <text x="600" y="200" text-anchor="middle"
         font-family="Charter, 'Iowan Old Style', Georgia, serif"
-        font-size="88" font-weight="600" fill="#e8e2d3" letter-spacing="-1">
+        font-size="100" font-weight="600" fill="#e8e2d3" letter-spacing="-1.5">
     The Living Lattice
   </text>
-  <text x="600" y="232" text-anchor="middle"
+
+  <!-- Tagline -->
+  <text x="600" y="262" text-anchor="middle"
         font-family="Charter, Georgia, serif"
-        font-style="italic" font-size="30" fill="#b8b0a0">
-    the fine structure constant from first principles
+        font-style="italic" font-size="32" fill="#b8b0a0">
+    Explorables of the intelligence theorem
   </text>
 
-  <!-- Central tetrahedral atom motif -->
-  <g transform="translate(600,400)">
-    <!-- Bonds -->
-    <line x1="0" y1="0" x2="-110" y2="-90" stroke="#d97236" stroke-width="5.5" stroke-linecap="round"/>
-    <line x1="0" y1="0" x2="110"  y2="-90" stroke="#d97236" stroke-width="5.5" stroke-linecap="round"/>
-    <line x1="0" y1="0" x2="-110" y2="90"  stroke="#d97236" stroke-width="5.5" stroke-linecap="round"/>
-    <line x1="0" y1="0" x2="110"  y2="90"  stroke="#d97236" stroke-width="5.5" stroke-linecap="round"/>
-    <!-- Outer atoms (B sublattice — blue) -->
-    <circle cx="-110" cy="-90" r="17" fill="#7db3dd"/>
-    <circle cx="110"  cy="-90" r="17" fill="#7db3dd"/>
-    <circle cx="-110" cy="90"  r="17" fill="#7db3dd"/>
-    <circle cx="110"  cy="90"  r="17" fill="#7db3dd"/>
-    <!-- Central atom (A sublattice — orange) -->
-    <circle cx="0" cy="0" r="22" fill="#d97236"/>
+  <!-- A little diagrammatic row of three tetrahedral atoms (signifying "library of essays") -->
+  <g transform="translate(600,410)">
+    <!-- Three scaled-down tetrahedral atoms in a row -->
+    <g transform="translate(-220,0)">
+      <line x1="0" y1="0" x2="-38" y2="-32" stroke="#d97236" stroke-width="3.5" stroke-linecap="round"/>
+      <line x1="0" y1="0" x2="38"  y2="-32" stroke="#d97236" stroke-width="3.5" stroke-linecap="round"/>
+      <line x1="0" y1="0" x2="-38" y2="32"  stroke="#d97236" stroke-width="3.5" stroke-linecap="round"/>
+      <line x1="0" y1="0" x2="38"  y2="32"  stroke="#d97236" stroke-width="3.5" stroke-linecap="round"/>
+      <circle cx="-38" cy="-32" r="10" fill="#7db3dd"/>
+      <circle cx="38"  cy="-32" r="10" fill="#7db3dd"/>
+      <circle cx="-38" cy="32"  r="10" fill="#7db3dd"/>
+      <circle cx="38"  cy="32"  r="10" fill="#7db3dd"/>
+      <circle cx="0" cy="0" r="14" fill="#d97236"/>
+    </g>
+    <g transform="translate(0,0)">
+      <line x1="0" y1="0" x2="-38" y2="-32" stroke="#d97236" stroke-width="3.5" stroke-linecap="round"/>
+      <line x1="0" y1="0" x2="38"  y2="-32" stroke="#d97236" stroke-width="3.5" stroke-linecap="round"/>
+      <line x1="0" y1="0" x2="-38" y2="32"  stroke="#d97236" stroke-width="3.5" stroke-linecap="round"/>
+      <line x1="0" y1="0" x2="38"  y2="32"  stroke="#d97236" stroke-width="3.5" stroke-linecap="round"/>
+      <circle cx="-38" cy="-32" r="10" fill="#7db3dd"/>
+      <circle cx="38"  cy="-32" r="10" fill="#7db3dd"/>
+      <circle cx="-38" cy="32"  r="10" fill="#7db3dd"/>
+      <circle cx="38"  cy="32"  r="10" fill="#7db3dd"/>
+      <circle cx="0" cy="0" r="14" fill="#d97236"/>
+    </g>
+    <g transform="translate(220,0)">
+      <line x1="0" y1="0" x2="-38" y2="-32" stroke="#d97236" stroke-width="3.5" stroke-linecap="round"/>
+      <line x1="0" y1="0" x2="38"  y2="-32" stroke="#d97236" stroke-width="3.5" stroke-linecap="round"/>
+      <line x1="0" y1="0" x2="-38" y2="32"  stroke="#d97236" stroke-width="3.5" stroke-linecap="round"/>
+      <line x1="0" y1="0" x2="38"  y2="32"  stroke="#d97236" stroke-width="3.5" stroke-linecap="round"/>
+      <circle cx="-38" cy="-32" r="10" fill="#7db3dd"/>
+      <circle cx="38"  cy="-32" r="10" fill="#7db3dd"/>
+      <circle cx="-38" cy="32"  r="10" fill="#7db3dd"/>
+      <circle cx="38"  cy="32"  r="10" fill="#7db3dd"/>
+      <circle cx="0" cy="0" r="14" fill="#d97236"/>
+    </g>
   </g>
 
-  <!-- Results strip -->
+  <!-- Bottom line -->
   <text x="600" y="540" text-anchor="middle"
         font-family="SF Mono, Menlo, monospace"
-        font-size="28" fill="#6dc48f" font-weight="600">
-    1/α = 137.035999   ·   g = 2.00231930
+        font-size="26" fill="#6dc48f" font-weight="600" letter-spacing="2">
+    I &#8805; 0
   </text>
-  <text x="600" y="582" text-anchor="middle"
+  <text x="600" y="580" text-anchor="middle"
         font-family="Charter, Georgia, serif"
-        font-style="italic" font-size="22" fill="#847e71">
-    zero free parameters  ·  derived from one inequality
+        font-style="italic" font-size="20" fill="#847e71">
+    one inequality, every substrate
   </text>
 </svg>
