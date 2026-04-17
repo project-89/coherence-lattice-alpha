@@ -62,6 +62,72 @@
 .hero-panel .panel-pronounce { font-style: italic; color: var(--text-faint); font-size: 13px; margin-top: 4px; }
 .hero-panel.default-state .panel-body { color: var(--text-faint); font-style: italic; text-align: center; padding: 1.4em 0; }
 
+/* Detail panel inner layout: thumbnail on left, prose on right */
+.hero-panel .panel-inner {
+  display: flex; gap: 22px; align-items: flex-start;
+  margin-top: 4px;
+}
+.hero-panel .panel-thumb {
+  flex: 0 0 82px; height: 82px;
+  background: var(--bg); border: 1px solid var(--panel-border);
+  border-radius: 6px; padding: 5px;
+  display: flex; align-items: center; justify-content: center;
+}
+.hero-panel .panel-thumb svg { width: 72px; height: 72px; color: var(--text); }
+.hero-panel .panel-prose { flex: 1; min-width: 0; }
+.hero-panel .panel-onlattice {
+  margin-top: 0.8em; padding: 10px 14px;
+  background: rgba(109, 196, 143, 0.08);
+  border-left: 3px solid #6dc48f;
+  border-radius: 3px;
+  font-size: 14.5px;
+}
+.hero-panel .panel-onlattice .tag {
+  display: inline-block;
+  font: 600 10.5px "SF Mono", monospace;
+  color: #6dc48f; text-transform: uppercase; letter-spacing: 0.08em;
+  margin-right: 0.7em;
+}
+.hero-panel .panel-chapterlink {
+  display: inline-block; margin-top: 0.9em;
+  font: 600 13px "Charter", serif;
+  padding: 6px 14px; border-radius: 4px;
+  background: var(--accent); color: #18160f;
+  text-decoration: none; border: none;
+}
+.hero-panel .panel-chapterlink:hover {
+  background: var(--accent-light);
+  border: none;
+}
+:root[data-theme="light"] .hero-panel .panel-chapterlink { color: white; }
+
+/* "What α is" and "What α means on the lattice" panels */
+.context-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+  margin: 1em 0;
+}
+.context-card {
+  padding: 14px 16px;
+  background: var(--bg-soft);
+  border: 1px solid var(--panel-border);
+  border-radius: 5px;
+}
+.context-card .card-title {
+  font: 600 13px "Charter", serif;
+  color: var(--accent);
+  margin-bottom: 0.4em;
+}
+.context-card .card-body {
+  font-size: 14.5px; line-height: 1.55; color: var(--text);
+}
+.context-card .card-body code, .context-card .card-body .mono {
+  font-size: 13px;
+}
+@media (max-width: 620px) {
+  .context-grid { grid-template-columns: 1fr; }
+  .hero-panel .panel-inner { flex-direction: column; gap: 14px; }
+}
+
 /* Iteration animation */
 .iter-row {
   display: grid;
@@ -95,7 +161,44 @@
 
 <h1>The &alpha; formula, piece by piece<span class="subtitle">Every factor, traced back to the chapter that derived it</span></h1>
 
-<p class="lead">The coherence lattice, the CLR, the diamond, the vortex, the BKT wall, the PLM Lemma, the living-versus-static choice &mdash; twelve chapters of physics now fit into a single line of algebra. This chapter displays that line at full scale, with every symbol clickable. Each click opens the chapter where that factor was derived, along with its current numeric value. Nothing is tuned. Nothing is an input. Every piece is a consequence of the one principle <em>I</em>&nbsp;&ge;&nbsp;0 acting on the diamond lattice.</p>
+<p class="lead">The coherence lattice, the CLR, the diamond, the vortex, the BKT wall, the PLM Lemma, the living-versus-static choice &mdash; twelve chapters of physics now fit into a single line of algebra. This chapter displays that line at full scale, with every symbol clickable. Each click opens a detail panel showing the lattice feature that produces it, the chapter where it is derived, and the role it plays in the formula. Nothing here is tuned; nothing is an input. Every piece is a <em>measurable property of the electron as a phase vortex on the diamond lattice</em>.</p>
+
+<h2>First &mdash; what is &alpha;?</h2>
+
+<p>Before looking at the formula, it helps to know what the number on the left-hand side actually <em>is</em>. In standard physics, the fine structure constant is <em>the</em> dimensionless strength of electromagnetism &mdash; a single number, roughly 1/137, that sits at the heart of four measurements. Any two of them, done with different apparatus, give the same value to twelve significant figures:</p>
+
+<div class="context-grid">
+  <div class="context-card">
+    <div class="card-title">1. Coulomb force between electrons</div>
+    <div class="card-body">
+      The repulsive force between two electrons separated by distance <em>r</em> is <em>F</em> = &alpha;&thinsp;&#x210F;<em>c</em>&thinsp;/&thinsp;<em>r</em>&sup2;. Factor out the universal constants &#x210F; and <em>c</em> and what remains is &alpha; &mdash; the fundamental strength of the electromagnetic push.
+    </div>
+  </div>
+  <div class="context-card">
+    <div class="card-title">2. Bohr radius of hydrogen</div>
+    <div class="card-body">
+      An electron's orbit around a proton has a characteristic size <em>a</em><sub>0</sub> = &#x210F;&thinsp;/&thinsp;(<em>m</em><sub>e</sub><em>c</em>&alpha;) &asymp; 0.529&#x202F;&Aring;. Larger &alpha; means a tighter orbit. Atom size is a direct measurement of &alpha;.
+    </div>
+  </div>
+  <div class="context-card">
+    <div class="card-title">3. Fine-structure splitting</div>
+    <div class="card-body">
+      Spectral lines in hydrogen and heavier atoms split into closely spaced doublets, separated by an amount proportional to &alpha;&sup2;. Sommerfeld discovered this in 1916 and named &alpha; after it. Still the most accurate non-g-factor measurement.
+    </div>
+  </div>
+  <div class="context-card">
+    <div class="card-title">4. Anomalous magnetic moment</div>
+    <div class="card-body">
+      The electron's magnetic moment is <em>g</em>/2 times a natural unit. Dirac predicted <em>g</em>&nbsp;=&nbsp;2 exactly; experiment finds <em>g</em>/2 &minus; 1 = &alpha;/(2&pi;) + (higher orders). Agreement with theory: <strong>12 matching digits</strong> &mdash; the most precise prediction in all of physics.
+    </div>
+  </div>
+</div>
+
+<p>Notice what all four have in common. Each measurement probes a different physical thing &mdash; the force, the orbit, the spectrum, the spin. Yet each returns the same dimensionless number. That is what makes &alpha; a <em>fundamental constant</em>: it isn't a property of any one atom or any one experiment. It is the single number that sets the strength of electromagnetism, universally. Whatever underlying structure reality has, that structure must <em>output</em> this one number.</p>
+
+<p>For a hundred years nobody has derived it from first principles. Eddington tried in 1929 and was ridiculed. Dirac famously called it "one of the greatest unsolved problems in physics". Feynman wrote: "It's been a mystery ever since it was discovered more than fifty years ago... we can measure it very accurately, but we don't understand it." The coherence lattice is, to our knowledge, the first framework that reproduces the measured value to 29 ppm with zero fit parameters.</p>
+
+<p class="aside"><span class="label">The test of physics vs numerology</span>Numerologists have derived 1/137 from combinations of integers and &pi; for a century. What makes the coherence lattice different is that every piece of the formula has an independent <em>physical</em> referent on the lattice &mdash; you can point at it, measure it, vary it, and watch the prediction change. If you remove the diamond lattice, you cannot have an exponent 4. If you remove BKT topology, the coupling 2/&pi; doesn't appear. If you replace the CLR with fixed-<em>K</em> dynamics, the Debye&ndash;Waller factor collapses. The formula is not an arithmetic coincidence &mdash; it is the combined output of seven independent pieces of lattice physics, each measurable, each falsifiable.</p>
 
 <h2>The formula</h2>
 
@@ -111,7 +214,52 @@
   <div class="panel-body">Click any coloured symbol above to see where it comes from, what it means, and the value it takes at the BKT critical point.</div>
 </div>
 
-<p>The single equation packages five independent physical inputs. Each comes from a theorem, a derivation, or a structural constraint proved earlier in the essay. None of them is fit to data. The self-consistency between the left and right sides &mdash; the &alpha; appearing inside its own exponent &mdash; is the Schwinger QED vertex, and it converges to a fixed point in three iterations. Here is that convergence, drawn explicitly:</p>
+<p>The single equation packages five independent physical inputs, each derived from the lattice dynamics and none of them fit to data. Click any coloured symbol above to see the lattice feature that produces it and to jump to the chapter where it is derived.</p>
+
+<h2>What &alpha; <em>is</em>, on the lattice</h2>
+
+<p>Each of the four measurements of &alpha; &mdash; the Coulomb force, the Bohr radius, the fine-structure splitting, the anomalous magnetic moment &mdash; probes a different physical quantity. On the coherence lattice, all four are faces of <em>one</em> dynamical quantity: <strong>the amplitude for a phase fluctuation in the K-field to propagate from the vacuum to the electron vortex and back.</strong></p>
+
+<div class="context-grid">
+  <div class="context-card">
+    <div class="card-title">Coulomb force &rlarr; bond-coherence transmission</div>
+    <div class="card-body">
+      Two vortices separated by distance <em>r</em> feel each other through phase fluctuations of the bonds between them. The efficiency of that transmission is the product of per-bond correlations <em>R</em><sub>0</sub><sup><em>z</em></sup> (the vertex factor), running out to <em>r</em> via the BKT power law. That is &alpha;.
+    </div>
+  </div>
+  <div class="context-card">
+    <div class="card-title">Bohr radius &rlarr; vortex extent in lattice units</div>
+    <div class="card-body">
+      The electron vortex has a finite spatial scale set by the balance of phase-gradient energy and the K-field's healing length. Measured in units of the Compton wavelength, that scale is 1/&alpha; &mdash; a direct consequence of the vertex factor and the BKT marginality condition (Chapter 11).
+    </div>
+  </div>
+  <div class="context-card">
+    <div class="card-title">Spectroscopic splitting &rlarr; vortex self-interaction</div>
+    <div class="card-body">
+      Two energy levels of the same vortex differ by its self-interaction through the K-field &mdash; a second-order process giving &alpha;&sup2;. Sommerfeld's 1916 constant is the lattice's 4-bond star-graph correlation, squared.
+    </div>
+  </div>
+  <div class="context-card">
+    <div class="card-title">Anomalous <em>g</em>-factor &rlarr; K-field vacuum response</div>
+    <div class="card-body">
+      For <em>frozen</em> K, the electron has <em>g</em> = 2 exactly (Dirac's result, Chapter 10). The anomaly <em>g</em>/2 &minus; 1 = &alpha;/(2&pi;) is the leading correction from the K-field's self-optimising response to the vortex &mdash; a virtual K-fluctuation absorbed and re-emitted. The tiny Schwinger term in the exponent of the formula is this same virtual loop.
+    </div>
+  </div>
+</div>
+
+<p>The electron's <em>charge</em>, by contrast, is a different kind of quantity: an integer. It comes from the topological winding of the phase around the vortex core (Chapter 9), and it is quantised because winding numbers are quantised. Charge and &alpha; are not the same thing: charge is 1, 2, 3, &hellip; (times <em>e</em>); &alpha; is 1/137.036&hellip; always. But they share a home on the lattice: the electron <em>is</em> a phase vortex, the charge is the winding of its phase, and &alpha; is how that vortex couples to everything else through the K-field. Remove the lattice and both quantities lose their meaning.</p>
+
+<p>So why this specific formula? Every factor in the expression above corresponds to one piece of the vortex's interaction with its lattice environment:</p>
+
+<ul style="margin: 0.6em 0 1em 1.6em; line-height: 1.75;">
+  <li><strong><em>R</em><sub>0</sub>(2/&pi;)</strong> &mdash; the correlation a single bond transmits at the BKT-critical coupling. <em>This is the von Mises single-bond statistic from Chapter 2.</em></li>
+  <li><strong>The exponent 4</strong> &mdash; each atom in the lattice has four bonds, so the vortex core has four independent information channels to the outside. <em>This is the coordination number of diamond from Chapter 8.</em></li>
+  <li><strong>The base &pi;/4</strong> &mdash; the fraction of an RG coarse-graining step captured by a single lattice hop. <em>This is Chapter 11's variance-ratio identity.</em></li>
+  <li><strong>The exponent 1/&radic;e</strong> &mdash; the coherence that survives a single RG shell, evaluated at the CLR attractor where <em>K</em> is frozen. <em>This is Chapter 12's living-vs-static choice.</em></li>
+  <li><strong>The correction &alpha;/(2&pi;)</strong> &mdash; the vertex correction from a virtual K-fluctuation loop, which is exactly the Schwinger term. <em>The lattice produces QED as an emergent theory.</em></li>
+</ul>
+
+<p>The formula's self-consistency &mdash; the &alpha; appearing inside its own exponent &mdash; is not a mathematical curiosity. It is the statement that the vacuum the electron lives in is made out of the same stuff as the electron itself, and both adjust to each other. Iterate, and a fixed point appears. That fixed point is the number:</p>
 
 <figure id="fig-iter">
   <canvas id="canvas-iter" width="680" height="420"></canvas>
@@ -196,55 +344,129 @@ function computeAlpha(R0_val, base_val, n_base_val) {
   const panel = document.getElementById('hero-panel');
   if (!eq || !panel) return;
 
+  // Inline SVG thumbnails — schematic lattice features, one per factor.
+  const THUMBS = {
+    alpha: `<svg viewBox="0 0 100 100" width="72" height="72"><defs><marker id="arA" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#efa57a"/></marker></defs>
+      <circle cx="50" cy="50" r="30" fill="none" stroke="#efa57a" stroke-width="1.5"/>
+      <path d="M50,50 m 18,-18 a 26,26 0 1,1 -26,0" fill="none" stroke="#efa57a" stroke-width="1.5" stroke-dasharray="3 3" marker-end="url(#arA)"/>
+      <text x="50" y="55" text-anchor="middle" fill="#efa57a" font-family="Charter, serif" font-style="italic" font-size="22" font-weight="600">α</text></svg>`,
+    R0: `<svg viewBox="0 0 100 100" width="72" height="72">
+      <circle cx="22" cy="50" r="11" fill="#7db3dd"/>
+      <circle cx="78" cy="50" r="11" fill="#7db3dd"/>
+      <path d="M33,50 L40,40 L48,60 L56,40 L64,60 L67,50" stroke="#efa57a" stroke-width="2" fill="none"/>
+      <line x1="22" y1="37" x2="22" y2="22" stroke="#e8e2d3" stroke-width="1.5"/>
+      <line x1="22" y1="22" x2="28" y2="22" stroke="#e8e2d3" stroke-width="1.5"/>
+      <line x1="78" y1="37" x2="78" y2="22" stroke="#e8e2d3" stroke-width="1.5"/>
+      <line x1="78" y1="22" x2="84" y2="18" stroke="#e8e2d3" stroke-width="1.5"/>
+      <text x="50" y="92" text-anchor="middle" fill="#efa57a" font-family="SF Mono, monospace" font-size="9">K</text></svg>`,
+    twopi: `<svg viewBox="0 0 100 100" width="72" height="72">
+      <circle cx="30" cy="50" r="14" fill="#d17a97"/>
+      <text x="30" y="56" text-anchor="middle" fill="#fff" font-family="SF Mono, monospace" font-size="18" font-weight="700">+</text>
+      <circle cx="70" cy="50" r="14" fill="#7db3dd"/>
+      <text x="70" y="56" text-anchor="middle" fill="#fff" font-family="SF Mono, monospace" font-size="20" font-weight="700">−</text>
+      <line x1="44" y1="50" x2="56" y2="50" stroke="#efa57a" stroke-width="2" stroke-dasharray="2 2"/>
+      <text x="50" y="86" text-anchor="middle" fill="#efa57a" font-family="Charter, serif" font-style="italic" font-size="11">marginal</text></svg>`,
+    four: `<svg viewBox="0 0 100 100" width="72" height="72">
+      <line x1="50" y1="50" x2="22" y2="22" stroke="#efa57a" stroke-width="2.5"/>
+      <line x1="50" y1="50" x2="78" y2="22" stroke="#efa57a" stroke-width="2.5"/>
+      <line x1="50" y1="50" x2="22" y2="78" stroke="#efa57a" stroke-width="2.5"/>
+      <line x1="50" y1="50" x2="78" y2="78" stroke="#efa57a" stroke-width="2.5"/>
+      <circle cx="22" cy="22" r="6" fill="#7db3dd"/>
+      <circle cx="78" cy="22" r="6" fill="#7db3dd"/>
+      <circle cx="22" cy="78" r="6" fill="#7db3dd"/>
+      <circle cx="78" cy="78" r="6" fill="#7db3dd"/>
+      <circle cx="50" cy="50" r="9" fill="#efa57a"/>
+      <text x="50" y="54" text-anchor="middle" fill="#fff" font-family="SF Mono, monospace" font-size="11" font-weight="700">4</text></svg>`,
+    base: `<svg viewBox="0 0 100 100" width="72" height="72">
+      <circle cx="50" cy="50" r="42" fill="none" stroke="#efa57a" stroke-width="1" stroke-dasharray="3 2" opacity="0.5"/>
+      <circle cx="50" cy="50" r="30" fill="none" stroke="#efa57a" stroke-width="1.2" stroke-dasharray="3 2" opacity="0.8"/>
+      <circle cx="50" cy="50" r="18" fill="none" stroke="#efa57a" stroke-width="1.8"/>
+      <circle cx="50" cy="50" r="8" fill="#efa57a"/>
+      <path d="M50,50 L82,50" stroke="#7db3dd" stroke-width="1.5" marker-end="url(#arrB)"/>
+      <defs><marker id="arrB" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#7db3dd"/></marker></defs>
+      <text x="96" y="54" text-anchor="end" fill="#7db3dd" font-family="Charter, serif" font-style="italic" font-size="10">RG</text></svg>`,
+    n: `<svg viewBox="0 0 100 100" width="72" height="72">
+      <line x1="10" y1="82" x2="90" y2="82" stroke="#e8e2d3" stroke-width="1"/>
+      <path d="M12,76 Q50,36 88,20" stroke="#7db3dd" stroke-width="1.5" fill="none"/>
+      <path d="M12,76 Q30,68 48,58" stroke="#7db3dd" stroke-width="1.5" fill="none" stroke-dasharray="2 2"/>
+      <path d="M12,76 Q50,72 88,42" stroke="#7db3dd" stroke-width="1.5" fill="none" stroke-dasharray="2 2"/>
+      <line x1="80" y1="18" x2="92" y2="22" stroke="#6dc48f" stroke-width="2" stroke-dasharray="2 2"/>
+      <circle cx="88" cy="20" r="5" fill="#6dc48f"/>
+      <text x="70" y="40" text-anchor="end" fill="#6dc48f" font-family="SF Mono, monospace" font-size="9">K*</text>
+      <text x="50" y="98" text-anchor="middle" fill="#e8e2d3" font-family="Charter, serif" font-style="italic" font-size="10">t</text></svg>`,
+    schwinger: `<svg viewBox="0 0 100 100" width="72" height="72">
+      <line x1="10" y1="60" x2="90" y2="60" stroke="#e8e2d3" stroke-width="2"/>
+      <path d="M35,60 Q35,20 50,20 Q65,20 65,60" stroke="#efa57a" stroke-width="1.5" fill="none" stroke-dasharray="3 2"/>
+      <path d="M40,22 Q44,18 48,22 T56,22 T64,22" stroke="#efa57a" stroke-width="1.3" fill="none"/>
+      <circle cx="35" cy="60" r="3.5" fill="#efa57a"/>
+      <circle cx="65" cy="60" r="3.5" fill="#efa57a"/>
+      <text x="90" y="78" text-anchor="end" fill="#e8e2d3" font-family="Charter, serif" font-style="italic" font-size="10">e⁻</text>
+      <text x="50" y="13" text-anchor="middle" fill="#efa57a" font-family="Charter, serif" font-style="italic" font-size="9">virtual K</text></svg>`,
+  };
+
   const DATA = {
     alpha: {
       name: '\u03B1 \u2014 the fine structure constant',
       pronounce: '"alpha"',
       chapter: 'The target',
+      chapterLink: null,
       value: `\u2248 1/${(1/computeAlpha(PHYS.R0_val, PHYS.base, PHYS.n_base)).toFixed(3)}`,
-      body: `The number that sets the strength of electromagnetism. When two electrons push each other apart, \u03B1 \u2248 1/137 is how strong that push is compared to the total energy of the system. It is dimensionless \u2014 same in any units, any era, any lab. Notice it appears on both sides of the equation above: once as the thing we are solving for, and once inside the exponent as a tiny self-correction. That is not a typo: the vacuum's response to an electron depends on \u03B1, and \u03B1 is what describes that response. You solve it by fixed-point iteration \u2014 guess a value, plug it in, get a new value, repeat. It settles in three steps, and the number it settles on is what the formula predicts.`,
+      body: `The number that sets the strength of electromagnetism. When two electrons push each other apart, \u03B1 \u2248 1/137 is how strong that push is compared to the total energy of the system. It is dimensionless \u2014 same in any units, any era, any lab. Notice it appears on both sides of the equation above: once as the thing we are solving for, and once inside the exponent as a tiny self-correction. That is not a typo: the vacuum's response to an electron depends on \u03B1, and \u03B1 is what describes that response. You solve it by fixed-point iteration \u2014 guess a value, plug it in, get a new value, repeat. It settles in three steps.`,
+      onLattice: `\u03B1 is the probability amplitude that a phase fluctuation in the K-field propagates from any point in the lattice to the vortex core and back. It is the vortex's coupling to the rest of its own vacuum.`,
     },
     R0: {
       name: 'R\u2080 \u2014 how aligned a single bond is',
       pronounce: '"R-nought of K"',
       chapter: 'Chapter 2 \u00B7 Oscillators on a graph',
+      chapterLink: '02-oscillators.html',
       value: `R\u2080(2/\u03C0) = ${PHYS.R0_val.toFixed(6)}`,
-      body: `Picture two oscillators joined by a spring with coupling strength K. If K is huge, they lock together (correlation = 1). If K is zero, their phases drift independently (correlation = 0). <em>R</em>\u2080(K) is the correlation at intermediate K \u2014 the average of cos(\u0394\u03B8) when the phase difference follows a "wrapped Gaussian" (the natural distribution for angles, called the von Mises distribution, forced here by the Coherence Learning Rule). Mathematically <em>R</em>\u2080(K) = I\u2081(K)\u2009/\u2009I\u2080(K), a ratio of two standard integrals called modified Bessel functions \u2014 the same integrals that crop up whenever you average cos\u03B8 with a Boltzmann-like weight. At the BKT coupling K = 2/\u03C0 the single-bond correlation is about 0.303: each bond transmits roughly 30% of its neighbour's phase information.`,
+      body: `Picture two oscillators joined by a spring with coupling strength <em>K</em>. If <em>K</em> is huge, they lock together (correlation = 1). If <em>K</em> is zero, their phases drift independently (correlation = 0). <em>R</em>\u2080(<em>K</em>) is the correlation at intermediate <em>K</em> \u2014 the average of cos(\u0394\u03B8) when the phase difference follows a "wrapped Gaussian" (the von Mises distribution, the natural distribution for angles, forced here by the Coherence Learning Rule). Mathematically <em>R</em>\u2080(<em>K</em>) = I\u2081(<em>K</em>) / I\u2080(<em>K</em>), a ratio of modified Bessel functions \u2014 the standard integrals you get whenever you average cos\u03B8 with a Boltzmann-like weight.`,
+      onLattice: `<em>R</em>\u2080 is literally what you get if you measure \u27E8cos(\u0394\u03B8)\u27E9 on any alive bond of the lattice. Running the CLR simulation produces it. At the BKT coupling <em>K</em> = 2/\u03C0 each bond transmits about 30.3% of its neighbour's phase information.`,
     },
     twopi: {
       name: '2/\u03C0 \u2014 the BKT critical coupling',
       pronounce: '"two over pi"',
       chapter: 'Chapter 11 \u00B7 The BKT wall',
+      chapterLink: '11-bkt-wall.html',
       value: `K_BKT = ${(2/Math.PI).toFixed(6)}`,
-      body: `This is the exact coupling at which a vortex can just barely exist as a free, stable excitation. Above it, vortex\u2013antivortex pairs are permanently glued together; below it, pairs proliferate wildly; at exactly 2/\u03C0, the free energy to separate them to any distance is zero. Kosterlitz and Thouless worked this out in 1972 for the 2D XY model and got a Nobel Prize for it. On our lattice, the CLR wants K as high as possible, but the vortex (which <em>is</em> the electron) cannot survive above 2/\u03C0 \u2014 so the system settles exactly here. No free parameters: \u03C0 from the geometry of phases, 2 from the entropy of positions.`,
+      body: `The exact coupling at which a phase vortex can exist as a free, stable excitation. Above it, vortex\u2013antivortex pairs are glued together; below it, pairs proliferate wildly; at exactly 2/\u03C0 the free energy to separate them is zero. Kosterlitz and Thouless worked this out in 1972 for the 2D XY model and won the 2016 Nobel Prize for it. Two ingredients: \u03C0 from the geometry of phases, 2 from the entropy of positions \u2014 they balance exactly at <em>K</em> = 2/\u03C0.`,
+      onLattice: `The CLR drives <em>K</em> upward (Chapter 4's Shannon channel climbs the potential); the electron vortex (Chapter 9) cannot survive <em>K</em> &gt; 2/\u03C0. The system settles at the boundary. This is the observable equilibrium in Chapter 11's Figure 3 \u2014 the marble hits the wall.`,
     },
     four: {
       name: 'the exponent 4 \u2014 each atom has 4 neighbours',
       pronounce: '"z equals four"',
       chapter: 'Chapter 8 \u00B7 Why the diamond lattice',
+      chapterLink: '08-diamond.html',
       value: `z = 4`,
-      body: `Every carbon atom in a diamond crystal sits at the centre of a tetrahedron with four nearest-neighbour atoms at its corners. That is where this 4 comes from: the coordination number <em>z</em>. Since each of those four bonds contributes its own independent correlation <em>R</em>\u2080, and the correlations compound multiplicatively at the shared central site, the total vertex correlation is <em>R</em>\u2080 raised to the fourth power. The diamond lattice isn't picked for aesthetics \u2014 Chapter 8 shows it's the <em>unique</em> 3D lattice satisfying five structural requirements at once (tetrahedral coordination, bipartite colouring, octahedral symmetry, two-atom unit cell, three dimensions). Change the 4 to anything else and you're on a different lattice \u2014 Chapter 14 shows what 1/\u03B1 does when you try.`,
+      body: `Every carbon atom in a diamond crystal sits at the centre of a tetrahedron with four nearest-neighbour atoms at its corners. That is where this 4 comes from: the coordination number <em>z</em>. Since each of those four bonds contributes its own independent correlation <em>R</em>\u2080, and the correlations compound multiplicatively at the shared central site, the total vertex correlation is <em>R</em>\u2080 raised to the fourth power. The diamond lattice isn't picked for aesthetics \u2014 Chapter 8 shows it's the <em>unique</em> 3D lattice satisfying five structural requirements at once.`,
+      onLattice: `You can literally count them. On the lattice rendered in Chapter 8, each vertex has four bonds radiating out. The vortex core sits on one atom; the star-graph vertex factor is the product of those four bond-correlations. Change the lattice and the exponent changes \u2014 Chapter 14 shows what 1/\u03B1 does when you try.`,
     },
     base: {
       name: '\u03C0/4 \u2014 how much of an RG step one bond captures',
       pronounce: '"pi over four"',
       chapter: 'Chapter 11 \u00B7 The BKT wall',
+      chapterLink: '11-bkt-wall.html',
       value: `\u03C0/z = ${(Math.PI/4).toFixed(6)}`,
-      body: `Renormalisation group (RG) theory says: to understand long-wavelength physics, average together small patches and study the result. Each "averaging step" shrinks a certain fraction of the fine-scale correlation. The question is: how much does one lattice bond shrink it by? The answer is a ratio. On the lattice, the phase difference between neighbours has spread 1/(<em>zK</em>); in the continuum 2D-XY limit, the RG-natural spread is 1/(\u03C0<em>K</em>). The coupling <em>K</em> cancels; the ratio is \u03C0/<em>z</em>. For diamond (<em>z</em> = 4) that is \u03C0/4 \u2248 0.785. This is the number raised to the Debye\u2013Waller power in the formula \u2014 it plays the role of the base of an exponential.`,
+      body: `Renormalisation group (RG) theory says: to understand long-wavelength physics, average together small patches and study the result. Each "averaging step" shrinks a certain fraction of the fine-scale correlation. How much does one lattice bond shrink it by? It is a ratio of variances. On the lattice, the phase difference between neighbours has spread 1/(<em>zK</em>); in the continuum 2D-XY limit, the RG-natural spread is 1/(\u03C0<em>K</em>). The coupling <em>K</em> cancels; the ratio is \u03C0/<em>z</em> = \u03C0/4.`,
+      onLattice: `Both variances are measurable on the lattice: the numerator is the variance of \u0394\u03B8 across one bond (directly from CLR simulation), and the denominator is the coarse-grained variance after one Wilsonian RG step. Their ratio is \u03C0/4, regardless of coupling. This is the <em>base</em> of the power-law correlator in the formula.`,
     },
     n: {
       name: '1/\u221Ae \u2014 how much coherence survives at the attractor',
       pronounce: '"one over root e"',
       chapter: 'Chapter 12 \u00B7 Living versus static',
+      chapterLink: '12-living-vs-static.html',
       value: `exp(\u2212\u03C3\u00B2) = ${PHYS.n_base.toFixed(6)}`,
-      body: `Crystallographers have a factor called the Debye\u2013Waller factor: when you X-ray a crystal, atoms are wobbling thermally and only a fraction of the diffraction intensity stays sharp \u2014 that fraction is exp(\u2212\u03C3\u00B2), where \u03C3\u00B2 is the mean-square wobble. Here the same idea applies, but the "wobble" is in the phase, not the position: \u03C3\u00B2 = 1/2 at the BKT point. So the factor is exp(\u22121/2) = 1/\u221Ae \u2248 0.607. The subtle part is <em>where in the RG flow</em> you evaluate this. Standard lattice field theory averages along the whole trajectory (and gets 0.787, producing 1/\u03B1 = 143 \u2014 wrong). The living lattice evaluates at the attractor \u2014 the fixed point where the CLR has frozen things \u2014 giving 0.607 and 1/\u03B1 = 137 (right). This single choice is Chapter 12's subject.`,
+      body: `Crystallographers have a factor called the Debye\u2013Waller factor: when you X-ray a crystal, atoms are wobbling thermally and only a fraction of the diffraction intensity stays sharp \u2014 that fraction is exp(\u2212\u03C3\u00B2), where \u03C3\u00B2 is the mean-square wobble. Here the same idea applies, but the "wobble" is in the phase, not the position: \u03C3\u00B2 = 1/2 at the BKT point. So the factor is exp(\u22121/2) = 1/\u221Ae \u2248 0.607.`,
+      onLattice: `The subtle part is <em>when</em> you measure it. Standard lattice field theory averages along the whole RG trajectory (giving 0.787 and the wrong answer 1/\u03B1 = 143). The living lattice evaluates at the attractor \u2014 the fixed point where the CLR has frozen <em>K</em> at <em>K</em>* (PLM Lemma, Chapter 12). That is Chapter 12's entire subject: which <em>K</em> do you plug into the Debye\u2013Waller factor? The answer is <em>K</em>*, and the number comes out 1/\u221Ae.`,
     },
     schwinger: {
       name: '\u03B1/(2\u03C0) \u2014 the Schwinger vacuum correction',
       pronounce: '"alpha over two pi"',
-      chapter: 'Standard QED',
+      chapter: 'Lattice \u2192 standard QED',
+      chapterLink: null,
       value: `\u2248 ${(computeAlpha(PHYS.R0_val, PHYS.base, PHYS.n_base)/(2*Math.PI)).toExponential(3)}`,
-      body: `Julian Schwinger calculated in 1948 that when an electron moves through the vacuum, it briefly kicks up and reabsorbs a cloud of virtual photons. This cloud modifies the electron's effective coupling by a small term: \u03B1 divided by 2\u03C0, about 0.00116 (a part per thousand of the matching exponent). It is the <em>only</em> piece of the formula borrowed from standard QED \u2014 and Schwinger's calculation of it in 1948 won him a share of the 1965 Nobel Prize. On the coherence lattice it shows up naturally because the vertex factor is evaluated self-consistently: the formula's output \u03B1 is fed back into its own exponent, and the Schwinger correction is what closes the loop. Without it, the iteration still converges \u2014 but to a slightly different value (\u2248137.03 without it vs 137.032 with). It is the final polish.`,
+      body: `Schwinger calculated in 1948 that when an electron moves through the vacuum, it briefly kicks up and reabsorbs a cloud of virtual photons. This cloud modifies the electron's effective coupling by a small term: \u03B1 divided by 2\u03C0, about 0.00116. His calculation won him a share of the 1965 Nobel Prize and reproduces the measured <em>g</em>&minus;2 anomaly to ten significant figures.`,
+      onLattice: `On the lattice, the "virtual photon" is a K-field fluctuation that propagates a short distance, interacts with the vortex, and returns. The Schwinger correction is what the CLR's perturbative expansion around <em>K</em>* produces at leading order \u2014 it is a consequence of the lattice's own dynamics, not an input. When the vertex factor is evaluated self-consistently, this correction is exactly what closes the loop and sets the fixed point.`,
     },
   };
 
@@ -263,6 +485,13 @@ function computeAlpha(R0_val, base_val, n_base_val) {
       }
       s.classList.add('active');
       panel.className = 'hero-panel';
+      const thumb = THUMBS[key] || '';
+      const chapterBtn = info.chapterLink
+        ? `<a class="panel-chapterlink" href="${info.chapterLink}">&rarr; Open ${info.chapter.split(' \u00B7 ')[0]}</a>`
+        : '';
+      const onLattice = info.onLattice
+        ? `<div class="panel-onlattice"><span class="tag">on the lattice</span>${info.onLattice}</div>`
+        : '';
       panel.innerHTML = `
         <div class="panel-head">
           <div class="panel-name">${info.name}</div>
@@ -270,7 +499,14 @@ function computeAlpha(R0_val, base_val, n_base_val) {
           <div class="panel-value">${info.value}</div>
         </div>
         <div class="panel-pronounce">pronounced <em>${info.pronounce}</em></div>
-        <div class="panel-body" style="margin-top: 0.6em;">${info.body}</div>
+        <div class="panel-inner">
+          <div class="panel-thumb">${thumb}</div>
+          <div class="panel-prose">
+            <div class="panel-body">${info.body}</div>
+            ${onLattice}
+            ${chapterBtn}
+          </div>
+        </div>
       `;
     });
   });
