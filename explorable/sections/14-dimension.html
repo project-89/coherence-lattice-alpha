@@ -88,6 +88,20 @@
 
 <div class="dim-row" id="dim-icons"><!-- four cards built by JS --></div>
 
+<h2>What the dial does to matter</h2>
+
+<p>The 1/&alpha; ruler above is an abstract number. Here is that same dial's effect on real physics: three hydrogen-like atoms, each a fixed proton (red) with an orbiting electron (blue). The only knob is the electromagnetic coupling strength &mdash; exactly what &alpha; controls. At <em>d</em>&nbsp;=&nbsp;3 the electrons hold stable, circular orbits. Slide to <em>d</em>&nbsp;=&nbsp;2 and the attraction is nearly 4x too strong: the electrons spiral inward and slam into their protons. Slide to <em>d</em>&nbsp;=&nbsp;4 and the attraction is 4x too weak: the electrons fly off in straight lines, the atoms evaporate. Only at <em>d</em>&nbsp;=&nbsp;3 does matter exist in the form we know.</p>
+
+<figure id="fig-atoms">
+  <canvas id="canvas-atoms" width="680" height="380"></canvas>
+  <div class="controls" id="atoms-controls"><!-- slider + buttons inserted by JS --></div>
+  <figcaption>
+    Three <span style="color: #d17a97;">protons</span> (fixed red disks) with <span style="color: #7db3dd;">electrons</span> (blue dots with fading trails) orbiting them under Coulomb attraction proportional to &alpha;(<em>d</em>). Shared slider with the d-dial above &mdash; move either and both update. At <em>d</em>&nbsp;=&nbsp;3, each electron holds a circular orbit indefinitely. At <em>d</em>&nbsp;&lt;&nbsp;3, the force exceeds what the initial tangential velocity can balance and electrons spiral in &mdash; eventually colliding with their protons (annihilation flash). At <em>d</em>&nbsp;&gt;&nbsp;3, the force is too weak to hold the orbital velocity; electrons fly off tangentially and escape. The simulation uses velocity-Verlet integration with soft-core protons (r&nbsp;&ge;&nbsp;1.5&thinsp;nominal&nbsp;units) to prevent numerical singularities, so a "crashed" electron rebounds chaotically inside the soft core rather than diverging. Press <strong>Reset</strong> to re-spawn electrons at the <em>d</em>&nbsp;=&nbsp;3 Bohr radius with circular velocity.
+  </figcaption>
+</figure>
+
+<p>This is what &alpha; &mdash; the whole formula we spent twelve chapters deriving &mdash; does to a universe. It sets the <em>size</em> of atoms (Bohr radius &prop; 1/&alpha;), the <em>depth</em> of their binding energy (&prop; &alpha;&sup2;), and whether they exist at all. Change &alpha; by a factor of four, change <em>d</em> from 3, and hydrogen stops being hydrogen.</p>
+
 <h2>Why d&nbsp;=&nbsp;2 and d&nbsp;=&nbsp;4 fail</h2>
 
 <div class="context-grid">
@@ -145,6 +159,16 @@ function alphaAtDim(d) {
   return a;
 }
 
+// Shared state — the one dimension slider drives both figures below.
+const shared = {
+  d: 3.0,
+  listeners: [],
+  setD(v) { this.d = v; this.listeners.forEach(f => f(v)); },
+  onChange(fn) { this.listeners.push(fn); },
+};
+
+const ALPHA_REF = alphaAtDim(3);  // ~ 1/137.03
+
 // ============================================================
 // FIGURE 1: The d-dial
 // ============================================================
@@ -155,13 +179,12 @@ function alphaAtDim(d) {
   const ctx = setupHiDPICanvas(canvas, W, H);
 
   const controls = document.getElementById('ddial-controls');
-  let d_now = 3.0;
   const dSlider = makeSlider(controls, {
     label: 'dimension <em>d</em>',
     min: 2.0, max: 5.0, step: 0.01,
     value: 3.0,
     format: (v) => v.toFixed(2),
-    onChange: (v) => { d_now = v; refreshCards(); },
+    onChange: (v) => { shared.setD(v); refreshCards(); },
   });
 
   // Snap buttons
@@ -170,7 +193,7 @@ function alphaAtDim(d) {
     b.textContent = label;
     if (Math.abs(dVal - 3) < 1e-6) b.classList.add('primary');
     b.addEventListener('click', () => {
-      d_now = dVal;
+      shared.setD(dVal);
       const input = controls.querySelector('input[type="range"]');
       if (input) { input.value = dVal; const v = controls.querySelector('.val'); if (v) v.textContent = dVal.toFixed(2); }
       refreshCards();
@@ -210,7 +233,7 @@ function alphaAtDim(d) {
     ctx.fillText('1/\u03B1 as a function of lattice dimension', W/2, titleY);
 
     // Current values block (left-aligned below title, large and clear)
-    const d = d_now, z = d + 1;
+    const d = shared.d, z = d + 1;
     const inv = 1 / alphaAtDim(d);
     const reg = regimeAt(d);
     ctx.font = '600 28px "SF Mono", monospace';
@@ -318,7 +341,7 @@ function alphaAtDim(d) {
   function refreshCards() {
     document.querySelectorAll('.dim-card').forEach(card => {
       const targetD = parseFloat(card.getAttribute('data-d'));
-      card.classList.toggle('active', Math.abs(d_now - targetD) < 0.02);
+      card.classList.toggle('active', Math.abs(shared.d - targetD) < 0.02);
     });
   }
   window.__refreshDimCards = refreshCards;
@@ -385,6 +408,237 @@ function alphaAtDim(d) {
 
   // Also highlight d=3 initially
   if (window.__refreshDimCards) window.__refreshDimCards();
+})();
+
+// ============================================================
+// FIGURE 2: Atoms-at-different-d simulation
+// Three hydrogen-like atoms — fixed protons with orbiting electrons,
+// Coulomb attraction scaled by α(d)/α(3).
+// ============================================================
+(() => {
+  const canvas = document.getElementById('canvas-atoms');
+  if (!canvas) return;
+  const W = 680, H = 380;
+  const ctx = setupHiDPICanvas(canvas, W, H);
+
+  const controls = document.getElementById('atoms-controls');
+  const playBtn = document.createElement('button');
+  playBtn.textContent = '\u23F8 Pause';
+  playBtn.className = 'primary';
+  controls.appendChild(playBtn);
+  const resetBtn = document.createElement('button');
+  resetBtn.textContent = 'Reset atoms';
+  controls.appendChild(resetBtn);
+  const hint = document.createElement('span');
+  hint.style.cssText = 'flex: 1; color: var(--text-faint); font-style: italic; font-size: 12px; text-align: right;';
+  hint.textContent = 'uses the slider above';
+  controls.appendChild(hint);
+
+  // Proton positions — widely spaced so each orbit is dominated by its home
+  // proton. Cross-proton perturbation is ~1% at d=3 so orbits are visibly circular.
+  const PROTONS = [
+    { x: 140, y: 230 },
+    { x: 540, y: 230 },
+    { x: 340, y: 70 },
+  ];
+  const N = PROTONS.length;
+  const R0_ORB = 42;                // initial orbital radius (pixels)
+  const G3 = 180;                   // coupling constant at d=3 (arbitrary units)
+  const V0_CIRC = Math.sqrt(G3 / R0_ORB);  // circular-orbit velocity at d=3
+  const SOFT = 4.0;                 // soft-core radius prevents singularities
+  const PROTON_R = 10;              // drawn radius of proton disk
+  const ESCAPE_R = 520;             // distance at which an electron counts as escaped
+  const DT_SUB = 0.15;              // integration timestep
+  const SUBSTEPS = 4;               // substeps per animation frame
+
+  // Per-electron state
+  const elec = PROTONS.map((p, i) => ({
+    x: p.x + R0_ORB, y: p.y,
+    vx: 0, vy: V0_CIRC,  // tangential, circular at d=3
+    trail: [],
+    crashed: false,
+    escaped: false,
+    flashTimer: 0,
+    home: i,
+  }));
+
+  let playing = true;
+  playBtn.addEventListener('click', () => {
+    playing = !playing;
+    playBtn.textContent = playing ? '\u23F8 Pause' : '\u25B6 Play';
+    playBtn.classList.toggle('primary', playing);
+  });
+  function reset() {
+    for (let i = 0; i < N; i++) {
+      const p = PROTONS[i];
+      elec[i].x = p.x + R0_ORB;
+      elec[i].y = p.y;
+      elec[i].vx = 0;
+      elec[i].vy = V0_CIRC;
+      elec[i].trail = [];
+      elec[i].crashed = false;
+      elec[i].escaped = false;
+      elec[i].flashTimer = 0;
+    }
+  }
+  resetBtn.addEventListener('click', reset);
+  // Slider change does NOT auto-reset — the simulation dynamically responds to
+  // the new α in real time. This is the pedagogical payoff: the reader sees
+  // what "stronger α" does to an orbit that was previously stable.
+
+  function forceOn(e) {
+    // Sum Coulomb attraction to every proton + repulsion from other electrons.
+    const scale = alphaAtDim(shared.d) / ALPHA_REF; // ~3.93 at d=2, 1 at d=3, 0.265 at d=4
+    let ax = 0, ay = 0;
+    // proton attraction
+    for (const p of PROTONS) {
+      const dx = p.x - e.x, dy = p.y - e.y;
+      const r2 = dx*dx + dy*dy + SOFT*SOFT;
+      const invR3 = 1 / (Math.sqrt(r2) * r2);
+      ax += G3 * scale * dx * invR3;
+      ay += G3 * scale * dy * invR3;
+    }
+    // electron repulsion (weak — electrons are far apart at d=3)
+    for (const other of elec) {
+      if (other === e) continue;
+      if (other.crashed || other.escaped) continue;
+      const dx = e.x - other.x, dy = e.y - other.y;
+      const r2 = dx*dx + dy*dy + SOFT*SOFT;
+      const invR3 = 1 / (Math.sqrt(r2) * r2);
+      ax += G3 * scale * dx * invR3;
+      ay += G3 * scale * dy * invR3;
+    }
+    return [ax, ay];
+  }
+
+  function step() {
+    for (const e of elec) {
+      if (e.crashed || e.escaped) continue;
+      // Velocity-Verlet integration
+      const [ax0, ay0] = forceOn(e);
+      e.x += e.vx * DT_SUB + 0.5 * ax0 * DT_SUB * DT_SUB;
+      e.y += e.vy * DT_SUB + 0.5 * ay0 * DT_SUB * DT_SUB;
+      const [ax1, ay1] = forceOn(e);
+      e.vx += 0.5 * (ax0 + ax1) * DT_SUB;
+      e.vy += 0.5 * (ay0 + ay1) * DT_SUB;
+
+      // Collision detection: proton impact
+      const home = PROTONS[e.home];
+      const dxh = e.x - home.x, dyh = e.y - home.y;
+      const r_home = Math.hypot(dxh, dyh);
+      if (r_home < PROTON_R * 0.7) {
+        e.crashed = true;
+        e.flashTimer = 30;
+      }
+      // Escape detection
+      if (r_home > ESCAPE_R) {
+        e.escaped = true;
+      }
+    }
+    // Trails (record every sub-step, cap length)
+    for (const e of elec) {
+      if (e.crashed || e.escaped) continue;
+      e.trail.push([e.x, e.y]);
+      if (e.trail.length > 180) e.trail.shift();
+    }
+  }
+
+  function drawScene() {
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = palette.bg;
+    ctx.fillRect(0, 0, W, H);
+
+    // Title strip
+    const d = shared.d;
+    const invA = 1 / alphaAtDim(d);
+    const reg = (d < 2.8) ? { name: 'too strong', color: '#c38df7' } :
+                (d < 3.2) ? { name: 'physical',   color: '#6dc48f' } :
+                            { name: 'too weak',   color: '#efa57a' };
+    ctx.fillStyle = palette.textSoft;
+    ctx.font = 'italic 12px "Charter", serif';
+    ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+    ctx.fillText(`d = ${d.toFixed(2)}`, 20, 24);
+    ctx.fillStyle = reg.color;
+    ctx.font = '600 12px "SF Mono", monospace';
+    ctx.fillText(`1/\u03B1 = ${invA > 9999 ? invA.toExponential(1) : invA.toFixed(1)}  \u2014  ${reg.name}`, 100, 24);
+
+    // Status summary on right
+    let crashed = 0, escaped = 0, alive = 0;
+    for (const e of elec) {
+      if (e.crashed) crashed++;
+      else if (e.escaped) escaped++;
+      else alive++;
+    }
+    ctx.textAlign = 'right';
+    ctx.fillStyle = palette.textFaint;
+    ctx.font = 'italic 11.5px "Charter", serif';
+    ctx.fillText(`alive: ${alive}   crashed: ${crashed}   escaped: ${escaped}`, W - 20, 24);
+
+    // Draw trails
+    for (const e of elec) {
+      if (e.trail.length < 2) continue;
+      const grad_col = e.escaped ? '#efa57a' : '#7db3dd';
+      ctx.lineWidth = 1.8;
+      for (let i = 1; i < e.trail.length; i++) {
+        const alpha = i / e.trail.length;
+        ctx.strokeStyle = `rgba(125, 179, 221, ${alpha.toFixed(2)})`;
+        ctx.beginPath();
+        ctx.moveTo(e.trail[i-1][0], e.trail[i-1][1]);
+        ctx.lineTo(e.trail[i][0], e.trail[i][1]);
+        ctx.stroke();
+      }
+    }
+
+    // Draw protons
+    for (const p of PROTONS) {
+      ctx.fillStyle = '#d17a97';
+      ctx.beginPath(); ctx.arc(p.x, p.y, PROTON_R, 0, 2*Math.PI); ctx.fill();
+      ctx.strokeStyle = palette.bg; ctx.lineWidth = 2; ctx.stroke();
+      ctx.fillStyle = '#fff'; ctx.font = '600 10px "SF Mono", monospace';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText('+', p.x, p.y + 1);
+    }
+
+    // Draw electrons + flash on crashed ones
+    for (let i = 0; i < N; i++) {
+      const e = elec[i];
+      if (e.crashed) {
+        // Draw a decaying flash at the proton position
+        if (e.flashTimer > 0) {
+          const p = PROTONS[e.home];
+          const r = PROTON_R + (30 - e.flashTimer) * 0.8;
+          const a = e.flashTimer / 30;
+          ctx.fillStyle = `rgba(239, 165, 122, ${(a * 0.5).toFixed(2)})`;
+          ctx.beginPath(); ctx.arc(p.x, p.y, r, 0, 2*Math.PI); ctx.fill();
+          e.flashTimer -= 1;
+        }
+        continue;
+      }
+      if (e.escaped) {
+        // Skip electron — it's off screen
+        continue;
+      }
+      // Normal electron
+      ctx.fillStyle = '#7db3dd';
+      ctx.beginPath(); ctx.arc(e.x, e.y, 5.5, 0, 2*Math.PI); ctx.fill();
+      ctx.strokeStyle = palette.bg; ctx.lineWidth = 2; ctx.stroke();
+    }
+
+    // Bottom hint
+    ctx.fillStyle = palette.textFaint;
+    ctx.font = 'italic 11px "Charter", serif';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+    ctx.fillText('drag the dimension slider above; this simulation follows', W/2, H - 14);
+  }
+
+  function loop() {
+    if (playing) {
+      for (let i = 0; i < SUBSTEPS; i++) step();
+    }
+    drawScene();
+    requestAnimationFrame(loop);
+  }
+  loop();
 })();
 </script>
 </body>
