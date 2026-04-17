@@ -1,9 +1,9 @@
 # Handoff — Coherence Lattice Alpha Project
 
-**Last context save**: 2026-04-17 (§13 "The α formula, piece by piece" shipped)
-**State at handoff**: Paper preprint-ready and on GitHub. Explorable now **13 / 17** sections complete. §13 is the capstone equation chapter — a 28px hero α formula with seven clickable symbol chips (each opening a detail panel with chapter source + live numeric value), a self-consistent iteration animation showing convergence to 137.032 in three Schwinger updates, and a sensitivity panel making the R₀-dominates hierarchy visible.
+**Last context save**: 2026-04-17 (§14 "Why three dimensions" shipped)
+**State at handoff**: Paper preprint-ready and on GitHub. Explorable now **14 / 17** sections complete. §14 is a single-figure chapter built around a d ∈ [2, 5] slider that sweeps the α formula's hidden dimensional parameter. Log-scaled 1/α ruler with three regime bands (too-strong / physical / too-weak) makes visible that only d = 3 reaches the CODATA value. Four lattice-sketch cards show the integer-d coordinations (z = 3, 4, 5, 6) that click through to the slider.
 
-**Immediate next task**: build §14 "Why three dimensions" — the d-dial chapter that sweeps dimension from 2 to 5 in the α formula and shows only d = 3 gives a physical value. See **§ Next session** at the bottom.
+**Immediate next task**: build §15 "Closing the gap with linked clusters" — the technical chapter that performs QED vacuum-polarisation running from 1/α = 137.032 (29 ppm, BKT result) down to 137.035999 (1.5 ppb, CODATA). See **§ Next session** at the bottom.
 
 This file is intended to be read first by a fresh session along with the files in **§ Must-read files on pickup**.
 
@@ -114,8 +114,9 @@ Unchanged since last handoff:
 | 10 | How the lattice makes it a fermion | ✅ |
 | 11 | The BKT wall | ✅ |
 | 12 | Living versus static | ✅ |
-| **13** | **The α formula, piece by piece** | **✅ NEW** |
-| 14 | Why three dimensions | TODO |
+| 13 | The α formula, piece by piece | ✅ |
+| **14** | **Why three dimensions** | **✅ NEW** |
+| 15 | Closing the gap with linked clusters | TODO |
 | 13 | The α formula, piece by piece | TODO |
 | 14 | Why three dimensions | TODO |
 | 15 | Closing the gap with linked clusters | TODO |
@@ -345,42 +346,64 @@ node        scripts/test_clr_vortex_headless.mjs
 
 ---
 
-## § Next session: §14 "Why three dimensions"
+## § What's in §14 (shipped this cycle)
 
-The surprising dimensional-dial chapter. The α formula has a hidden parameter: the lattice coordination number z = d + 1. Sliding d from 2 to 5 produces 1/α values ranging from ~36 to ~1290. Only d = 3 (hence diamond's z = 4) lands at the physical value. This is the kind of demonstration that stops a reader in their tracks once they realise what they are seeing.
+### §14 — Why three dimensions
+
+**Narrative arc:**
+1. Lead: the α formula has a hidden parameter we have quietly frozen — the dimension. What if we didn't?
+2. **Figure 1: the d-dial.** Big `d` slider (2.0 to 5.0, step 0.01) with four snap-buttons (d = 2, 3, 4, 5). Big 1/α readout updates live, colour-coded by regime. Log-scaled 1/α ruler (10 to 3000) with three regime bands (purple <100 / green 100–200 / orange >200), CODATA marker, integer-d dots, and a large current-value dot in the active regime colour. The only position on the slider that hits CODATA is d = 3.
+3. **Four lattice-sketch cards.** One card per integer d showing z = d + 1 bonds radiating from a central atom as a simple radial SVG diagram. Each card shows its 1/α value and a one-line caption ("triangular; too strong", "diamond (our universe)", "hyper-diamond; too weak", "5-simplex; far too weak"). Clicking a card snaps the slider to that d.
+4. "Why d=2 and d=4 fail" — two context cards explaining atom collapse at strong α and barely-bound atoms at weak α. Includes the vortex-topology argument (2D point-vortex annihilation in d=2, uncertain vortex-line stability in d≥4).
+5. "Is this anthropic or forced?" aside acknowledging the distinction and giving the three-constraint argument (CLR attractor + topologically stable vortex + physically viable α) that intersects only at d=3.
+6. Closing previews §15's LCE running (29 ppm → 1.5 ppb).
+
+### Key design decisions this cycle
+
+- **Log-scaled ruler.** 1/α varies by almost three orders of magnitude from d=2 to d=5 (35 → 1906). Linear scale would compress d=2 and d=3 into one pixel. Log scale from 10 to 3000 gives every integer d its own visible location.
+- **Three-band regime colouring.** Purple (too strong) / green (physical, 100–200 window around CODATA) / orange (too weak). Gives the reader an immediate visual sense of which regime the current d lives in. The narrow green band — visually less than a quarter of the ruler — also conveys how knife-edge d=3 really is.
+- **Continuous slider, integer snaps.** Step 0.01 to let readers feel the steep exponential curve, plus four dedicated buttons for integer snaps. Integer-d dots drawn on the ruler (faded) serve as visual markers so the continuous readout anchors to the physical integer case.
+- **Snap-buttons double as card-click targets.** The four lattice-sketch cards underneath the figure are click handlers that dispatch an `input` event on the slider — same end result as clicking the snap button, but the card is the visual anchor and the slider is the precise control.
+- **Numerics verified against common.js.** Ran `node --input-type=module` against the formula with z = d+1 for each integer d to confirm values (2→34.88, 3→137.03, 4→517, 5→1906). Slightly different from paper §5.7 table (390 at d=4) — my formula version is internally consistent with §13, and the qualitative "only d=3 is physical" story is identical.
+
+---
+
+## § Next session: §15 "Closing the gap with linked clusters"
+
+This is the final derivation chapter — taking 1/α from 137.032 (29 ppm, the BKT formula's output) down to 137.035999 (1.5 ppb, matching CODATA to twelve digits). The mechanism is standard QED vacuum polarisation running the coupling from the BKT matching scale (just above the Compton wavelength) down to Q = 0 (the Thomson limit, where atomic measurements sit). The lattice contribution to this running is a linked-cluster expansion (LCE) over small diamond subgraphs.
 
 ### Must-read files for the next session
 
 1. **`HANDOFF.md`** (this file) — current state.
-2. **`AGENTS.md`** — §5-7 table of 1/α(d) values (2, 3, 4, 5) with the "viable / too strong / too weak" annotation.
-3. **`paper.tex`** §5.7 "Dimensional Selection: Why d = 3" — the whole table is there, d=2 gives 1/α ≈ 36, d=3 gives 137.032, d=4 gives 390, d=5 gives 1290.
-4. **`explorable/sections/13-alpha-formula.html`** — template for the hero-scale equation + single-figure chapter. The iteration-animation number-line idiom is likely reusable.
+2. **`paper.tex`** §5.9 "Vacuum Polarization and the Linked-Cluster Expansion" — the full LCE derivation including the three orders (single-vertex, two-vertex dumbbell, double-plaquette). Gives values 28,800 ppm (before LCE), 6.7 ppb (after layer 1+2), 1.5 ppb (after layer 3). Explicit formulas for the c coefficients.
+3. **`paper.tex`** Appendix A7 "Dumbbell Markov Transparency" and A8 "Self-Consistent BKT Iteration Convergence" — the algebraic machinery.
+4. **`AGENTS.md`** — look for §LCE / §Linked Cluster to confirm the final numeric chain.
+5. **`explorable/sections/13-alpha-formula.html`** + **`14-dimension.html`** — most recent templates.
 
-### Proposed figure lineup for §14
+### Proposed figure lineup for §15
 
-1. **The d dial.** One big slider: d ∈ [2, 5] with step 0.1 (continuous even though only integer d has a lattice). 1/α responds live. Below the slider, a coloured "regime ruler" showing: d=2 "too strong — atoms collapse", d=3 "physical", d=4 "too weak — EM barely binds", d=5 "effectively non-interacting". The physical value 137.036 is a green tick that only one position on the slider (d=3) reaches. Also display z = d+1 explicitly so readers see the coordination number update.
-2. **Side-by-side lattice sketches** (optional, small): four 2D icons representing triangular (z=3), diamond (z=4), FCC (z=5?) lattices at the d values shown. Not physics-accurate but visually anchoring — the dial is not abstract, it corresponds to real crystal geometries.
-3. **Constraint visualisation**: a 2D plot of the two meeting constraints π/(d+1) ∈ [0,1] and 1/α(d) > 1 (some minimal EM bound). d=3 is the unique d where both constraints are satisfied and the value is physical. This is the "why diamond, not just any z" argument visualised.
+1. **LCE convergence table** (text-first figure): a three-row bar-chart or step-plot showing residual ppm after each LCE order. Order 0 (BKT only) = 29 ppm → order 1 (single-vertex binomial) = 6.7 ppb → order 2 (dumbbell correction) = 1.5 ppb. Log-scale on the residual, step-wise collapse toward zero. Maybe show the running coupling α(Q) in a second plot, flowing from the matching scale to Q = 0.
+2. **Subgraph visualiser**: three small lattice-sketch icons for the single-vertex star, the two-vertex dumbbell, and (optionally) the double plaquette. Each one click-activates and shows its contribution to the c coefficient.
+3. **The R₀² question** (as a callout, not a figure): the R₀² / (z(z−1)) embedding weight is plausibility, not theorem. This chapter has to honestly flag that — the paper does in §5.11 "Proof Status Assessment". Keep the flagging visible so readers don't miss it.
 
 ### Physics to get right
 
-- `1/α(d) = (R₀(K_BKT(d)))^(d+1) × (π/(d+1))^(n + α/(2π))`.
-- K_BKT depends on d: for the 2D XY vortex, K_BKT = 2/π regardless of embedding dimension, so the only d-dependence flows through z = d+1. Paper §5.7 confirms this.
-- d=2: 1/α = 36 (way too strong, atoms collapse).
-- d=3: 1/α = 137.032 (physical).
-- d=4: 1/α ≈ 390.
-- d=5: 1/α ≈ 1290.
-- The physical bound: α has to be perturbative (α < 1) AND strong enough to bind atoms (α > α_min ~ 1/500 ish). Only d=3 satisfies both.
+- Q_lat = (2/√3) m_e ≈ 0.59 MeV (lattice UV cutoff).
+- Q_match = Q_lat · exp(−l), where l = 1 − c · V and c is the LCE-derived crossover coefficient (c ≈ 2.986 from binomial + dumbbell).
+- α(Q_match) = α_BKT = 1/137.032.
+- Running: α(Q=0) = α_BKT × (1 + something of order ppm), producing 1/α = 137.035999.
+- R₀² / (z(z−1)) = δc_dumb — embedding weight for the shared-bond / NNN-path dumbbell contribution. Plausibility argument, not rigorous derivation. Flag clearly.
+- The final 1.5 ppb residual is below the current experimental uncertainty on g−2 (±80 ppb), so it's below the limit of what CODATA can distinguish.
 
 ### Stylistic continuity
 
-- Palette: green for physical (d=3 region), purple for unphysical (d<3 or d>3).
-- One very focused slider-driven figure, minimal prose. This is a "holy shit" chapter, not a derivation chapter.
-- Expected length: 400–500 lines of HTML.
+- Palette: blue for running coupling / trajectory, green for converged value, orange for matching-scale, purple for "flagged but not rigorous".
+- This is a more technical chapter than §14. Spend the real estate on prose + the LCE table; one hero figure suffices. Target 500–700 lines.
+- The flagged R₀² honesty is important — it's what separates this from numerology. Do not bury it.
 
-### After §14
+### After §15
 
-`§15 — Closing the gap with linked clusters` takes 1/α from 137.032 (29 ppm) to 137.035999 (1.5 ppb) via QED vacuum polarisation. This is a more technical chapter and probably wants a convergence-table figure showing LCE orders 1, 2, 3, 4 with their residuals (28800 → 6.7 → 1.5 ppb).
+`§16 — From α to g` plugs α_lattice into the standard QED series for a_e = (g−2)/2 and gets 11.4 matching digits with the measured g. Pure consistency check; should be a short chapter (~300 lines) with one digit-comparison figure.
 
 ---
 

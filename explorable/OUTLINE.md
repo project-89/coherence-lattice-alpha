@@ -40,7 +40,7 @@ A three-act structure:
 | 11 | The BKT wall | ✅ DONE |
 | 12 | Living versus static | ✅ DONE |
 | 13 | The α formula, piece by piece | ✅ DONE |
-| 14 | Why three dimensions | TODO |
+| 14 | Why three dimensions | ✅ DONE |
 | 15 | Closing the gap with linked clusters | TODO |
 | 16 | From α to g | TODO |
 | 17 | Coda: what just happened | TODO |
@@ -168,22 +168,7 @@ Dropdown with seven candidate lattices (SC/BCC/FCC/HCP/diamond/2D honeycomb/2D s
 
 ### 14 — Why three dimensions
 
-**Core idea:** The α formula has a "d dial." Only d = 3 produces a physical α. This is the most surprising demonstration in the essay.
-
-**Interactives:**
-- **Dimension dial:** slide d from 2 to 5, watch 1/α(d) update.
-  - d=2: ~36 (too strong; atoms collapse)
-  - d=3: 137.032 ✓
-  - d=4: ~390 (too weak; EM barely binds)
-  - d=5: ~1290
-- **Two constraints meeting:** show the ratio K_BKT/K_cross = π/(d+1) must be in [0,1] (d ≥ 2) AND R₀^z factor must give physical α.
-- **d = 3 as anthropic or forced?:** frame it as the unique dimension where α is perturbative yet strong enough.
-
-**Prose:**
-- The dimension dial and what it reveals
-- Why d=2 fails (too strong; also point vortices annihilate)
-- Why d≥4 fails (too weak EM)
-- Only d=3 is viable. Is this "why we live in 3D"?
+**Completed.** One big d-dial figure with d ∈ [2, 5] slider (step 0.01) and four snap-buttons. Log-scaled 1/α ruler from 10 to 3000 with coloured regime bands (purple = too strong <100, green = physical 100–200, orange = too weak >200). CODATA 137.036 dashed marker. Integer d positions (2, 3, 4, 5) drawn as faded dots on the ruler. Current value highlighted in the regime's colour. Four lattice-sketch cards below — one per integer d — showing coordination number z=d+1 as a radial bonds diagram with central atom. Cards click through to the slider; the active card highlights. "Why d=2 and d=4 fail" two-card section explaining atom collapse at strong α and barely-bound atoms at weak α. Final aside distinguishes anthropic from forced dimensionality and gives the three-constraint argument (CLR attractor + topologically stable vortex + physical α) that intersects only at d=3. Closing previews §15's LCE correction.
 
 ---
 
@@ -266,7 +251,7 @@ explorable/
     ├── 11-bkt-wall.html       ✅
     ├── 12-living-vs-static.html ✅
     ├── 13-alpha-formula.html  ✅
-    ├── 14-dimension.html      TODO
+    ├── 14-dimension.html      ✅
     ├── 15-lce.html            TODO
     ├── 16-g-factor.html       TODO
     └── 17-coda.html           TODO

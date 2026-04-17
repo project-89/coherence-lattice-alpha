@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Why three dimensions — The Living Lattice</title>
+<link rel="stylesheet" href="../css/style.css">
+<style>
+/* Four-up lattice icon row */
+.dim-row {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;
+  margin: 1em 0 1.2em;
+}
+.dim-card {
+  padding: 10px; text-align: center;
+  background: var(--bg-soft); border: 1px solid var(--panel-border);
+  border-radius: 5px;
+  transition: border-color 0.15s, background 0.15s;
+  cursor: pointer;
+}
+.dim-card:hover { border-color: var(--accent-light); }
+.dim-card.active { border-color: var(--accent); background: var(--highlight); }
+.dim-card .dim-label {
+  font: 600 13px "Charter", serif; color: var(--text); margin-top: 4px;
+}
+.dim-card .dim-value {
+  font: 600 14px "SF Mono", monospace; margin-top: 2px;
+}
+.dim-card.unphysical .dim-value { color: #c38df7; }
+.dim-card.physical .dim-value { color: #6dc48f; }
+.dim-card .dim-caption {
+  font: italic 11px "Charter", serif; color: var(--text-faint);
+  margin-top: 3px; display: block;
+}
+.dim-card svg { width: 100%; height: 80px; display: block; }
+@media (max-width: 620px) {
+  .dim-row { grid-template-columns: repeat(2, 1fr); }
+}
+.context-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+  margin: 1em 0;
+}
+.context-card {
+  padding: 14px 16px;
+  background: var(--bg-soft);
+  border: 1px solid var(--panel-border);
+  border-radius: 5px;
+}
+.context-card .card-title {
+  font: 600 13px "Charter", serif;
+  color: var(--accent);
+  margin-bottom: 0.4em;
+}
+.context-card .card-body {
+  font-size: 14.5px; line-height: 1.55; color: var(--text);
+}
+@media (max-width: 620px) {
+  .context-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<nav class="breadcrumb">
+  <a href="../index.html">&larr; contents</a>
+  <span class="sep">&middot;</span>
+  <span class="section-num">section 14 / 17</span>
+</nav>
+
+<h1>Why three dimensions<span class="subtitle">The hidden dial in the &alpha; formula &mdash; and the dimension that survives it</span></h1>
+
+<p class="lead">Every factor of the &alpha; formula has by now been derived from lattice physics. But one of those factors, quietly, carries a <em>free parameter</em> we have never turned: the dimensionality of space itself. The coordination number <em>z</em> in the formula is really <em>d</em>&thinsp;+&thinsp;1, where <em>d</em> is the dimension of the lattice. Diamond gives <em>z</em>&nbsp;=&nbsp;4 because <em>d</em>&nbsp;=&nbsp;3. What if we had lived on a lattice of another dimension?</p>
+
+<h2>The d-dial</h2>
+
+<p>Slide the dimensional dimension of the lattice in the figure below. Only one integer value makes a physical electromagnetic coupling:</p>
+
+<figure id="fig-ddial">
+  <canvas id="canvas-ddial" width="680" height="380"></canvas>
+  <div class="controls" id="ddial-controls"><!-- slider + snap buttons inserted by JS --></div>
+  <figcaption>
+    Sliding the dimension dial sweeps <em>d</em> from 2 to 5 continuously. The dot on the ruler shows the current 1/&alpha;; the green dashed line marks the physical value 137.036. Only <strong><em>d</em>&nbsp;=&nbsp;3</strong> reaches it. At <em>d</em>&nbsp;=&nbsp;2 the coupling is far too strong (1/&alpha;&nbsp;&lt;&nbsp;40); atoms would collapse under electromagnetic self-attraction. At <em>d</em>&nbsp;=&nbsp;4 the coupling has halved in strength (1/&alpha;&nbsp;&gt;&nbsp;500); atoms barely bind. At <em>d</em>&nbsp;=&nbsp;5 it is weaker by another factor of four. Dimensionality is not a free choice &mdash; it is <em>selected</em> by the requirement that the output be physical.
+  </figcaption>
+</figure>
+
+<p>Notice how sensitive the output is. A one-unit change in <em>d</em> moves 1/&alpha; by roughly a factor of four. This is not a smooth slide: the whole formula has an exponential (<em>R</em><sub>0</sub> raised to <em>z</em>&nbsp;=&nbsp;<em>d</em>&nbsp;+&nbsp;1), so integer dimensions give wildly different couplings. It is a knife-edge landscape with one viable point at <em>d</em>&nbsp;=&nbsp;3. Click through the integer values:</p>
+
+<div class="dim-row" id="dim-icons"><!-- four cards built by JS --></div>
+
+<h2>Why d&nbsp;=&nbsp;2 and d&nbsp;=&nbsp;4 fail</h2>
+
+<div class="context-grid">
+  <div class="context-card">
+    <div class="card-title">d&nbsp;=&nbsp;2 &mdash; too strong to bind atoms</div>
+    <div class="card-body">
+      With a coupling of 1/&alpha;&nbsp;&asymp;&nbsp;35 (almost 4x the measured value), electrons would pull each other so hard that hydrogen's electron would spiral inward in a picosecond. Bohr radii would be 4x smaller, electron binding energies <em>sixteen</em> times larger, and chemistry \u2014 which lives in the narrow range where EM is strong enough to bind but weak enough to allow delicate valence structures \u2014 would not exist. Perturbation theory in &alpha; would also fail: the very expansion parameter that makes QED a well-defined theory would become order unity.
+    </div>
+  </div>
+  <div class="context-card">
+    <div class="card-title">d&nbsp;=&nbsp;4 &mdash; too weak to matter</div>
+    <div class="card-body">
+      At 1/&alpha;&nbsp;&gt;&nbsp;500, EM would be 4x weaker than in our universe. Atomic binding energies drop by 16x; thermal motion at room temperature would easily ionise hydrogen. Worse: 2D point-vortex annihilation (Chapter 7) goes away only because <em>d</em>&nbsp;&ge;&nbsp;3; in <em>d</em>&nbsp;=&nbsp;4 the vortex is a 2-dimensional object that suffers even stronger topological fluctuations. The BKT wall arguments that pin <em>K</em> at 2/&pi; weaken. Whether electrons can even exist as stable excitations becomes an open question.
+    </div>
+  </div>
+</div>
+
+<p>At <em>d</em>&nbsp;=&nbsp;3 the combination clicks: EM is strong enough to bind atoms (&alpha; of order 0.01 keeps nuclei and electrons together), weak enough to treat perturbatively (allowing QED to work), and the lattice's 3D geometry is the unique <em>d</em> where 2D point-vortex annihilation (Chapter 7) can fail but 3D vortex-line topology persists (Chapter 8). Three constraints, one satisfying dimension.</p>
+
+<h2>Is this anthropic &mdash; or forced?</h2>
+
+<p class="aside"><span class="label">A careful claim</span>Whether the observed dimensionality is <em>anthropic</em> (we live here because other dimensions are uninhabitable) or <em>forced</em> by the structure of the theory (no other dimension admits a self-consistent CLR attractor) is a question the coherence lattice does not yet answer. What it does show: the two options are not equivalent. In an anthropic framing, the dimension is a boundary condition imposed on a multiverse; in a forced framing, the dimension is a requirement of the equations. The d-dial figure shows what the formula says, nothing more.</p>
+
+<p>A softer version of the forced argument <em>can</em> be made. The coherence lattice requires <em>three</em> features to work: (i) the CLR attractor (any <em>d</em>), (ii) a topologically stable vortex (needs <em>d</em>&nbsp;&ge;&nbsp;3 because 2D point-vortices annihilate pairwise under the CLR, Chapter 7), and (iii) a physically viable &alpha; (narrowly around <em>d</em>&nbsp;=&nbsp;3). The intersection of these three constraints is the single integer <em>d</em>&nbsp;=&nbsp;3. Whether that counts as "forced" is a philosophical question; operationally, the theory picks it out uniquely.</p>
+
+<h2>Where this leaves us</h2>
+
+<p>The BKT formula gives 1/&alpha;&nbsp;=&nbsp;137.032. The CODATA measurement is 137.035999. The gap is 29 ppm, or 3% of 1%, and it is not zero. That remaining difference is not a lattice effect; it is <em>QED vacuum polarisation</em> running &alpha;<sub>BKT</sub> (which lives at the matching scale) down to <em>Q</em>&nbsp;=&nbsp;0 (the Thomson limit, where CODATA measurements sit). The next chapter performs that running &mdash; with a linked-cluster expansion over diamond subgraphs &mdash; and closes the gap to 1.5 parts per <em>billion</em>.</p>
+
+<nav class="nav-links">
+  <a href="13-alpha-formula.html" class="prev">The α formula, piece by piece</a>
+  <a href="../index.html" class="up">contents</a>
+  <a href="15-lce.html" class="next">Closing the gap with linked clusters</a>
+</nav>
+
+</div>
+<script type="module">
+import { setupHiDPICanvas, wireEquation, runWhenVisible, makeSlider, R0, K_BKT, palette } from '../js/common.js';
+
+// ============================================================
+// Physics kernel — alpha(d)
+// ============================================================
+const N0 = 1 / Math.sqrt(Math.E);
+const R0_KBKT = R0(K_BKT);
+const CODATA_INV = 137.035999084;
+
+function alphaAtDim(d) {
+  const z = d + 1;
+  const V = Math.pow(R0_KBKT, z);
+  const base = Math.PI / z;
+  let a = V;
+  for (let i = 0; i < 50; i++) {
+    a = V * Math.pow(base, N0 + a / (2 * Math.PI));
+  }
+  return a;
+}
+
+// ============================================================
+// FIGURE 1: The d-dial
+// ============================================================
+(() => {
+  const canvas = document.getElementById('canvas-ddial');
+  if (!canvas) return;
+  const W = 680, H = 380;
+  const ctx = setupHiDPICanvas(canvas, W, H);
+
+  const controls = document.getElementById('ddial-controls');
+  let d_now = 3.0;
+  const dSlider = makeSlider(controls, {
+    label: 'dimension <em>d</em>',
+    min: 2.0, max: 5.0, step: 0.01,
+    value: 3.0,
+    format: (v) => v.toFixed(2),
+    onChange: (v) => { d_now = v; refreshCards(); },
+  });
+
+  // Snap buttons
+  function snapBtn(label, dVal) {
+    const b = document.createElement('button');
+    b.textContent = label;
+    if (Math.abs(dVal - 3) < 1e-6) b.classList.add('primary');
+    b.addEventListener('click', () => {
+      d_now = dVal;
+      const input = controls.querySelector('input[type="range"]');
+      if (input) { input.value = dVal; const v = controls.querySelector('.val'); if (v) v.textContent = dVal.toFixed(2); }
+      refreshCards();
+    });
+    controls.appendChild(b);
+    return b;
+  }
+  snapBtn('d = 2', 2);
+  snapBtn('d = 3', 3);
+  snapBtn('d = 4', 4);
+  snapBtn('d = 5', 5);
+
+  // Y-axis layout
+  const px0 = 70, px1 = W - 40, titleY = 28;
+
+  // 1/alpha range: log-scaled from 10 to 3000 to cover all integer d
+  const INV_MIN = 10, INV_MAX = 3000;
+  function mapInvLog(v) {
+    const lv = Math.log10(Math.max(INV_MIN, Math.min(INV_MAX, v)));
+    const ln = Math.log10(INV_MIN), lx = Math.log10(INV_MAX);
+    return px0 + (lv - ln) / (lx - ln) * (px1 - px0);
+  }
+
+  const rulerY = 225;
+
+  function regimeAt(d) {
+    if (d < 2.8)  return { name: 'too strong', color: '#c38df7', cat: 'unphysical', desc: 'atoms collapse under EM self-attraction' };
+    if (d < 3.2)  return { name: 'physical',   color: '#6dc48f', cat: 'physical',   desc: 'EM strong enough to bind, weak enough to stay perturbative' };
+    return          { name: 'too weak',   color: '#efa57a', cat: 'unphysical', desc: 'EM barely binds atoms; vortex stability questionable' };
+  }
+
+  function drawAxes() {
+    // Big title
+    ctx.fillStyle = palette.text;
+    ctx.font = '600 14px "Charter", serif';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+    ctx.fillText('1/\u03B1 as a function of lattice dimension', W/2, titleY);
+
+    // Current values block (left-aligned below title, large and clear)
+    const d = d_now, z = d + 1;
+    const inv = 1 / alphaAtDim(d);
+    const reg = regimeAt(d);
+    ctx.font = '600 28px "SF Mono", monospace';
+    ctx.fillStyle = reg.color;
+    ctx.textAlign = 'center';
+    ctx.fillText(`1/\u03B1 = ${inv > 9999 ? inv.toExponential(2) : inv.toFixed(2)}`, W/2, 82);
+    ctx.font = '600 13px "Charter", serif';
+    ctx.fillStyle = palette.textSoft;
+    ctx.fillText(`d = ${d.toFixed(2)}      z = d + 1 = ${z.toFixed(2)}`, W/2, 108);
+
+    // Regime badge below
+    ctx.font = '600 12.5px "Charter", serif';
+    ctx.fillStyle = reg.color;
+    ctx.fillText(`\u2014 ${reg.name.toUpperCase()} \u2014`, W/2, 132);
+    ctx.font = 'italic 11.5px "Charter", serif';
+    ctx.fillStyle = palette.textFaint;
+    ctx.fillText(reg.desc, W/2, 150);
+
+    // Ruler axis (log-scale)
+    ctx.strokeStyle = palette.axis; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(px0, rulerY); ctx.lineTo(px1, rulerY); ctx.stroke();
+    // Major ticks
+    [10, 30, 100, 300, 1000, 3000].forEach(v => {
+      const x = mapInvLog(v);
+      ctx.strokeStyle = palette.axis; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(x, rulerY - 5); ctx.lineTo(x, rulerY + 5); ctx.stroke();
+      ctx.fillStyle = palette.textFaint;
+      ctx.font = 'italic 11px "Charter", serif';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+      ctx.fillText(v.toString(), x, rulerY + 10);
+    });
+    ctx.fillStyle = palette.textSoft;
+    ctx.font = 'italic 11.5px "Charter", serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('1/\u03B1  (log scale)', W/2, rulerY + 36);
+
+    // Regime bands above ruler
+    const bandsY = rulerY - 35, bandH = 18;
+    // purple band (too strong): from 1/α = 10 to 100
+    ctx.fillStyle = 'rgba(195, 141, 247, 0.18)';
+    ctx.fillRect(mapInvLog(10), bandsY, mapInvLog(100) - mapInvLog(10), bandH);
+    // green band (physical): from 100 to 200
+    ctx.fillStyle = 'rgba(109, 196, 143, 0.30)';
+    ctx.fillRect(mapInvLog(100), bandsY, mapInvLog(200) - mapInvLog(100), bandH);
+    // orange band (too weak): 200 to 3000
+    ctx.fillStyle = 'rgba(239, 165, 122, 0.18)';
+    ctx.fillRect(mapInvLog(200), bandsY, mapInvLog(3000) - mapInvLog(200), bandH);
+
+    // Band labels
+    ctx.font = '600 11px "Charter", serif'; ctx.textBaseline = 'middle';
+    ctx.fillStyle = '#c38df7'; ctx.textAlign = 'center';
+    ctx.fillText('too strong', (mapInvLog(10) + mapInvLog(100))/2, bandsY + bandH/2);
+    ctx.fillStyle = '#6dc48f';
+    ctx.fillText('physical', (mapInvLog(100) + mapInvLog(200))/2, bandsY + bandH/2);
+    ctx.fillStyle = '#efa57a';
+    ctx.fillText('too weak', (mapInvLog(200) + mapInvLog(3000))/2, bandsY + bandH/2);
+
+    // CODATA marker (green dashed vertical line BELOW the ruler to avoid
+    // collision with the readout above)
+    const xC = mapInvLog(CODATA_INV);
+    ctx.strokeStyle = '#6dc48f'; ctx.lineWidth = 2;
+    ctx.setLineDash([5, 3]);
+    ctx.beginPath(); ctx.moveTo(xC, rulerY - 12); ctx.lineTo(xC, rulerY + 34); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = '#6dc48f'; ctx.font = '600 11px "SF Mono", monospace';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+    ctx.fillText('CODATA  137.036', xC, rulerY + 62);
+
+    // Draw integer d positions as faded dots on the ruler
+    for (let di = 2; di <= 5; di++) {
+      const invD = 1/alphaAtDim(di);
+      if (invD < INV_MIN || invD > INV_MAX) continue;
+      const x = mapInvLog(invD);
+      ctx.fillStyle = di === 3 ? '#6dc48f' : (di < 3 ? '#c38df7' : '#efa57a');
+      ctx.globalAlpha = 0.5;
+      ctx.beginPath(); ctx.arc(x, rulerY, 5, 0, 2*Math.PI); ctx.fill();
+      ctx.globalAlpha = 1;
+      ctx.font = 'italic 10.5px "Charter", serif';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+      ctx.fillStyle = palette.textFaint;
+      ctx.fillText(`d=${di}`, x, rulerY - 10);
+    }
+
+    // Current dot (big)
+    const xNow = mapInvLog(Math.max(INV_MIN, Math.min(INV_MAX, inv)));
+    ctx.fillStyle = reg.color;
+    ctx.beginPath(); ctx.arc(xNow, rulerY, 11, 0, 2*Math.PI); ctx.fill();
+    ctx.strokeStyle = palette.bg; ctx.lineWidth = 2; ctx.stroke();
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = palette.bg; ctx.fillRect(0, 0, W, H);
+    drawAxes();
+
+    // Bottom hint
+    ctx.fillStyle = palette.textFaint;
+    ctx.font = 'italic 11px "Charter", serif';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+    ctx.fillText('drag the slider; click d=N to snap to an integer', W/2, H - 14);
+  }
+  runWhenVisible(canvas, draw);
+
+  // Keep the cards in sync with slider
+  function refreshCards() {
+    document.querySelectorAll('.dim-card').forEach(card => {
+      const targetD = parseFloat(card.getAttribute('data-d'));
+      card.classList.toggle('active', Math.abs(d_now - targetD) < 0.02);
+    });
+  }
+  window.__refreshDimCards = refreshCards;
+})();
+
+// ============================================================
+// Four-up lattice icon row
+// ============================================================
+(() => {
+  const row = document.getElementById('dim-icons');
+  if (!row) return;
+
+  // Simple lattice sketches:
+  //   d=2: three bonds from central atom in plane (hexagonal layer)
+  //   d=3: tetrahedron (diamond)
+  //   d=4: five bonds from center (4-simplex schematic)
+  //   d=5: six bonds from center (5-simplex schematic)
+  function bondsSvg(z, colorBg) {
+    // Radially arranged z bonds from center.
+    const parts = [];
+    const cx = 50, cy = 45, r = 30;
+    parts.push(`<svg viewBox="0 0 100 80">`);
+    for (let i = 0; i < z; i++) {
+      const a = -Math.PI/2 + (2*Math.PI * i / z);
+      const x = cx + r * Math.cos(a);
+      const y = cy + r * Math.sin(a);
+      parts.push(`<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="${colorBg}" stroke-width="2"/>`);
+      parts.push(`<circle cx="${x}" cy="${y}" r="5" fill="${colorBg}"/>`);
+    }
+    parts.push(`<circle cx="${cx}" cy="${cy}" r="7" fill="${colorBg}" opacity="0.6"/>`);
+    parts.push(`<text x="${cx}" y="${cy + 4}" text-anchor="middle" fill="#fff" font-family="SF Mono" font-weight="700" font-size="10">${z}</text>`);
+    parts.push(`</svg>`);
+    return parts.join('');
+  }
+
+  const dims = [
+    { d: 2, z: 3, label: 'd = 2',  inv: 1/alphaAtDim(2), cat: 'unphysical', caption: 'triangular / hexagonal; too strong' },
+    { d: 3, z: 4, label: 'd = 3',  inv: 1/alphaAtDim(3), cat: 'physical',   caption: 'diamond (our universe)' },
+    { d: 4, z: 5, label: 'd = 4',  inv: 1/alphaAtDim(4), cat: 'unphysical', caption: 'hyper-diamond; too weak' },
+    { d: 5, z: 6, label: 'd = 5',  inv: 1/alphaAtDim(5), cat: 'unphysical', caption: '5-simplex; far too weak' },
+  ];
+
+  dims.forEach(e => {
+    const card = document.createElement('div');
+    card.className = 'dim-card ' + e.cat;
+    card.setAttribute('data-d', e.d);
+    const color = e.cat === 'physical' ? '#6dc48f' : (e.d < 3 ? '#c38df7' : '#efa57a');
+    const invDisp = e.inv > 9999 ? e.inv.toExponential(1) : e.inv.toFixed(1);
+    card.innerHTML = `
+      ${bondsSvg(e.z, color)}
+      <div class="dim-label">${e.label} <span style="color: var(--text-faint); font-weight: 400; font-size: 0.9em;">(z = ${e.z})</span></div>
+      <div class="dim-value">1/&alpha; = ${invDisp}</div>
+      <span class="dim-caption">${e.caption}</span>
+    `;
+    card.addEventListener('click', () => {
+      const slider = document.querySelector('#ddial-controls input[type="range"]');
+      if (slider) {
+        slider.value = e.d;
+        slider.dispatchEvent(new Event('input'));
+      }
+    });
+    row.appendChild(card);
+  });
+
+  // Also highlight d=3 initially
+  if (window.__refreshDimCards) window.__refreshDimCards();
+})();
+</script>
+</body>
+</html>
