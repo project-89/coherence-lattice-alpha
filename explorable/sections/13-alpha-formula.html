@@ -114,7 +114,7 @@
 <p>The single equation packages five independent physical inputs. Each comes from a theorem, a derivation, or a structural constraint proved earlier in the essay. None of them is fit to data. The self-consistency between the left and right sides &mdash; the &alpha; appearing inside its own exponent &mdash; is the Schwinger QED vertex, and it converges to a fixed point in three iterations. Here is that convergence, drawn explicitly:</p>
 
 <figure id="fig-iter">
-  <canvas id="canvas-iter" width="680" height="320"></canvas>
+  <canvas id="canvas-iter" width="680" height="420"></canvas>
   <div class="controls" id="iter-controls"><!-- buttons inserted by JS --></div>
   <figcaption>
     Self-consistent iteration of the formula, starting from the bare UV guess <em>&alpha;</em><sub>0</sub> = <em>V</em> = <em>R</em><sub>0</sub>(2/&pi;)<sup>4</sup> and reinserting the Schwinger correction <em>&alpha;</em>/(2&pi;) at each step. The horizontal axis is a 1/<em>&alpha;</em> number line; the orange dot is the current iterate; the green dashed line is the CODATA measured value 1/<em>&alpha;</em>&nbsp;=&nbsp;137.036. The first iteration undershoots (1/<em>&alpha;</em>&nbsp;=&nbsp;118.3, purple); each subsequent step corrects toward the fixed point. Three steps reach 137.032 &mdash; within <strong>29 ppm</strong> of the measured value. The BKT formula has no free parameters; its only observable is &alpha; itself, and it produces one self-consistent answer.
@@ -126,7 +126,7 @@
 <p>To see which factors matter most, nudge them:</p>
 
 <figure id="fig-sens">
-  <canvas id="canvas-sens" width="680" height="260"></canvas>
+  <canvas id="canvas-sens" width="680" height="340"></canvas>
   <div class="controls" id="sens-controls"><!-- sliders inserted by JS --></div>
   <figcaption>
     Each slider perturbs one factor of the formula by &plusmn;5% around its derived value. The resulting 1/<em>&alpha;</em> is displayed at the right and plotted as a coloured tick on the bottom ruler (CODATA 137.036 marked in green). <strong>R<sub>0</sub>(2/&pi;) dominates the sensitivity</strong>: a &plusmn;5% change sweeps 1/<em>&alpha;</em> through roughly 55 integer units, more than 25x the sensitivity of the Debye&ndash;Waller exponent. This is why the derivation effort is concentrated on the vertex factor &mdash; it is where the ppm precision of the BKT prediction lives.
@@ -202,49 +202,49 @@ function computeAlpha(R0_val, base_val, n_base_val) {
       pronounce: '"alpha"',
       chapter: 'The target',
       value: `\u2248 1/${(1/computeAlpha(PHYS.R0_val, PHYS.base, PHYS.n_base)).toFixed(3)}`,
-      body: `The dimensionless strength of electromagnetism. Appears self-referentially in the exponent (via the Schwinger QED vertex \u03B1/(2\u03C0)), making the formula self-consistent rather than algebraic. Iteration converges to a unique fixed point in three steps \u2014 that fixed point is the value the formula predicts.`,
+      body: `The number that sets the strength of electromagnetism. When two electrons push each other apart, \u03B1 \u2248 1/137 is how strong that push is compared to the total energy of the system. It is dimensionless \u2014 same in any units, any era, any lab. Notice it appears on both sides of the equation above: once as the thing we are solving for, and once inside the exponent as a tiny self-correction. That is not a typo: the vacuum's response to an electron depends on \u03B1, and \u03B1 is what describes that response. You solve it by fixed-point iteration \u2014 guess a value, plug it in, get a new value, repeat. It settles in three steps, and the number it settles on is what the formula predicts.`,
     },
     R0: {
-      name: 'R\u2080 \u2014 von Mises order parameter',
+      name: 'R\u2080 \u2014 how aligned a single bond is',
       pronounce: '"R-nought of K"',
       chapter: 'Chapter 2 \u00B7 Oscillators on a graph',
       value: `R\u2080(2/\u03C0) = ${PHYS.R0_val.toFixed(6)}`,
-      body: `The mean coherence of a single bond at coupling K, equal to I\u2081(K)/I\u2080(K) where I are modified Bessel functions. This is the continuum limit of \u27E8cos(\u0394\u03B8)\u27E9 on a single bond with a von Mises phase distribution \u2014 the natural distribution forced by the CLR. Raised to the power z = 4 (diamond coordination), this is the <em>star-graph vertex factor</em>: four independent coherences compounded at a lattice site.`,
+      body: `Picture two oscillators joined by a spring with coupling strength K. If K is huge, they lock together (correlation = 1). If K is zero, their phases drift independently (correlation = 0). <em>R</em>\u2080(K) is the correlation at intermediate K \u2014 the average of cos(\u0394\u03B8) when the phase difference follows a "wrapped Gaussian" (the natural distribution for angles, called the von Mises distribution, forced here by the Coherence Learning Rule). Mathematically <em>R</em>\u2080(K) = I\u2081(K)\u2009/\u2009I\u2080(K), a ratio of two standard integrals called modified Bessel functions \u2014 the same integrals that crop up whenever you average cos\u03B8 with a Boltzmann-like weight. At the BKT coupling K = 2/\u03C0 the single-bond correlation is about 0.303: each bond transmits roughly 30% of its neighbour's phase information.`,
     },
     twopi: {
       name: '2/\u03C0 \u2014 the BKT critical coupling',
       pronounce: '"two over pi"',
       chapter: 'Chapter 11 \u00B7 The BKT wall',
       value: `K_BKT = ${(2/Math.PI).toFixed(6)}`,
-      body: `The exact coupling at which a vortex\u2013antivortex pair is marginally bound on a 2D XY model: the free energy F(R) = (\u03C0K \u2212 2)\u2009ln(R/a) is flat, neither confined nor proliferating. Above this value, a single vortex cannot exist; below, pairs nucleate spontaneously. The CLR drives K upward from zero; the topological constraint pins it exactly here. No free parameters \u2014 pure 2D XY physics.`,
+      body: `This is the exact coupling at which a vortex can just barely exist as a free, stable excitation. Above it, vortex\u2013antivortex pairs are permanently glued together; below it, pairs proliferate wildly; at exactly 2/\u03C0, the free energy to separate them to any distance is zero. Kosterlitz and Thouless worked this out in 1972 for the 2D XY model and got a Nobel Prize for it. On our lattice, the CLR wants K as high as possible, but the vortex (which <em>is</em> the electron) cannot survive above 2/\u03C0 \u2014 so the system settles exactly here. No free parameters: \u03C0 from the geometry of phases, 2 from the entropy of positions.`,
     },
     four: {
-      name: 'the exponent 4 \u2014 diamond coordination',
+      name: 'the exponent 4 \u2014 each atom has 4 neighbours',
       pronounce: '"z equals four"',
       chapter: 'Chapter 8 \u00B7 Why the diamond lattice',
       value: `z = 4`,
-      body: `Every atom in the diamond lattice has exactly four nearest neighbours, tetrahedrally arranged. This is the star-graph vertex count: four independent bond coherences compound multiplicatively at a single site. The diamond lattice is the unique 3D lattice satisfying five structural filters (coordination, bipartiteness, octahedral symmetry, two-site unit cell, d \u2265 3) \u2014 so this factor of 4 is <em>selected</em>, not chosen.`,
+      body: `Every carbon atom in a diamond crystal sits at the centre of a tetrahedron with four nearest-neighbour atoms at its corners. That is where this 4 comes from: the coordination number <em>z</em>. Since each of those four bonds contributes its own independent correlation <em>R</em>\u2080, and the correlations compound multiplicatively at the shared central site, the total vertex correlation is <em>R</em>\u2080 raised to the fourth power. The diamond lattice isn't picked for aesthetics \u2014 Chapter 8 shows it's the <em>unique</em> 3D lattice satisfying five structural requirements at once (tetrahedral coordination, bipartite colouring, octahedral symmetry, two-atom unit cell, three dimensions). Change the 4 to anything else and you're on a different lattice \u2014 Chapter 14 shows what 1/\u03B1 does when you try.`,
     },
     base: {
-      name: '\u03C0/4 \u2014 lattice-to-RG variance ratio',
+      name: '\u03C0/4 \u2014 how much of an RG step one bond captures',
       pronounce: '"pi over four"',
-      chapter: 'Chapter 11 \u00B7 The BKT wall (equation block)',
+      chapter: 'Chapter 11 \u00B7 The BKT wall',
       value: `\u03C0/z = ${(Math.PI/4).toFixed(6)}`,
-      body: `The ratio of the nearest-neighbour phase variance \u27E8\u0394\u03B8\u00B2\u27E9 = 1/(zK) to the standard 2D XY RG variance 1/(\u03C0K). The K cancels exactly; what remains is pure geometry: \u03C0 from 2D XY, z = 4 from diamond. This is the power-law base of the BKT correlator: each Wilsonian coarse-graining step multiplies the correlator by \u03C0/z. Zero free parameters.`,
+      body: `Renormalisation group (RG) theory says: to understand long-wavelength physics, average together small patches and study the result. Each "averaging step" shrinks a certain fraction of the fine-scale correlation. The question is: how much does one lattice bond shrink it by? The answer is a ratio. On the lattice, the phase difference between neighbours has spread 1/(<em>zK</em>); in the continuum 2D-XY limit, the RG-natural spread is 1/(\u03C0<em>K</em>). The coupling <em>K</em> cancels; the ratio is \u03C0/<em>z</em>. For diamond (<em>z</em> = 4) that is \u03C0/4 \u2248 0.785. This is the number raised to the Debye\u2013Waller power in the formula \u2014 it plays the role of the base of an exponential.`,
     },
     n: {
-      name: '1/\u221Ae \u2014 Debye\u2013Waller intensity at the attractor',
+      name: '1/\u221Ae \u2014 how much coherence survives at the attractor',
       pronounce: '"one over root e"',
       chapter: 'Chapter 12 \u00B7 Living versus static',
       value: `exp(\u2212\u03C3\u00B2) = ${PHYS.n_base.toFixed(6)}`,
-      body: `The Debye\u2013Waller factor n = exp(\u2212\u03C3\u00B2) with \u03C3\u00B2 = 2\u03B7 = 1/(\u03C0 K_BKT) = 1/2. Evaluated at the attractor, not integrated over the RG trajectory. The PLM Lemma says K freezes exponentially at K* under the CLR; observables are therefore evaluated at K*, giving the endpoint exp(\u2212\u03C3\u00B2) = 1/\u221Ae instead of the trajectory average 0.787. This single choice moves 1/\u03B1 from 143 to 137.`,
+      body: `Crystallographers have a factor called the Debye\u2013Waller factor: when you X-ray a crystal, atoms are wobbling thermally and only a fraction of the diffraction intensity stays sharp \u2014 that fraction is exp(\u2212\u03C3\u00B2), where \u03C3\u00B2 is the mean-square wobble. Here the same idea applies, but the "wobble" is in the phase, not the position: \u03C3\u00B2 = 1/2 at the BKT point. So the factor is exp(\u22121/2) = 1/\u221Ae \u2248 0.607. The subtle part is <em>where in the RG flow</em> you evaluate this. Standard lattice field theory averages along the whole trajectory (and gets 0.787, producing 1/\u03B1 = 143 \u2014 wrong). The living lattice evaluates at the attractor \u2014 the fixed point where the CLR has frozen things \u2014 giving 0.607 and 1/\u03B1 = 137 (right). This single choice is Chapter 12's subject.`,
     },
     schwinger: {
-      name: '\u03B1/(2\u03C0) \u2014 Schwinger self-consistency',
+      name: '\u03B1/(2\u03C0) \u2014 the Schwinger vacuum correction',
       pronounce: '"alpha over two pi"',
       chapter: 'Standard QED',
       value: `\u2248 ${(computeAlpha(PHYS.R0_val, PHYS.base, PHYS.n_base)/(2*Math.PI)).toExponential(3)}`,
-      body: `The Schwinger QED vertex correction \u2014 the tiny self-consistency term. The formula depends on \u03B1, which depends on the formula. Iteration: \u03B1\u2081 = f(\u03B1\u2080), \u03B1\u2082 = f(\u03B1\u2081), \u2026 converges in three steps. This is the only piece of standard QED in the derivation; everything else comes from lattice + topology. Its magnitude is about 0.0012 \u2014 small but enough to set the fixed point.`,
+      body: `Julian Schwinger calculated in 1948 that when an electron moves through the vacuum, it briefly kicks up and reabsorbs a cloud of virtual photons. This cloud modifies the electron's effective coupling by a small term: \u03B1 divided by 2\u03C0, about 0.00116 (a part per thousand of the matching exponent). It is the <em>only</em> piece of the formula borrowed from standard QED \u2014 and Schwinger's calculation of it in 1948 won him a share of the 1965 Nobel Prize. On the coherence lattice it shows up naturally because the vertex factor is evaluated self-consistently: the formula's output \u03B1 is fed back into its own exponent, and the Schwinger correction is what closes the loop. Without it, the iteration still converges \u2014 but to a slightly different value (\u2248137.03 without it vs 137.032 with). It is the final polish.`,
     },
   };
 
@@ -282,7 +282,7 @@ function computeAlpha(R0_val, base_val, n_base_val) {
 (() => {
   const canvas = document.getElementById('canvas-iter');
   if (!canvas) return;
-  const W = 680, H = 320;
+  const W = 680, H = 420;
   const ctx = setupHiDPICanvas(canvas, W, H);
 
   const controls = document.getElementById('iter-controls');
@@ -317,8 +317,12 @@ function computeAlpha(R0_val, base_val, n_base_val) {
     playBtn.classList.add('primary');
   });
 
-  // Layout
-  const rulerY = 100, rulerXMin = 70, rulerXMax = W - 40;
+  // Layout (four vertical bands)
+  //   0 .. 55   title block
+  //  55 .. 115  large numeric readout (1/α + ppm distance)
+  // 115 .. 180  ruler + CODATA marker + ticks
+  // 180 .. 420  iteration history list
+  const rulerY = 150, rulerXMin = 70, rulerXMax = W - 40;
   const INV_MIN = 100, INV_MAX = 175; // window of 1/alpha values shown
   const mapInv = (v) => rulerXMin + (v - INV_MIN) / (INV_MAX - INV_MIN) * (rulerXMax - rulerXMin);
 
@@ -346,19 +350,20 @@ function computeAlpha(R0_val, base_val, n_base_val) {
     ctx.font = 'italic 12px "Charter", serif';
     ctx.textAlign = 'left';
     ctx.fillText('1/\u03B1', rulerXMin - 30, rulerY - 4);
-    // CODATA marker
+    // CODATA marker — dashed vertical line and a label placed BELOW the tick
+    // numbers so it never collides with the big readout band above.
     const xC = mapInv(codataInv);
     ctx.strokeStyle = '#6dc48f';
     ctx.lineWidth = 2;
     ctx.setLineDash([5, 3]);
     ctx.beginPath();
-    ctx.moveTo(xC, rulerY - 30); ctx.lineTo(xC, rulerY + 22);
+    ctx.moveTo(xC, rulerY - 16); ctx.lineTo(xC, rulerY + 18);
     ctx.stroke();
     ctx.setLineDash([]);
     ctx.fillStyle = '#6dc48f';
     ctx.font = '600 11px "SF Mono", monospace';
     ctx.textAlign = 'center';
-    ctx.fillText('CODATA  137.036', xC, rulerY - 36);
+    ctx.fillText('CODATA  137.036', xC, rulerY + 34);
   }
 
   function drawDot(v, color, size = 10) {
@@ -373,7 +378,7 @@ function computeAlpha(R0_val, base_val, n_base_val) {
   }
 
   function drawStepList() {
-    const x = 40, y0 = 165;
+    const x = 40, y0 = 200;
     const lineH = 22;
     ctx.font = '600 12px "Charter", serif';
     ctx.fillStyle = palette.text;
@@ -402,10 +407,10 @@ function computeAlpha(R0_val, base_val, n_base_val) {
     ctx.fillStyle = palette.text;
     ctx.font = '600 13px "Charter", serif';
     ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
-    ctx.fillText('Self-consistent iteration  \u2014  \u03B1 feeds its own exponent', W/2, 28);
+    ctx.fillText('Self-consistent iteration  \u2014  \u03B1 feeds its own exponent', W/2, 24);
     ctx.font = 'italic 11.5px "Charter", serif';
     ctx.fillStyle = palette.textFaint;
-    ctx.fillText('starting from \u03B1\u2080 = V (UV bare value), three Schwinger updates reach 137.032', W/2, 46);
+    ctx.fillText('start from \u03B1\u2080 = V (UV bare value); three Schwinger updates reach 137.032', W/2, 42);
   }
 
   function currentInvAlpha() {
@@ -431,22 +436,23 @@ function computeAlpha(R0_val, base_val, n_base_val) {
     }
     ctx.globalAlpha = 1;
 
-    // Current (big) dot
+    // Current (big) dot on the ruler
     const liveInv = currentInvAlpha();
     const isConverged = current >= steps.length - 1 && doneFlashTimer > 0;
     const dotCol = isConverged ? '#6dc48f' : palette.alive;
     drawDot(liveInv, dotCol, 11);
 
-    // Big numeric readout
+    // Big numeric readout — placed in the dedicated band 55..110, above the ruler
     ctx.fillStyle = dotCol;
-    ctx.font = '600 22px "SF Mono", monospace';
-    ctx.textAlign = 'center';
-    ctx.fillText(`1/\u03B1 = ${liveInv.toFixed(3)}`, W/2, 82);
+    ctx.font = '600 26px "SF Mono", monospace';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+    ctx.fillText(`1/\u03B1 = ${liveInv.toFixed(3)}`, W/2, 92);
+    // ppm distance readout beneath the big number
     ctx.fillStyle = palette.textFaint;
-    ctx.font = 'italic 11px "Charter", serif';
+    ctx.font = 'italic 11.5px "Charter", serif';
     const dist = Math.abs(liveInv - codataInv);
     const dist_ppm = (dist / codataInv) * 1e6;
-    ctx.fillText(`distance to CODATA: ${dist.toFixed(4)}  (${dist_ppm.toFixed(1)} ppm)`, W/2, 66);
+    ctx.fillText(`distance to CODATA: ${dist.toFixed(4)}  (${dist_ppm.toFixed(1)} ppm)`, W/2, 110);
 
     drawStepList();
   }
@@ -480,7 +486,7 @@ function computeAlpha(R0_val, base_val, n_base_val) {
 (() => {
   const canvas = document.getElementById('canvas-sens');
   if (!canvas) return;
-  const W = 680, H = 260;
+  const W = 680, H = 340;
   const ctx = setupHiDPICanvas(canvas, W, H);
 
   const controls = document.getElementById('sens-controls');
@@ -520,10 +526,15 @@ function computeAlpha(R0_val, base_val, n_base_val) {
     ctx.clearRect(0, 0, W, H);
     ctx.fillStyle = palette.bg; ctx.fillRect(0, 0, W, H);
 
+    // Layout bands:
+    //   0 .. 40    title
+    //  40 .. 110   big readout (1/α)
+    // 110 .. 175   ruler + CODATA marker + ticks (CODATA label BELOW)
+    // 175 .. 340   swing-bar block
     ctx.fillStyle = palette.text;
     ctx.font = '600 13px "Charter", serif';
     ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
-    ctx.fillText('Sensitivity  \u2014  \u00B15% nudge around the derived value', W/2, 26);
+    ctx.fillText('Sensitivity  \u2014  \u00B15% nudge around the derived value', W/2, 24);
 
     // Compute live 1/alpha
     const R0v = PHYS.R0_val * state.R0;
@@ -532,8 +543,15 @@ function computeAlpha(R0_val, base_val, n_base_val) {
     const a   = computeAlpha(R0v, bv, nv);
     const inv = 1/a;
 
-    // Ruler — leave right margin for swing labels beneath
-    const rulerY = 90, rx0 = 60, rx1 = W - 90;
+    // Big numeric readout first (above the ruler band)
+    ctx.fillStyle = palette.alive;
+    ctx.font = '600 24px "SF Mono", monospace';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+    ctx.fillText(`1/\u03B1 = ${inv.toFixed(3)}`, W/2, 76);
+
+    // Ruler (band 110..175) — CODATA label placed BELOW the ticks so it never
+    // collides with the readout above.
+    const rulerY = 130, rx0 = 60, rx1 = W - 90;
     const mapX = (v) => rx0 + (v - RANGE_MIN) / (RANGE_MAX - RANGE_MIN) * (rx1 - rx0);
     ctx.strokeStyle = palette.axis; ctx.lineWidth = 2;
     ctx.beginPath(); ctx.moveTo(rx0, rulerY); ctx.lineTo(rx1, rulerY); ctx.stroke();
@@ -545,29 +563,23 @@ function computeAlpha(R0_val, base_val, n_base_val) {
       ctx.beginPath(); ctx.moveTo(x, rulerY - 4); ctx.lineTo(x, rulerY + 4); ctx.stroke();
       ctx.fillText(v.toString(), x, rulerY + 8);
     }
-    // CODATA dashed
+    // CODATA dashed vertical + label below
     const xC = mapX(codataInv);
     ctx.strokeStyle = '#6dc48f'; ctx.lineWidth = 2;
     ctx.setLineDash([4, 3]);
-    ctx.beginPath(); ctx.moveTo(xC, rulerY - 26); ctx.lineTo(xC, rulerY + 22); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(xC, rulerY - 14); ctx.lineTo(xC, rulerY + 18); ctx.stroke();
     ctx.setLineDash([]);
     ctx.fillStyle = '#6dc48f'; ctx.font = '600 11px "SF Mono", monospace'; ctx.textAlign = 'center';
-    ctx.fillText('CODATA 137.036', xC, rulerY - 32);
-    // Current tick
+    ctx.fillText('CODATA 137.036', xC, rulerY + 34);
+    // Current (live) tick
     const invClamped = Math.max(RANGE_MIN + 1, Math.min(RANGE_MAX - 1, inv));
     const xNow = mapX(invClamped);
     ctx.fillStyle = palette.alive;
     ctx.beginPath(); ctx.arc(xNow, rulerY, 9, 0, 2*Math.PI); ctx.fill();
     ctx.strokeStyle = palette.bg; ctx.lineWidth = 2; ctx.stroke();
 
-    // Big numeric readout
-    ctx.fillStyle = palette.alive;
-    ctx.font = '600 22px "SF Mono", monospace';
-    ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
-    ctx.fillText(`1/\u03B1 = ${inv.toFixed(3)}`, W/2, 66);
-
-    // Sensitivity bars below
-    const barsY = 140, barH = 22, gap = 14;
+    // Sensitivity bars below (band 180..340)
+    const barsY = 195, barH = 22, gap = 14;
     const labels = [
       { key: 'R0',   name: 'R\u2080(2/\u03C0)',     color: '#d17a97' },
       { key: 'base', name: '\u03C0/4',              color: '#efa57a' },
