@@ -461,6 +461,24 @@ nav.toc .status {
 .nav-links .next::after { content: " →"; }
 .nav-links .up { color: var(--text-soft); }
 
+/* On mobile, stack the three links vertically so each has a comfortable
+ * tap target and long chapter titles don't overflow. */
+@media (max-width: 620px) {
+  .nav-links {
+    flex-direction: column;
+    gap: 14px;
+    padding-top: 1.2em;
+    text-align: center;
+  }
+  .nav-links a {
+    padding: 6px 10px;
+    line-height: 1.35;
+  }
+  .nav-links .prev { text-align: left; }
+  .nav-links .next { text-align: right; }
+  .nav-links .up  { font-weight: 600; }
+}
+
 /* --- Callouts --- */
 
 .aside {
