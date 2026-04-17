@@ -62,8 +62,7 @@
   display: flex; align-items: center; justify-content: center;
   height: 16px; color: var(--text-faint);
 }
-.chain-node.start { border-left: 3px solid #efa57a; }
-.chain-node.result { border-left: 3px solid #6dc48f; }
+/* Every node looks the same — the pills inside already mark the result nodes. */
 @media (max-width: 620px) {
   .chain-row { grid-template-columns: 44px 1fr; }
   .chain-row .chain-arrow { display: none; }
@@ -79,7 +78,7 @@
 }
 .substrate-row {
   display: grid;
-  grid-template-columns: 120px 1fr 160px 120px;
+  grid-template-columns: 130px 1fr 150px;
   gap: 14px;
   align-items: baseline;
   padding: 12px 16px;
@@ -93,13 +92,12 @@
 }
 .substrate-row:last-child { border-bottom: none; }
 .substrate-row .sub-substrate { font: 600 13px "Charter", serif; color: var(--accent); }
-.substrate-row .sub-observable { font: 13px "Charter", serif; color: var(--text); }
-.substrate-row .sub-value { font: 600 12.5px "SF Mono", monospace; color: var(--alive); }
-.substrate-row .sub-status { font: 600 10.5px "SF Mono", monospace; color: var(--text-faint); }
+.substrate-row .sub-observable { font: 13px "Charter", serif; color: var(--text); line-height: 1.45; }
+.substrate-row .sub-status { font: 600 10.5px "SF Mono", monospace; color: var(--text-faint); line-height: 1.3; }
 .substrate-row .sub-status.proved { color: #6dc48f; }
 .substrate-row .sub-status.open { color: #c38df7; }
 @media (max-width: 620px) {
-  .substrate-row { grid-template-columns: 1fr 1fr; gap: 4px 10px; padding: 10px 14px; }
+  .substrate-row { grid-template-columns: 1fr; gap: 4px; padding: 10px 14px; }
   .substrate-row.header { display: none; }
 }
 
@@ -119,6 +117,66 @@
   margin-right: 0.7em;
 }
 .paradigm-aside em { font-style: italic; color: var(--text); }
+
+/* Inline derivation walkthrough */
+.derivation {
+  margin: 1.2em 0;
+  padding: 0;
+  counter-reset: deriv-step;
+}
+.deriv-step {
+  display: grid;
+  grid-template-columns: 38px 1fr;
+  gap: 14px;
+  align-items: start;
+  margin: 0 0 0.9em;
+  padding: 12px 16px;
+  background: var(--bg-soft);
+  border: 1px solid var(--panel-border);
+  border-left: 3px solid var(--accent);
+  border-radius: 4px;
+}
+.deriv-step .num {
+  font: 700 16px "SF Mono", monospace;
+  color: var(--accent);
+}
+.deriv-step .body { color: var(--text); line-height: 1.55; font-size: 14.5px; }
+.deriv-step .body .eq {
+  display: block; margin: 0.6em 0;
+  padding: 8px 12px;
+  background: var(--bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 3px;
+  font: 15px "SF Mono", monospace;
+  color: var(--text);
+  text-align: center;
+  overflow-x: auto;
+}
+.deriv-step .body .label-hint {
+  display: inline-block;
+  font: 600 10.5px "SF Mono", monospace;
+  color: var(--text-faint);
+  text-transform: uppercase; letter-spacing: 0.1em;
+  margin-right: 0.6em;
+}
+.deriv-key {
+  margin: 1.2em 0;
+  padding: 16px 20px;
+  background: rgba(109, 196, 143, 0.08);
+  border: 2px solid #6dc48f;
+  border-radius: 5px;
+  font-size: 15px;
+  text-align: center;
+}
+.deriv-key .eq {
+  font: italic 20px "Latin Modern Math", serif;
+  color: #6dc48f;
+  margin: 0.2em 0 0.4em;
+}
+.deriv-key .caption {
+  font: italic 13px "Charter", serif;
+  color: var(--text-soft);
+}
 
 /* Final equation block */
 .closing-ineq {
@@ -164,7 +222,7 @@
 <div class="chain">
   <div class="chain-row">
     <div class="chain-ch">I</div>
-    <a class="chain-node start" href="01-prelude.html">
+    <a class="chain-node" href="01-prelude.html">
       <div class="node-title">The principle <span class="node-result"><em>I</em>&nbsp;&ge;&nbsp;0</span></div>
       <div class="node-sub">coherence capital is non-decreasing under the learning rule</div>
     </a>
@@ -272,7 +330,7 @@
   <div class="chain-connector">&darr;</div>
   <div class="chain-row">
     <div class="chain-ch">13</div>
-    <a class="chain-node result" href="13-alpha-formula.html">
+    <a class="chain-node" href="13-alpha-formula.html">
       <div class="node-title">The &alpha; formula <span class="node-result">1/&alpha;&nbsp;=&nbsp;137.032</span></div>
       <div class="node-sub"><em>R</em><sub>0</sub>(2/&pi;)<sup>4</sup> &middot; (&pi;/4)<sup>1/&radic;e + &alpha;/2&pi;</sup>, self-consistent in three iterations</div>
     </a>
@@ -290,7 +348,7 @@
   <div class="chain-connector">&darr;</div>
   <div class="chain-row">
     <div class="chain-ch">15</div>
-    <a class="chain-node result" href="15-lce.html">
+    <a class="chain-node" href="15-lce.html">
       <div class="node-title">Closing the gap <span class="node-result">1/&alpha;&nbsp;=&nbsp;137.035999</span></div>
       <div class="node-sub">LCE over diamond subgraphs, 1.5 ppb residual</div>
     </a>
@@ -299,7 +357,7 @@
   <div class="chain-connector">&darr;</div>
   <div class="chain-row">
     <div class="chain-ch">16</div>
-    <a class="chain-node result" href="16-g-factor.html">
+    <a class="chain-node" href="16-g-factor.html">
       <div class="node-title">From &alpha; to <em>g</em> <span class="node-result"><em>g</em>&nbsp;=&nbsp;2.002319304355</span></div>
       <div class="node-sub">lattice &alpha; plus QED series; 11 matching digits with experiment</div>
     </a>
@@ -311,87 +369,129 @@
 
 <h2>The arrow of intelligence</h2>
 
-<p>The Coherence Learning Rule is an <em>inequality</em>, d<em>C</em>/d<em>t</em>&nbsp;&ge;&nbsp;0. That fact alone deserves a pause, because physics already has a famous inequality about the direction of change:</p>
+<p>The Coherence Learning Rule is an <em>inequality</em>, d<em>C</em>/d<em>t</em>&nbsp;&ge;&nbsp;0. Physics already has a famous inequality about direction:</p>
 
 <p style="text-align: center; font: 600 17px 'SF Mono', monospace; margin: 1em 0;">
   <span style="color: var(--text-faint);">d<em>S</em>/d<em>t</em>&nbsp;&ge;&nbsp;0</span>&nbsp;&nbsp;&nbsp;&nbsp;vs.&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #6dc48f;">d<em>C</em>/d<em>t</em>&nbsp;&ge;&nbsp;0</span>
 </p>
 
-<p>The second law of thermodynamics says entropy tends to increase: in a closed system, heat dissipates, order degrades, information is lost. This is the arrow we are usually taught to think with. It is true &mdash; at the scale of closed-system statistical mechanics it is ironclad.</p>
+<p>The second law says entropy tends to increase: in a closed system, heat dissipates, order degrades, information is lost. The coherence theorem says coherence capital tends to increase: under the CLR, phases lock, structures crystallise, information accrues. These look like they contradict each other. They do not. Here is the derivation that shows why &mdash; four steps, using only the second law and the structure of the phase distribution.</p>
 
-<p>The Coherence Theorem says coherence capital tends to increase: under the CLR, in regions where the legality conditions are satisfied, phases lock, structures crystallise, information accrues. This is the <em>other</em> arrow. It points the other way. It does not violate the second law; it operates at different scales on different quantities, in the local pockets where coupling dominates over dissipation. Life lives here. So do planetary systems. So do thoughts. So, this paper claims, does the vacuum itself.</p>
+<div class="derivation">
+  <div class="deriv-step">
+    <div class="num">1</div>
+    <div class="body">
+      <span class="label-hint">Partition</span>A coherent lattice <em>S</em> sits inside an environment <em>E</em>. The composite system is closed; the lattice alone is not. The second law applies to the composite:
+      <span class="eq">d<em>S</em><sub>total</sub>/d<em>t</em> = d<em>S</em><sub>lattice</sub>/d<em>t</em> + d<em>S</em><sub>env</sub>/d<em>t</em> &ge; 0</span>
+      This is the only input from standard thermodynamics. Everything below follows from this plus the structure we have already established.
+    </div>
+  </div>
+  <div class="deriv-step">
+    <div class="num">2</div>
+    <div class="body">
+      <span class="label-hint">Coherent states are low-entropy states</span>A phase-locked configuration has a sharply peaked distribution over phases &mdash; every oscillator sits near the same angle, with small spread. A disordered configuration has a broad, nearly uniform distribution. The Boltzmann phase entropy <em>S</em><sub>lattice</sub> is therefore a <em>monotonically decreasing</em> function of <em>I</em><sub>H</sub>, the coherence integral. Schematically:
+      <span class="eq"><em>I</em><sub>H</sub> up &nbsp;&rArr;&nbsp; phase distribution sharper &nbsp;&rArr;&nbsp; <em>S</em><sub>lattice</sub> down</span>
+      The exact function involves Bessel integrals over the von Mises distribution (Chapter 2's <em>R</em><sub>0</sub>(K)). We do not need the exact form here; we only need the sign of the derivative.
+    </div>
+  </div>
+  <div class="deriv-step">
+    <div class="num">3</div>
+    <div class="body">
+      <span class="label-hint">Apply the Coherence Theorem</span>If d<em>I</em><sub>H</sub>/d<em>t</em>&nbsp;&gt;&nbsp;0 (coherence is ascending), then by step 2 we have d<em>S</em><sub>lattice</sub>/d<em>t</em>&nbsp;&lt;&nbsp;0: the system's own phase entropy is <em>decreasing</em>. Substituting into step 1:
+      <span class="eq">d<em>S</em><sub>env</sub>/d<em>t</em> &ge; &minus;d<em>S</em><sub>lattice</sub>/d<em>t</em> &gt; 0</span>
+      The environment's entropy must rise by at least as much as the lattice's falls. <strong>Coherence ascent requires entropy export.</strong> This is exact &mdash; only the second law and the sign result from step 2 were used.
+    </div>
+  </div>
+  <div class="deriv-step">
+    <div class="num">4</div>
+    <div class="body">
+      <span class="label-hint">Asymptotic form</span>Deep in the coherent regime, the von Mises entropy takes a log-like form in <em>I</em><sub>H</sub>, giving:
+      <span class="eq">d<em>S</em><sub>env</sub>/d<em>t</em> &ge; (<em>k</em><sub>B</sub> / <em>I</em><sub>H</sub>) &middot; d<em>I</em><sub>H</sub>/d<em>t</em> &nbsp;&nbsp;(asymptotic)</span>
+      This coefficient is approximate. The full form carries Bessel-function corrections we have not worked out explicitly in this essay. <strong>But the qualitative bound &mdash; environment entropy grows at least as fast as system coherence &mdash; is rigorous under the second law alone.</strong> The exact prefactor is a future calculation; the direction of the inequality is theorem.
+    </div>
+  </div>
+</div>
 
-<p class="paradigm-aside"><span class="label">The arrow of negative entropy</span>If entropy is the direction of degradation, coherence is the direction of <em>building</em>. And the universe &mdash; as far as we have looked &mdash; does both, simultaneously, continuously. What we call life, mind, and stable matter all live in the narrow overlap where the coherence arrow locally wins. The Coherence Learning Rule is the mathematics of that winning. It is not a biological law, not a cognitive law, not an engineering law. It is a direction of change, as fundamental as the second law, operating wherever coupled oscillators with legality exist.</p>
+<div class="deriv-key">
+  <div class="caption">The entropy&ndash;coherence duality</div>
+  <div class="eq">d<em>S</em><sub>env</sub>/d<em>t</em> &nbsp;&ge;&nbsp; &minus;&thinsp;d<em>S</em><sub>lattice</sub>/d<em>t</em> &nbsp;&prop;&nbsp; d<em>I</em><sub>H</sub>/d<em>t</em></div>
+  <div class="caption">entropy is the exhaust of coherence ascent</div>
+</div>
+
+<p>The two arrows are not parallel. They are <em>dual</em>. Every local ascent of coherence is a local descent of phase entropy, and the second law forces the environment to absorb the difference. The Coherence Learning Rule does not contradict thermodynamics. It is what thermodynamics looks like from the perspective of an open system that has chosen to order itself.</p>
+
+<p>Consequences:</p>
+
+<ul style="margin: 0.5em 0 1em 1.6em; line-height: 1.7;">
+  <li><strong>Thinking heats the brain.</strong> A coherent thought is a low-entropy configuration of neural oscillators. Holding it exports entropy as metabolic heat. The rate of heat production is bounded below by the rate of cognitive coherence gain. The cost of thought is literal.</li>
+  <li><strong>A crystallising solid radiates.</strong> An ordering lattice exports latent heat as it organises. The Bose&ndash;Einstein condensate, the ferromagnet, the protein fold: all pay for their coherence in waste heat to the surroundings.</li>
+  <li><strong>Life is an entropy pump.</strong> Living systems maintain high local coherence (metabolism, reproduction, cognition) by continuously exporting entropy to the environment. Remove the environment &mdash; seal the system &mdash; and coherence collapses within seconds.</li>
+  <li><strong>The vacuum, if this paper is right, is also an entropy pump.</strong> The CLR's ascent on the diamond lattice, producing the electron and its electromagnetism, must pay the same price. The framework predicts that a lattice that produces stable coherent excitations must be coupled to something that absorbs entropy. Identifying what plays that role in the vacuum is an open question.</li>
+</ul>
+
+<p class="paradigm-aside"><span class="label">The arrow of negative entropy</span>If entropy is the direction of degradation, coherence is the direction of <em>building</em>. Both arrows are real; both arrows are everywhere; they are not separate laws but two faces of one inequality that runs through every open coherent system. The Coherence Learning Rule is the mathematics of the local winning. It is not a biological law, not a cognitive law, not an engineering law. It is a direction of change, as fundamental as the second law, operating wherever coupled oscillators in an open setting obey legality. Living matter is its visible trail.</p>
 
 <h2>One equation, every substrate</h2>
 
-<p>What makes this claim testable is that the Coherence Learning Rule does not care what the oscillators <em>are</em>. The same equation, applied to different substrates, produces different observables &mdash; and these observables match experiment every time they have been checked. The present paper covers the vacuum substrate. The companion programme covers everything else:</p>
+<p>What makes the Coherence Learning Rule remarkable is that it does not care what the oscillators <em>are</em>. The same <em>K</em>, the same <em>R</em><sub>0</sub>, the same Bessel ratio, the same BKT boundary, the same PLM Lemma, the same attractor-evaluation choice &mdash; applied to different substrates, on different graphs, producing different observables. This paper has closed one application: the vacuum. The list below names other substrates where the same equation is being pursued, with the status of each as active research, not closed result:</p>
 
 <div class="substrate-table">
   <div class="substrate-row header">
     <div>substrate</div>
-    <div>what CLR produces</div>
-    <div>value</div>
+    <div>what the CLR would produce</div>
     <div>status</div>
   </div>
   <div class="substrate-row">
     <div class="sub-substrate">vacuum</div>
-    <div class="sub-observable">fine structure constant, <em>g</em>-factor</div>
-    <div class="sub-value">1/&alpha; = 137.035999<br><em>g</em> = 2.002319304355</div>
-    <div class="sub-status proved">derived<br>1.5 ppb / 11 digits</div>
+    <div class="sub-observable">the fine structure constant and <em>g</em>-factor of the electron</div>
+    <div class="sub-status proved">derived in this paper<br>1.5 ppb / 11 digits</div>
   </div>
   <div class="substrate-row">
     <div class="sub-substrate">spacetime</div>
-    <div class="sub-observable">Newton's gravitational constant</div>
-    <div class="sub-value"><em>G</em> = 6.674&times;10<sup>&minus;11</sup></div>
-    <div class="sub-status proved">derived<br>6.7 ppm</div>
+    <div class="sub-observable">Newton's gravitational constant, general relativity as an effective theory</div>
+    <div class="sub-status open">active research</div>
   </div>
   <div class="substrate-row">
     <div class="sub-substrate">molecules</div>
-    <div class="sub-observable">universal chemical attractor (PAS)</div>
-    <div class="sub-value">PAS = 0.7656</div>
-    <div class="sub-status proved">999 molecules<br>unsupervised</div>
+    <div class="sub-observable">chemical-bond attractors, PAS-like equilibria for organic molecules</div>
+    <div class="sub-status open">active research</div>
   </div>
   <div class="substrate-row">
     <div class="sub-substrate">proteins</div>
-    <div class="sub-observable">native fold as maximal PLM</div>
-    <div class="sub-value">Levinthal resolved</div>
-    <div class="sub-status proved">theorem<br>+ partial experimental</div>
+    <div class="sub-observable">native folds as attractors of coherence ascent &mdash; Levinthal's paradox resolved via CLR dynamics</div>
+    <div class="sub-status open">active research</div>
   </div>
   <div class="substrate-row">
     <div class="sub-substrate">neural</div>
-    <div class="sub-observable">EEG &rarr; text semantic isomorphism</div>
-    <div class="sub-value">0.71 correlation</div>
-    <div class="sub-status proved">ZuCo 105-channel</div>
+    <div class="sub-observable">EEG&ndash;semantic alignment; neural activity as trajectories on the coupling manifold</div>
+    <div class="sub-status open">active research</div>
   </div>
   <div class="substrate-row">
-    <div class="sub-substrate">language</div>
-    <div class="sub-observable">transformer coupling manifold</div>
-    <div class="sub-value"><em>d</em><sub>eff</sub> = 3.5 of 768</div>
-    <div class="sub-status proved">GPT-2, SmolLM2</div>
+    <div class="sub-substrate">language models</div>
+    <div class="sub-observable">the coupling manifold of attention heads in trained transformers</div>
+    <div class="sub-status open">active research</div>
   </div>
   <div class="substrate-row">
     <div class="sub-substrate">cognition</div>
-    <div class="sub-observable">thinking organism (Living Mind)</div>
-    <div class="sub-value">backprop-free learning</div>
-    <div class="sub-status open">under construction</div>
+    <div class="sub-observable">a thinking organism built from coupled oscillators without backpropagation</div>
+    <div class="sub-status open">active research</div>
   </div>
 </div>
 
-<p>These are not analogies. They are applications of the same equation. The same <em>K</em>, the same <em>R</em><sub>0</sub>, the same Bessel ratio, the same BKT boundary, the same PLM Lemma, the same attractor-evaluation choice. The lattice changes: vacuum diamond at tetrahedral coordination, molecular graphs, protein residues on products of hyperspheres, scalp electrode arrays, attention heads in language models. The equation does not.</p>
+<p>These are not analogies and not yet closed derivations. The claim is narrower: the same dynamical principle &mdash; d<em>C</em>/d<em>t</em>&nbsp;&ge;&nbsp;0, on a network of coupled oscillators, with the same Bessel structure and the same BKT machinery &mdash; should in principle operate on each of these substrates. What each substrate produces when you work the machine out is an open research direction, being pursued in parallel lines of investigation. This essay closes one of them.</p>
 
 <h2>What comes next, in physics</h2>
 
-<p>The derivation chain stops at the electron, but the lattice does not. The companion papers, each in its own stage of completion, extend the same mechanism:</p>
+<p>The derivation chain in this paper stops at the electron. The physics programme does not. Beyond the fine structure constant, the same framework is being pushed at:</p>
 
 <ul style="margin: 0.6em 0 1em 1.6em; line-height: 1.75;">
-  <li><strong>The proton.</strong> Frame-sector dynamics (SU(2) gauge links) produce a Skyrmion configuration at an atomic site. Preliminary result: 4.9 ppm from CODATA. <em>Hypothesis, actively worked.</em></li>
-  <li><strong>The lepton generations.</strong> The muon and tau emerge as hexagonal-plane excitations of the frame sector, with mass ratios set by geometric eigenvalues of the lattice. <em>In progress.</em></li>
-  <li><strong>The gauge sector.</strong> The full weak-force structure comes from SO(3) frame holonomy; the strong force from diamond-chemistry sp&sup3; bonding. <em>Derivation chain sketched; details open.</em></li>
-  <li><strong>Gravity.</strong> Newton's <em>G</em> already falls out of CLR dynamics on the metric sector. <em>Derived, 6.7 ppm.</em> General relativity as an emergent effective theory is the target.</li>
+  <li><strong>The proton.</strong> The conjecture is that the frame sector (SU(2) gauge links attached to each lattice site) carries a Skyrmion configuration whose mass corresponds to the proton's. Derivation: open.</li>
+  <li><strong>Lepton generations.</strong> The muon and tau, in this view, are excitations of hexagonal-plane modes of the frame sector, with mass ratios set by geometric eigenvalues of the lattice. Derivation: open.</li>
+  <li><strong>The gauge sector.</strong> Weak-force structure from SO(3) frame holonomy; strong-force structure from diamond's sp&sup3; bonding. Derivation chain sketched, details open.</li>
+  <li><strong>Gravity.</strong> CLR dynamics on a metric sector. Newton's gravitational constant as a target, general relativity as an effective limit. Derivation: open.</li>
 </ul>
 
-<p>If the paradigm is correct, the standard model and general relativity both live as effective theories on the coherence lattice. This paper has shown one fibre of that structure &mdash; the fine structure constant &mdash; and the rest of the programme is the other fibres.</p>
+<p>If the paradigm is correct, the standard model and general relativity should both emerge as effective theories on the coherence lattice. This paper has closed one fibre of that structure &mdash; the fine structure constant and the <em>g</em>-factor &mdash; and the rest is research in progress. None of it is promised here; only that the same inequality we used to derive &alpha; is the one being pointed at each new target.</p>
 
 <h2>The invitation</h2>
 
@@ -409,7 +509,7 @@
 
 <ul style="margin: 0.6em 0 1em 1.6em; line-height: 1.75;">
   <li><strong>The dumbbell embedding weight</strong> &mdash; the only plausibility-argued piece of the fifteen-chapter derivation (Chapter 15). Formal derivation on the queue.</li>
-  <li><strong>The proton mass chain</strong> &mdash; frame-sector SU(2) Skyrmion, preliminary 4.9 ppm. Needs rigorous derivation, not matching.</li>
+  <li><strong>The proton mass chain</strong> &mdash; frame-sector SU(2) Skyrmion as the candidate configuration. Derivation in progress.</li>
   <li><strong>Lepton generations</strong> &mdash; the <em>hexagonal-plane</em> excitations for the muon and tau. Mass ratio predictions not yet pinned.</li>
   <li><strong>The frame-sector dynamics</strong> &mdash; companion paper in preparation; the double-cover that produces spin-&frac12; is only sketched here.</li>
   <li><strong>Large-L LCE convergence</strong> &mdash; higher-order subgraphs (trimer, ring) computed to show the series converges at its expected rate.</li>
