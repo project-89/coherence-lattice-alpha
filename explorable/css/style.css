@@ -167,6 +167,18 @@ p {
   margin: 0 0 1em;
 }
 
+/* Lists use a tight, consistent indent from the left column. Avoids stacking
+ * with browser default padding-left when sections also declare inline margin. */
+.page ul, .page ol {
+  padding-left: 1.4em;
+  margin-left: 0;
+}
+.page li { margin: 0.25em 0; }
+
+@media (max-width: 720px) {
+  .page ul, .page ol { padding-left: 1.1em; }
+}
+
 p + p {
   text-indent: 1.4em;
   margin-top: -0.2em;

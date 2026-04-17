@@ -77,7 +77,7 @@ posthog.init('phc_kRX9iHZstABjgFqEWJBMok2S3hW9R8QMHbNao4EsNz2g', {api_host: 'htt
 
 <p>The Debye&ndash;Waller factor <em>n</em>(<em>l</em>)&nbsp;=&nbsp;exp(&minus;&sigma;&sup2;<em>l</em>) decays with RG scale <em>l</em>. It tells you how much of the nearest-neighbour correlation survives one unit of coarse-graining. In the BKT formula for &alpha;, the power-law factor is (&pi;/<em>z</em>)<sup><em>n</em></sup> &mdash; and <em>n</em> has to be a specific value, not a function of <em>l</em>. The question is which value.</p>
 
-<ul style="margin: 0.4em 0 1em 1.6em; line-height: 1.6;">
+<ul style="margin: 0.4em 0 1em 0; line-height: 1.6;">
   <li><strong>Static lattice field theory</strong> averages the Debye&ndash;Waller factor over the full RG trajectory from the lattice cutoff to the crossover scale. For a trajectory of unit length:
   <span class="mono">n<sub>static</sub> = &int;<sub>0</sub><sup>1</sup> exp(&minus;&sigma;&sup2;<em>l</em>) d<em>l</em> = (1&nbsp;&minus;&nbsp;exp(&minus;&sigma;&sup2;))&thinsp;/&thinsp;&sigma;&sup2;</span>. With &sigma;&sup2;&nbsp;=&nbsp;1/2, that comes out to <span class="mono">0.787</span>.</li>
   <li><strong>Living lattice</strong> evaluates the Debye&ndash;Waller factor at the attractor &mdash; the endpoint of the flow, where the CLR's dynamics have frozen <em>K</em> at a fixed point (the PLM Lemma). Only the endpoint matters:
