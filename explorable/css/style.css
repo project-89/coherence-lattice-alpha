@@ -466,7 +466,7 @@ nav.toc .status {
   letter-spacing: 0.08em;
   color: var(--accent);
   font-weight: 600;
-  margin-bottom: 0.4em;
+  margin-right: 0.6em;
 }
 
 /* --- Math --- */
