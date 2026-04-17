@@ -400,7 +400,7 @@
     <span class="eq-symbol state" data-symbol="dSenv">d<em>S</em><sub>env</sub>/d<em>t</em></span>
     &nbsp;&ge;&nbsp;
     <span class="eq-symbol op" data-symbol="negdSlat">&minus;d<em>S</em><sub>lattice</sub>/d<em>t</em></span>
-    &nbsp;&prop;&nbsp;
+    &nbsp;<span class="eq-symbol struct" data-symbol="prop">&prop;</span>&nbsp;
     <span class="eq-symbol param" data-symbol="dIH">d<em>I</em><sub>H</sub>/d<em>t</em></span>
   </div>
   <p class="eq-prompt">Click any coloured symbol to see what it represents. The full four-step derivation sits below as an accordion.</p>
@@ -578,6 +578,11 @@ wireEquation('eq-duality', {
     name: 'd<em>I</em><sub>H</sub>/d<em>t</em> &mdash; rate of coherence ascent',
     pronounce: '"dee I sub H, dee tee"',
     description: 'The rate at which the coherence integral <em>I</em><sub>H</sub> is increasing inside the lattice. This is the quantity the Coherence Theorem forces to be non-negative under legal CLR dynamics. The symbol <em>I</em><sub>H</sub> is the normalised alignment of all phases; when all oscillators are perfectly phase-locked, <em>I</em><sub>H</sub>&nbsp;=&nbsp;1. The proportionality (&prop;) on the right-hand side comes from the asymptotic von Mises relationship between phase entropy and coherence &mdash; the coefficient is roughly <em>k</em><sub>B</sub>/<em>I</em><sub>H</sub>, with Bessel-function corrections not worked out here.',
+  },
+  prop: {
+    name: '&prop; &mdash; "is proportional to"',
+    pronounce: '"is proportional to"',
+    description: 'The standard mathematical shorthand meaning <em>equal up to a multiplicative constant</em>. "<em>A</em>&nbsp;&prop;&nbsp;<em>B</em>" means <em>A</em>&nbsp;=&nbsp;<em>k</em>&thinsp;&middot;&thinsp;<em>B</em> for some coefficient <em>k</em>. Familiar examples: the area of a circle is proportional to radius<sup>2</sup> (with coefficient &pi;); the force of a spring is proportional to displacement (with coefficient <em>k</em>, Hooke\'s law). In this equation, the proportionality is doing specific work: the inequality on the left (&ge;) is <em>rigorous</em> from the second law alone; the proportionality on the right is <em>asymptotic</em> &mdash; the entropy export scales with the coherence ascent, with a coefficient roughly <em>k</em><sub>B</sub>/<em>I</em><sub>H</sub> in the high-coherence limit. The sign and direction of the relationship are theorem; the exact magnitude awaits a full Bessel-function calculation. This is the one piece of the duality equation that is approximate rather than exact &mdash; flagged here so no reader mistakes it for more than it is.',
   },
 });
 </script>
