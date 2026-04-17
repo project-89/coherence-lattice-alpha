@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://lattice.project89.org/sitemap.xml
