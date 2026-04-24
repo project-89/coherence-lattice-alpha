@@ -829,7 +829,7 @@ wireEquation('eq-winding', {
         phases[idx(x, y)] = a - b;
       }
     }
-    relaxKuramoto();
+    relaxKuramoto(40);
     cores = [
       { x: cx1, y: cyT, charge: +1 },
       { x: cx2, y: cyT, charge: -1 },
@@ -1195,15 +1195,22 @@ wireEquation('eq-winding', {
 
   // --- Controls --------------------------------------------------------
 
-  document.getElementById('vort-pos').addEventListener('click', () => { seedVortex(+1); shakeAmp = 0; });
-  document.getElementById('vort-neg').addEventListener('click', () => { seedVortex(-1); shakeAmp = 0; });
-  document.getElementById('vort-pair').addEventListener('click', () => { seedVortexPair(); shakeAmp = 0; });
-  document.getElementById('vort-uniform').addEventListener('click', () => { seedUniform(); shakeAmp = 0; });
+  const presetBtns = ['vort-pos', 'vort-neg', 'vort-pair', 'vort-uniform'];
+  function highlightPreset(id) {
+    for (const b of presetBtns) {
+      document.getElementById(b).classList.toggle('primary', b === id);
+    }
+  }
+  document.getElementById('vort-pos').addEventListener('click', () => { seedVortex(+1); shakeAmp = 0; highlightPreset('vort-pos'); });
+  document.getElementById('vort-neg').addEventListener('click', () => { seedVortex(-1); shakeAmp = 0; highlightPreset('vort-neg'); });
+  document.getElementById('vort-pair').addEventListener('click', () => { seedVortexPair(); shakeAmp = 0; highlightPreset('vort-pair'); });
+  document.getElementById('vort-uniform').addEventListener('click', () => { seedUniform(); shakeAmp = 0; highlightPreset('vort-uniform'); });
   document.getElementById('vort-shake').addEventListener('click', () => { shakeAmp = 1.0; shakeT = 0; });
   document.getElementById('vort-reset').addEventListener('click', () => {
     seedVortex(+1);
     shakeAmp = 0;
     loop.cx = 7.5; loop.cy = 7.5; loop.hw = 3; loop.hh = 3;
+    highlightPreset('vort-pos');
   });
   const bondsBtn = document.getElementById('vort-bonds');
   bondsBtn.addEventListener('click', () => {
