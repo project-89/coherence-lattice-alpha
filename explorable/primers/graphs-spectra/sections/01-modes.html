@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Modes: a network's natural wobbles — The Living Lattice</title>
+<meta name="description" content="Eigenvalues and eigenvectors before the names: pluck a chain of springs and hear which overtones you excited, step through a real network's wobble-patterns, then build your own graph and play its chord.">
+<meta name="author" content="Michael Sharpe">
+<link rel="canonical" href="https://lattice.project89.org/primers/graphs-spectra/sections/01-modes.html">
+<link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
+<link rel="apple-touch-icon" href="../../../apple-touch-icon.png">
+<meta property="og:title" content="Modes: a network's natural wobbles — The Living Lattice">
+<meta property="og:description" content="Eigenvalues before the name: pluck a spring chain, hear its overtone recipe, step through a network's modes, then build your own graph and play its chord.">
+<meta property="og:url" content="https://lattice.project89.org/primers/graphs-spectra/sections/01-modes.html">
+<meta property="og:site_name" content="The Living Lattice">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://lattice.project89.org/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Modes: a network's natural wobbles — The Living Lattice">
+<meta name="twitter:description" content="Pluck a spring chain, hear its overtone recipe, step through a network's modes, build your own graph and play its chord.">
+<meta name="twitter:image" content="https://lattice.project89.org/og-image.png">
+<!-- BEGIN AUTO-INJECTED ANALYTICS -->
+<!-- PostHog -->
+<script>
+!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+posthog.init('phc_kRX9iHZstABjgFqEWJBMok2S3hW9R8QMHbNao4EsNz2g', {api_host: 'https://us.i.posthog.com', person_profiles: 'identified_only'});
+</script>
+<!-- END AUTO-INJECTED ANALYTICS -->
+<link rel="stylesheet" href="../../../css/style.css">
+<style>
+.flag-callout {
+  margin: 1.6em 0; padding: 16px 20px;
+  background: rgba(195, 141, 247, 0.08);
+  border-left: 3px solid #c38df7; border-radius: 3px;
+  font-size: 14.5px; line-height: 1.55;
+}
+.flag-callout .flag-label {
+  display: inline-block; font: 700 10.5px "SF Mono", monospace;
+  color: #c38df7; text-transform: uppercase; letter-spacing: 0.1em; margin-right: 0.7em;
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<nav class="breadcrumb">
+  <a href="../index.html">&larr; graphs &amp; spectra</a>
+  <span class="sep">&middot;</span>
+  <span class="section-num">section 01 / 03</span>
+</nav>
+
+<h1>Modes: a network's natural wobbles<span class="subtitle">Eigenvalues, finally, for people who bounced off them — taught by plucking things</span></h1>
+
+<p class="lead">"Eigenvalue" may be the single most wall-like word in mathematics: it sounds abstract, it is usually taught as pure symbol-shuffling, and it guards the door to half of physics. Here is the secret the notation hides: <strong>an eigenvalue is a pitch.</strong> A connected thing — a chain of springs, a drumhead, a network — has a small set of natural ways it likes to wobble, and each way rings at its own rate. In this section you will pluck a chain and read off, live, exactly which of its natural wobbles your pluck was made of; then step through a real network's wobbles one at a time; then build your own network and play its chord. Only after all that will we say the word.</p>
+
+<h2>1. A graph is who-talks-to-whom</h2>
+
+<p>Strip a network down to its skeleton and you get a <strong>graph</strong>: dots (nodes) and lines between them (edges). Nothing else. The dots can be neurons, people, oscillators, atoms; the lines say who directly influences whom. On this site the lines carry the coupling strengths <span class="mono">K</span> you met in <a href="../../sections/00-phase-and-sound.html">the phase primer</a> — an edge is a channel through which one node nudges another. Everything in this module works for weighted couplings too, but today one line = one unit of nudge, so the shape alone does the talking.</p>
+
+<h2>2. Pluck it and listen to what it's made of</h2>
+
+<p>Start with the simplest possible network: six masses in a row, joined by springs. Pull one mass aside and let go. The chain does something that looks complicated — but it is not doing anything new. Every motion this chain can ever make is a <em>mixture of six special patterns</em>: the whole chain swaying together, a see-saw with the left half up and the right half down, an S-curve, and progressively wigglier shapes. Each special pattern, left alone, would just oscillate in place at its own rate, forever holding its shape. Your pluck picked a particular <em>recipe</em> of them, and the meters below the chain show you that recipe, live.</p>
+
+<figure id="fig-springs">
+  <canvas id="canvas-springs" width="680" height="380"></canvas>
+  <div class="controls" id="springs-controls">
+    <button id="pluck-end" class="primary">Pluck the end</button>
+    <button id="pluck-1">Pluck mass 2</button>
+    <button id="pluck-shape">Start in the see-saw shape</button>
+  </div>
+  <figcaption>Six masses, five springs, free ends. The meters show how much of each special pattern your pluck contained — a recipe that stays fixed while the motion looks chaotic (the patterns don't trade energy; they only fade slowly together). Two things to try: <strong>Pluck mass 2</strong> — the S-curve meter stays at exactly zero, because mass 2 is a still-point of that pattern; you cannot excite a wobble by pushing on its node. And <strong>Start in the see-saw shape</strong> — one meter, one pattern, and the chain rings a single pure tone: a shape that vibrates alone. <em>Sound on: one voice per pattern, pitch at the pattern's true rate, loudness at its meter — you are hearing the recipe.</em> <span id="springs-readout" class="readout">—</span></figcaption>
+</figure>
+
+<p>That "shape that vibrates alone" is the whole idea of this module. Hold onto it.</p>
+
+<h2>3. Networks are drums</h2>
+
+<p>Tap a drumhead and it rings in a few characteristic patterns: the whole skin billowing together, the left half up while the right half is down, four alternating quadrants. Each pattern rings at its own pitch — the gentle whole-skin motion is the low boom, the wigglier patterns are the higher overtones. (If you read the foundations essay on memory, this is exactly the physics behind <a href="../../../foundations/sections/05-memory-basins.html">Chladni figures</a> — and the <a href="../../sound-workshop/sections/02-chladni.html">sound workshop</a> lets you pour sand on those patterns.)</p>
+
+<p>A network is a drum with a stranger shape. Imagine each node holding a value that gets pulled toward its neighbors' values — exactly the nudging dynamics this whole site runs on. Then the network has its own set of special wobble-patterns, called <strong>modes</strong>, each ringing at its own rate. Here is a network of two tight six-node clusters joined by a single edge — that lone connection is called a <strong>bridge</strong>, and it becomes the main character of section 03. Step through its modes:</p>
+
+<figure id="fig-modes">
+  <canvas id="canvas-modes" width="680" height="380"></canvas>
+  <div class="controls" id="modes-controls">
+    <button id="mode-prev">&#9664; mode</button>
+    <button id="mode-next" class="primary">mode &#9654;</button>
+  </div>
+  <figcaption>The network's actual wobble-patterns, computed live from this exact graph, gentlest first. Blue nodes move up while orange nodes move down; the animation speed is the mode's true relative frequency. Mode 0 is the free ride — everyone together, nothing stretched, frequency zero. Mode 1 barely bends the one bridge. Higher modes fight more neighbors and vibrate faster. <em>Sound on: the mode's pitch, proportional to the square root of its stiffness (&lambda;) — the same law a drum obeys. Mode 0 is silent.</em> <span id="modes-readout" class="readout">mode 1 &middot; &lambda; = —</span></figcaption>
+</figure>
+
+<h2>4. What you just saw — now with its real name</h2>
+
+<p>Each of those patterns has a defining property, and it is worth saying carefully because it is the entire content of the scary word. When the network's pulling-toward-neighbors machinery acts on an <em>arbitrary</em> shape of displacements, it warps it: some parts snap back hard, others barely move, and the shape that comes out is different from the shape that went in. But the special patterns — the spring chain's see-saw, the network's cluster-vs-cluster — <strong>keep their shape</strong>. The network's response to that pattern is the same pattern, just scaled — pushed back with some overall strength. Nothing about its geometry changes; only its size.</p>
+
+<p>That shape-keeping pattern is called an <strong>eigenvector</strong> (German <em>eigen</em>, "its own" — the network's own pattern). The scaling number — how hard the network pushes back on it, its stiffness — is the <strong>eigenvalue</strong>, written <span class="mono">&lambda;</span> (lambda). Stiff pattern, big &lambda;, fast vibration, high pitch. Gentle pattern, small &lambda;, slow vibration, low pitch. The full set of a network's eigenvalues is called its <strong>spectrum</strong> — the same word as a spectrum of light or sound, and not by coincidence: it is literally the network's chord, the set of pitches it is capable of ringing at. That is the whole idea. Everything else about eigen-anything is bookkeeping.</p>
+
+<h2>5. Now build your own</h2>
+
+<p>The spectrum is not decoration on top of a graph — it <em>is</em> the graph, heard rather than seen. The fastest way to believe that is to change a graph and listen. Below, eight nodes: click two nodes in a row to add or remove the edge between them, or start from a preset. Every click recomputes the real spectrum; the coloring shows the gentlest genuine mode, and the bars are the chord.</p>
+
+<figure id="fig-editor">
+  <canvas id="canvas-editor" width="680" height="420"></canvas>
+  <div class="controls" id="editor-controls">
+    <button id="ed-ring">Ring</button>
+    <button id="ed-path">Path</button>
+    <button id="ed-clusters" class="primary">Two squares + bridge</button>
+    <button id="ed-complete">Everyone-to-everyone</button>
+  </div>
+  <figcaption>Click a node, then another, to toggle the edge between them (first click highlights). Things to try: a ring versus a path (close one loop and hear the chord tighten); everyone-to-everyone (maximum stiffness — a high, clenched chord); delete edges one at a time until the graph falls into two pieces and watch &lambda;&#8322; hit exactly zero — the network is no longer one thing, and the chord loses its lowest genuine voice. <em>Sound on: the chord — one tone per mode, pitch &prop; &radic;&lambda;, recomputed live from your graph.</em> <span id="editor-readout" class="readout">&lambda;&#8322; = —</span></figcaption>
+</figure>
+
+<div class="flag-callout">
+  <span class="flag-label">What's real here</span>
+  Every spectrum, eigenvector, and pitch on this page is computed live from the exact graph on screen — nothing is canned. The idealizations are physical, not mathematical: the spring chain has equal masses and perfect springs (with a whisper of damping so it rings down), and the audio maps pitch to &radic;&lambda; with a fixed scale so the chord sits in a comfortable register. The same computation at research scale — spectra of coupling graphs with thousands of nodes — is what the essays mean when they talk about a network's slow modes.
+</div>
+
+<h2>Where this goes</h2>
+
+<p>You now own the picture: a network has its own patterns (eigenvectors), each with a stiffness that is also a pitch (eigenvalues; together, the spectrum). <a href="02-laplacian.html">Section 02</a> opens the machine that generates all of it — a single, almost embarrassingly simple question each node asks about its neighbors — and shows the same machine running the site's coupling dynamics. Then <a href="03-fiedler.html">section 03</a> takes the gentlest genuine mode you met here and turns it into the network's built-in early-warning system.</p>
+
+<div class="nav-links">
+  <a href="../index.html" class="prev">Graphs &amp; spectra</a>
+  <a href="02-laplacian.html" class="next">The Laplacian: the disagreement machine</a>
+</div>
+
+</div>
+
+<script type="module">
+import { setupHiDPICanvas, runWhenVisible, palette, makeSoundToggle, makeVoices } from '../../../js/common.js';
+
+// ---- Shared: spectrum of a (weighted) graph Laplacian, smallest modes first.
+// Power iteration with deflation on B = cI − L. Verified against path P3
+// (0,1,3), cycle C4 (0,2,2,4), and path P6 (2−2cos(kπ/6)) offline.
+function spectrum(edges, n, k) {
+  const L = Array.from({ length: n }, () => new Float64Array(n));
+  for (const e of edges) { const a = e[0], b = e[1], w = e[2] ?? 1; L[a][b] -= w; L[b][a] -= w; L[a][a] += w; L[b][b] += w; }
+  let maxdeg = 0;
+  for (let i = 0; i < n; i++) maxdeg = Math.max(maxdeg, L[i][i]);
+  const c = 2 * maxdeg + 1;
+  const found = [];
+  for (let m = 0; m < k; m++) {
+    let v = Float64Array.from({ length: n }, () => Math.random() - 0.5);
+    for (let it = 0; it < 3000; it++) {
+      for (const f of found) {
+        let d = 0;
+        for (let i = 0; i < n; i++) d += v[i] * f.v[i];
+        for (let i = 0; i < n; i++) v[i] -= d * f.v[i];
+      }
+      const w2 = new Float64Array(n);
+      for (let i = 0; i < n; i++) {
+        let Lv = 0;
+        for (let j = 0; j < n; j++) Lv += L[i][j] * v[j];
+        w2[i] = c * v[i] - Lv;
+      }
+      let norm = 0;
+      for (let i = 0; i < n; i++) norm += w2[i] * w2[i];
+      norm = Math.sqrt(norm) + 1e-12;
+      for (let i = 0; i < n; i++) v[i] = w2[i] / norm;
+    }
+    let lam = 0;
+    for (let i = 0; i < n; i++) {
+      let Lv = 0;
+      for (let j = 0; j < n; j++) Lv += L[i][j] * v[j];
+      lam += v[i] * Lv;
+    }
+    found.push({ lam: Math.max(0, lam), v });
+  }
+  found.sort((a, b) => a.lam - b.lam);
+  for (const f of found) {
+    if (f.v[0] > 0) for (let i = 0; i < n; i++) f.v[i] = -f.v[i];
+    let mx = 0;
+    for (let i = 0; i < n; i++) mx = Math.max(mx, Math.abs(f.v[i]));
+    if (mx > 1e-9) for (let i = 0; i < n; i++) f.v[i] /= mx;
+  }
+  return found;
+}
+
+const FREQ_SCALE = 260; // audio Hz per sqrt(lambda)
+
+// ============================================================
+// FIG A: the spring chain — recipes of modes
+// ============================================================
+(() => {
+  const canvas = document.getElementById('canvas-springs');
+  const ctx = setupHiDPICanvas(canvas, 680, 380);
+  const readout = document.getElementById('springs-readout');
+  const n = 6;
+
+  // Free-ends chain: exact modes v_k(i) = cos(kπ(i+0.5)/n), λ_k = 2−2cos(kπ/n).
+  const MODES = [];
+  for (let k = 0; k < n; k++) {
+    const v = Array.from({ length: n }, (_, i) => Math.cos(k * Math.PI * (i + 0.5) / n));
+    const norm = Math.sqrt(v.reduce((a, x) => a + x * x, 0));
+    MODES.push({ lam: 2 - 2 * Math.cos(k * Math.PI / n), v: v.map(x => x / norm) });
+  }
+
+  let x = new Float64Array(n), vel = new Float64Array(n);
+  // sim-time runs ~12× real time (4 substeps × dt 0.05 × 60fps), so the
+  // damping must be a true whisper for a ~minute-long ring-down
+  const GAMMA = 0.004;
+  function pluck(shape) {
+    x = Float64Array.from(shape);
+    vel = new Float64Array(n);
+  }
+  document.getElementById('pluck-end').addEventListener('click', () =>
+    pluck([1, 0, 0, 0, 0, 0]));
+  document.getElementById('pluck-1').addEventListener('click', () =>
+    pluck([0, 1, 0, 0, 0, 0]));
+  document.getElementById('pluck-shape').addEventListener('click', () =>
+    pluck(MODES[1].v.map(u => u * 1.6)));
+  pluck([1, 0, 0, 0, 0, 0]);
+
+  function acc(x) {
+    const a = new Float64Array(n);
+    for (let i = 0; i < n; i++) {
+      if (i > 0) a[i] += x[i - 1] - x[i];
+      if (i < n - 1) a[i] += x[i + 1] - x[i];
+      a[i] -= GAMMA * vel[i];
+    }
+    return a;
+  }
+  function modeEnergies() {
+    return MODES.map(m => {
+      let a = 0, ad = 0;
+      for (let i = 0; i < n; i++) { a += m.v[i] * x[i]; ad += m.v[i] * vel[i]; }
+      return 0.5 * ad * ad + 0.5 * m.lam * a * a;
+    });
+  }
+
+  const sound = makeSoundToggle(document.getElementById('springs-controls'), { label: 'hear the recipe' });
+  const voices = makeVoices(sound, 5, { freq: 220 });
+
+  let A = acc(x);
+  function draw() {
+    // several small verlet steps per frame
+    const dt = 0.05;
+    for (let s = 0; s < 4; s++) {
+      for (let i = 0; i < n; i++) x[i] += vel[i] * dt + 0.5 * A[i] * dt * dt;
+      const A2 = acc(x);
+      for (let i = 0; i < n; i++) vel[i] += 0.5 * (A[i] + A2[i]) * dt;
+      A = A2;
+    }
+
+    ctx.clearRect(0, 0, 680, 380);
+    const x0 = 90, gap = 100, midY = 120, amp = 55;
+
+    // springs
+    ctx.strokeStyle = palette.axis; ctx.lineWidth = 1.4;
+    for (let i = 0; i < n - 1; i++) {
+      const ax = x0 + i * gap, ay = midY - x[i] * amp;
+      const bx = x0 + (i + 1) * gap, by = midY - x[i + 1] * amp;
+      ctx.beginPath(); ctx.moveTo(ax, ay);
+      const segs = 8;
+      for (let s = 1; s < segs; s++) {
+        const t = s / segs;
+        ctx.lineTo(ax + (bx - ax) * t, ay + (by - ay) * t + (s % 2 ? -6 : 6));
+      }
+      ctx.lineTo(bx, by); ctx.stroke();
+    }
+    // masses
+    for (let i = 0; i < n; i++) {
+      ctx.fillStyle = palette.orange;
+      ctx.beginPath(); ctx.arc(x0 + i * gap, midY - x[i] * amp, 11, 0, Math.PI * 2); ctx.fill();
+    }
+    ctx.strokeStyle = palette.grid; ctx.setLineDash([2, 4]);
+    ctx.beginPath(); ctx.moveTo(x0 - 30, midY); ctx.lineTo(x0 + (n - 1) * gap + 30, midY); ctx.stroke();
+    ctx.setLineDash([]);
+
+    // recipe meters (modes 1..5; mode 0 = drift, excluded)
+    const E = modeEnergies();
+    const mx0 = 90, mw = 88, mh = 90, my = 330;
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 12px serif'; ctx.textAlign = 'left';
+    ctx.fillText('the recipe — energy in each pattern (gentlest first)', mx0, my - mh - 14);
+    let names = ['see-saw', 'S-curve', 'W-curve', 'zigzag', 'full flip'];
+    for (let k = 1; k < n; k++) {
+      const bx = mx0 + (k - 1) * (mw + 14);
+      const h = Math.min(1, E[k] / 0.9) * mh;
+      ctx.fillStyle = palette.bgSoft; ctx.strokeStyle = palette.axis; ctx.lineWidth = 1;
+      ctx.fillRect(bx, my - mh, mw, mh); ctx.strokeRect(bx, my - mh, mw, mh);
+      ctx.fillStyle = k === 1 ? palette.burgundy : palette.blue;
+      if (h > 0.5) ctx.fillRect(bx, my - h, mw, h);
+      ctx.fillStyle = palette.textFaint; ctx.font = '10px "SF Mono", monospace'; ctx.textAlign = 'center';
+      ctx.fillText(names[k - 1], bx + mw / 2, my + 13);
+      ctx.fillText(E[k] < 0.004 ? 'zero' : E[k].toFixed(2), bx + mw / 2, my + 26);
+      ctx.textAlign = 'left';
+    }
+
+    const tot = E.reduce((a, b, i) => (i > 0 ? a + b : a), 0);
+    readout.textContent = tot < 0.01 ? 'at rest — pluck it' :
+      `ringing · ${E.filter((e, i) => i > 0 && e > 0.004).length} ${E.filter((e, i) => i > 0 && e > 0.004).length === 1 ? 'pattern' : 'patterns'} in the mix`;
+
+    for (let k = 1; k < n; k++) {
+      voices.set(k - 1, FREQ_SCALE * Math.sqrt(MODES[k].lam), Math.min(1, E[k] / 0.5));
+    }
+  }
+  runWhenVisible(canvas, draw);
+})();
+
+// ============================================================
+// FIG B: step through the 12-node network's modes
+// ============================================================
+const N12 = 12;
+const CLUSTER_EDGES = [
+  [0,1],[1,2],[2,3],[3,4],[4,5],[5,0],[0,2],[3,5],
+  [6,7],[7,8],[8,9],[9,10],[10,11],[11,6],[6,8],[7,10],[9,11],
+];
+const BRIDGE = [2, 8];
+const POS12 = [];
+for (let i = 0; i < 6; i++) {
+  const a = (i / 6) * Math.PI * 2 + Math.PI / 6;
+  POS12.push([-1.05 + Math.cos(a) * 0.55, Math.sin(a) * 0.55]);
+}
+for (let i = 0; i < 6; i++) {
+  const a = (i / 6) * Math.PI * 2 - Math.PI / 2;
+  POS12.push([1.05 + Math.cos(a) * 0.55, Math.sin(a) * 0.55]);
+}
+
+(() => {
+  const canvas = document.getElementById('canvas-modes');
+  const ctx = setupHiDPICanvas(canvas, 680, 380);
+  const readout = document.getElementById('modes-readout');
+  const FULL_EDGES = CLUSTER_EDGES.concat([BRIDGE]);
+  const MODES_FULL = spectrum(FULL_EDGES, N12, 5);
+  let k = 1;
+  document.getElementById('mode-prev').addEventListener('click', () => { k = Math.max(0, k - 1); });
+  document.getElementById('mode-next').addEventListener('click', () => { k = Math.min(MODES_FULL.length - 1, k + 1); });
+
+  const sound = makeSoundToggle(document.getElementById('modes-controls'), { label: 'hear this mode' });
+  const voice = makeVoices(sound, 1, { freq: 220 });
+
+  let t = 0;
+  function draw() {
+    const mode = MODES_FULL[k];
+    const w = mode.lam < 1e-6 ? 0.5 : 0.9 + 1.5 * Math.sqrt(mode.lam);
+    t += w * 0.045;
+
+    ctx.clearRect(0, 0, 680, 380);
+    const disp = mode.lam < 1e-6 ? MODES_FULL[0].v.map(() => 0.55) : Array.from(mode.v);
+
+    const cx = 340, cy = 170, s = 130;
+    const px = (i) => cx + POS12[i][0] * s;
+    const py = (i) => cy - POS12[i][1] * s - disp[i] * 34 * Math.cos(t);
+    for (const [a, b] of FULL_EDGES) {
+      const isBridge = (a === BRIDGE[0] && b === BRIDGE[1]);
+      ctx.strokeStyle = isBridge ? palette.burgundy : palette.axis;
+      ctx.lineWidth = isBridge ? 2.4 : 1.4;
+      ctx.beginPath(); ctx.moveTo(px(a), py(a)); ctx.lineTo(px(b), py(b)); ctx.stroke();
+    }
+    for (let i = 0; i < N12; i++) {
+      const d = disp[i] * Math.cos(t);
+      ctx.fillStyle = disp[i] > 0.06 ? palette.blue : disp[i] < -0.06 ? palette.orange : palette.textFaint;
+      ctx.beginPath(); ctx.arc(px(i), py(i), 9 + Math.abs(d) * 2, 0, Math.PI * 2); ctx.fill();
+    }
+
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 12px serif'; ctx.textAlign = 'center';
+    ctx.fillText(
+      k === 0 ? 'mode 0 — the free ride: everyone together, no edge stretched, frequency zero'
+      : k === 1 ? 'mode 1 — cluster vs cluster: only the bridge bends (section 03 is about this one)'
+      : `mode ${k} — a wigglier pattern: more neighbors disagree, stiffer, faster`,
+      340, 350);
+
+    readout.textContent = `mode ${k} · λ = ${mode.lam.toFixed(3)}` + (k === 0 ? ' (free, silent)' : ` · pitch ${(FREQ_SCALE * Math.sqrt(mode.lam)).toFixed(0)} Hz`);
+    voice.set(0, Math.max(1, FREQ_SCALE * Math.sqrt(mode.lam)), mode.lam < 1e-6 ? 0 : 0.9);
+  }
+  runWhenVisible(canvas, draw);
+})();
+
+// ============================================================
+// FIG C: build your own graph
+// ============================================================
+(() => {
+  const canvas = document.getElementById('canvas-editor');
+  const ctx = setupHiDPICanvas(canvas, 680, 420);
+  const readout = document.getElementById('editor-readout');
+  const n = 8;
+  const POS = Array.from({ length: n }, (_, i) => {
+    const a = (i / n) * Math.PI * 2 - Math.PI / 2;
+    return [Math.cos(a), Math.sin(a)];
+  });
+  const cx = 230, cy = 190, s = 130;
+  const px = (i) => cx + POS[i][0] * s;
+  const py0 = (i) => cy - POS[i][1] * s;
+
+  let edges = [];
+  const key = (a, b) => a < b ? `${a}-${b}` : `${b}-${a}`;
+  function setEdges(list) { edges = list.map(([a, b]) => [Math.min(a, b), Math.max(a, b)]); recompute(); }
+  function toggle(a, b) {
+    const k = key(a, b);
+    const idx = edges.findIndex(([x, y]) => key(x, y) === k);
+    if (idx >= 0) edges.splice(idx, 1); else edges.push([Math.min(a, b), Math.max(a, b)]);
+    recompute();
+  }
+
+  // components for the disconnected case
+  function components() {
+    const comp = new Array(n).fill(-1);
+    let c = 0;
+    for (let i = 0; i < n; i++) {
+      if (comp[i] >= 0) continue;
+      const stack = [i]; comp[i] = c;
+      while (stack.length) {
+        const u = stack.pop();
+        for (const [a, b] of edges) {
+          const v = a === u ? b : b === u ? a : -1;
+          if (v >= 0 && comp[v] < 0) { comp[v] = c; stack.push(v); }
+        }
+      }
+      c++;
+    }
+    return { comp, count: c };
+  }
+
+  let modes = [], ncomp = 1, fied = null;
+  function recompute() {
+    modes = spectrum(edges, n, 4);
+    const cc = components();
+    ncomp = cc.count;
+    if (ncomp > 1) {
+      // λ=0 space is multi-dimensional; show the honest picture: components.
+      fied = { lam: 0, v: Float64Array.from({ length: n }, (_, i) => (cc.comp[i] % 2 === 0 ? -1 : 1)) };
+    } else {
+      fied = modes[1];
+    }
+  }
+
+  document.getElementById('ed-ring').addEventListener('click', () =>
+    setEdges(Array.from({ length: n }, (_, i) => [i, (i + 1) % n])));
+  document.getElementById('ed-path').addEventListener('click', () =>
+    setEdges(Array.from({ length: n - 1 }, (_, i) => [i, i + 1])));
+  document.getElementById('ed-clusters').addEventListener('click', () =>
+    setEdges([[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[1,5]]));
+  document.getElementById('ed-complete').addEventListener('click', () => {
+    const all = [];
+    for (let i = 0; i < n; i++) for (let j = i + 1; j < n; j++) all.push([i, j]);
+    setEdges(all);
+  });
+  setEdges([[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[1,5]]);
+
+  let selected = -1;
+  canvas.addEventListener('pointerdown', (e) => {
+    const rect = canvas.getBoundingClientRect();
+    const mx = (e.clientX - rect.left) * (680 / rect.width);
+    const my = (e.clientY - rect.top) * (420 / rect.height);
+    let hit = -1;
+    for (let i = 0; i < n; i++) {
+      if (Math.hypot(mx - px(i), my - py0(i)) < 22) { hit = i; break; }
+    }
+    if (hit < 0) { selected = -1; return; }
+    if (selected < 0) selected = hit;
+    else if (selected === hit) selected = -1;
+    else { toggle(selected, hit); selected = -1; }
+  });
+
+  const sound = makeSoundToggle(document.getElementById('editor-controls'), { label: "hear your graph's chord" });
+  const NV = 3;
+  const voices = makeVoices(sound, NV, { freq: 220 });
+
+  let t = 0;
+  function draw() {
+    const w = fied.lam < 1e-6 ? 0.5 : 0.9 + 1.5 * Math.sqrt(fied.lam);
+    t += w * 0.045;
+
+    ctx.clearRect(0, 0, 680, 420);
+    const disp = fied.lam < 1e-6 && ncomp === 1 ? fied.v.map(() => 0.4) : Array.from(fied.v);
+    const py = (i) => py0(i) - disp[i] * 26 * Math.cos(t);
+
+    ctx.lineWidth = 1.4; ctx.strokeStyle = palette.axis;
+    for (const [a, b] of edges) {
+      ctx.beginPath(); ctx.moveTo(px(a), py(a)); ctx.lineTo(px(b), py(b)); ctx.stroke();
+    }
+    for (let i = 0; i < n; i++) {
+      ctx.fillStyle = disp[i] > 0.06 ? palette.blue : disp[i] < -0.06 ? palette.orange : palette.textFaint;
+      ctx.beginPath(); ctx.arc(px(i), py(i), 11, 0, Math.PI * 2); ctx.fill();
+      if (i === selected) {
+        ctx.strokeStyle = palette.green; ctx.lineWidth = 3;
+        ctx.beginPath(); ctx.arc(px(i), py(i), 16, 0, Math.PI * 2); ctx.stroke();
+      }
+    }
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 11px serif'; ctx.textAlign = 'center';
+    ctx.fillText(selected >= 0 ? 'now click a second node to toggle the edge' : 'click a node, then another, to toggle their edge', cx, 375);
+
+    // chord bars (modes 1..3)
+    const bx0 = 470, bw = 44, bh = 90, by = 230;
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 11px serif'; ctx.textAlign = 'left';
+    ctx.fillText('the chord', bx0, by - bh - 14);
+    for (let m = 1; m <= NV; m++) {
+      const lam = modes[m] ? modes[m].lam : 0;
+      const h = Math.min(1, Math.sqrt(lam) / 2.6) * bh;
+      const x = bx0 + (m - 1) * (bw + 14);
+      ctx.fillStyle = palette.bgSoft; ctx.strokeStyle = palette.axis; ctx.lineWidth = 1;
+      ctx.fillRect(x, by - bh, bw, bh); ctx.strokeRect(x, by - bh, bw, bh);
+      ctx.fillStyle = m === 1 ? palette.burgundy : palette.blue;
+      if (h > 0.5) ctx.fillRect(x, by - h, bw, h);
+      ctx.fillStyle = palette.textFaint; ctx.font = '10px "SF Mono", monospace'; ctx.textAlign = 'center';
+      ctx.fillText(lam < 1e-4 ? 'silent' : `λ=${lam.toFixed(2)}`, x + bw / 2, by + 14);
+      ctx.textAlign = 'left';
+    }
+
+    ctx.font = '600 14px "SF Mono", monospace';
+    if (ncomp > 1) {
+      ctx.fillStyle = palette.burgundy;
+      ctx.fillText(`λ₂ = 0.000 — in ${ncomp} pieces`, 470, 290);
+    } else {
+      ctx.fillStyle = palette.green;
+      ctx.fillText(`λ₂ = ${modes[1].lam.toFixed(3)}`, 470, 290);
+    }
+
+    readout.textContent = ncomp > 1 ? `λ₂ = 0.000 — the graph is in ${ncomp} pieces` : `λ₂ = ${modes[1].lam.toFixed(3)} · ${edges.length} edges`;
+
+    for (let m = 1; m <= NV; m++) {
+      const lam = modes[m] ? modes[m].lam : 0;
+      voices.set(m - 1, Math.max(1, FREQ_SCALE * Math.sqrt(lam)), lam < 1e-4 ? 0 : 1);
+    }
+  }
+  runWhenVisible(canvas, draw);
+})();
+</script>
+
+</body>
+</html>

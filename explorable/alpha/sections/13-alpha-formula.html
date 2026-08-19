@@ -277,7 +277,7 @@ posthog.init('phc_kRX9iHZstABjgFqEWJBMok2S3hW9R8QMHbNao4EsNz2g', {api_host: 'htt
 <p>So why this specific formula? Every factor in the expression above corresponds to one piece of the vortex's interaction with its lattice environment:</p>
 
 <ul style="margin: 0.6em 0 1em 0; line-height: 1.75;">
-  <li><strong><em>R</em><sub>0</sub>(2/&pi;)</strong> &mdash; the correlation a single bond transmits at the BKT-critical coupling. <em>This is the von Mises single-bond statistic from Chapter 2.</em></li>
+  <li><strong><em>R</em><sub>0</sub>(2/&pi;)</strong> &mdash; the correlation a single bond transmits at the BKT-critical coupling. <em>This is the von Mises single-bond statistic from Foundations.</em></li>
   <li><strong>The exponent 4</strong> &mdash; each atom in the lattice has four bonds, so the vortex core has four independent information channels to the outside. <em>This is the coordination number of diamond from Chapter 8.</em></li>
   <li><strong>The base &pi;/4</strong> &mdash; the fraction of an RG coarse-graining step captured by a single lattice hop. <em>This is Chapter 11's variance-ratio identity.</em></li>
   <li><strong>The exponent 1/&radic;e</strong> &mdash; the coherence that survives a single RG shell, evaluated at the CLR attractor where <em>K</em> is frozen. <em>This is Chapter 12's living-vs-static choice.</em></li>
@@ -310,7 +310,7 @@ posthog.init('phc_kRX9iHZstABjgFqEWJBMok2S3hW9R8QMHbNao4EsNz2g', {api_host: 'htt
 
 <h2>Zero free parameters, twelve chapters deep</h2>
 
-<p class="aside"><span class="label">The ledger</span>Every ingredient of the BKT formula has a chapter-level provenance. <em>R</em><sub>0</sub> is the von Mises order parameter on a single bond (Chapter 2). The coupling 2/&pi; is the BKT marginal value forced by vortex topology (Chapter 11). The exponent 4 is the coordination number of the diamond lattice (Chapter 8). The base &pi;/4 is the lattice-to-RG variance ratio (Chapter 5). The matching exponent 1/&radic;e is the Debye&ndash;Waller factor at the CLR attractor (Chapter 12). The correction &alpha;/(2&pi;) is standard Schwinger QED. None of them is a fit, a scale, or a unit convention. The only thing you have to <em>believe</em> to get &alpha; out of this framework is the inequality <em>I</em>&nbsp;&ge;&nbsp;0 &mdash; the Coherence Theorem from Chapter 4.</p>
+<p class="aside"><span class="label">The ledger</span>Every ingredient of the BKT formula has a chapter-level provenance. <em>R</em><sub>0</sub> is the von Mises order parameter on a single bond (Foundations). The coupling 2/&pi; is the BKT marginal value forced by vortex topology (Chapter 11). The exponent 4 is the coordination number of the diamond lattice (Chapter 8). The base &pi;/4 is the lattice-to-RG variance ratio (Chapter 5). The matching exponent 1/&radic;e is the Debye&ndash;Waller factor at the CLR attractor (Chapter 12). The correction &alpha;/(2&pi;) is standard Schwinger QED. None of them is a fit, a scale, or a unit convention. The only thing you have to <em>believe</em> to get &alpha; out of this framework is the inequality <em>I</em>&nbsp;&ge;&nbsp;0 &mdash; the Coherence Theorem from Foundations.</p>
 
 <h2>Closing the last 3%</h2>
 
@@ -441,8 +441,8 @@ function computeAlpha(R0_val, base_val, n_base_val) {
     R0: {
       name: 'R\u2080 \u2014 how aligned a single bond is',
       pronounce: '"R-nought of K"',
-      chapter: 'Chapter 2 \u00B7 Oscillators on a graph',
-      chapterLink: '02-oscillators.html',
+      chapter: 'Foundations \u00B7 Oscillators on a graph',
+      chapterLink: '../../foundations/sections/01-oscillators.html',
       value: `R\u2080(2/\u03C0) = ${PHYS.R0_val.toFixed(6)}`,
       body: `Picture two oscillators joined by a spring with coupling strength <em>K</em>. If <em>K</em> is huge, they lock together (correlation = 1). If <em>K</em> is zero, their phases drift independently (correlation = 0). <em>R</em>\u2080(<em>K</em>) is the correlation at intermediate <em>K</em> \u2014 the average of cos(\u0394\u03B8) when the phase difference follows a "wrapped Gaussian" (the von Mises distribution, the natural distribution for angles, forced here by the Coherence Learning Rule). Mathematically <em>R</em>\u2080(<em>K</em>) = I\u2081(<em>K</em>) / I\u2080(<em>K</em>), a ratio of modified Bessel functions \u2014 the standard integrals you get whenever you average cos\u03B8 with a Boltzmann-like weight.`,
       onLattice: `<em>R</em>\u2080 is literally what you get if you measure \u27E8cos(\u0394\u03B8)\u27E9 on any alive bond of the lattice. Running the CLR simulation produces it. At the BKT coupling <em>K</em> = 2/\u03C0 each bond transmits about 30.3% of its neighbour's phase information.`,
@@ -454,7 +454,7 @@ function computeAlpha(R0_val, base_val, n_base_val) {
       chapterLink: '11-bkt-wall.html',
       value: `K_BKT = ${(2/Math.PI).toFixed(6)}`,
       body: `The exact coupling at which a phase vortex can exist as a free, stable excitation. Above it, vortex\u2013antivortex pairs are glued together; below it, pairs proliferate wildly; at exactly 2/\u03C0 the free energy to separate them is zero. Kosterlitz and Thouless worked this out in 1972 for the 2D XY model and won the 2016 Nobel Prize for it. Two ingredients: \u03C0 from the geometry of phases, 2 from the entropy of positions \u2014 they balance exactly at <em>K</em> = 2/\u03C0.`,
-      onLattice: `The CLR drives <em>K</em> upward (Chapter 4's Shannon channel climbs the potential); the electron vortex (Chapter 9) cannot survive <em>K</em> &gt; 2/\u03C0. The system settles at the boundary. This is the observable equilibrium in Chapter 11's Figure 3 \u2014 the marble hits the wall.`,
+      onLattice: `The CLR drives <em>K</em> upward (Foundations' Shannon channel climbs the potential); the electron vortex (Chapter 9) cannot survive <em>K</em> &gt; 2/\u03C0. The system settles at the boundary. This is the observable equilibrium in Chapter 11's Figure 3 \u2014 the marble hits the wall.`,
     },
     four: {
       name: 'the exponent 4 \u2014 each atom has 4 neighbours',

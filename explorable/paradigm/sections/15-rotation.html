@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The rotation: meaning is shared — The Living Lattice</title>
+<meta name="description" content="Two language models trained in total isolation encode meaning as the same space, up to a single rotation. Find that rotation and paired retrieval between them climbs to 99.3% on held-out data. The universal manifold of meaning is a measured object, not a metaphor.">
+<meta name="author" content="Michael Sharpe">
+<link rel="canonical" href="https://lattice.project89.org/paradigm/sections/15-rotation.html">
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+<meta property="og:title" content="The rotation: meaning is shared — The Living Lattice">
+<meta property="og:description" content="Two models, one rotation apart. The universal manifold of meaning, measured.">
+<meta property="og:url" content="https://lattice.project89.org/paradigm/sections/15-rotation.html">
+<meta property="og:site_name" content="The Living Lattice">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://lattice.project89.org/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="The rotation: meaning is shared — The Living Lattice">
+<meta name="twitter:description" content="Two models, one rotation apart.">
+<meta name="twitter:image" content="https://lattice.project89.org/og-image.png">
+<!-- BEGIN AUTO-INJECTED ANALYTICS -->
+<!-- PostHog -->
+<script>
+!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+posthog.init('phc_kRX9iHZstABjgFqEWJBMok2S3hW9R8QMHbNao4EsNz2g', {api_host: 'https://us.i.posthog.com', person_profiles: 'identified_only'});
+</script>
+<!-- END AUTO-INJECTED ANALYTICS -->
+<link rel="stylesheet" href="../../css/style.css">
+<style>
+.flag-callout { margin: 1.6em 0; padding: 16px 20px; background: rgba(195,141,247,0.08); border-left: 3px solid #c38df7; border-radius: 3px; font-size: 14.5px; line-height: 1.55; }
+.flag-callout .flag-label { display:inline-block; font: 700 10.5px "SF Mono",monospace; color:#c38df7; text-transform:uppercase; letter-spacing:0.1em; margin-right:0.7em; }
+</style>
+</head>
+<body>
+<div class="page">
+
+<nav class="breadcrumb">
+  <a href="../index.html">&larr; contents</a>
+  <span class="sep">&middot;</span>
+  <span class="section-num">section 15 &middot; the universal case</span>
+</nav>
+
+<h1>The rotation: meaning is shared<span class="subtitle">Two minds trained in isolation encode meaning as the same space, up to one rotation</span></h1>
+
+<p class="lead">If meaning lives on a universal manifold, two models that never saw each other&rsquo;s weights should discover the <em>same</em> manifold — differing only in how they happen to orient it. That is exactly what is found. Take two text embedders trained independently, on different data, with different architectures. Embed the same sentences in each. Their point-clouds are not similar; they are <strong>the same cloud, rotated</strong>. Find the rotation and you can translate between two alien minds with no shared training at all. (If &ldquo;rotated&rdquo; feels abstract, <a href="../../primers/sections/01-rotations.html">the rotations primer</a> lets you play the find-the-rotation game by hand first.)</p>
+
+<p>Below is the real thing, not a cartoon: 36 sentences from three topics (astronomy, molecular biology, cryptography), embedded by <strong>Gemini</strong> (768 dimensions) and by <strong>OpenAI&rsquo;s 3-large</strong> (3072 dimensions) — two closed models, no shared training — each flattened to its own two-dimensional shadow by PCA. Filled dots are Gemini&rsquo;s chart; rings are OpenAI&rsquo;s; color is the topic. The orange chart has been scrambled to a random orientation (a chart&rsquo;s orientation is pure convention). Rotate it home — drag the slider, or press <em>Find the rotation</em> — and watch three topics&rsquo; islands land on their twins.</p>
+
+<figure id="fig-rot">
+  <canvas id="canvas-rot" width="680" height="380"></canvas>
+  <div class="controls" id="rot-controls">
+    <button id="rot-find" class="primary">Find the rotation Q</button>
+    <button id="rot-scramble">Scramble</button>
+  </div>
+  <figcaption>
+    Real data: 36 sentences, two independently trained embedders, each reduced to its own 2-D PCA shadow. The meter is <strong>cloud agreement</strong> (mean per-sentence alignment); in this projection it tops out at <span class="mono">99.1%</span> — the two shadows are one shape. The small readout below it tells the deeper story: <strong>top-1 retrieval</strong> (does each sentence land nearest its exact twin?) reaches only ~33% in two dimensions, because which-sentence-is-which lives in the dimensions the shadow lost — in the full spaces the same rotation construction reaches <span class="mono">99.3%</span> held-out. Alignment is easy to see in 2-D; identity needs the other hundred dimensions. <span id="rot-readout" class="readout">agreement = —</span>
+  </figcaption>
+</figure>
+
+<p>On real encoders (Gemini 768-d and OpenAI 3072-d, no shared training) the aligned top-1 paired retrieval on held-out sentences is <strong>99.3%</strong>, holding across entire held-out topics. The alignment is a single orthogonal rotation, found by closed-form Procrustes and <em>overdetermined</em> by a few hundred anchors — strong evidence it is a property of the geometry, not a fit to the data. The retrieval saturates at an intrinsic shared dimension <span class="mono">D* &asymp; 100</span>: about half of each encoder&rsquo;s variance corresponds between models, and the other half is private noise. The &ldquo;universal manifold of meaning&rdquo; stops being a slogan and becomes a measured object — and language is simply the most articulated coherence field we have for mapping it.</p>
+
+<div class="flag-callout">
+  <span class="flag-label">What's real here</span>The clouds you rotate are <strong>real</strong>: cached embeddings of 36 corpus sentences from the Platonic-rotation bundle (<span class="mono">gemini-embedding-001</span>, 768-d; <span class="mono">text-embedding-3-large</span>, 3072-d), each L2-normalized, mean-centered, and reduced to its own top-2 principal components (which carry &asymp;19&ndash;20% of each model&rsquo;s variance — this is a flat shadow of a high-dimensional result, and the on-screen numbers are the shadow&rsquo;s). The three topics were chosen because their 2-D shadow preserves the most structure; the initial mis-orientation is applied at load, since a chart&rsquo;s orientation is arbitrary. The headline numbers — 99.3% held-out top-1 and <span class="mono">D* &asymp; 100</span> — are the full-dimensional measurements from the paper; full derivation provenance ships inside <span class="mono">paradigm/data/rotation-real.json</span>.
+</div>
+
+<p>Meaning is shared across models. The last chapter of this act asks whether it is shared across <em>substrates</em> — whether a brain and a language model trace the same trajectory through that manifold.</p>
+
+<div class="nav-links">
+  <a href="14-one-constant.html" class="prev">One constant</a>
+  <a href="16-brains-language.html" class="next">Brains and language on one manifold</a>
+</div>
+
+</div>
+
+<script type="module">
+import { setupHiDPICanvas, makeSlider, runWhenVisible, palette } from '../../js/common.js';
+
+(() => {
+  const W = 680, H = 380, canvas = document.getElementById('canvas-rot');
+  const ctx = setupHiDPICanvas(canvas, W, H);
+  const readout = document.getElementById('rot-readout');
+  const cx = 235, cy = 190, scl = 105;
+
+  // Real data: 36 corpus sentences embedded by two independent encoders,
+  // each reduced to its own 2-D PCA chart offline. Full derivation
+  // provenance ships inside the JSON itself.
+  let DATA = null;
+  const DOMCOLOR = { astronomy: '#2a5f8f', molecular_biology: '#2d7d4f', cryptography: '#a855f7' };
+  const DOMLABEL = { astronomy: 'astronomy', molecular_biology: 'molecular biology', cryptography: 'cryptography' };
+  const SCRAMBLE0 = 2.42;            // initial mis-orientation (rad) — orientation is chart convention
+
+  function rotV(p, t) { return [p[0] * Math.cos(t) - p[1] * Math.sin(t), p[0] * Math.sin(t) + p[1] * Math.cos(t)]; }
+
+  let scramble = SCRAMBLE0;          // hidden offset applied to the orange chart
+  let applied = 0;                   // user-applied rotation
+  let target = 0, animating = false;
+  const rotCtl = makeSlider(document.getElementById('rot-controls'), {
+    label: 'rotation applied', min: -Math.PI, max: Math.PI, step: 0.01, value: applied,
+    format: v => (v * 180 / Math.PI).toFixed(0) + '°', onChange: v => { applied = v; animating = false; },
+  });
+  document.getElementById('rot-find').addEventListener('click', () => {
+    // the true answer: undo the scramble (the real charts' best alignment is 0°)
+    let t = -scramble; while (t > Math.PI) t -= 2 * Math.PI; while (t < -Math.PI) t += 2 * Math.PI;
+    target = t; animating = true;
+  });
+  document.getElementById('rot-scramble').addEventListener('click', () => {
+    scramble = Math.random() * Math.PI * 2; applied = 0; animating = false; rotCtl.value = 0;
+  });
+
+  fetch('../data/rotation-real.json').then(r => r.json()).then(d => { DATA = d; });
+
+  function agreement(A, B) {
+    let s = 0;
+    for (let i = 0; i < A.length; i++) {
+      const na = Math.hypot(A[i][0], A[i][1]) + 1e-9, nb = Math.hypot(B[i][0], B[i][1]) + 1e-9;
+      s += (A[i][0] * B[i][0] + A[i][1] * B[i][1]) / (na * nb);
+    }
+    return s / A.length;
+  }
+  function retrieval(A, B) {
+    let hit = 0;
+    for (let i = 0; i < A.length; i++) {
+      let best = -1, bd = 1e9;
+      for (let j = 0; j < B.length; j++) { const dx = A[i][0] - B[j][0], dy = A[i][1] - B[j][1]; const d = dx * dx + dy * dy; if (d < bd) { bd = d; best = j; } }
+      if (best === i) hit++;
+    }
+    return hit / A.length;
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H); ctx.fillStyle = palette.bg; ctx.fillRect(0, 0, W, H);
+    if (!DATA) {
+      ctx.fillStyle = palette.textFaint; ctx.font = 'italic 13px "Charter",serif'; ctx.textAlign = 'center';
+      ctx.fillText('loading the real embeddings…', W / 2, H / 2);
+      return;
+    }
+    if (animating) { applied += (target - applied) * 0.08; if (Math.abs(target - applied) < 0.005) { applied = target; animating = false; } rotCtl.value = applied; }
+
+    const A = DATA.A;
+    const B = DATA.B.map(p => rotV(p, scramble + applied));
+    const agr = Math.max(0, agreement(A, B));
+    const ret = retrieval(A, B);
+
+    // pair connectors fade in with agreement
+    if (agr > 0.5) {
+      ctx.strokeStyle = `rgba(125,125,140,${(agr - 0.5) * 0.7})`; ctx.lineWidth = 1;
+      for (let i = 0; i < A.length; i++) { ctx.beginPath(); ctx.moveTo(cx + A[i][0] * scl, cy - A[i][1] * scl); ctx.lineTo(cx + B[i][0] * scl, cy - B[i][1] * scl); ctx.stroke(); }
+    }
+    // Gemini chart: filled dots; OpenAI chart: rings. Color = topic.
+    A.forEach((p, i) => {
+      ctx.fillStyle = DOMCOLOR[DATA.items[i].domain];
+      ctx.beginPath(); ctx.arc(cx + p[0] * scl, cy - p[1] * scl, 4.5, 0, Math.PI * 2); ctx.fill();
+    });
+    B.forEach((p, i) => {
+      ctx.strokeStyle = DOMCOLOR[DATA.items[i].domain]; ctx.lineWidth = 2.2;
+      ctx.beginPath(); ctx.arc(cx + p[0] * scl, cy - p[1] * scl, 5.5, 0, Math.PI * 2); ctx.stroke();
+    });
+    // legend
+    ctx.font = 'italic 12px "Charter",serif'; ctx.textAlign = 'left';
+    ctx.fillStyle = palette.textSoft;
+    ctx.fillText('● Gemini (768-d)   ○ OpenAI 3-large (3072-d)', 20, 24);
+    let lx = 20;
+    DATA.domains.forEach(d => {
+      ctx.fillStyle = DOMCOLOR[d];
+      ctx.fillText('■ ' + DOMLABEL[d], lx, 44);
+      lx += ctx.measureText('■ ' + DOMLABEL[d]).width + 18;
+    });
+
+    // agreement meter (right)
+    const mx = 508, my = 58, mw = 132, mh = 240;
+    ctx.strokeStyle = palette.axis; ctx.lineWidth = 1; ctx.strokeRect(mx, my, mw, mh);
+    ctx.fillStyle = 'rgba(109,196,143,0.25)'; ctx.fillRect(mx, my + mh - agr * mh, mw, agr * mh);
+    ctx.fillStyle = '#6dc48f'; ctx.font = '600 24px "SF Mono",monospace'; ctx.textAlign = 'center';
+    ctx.fillText((agr * 100).toFixed(0) + '%', mx + mw / 2, my + mh / 2 - 6);
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 11px "Charter",serif';
+    ctx.fillText('cloud agreement', mx + mw / 2, my + mh / 2 + 14);
+    // ceiling of this 2-D shadow
+    const ceil = DATA.provenance.match_at_best_pct / 100;
+    ctx.strokeStyle = 'rgba(195,141,247,0.8)'; ctx.setLineDash([4, 3]); ctx.beginPath(); ctx.moveTo(mx, my + mh - ceil * mh); ctx.lineTo(mx + mw, my + mh - ceil * mh); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = '#c38df7'; ctx.font = '10px "SF Mono",monospace';
+    ctx.fillText('shadow ceiling ' + DATA.provenance.match_at_best_pct + '%', mx + mw / 2, my + mh - ceil * mh - 5);
+    // the identity story, honestly
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 10.5px "Charter",serif';
+    ctx.fillText(`top-1 retrieval here: ${(ret * 100).toFixed(0)}%`, mx + mw / 2, my + mh + 18);
+    ctx.fillText('(full-D: 99.3% held-out)', mx + mw / 2, my + mh + 33);
+
+    readout.textContent = `agreement = ${(agr * 100).toFixed(0)}%  ·  top-1 in this shadow = ${(ret * 100).toFixed(0)}%`;
+  }
+  runWhenVisible(canvas, draw);
+})();
+</script>
+
+</body>
+</html>

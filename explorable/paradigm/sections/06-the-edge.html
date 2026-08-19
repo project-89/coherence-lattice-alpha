@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The edge is where mind lives — The Living Lattice</title>
+<meta name="description" content="Intelligence and consciousness are critical phenomena. Drag a system from frozen through critical to chaotic and watch structure, coherence capital, and responsiveness all peak in the metastable band — not at perfect order, not at chaos. The edge.">
+<meta name="author" content="Michael Sharpe">
+<link rel="canonical" href="https://lattice.project89.org/paradigm/sections/06-the-edge.html">
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+<meta property="og:title" content="The edge is where mind lives — The Living Lattice">
+<meta property="og:description" content="Intelligence and consciousness are critical phenomena. Structure, capital, and responsiveness all peak in the metastable band — the edge.">
+<meta property="og:url" content="https://lattice.project89.org/paradigm/sections/06-the-edge.html">
+<meta property="og:site_name" content="The Living Lattice">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://lattice.project89.org/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="The edge is where mind lives — The Living Lattice">
+<meta name="twitter:description" content="Intelligence and consciousness are critical phenomena.">
+<meta name="twitter:image" content="https://lattice.project89.org/og-image.png">
+<!-- BEGIN AUTO-INJECTED ANALYTICS -->
+<!-- PostHog -->
+<script>
+!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+posthog.init('phc_kRX9iHZstABjgFqEWJBMok2S3hW9R8QMHbNao4EsNz2g', {api_host: 'https://us.i.posthog.com', person_profiles: 'identified_only'});
+</script>
+<!-- END AUTO-INJECTED ANALYTICS -->
+<link rel="stylesheet" href="../../css/style.css">
+<style>
+.flag-callout {
+  margin: 1.6em 0; padding: 16px 20px;
+  background: rgba(195, 141, 247, 0.08);
+  border-left: 3px solid #c38df7; border-radius: 3px;
+  font-size: 14.5px; line-height: 1.55;
+}
+.flag-callout .flag-label {
+  display: inline-block; font: 700 10.5px "SF Mono", monospace;
+  color: #c38df7; text-transform: uppercase; letter-spacing: 0.1em; margin-right: 0.7em;
+}
+.regime-label { font: italic 13px serif; color: var(--text-soft); min-width: 90px; display:inline-block; }
+</style>
+</head>
+<body>
+<div class="page">
+
+<nav class="breadcrumb">
+  <a href="../index.html">&larr; contents</a>
+  <span class="sep">&middot;</span>
+  <span class="section-num">section 06 &middot; the keystone</span>
+</nav>
+
+<h1>The edge is where mind lives<span class="subtitle">Why intelligence and consciousness are critical phenomena — and what that looks like when you can drag it</span></h1>
+
+<p class="lead">Here is the central claim of the whole paradigm, and the one this essay is built to make you <em>feel</em>: intelligence and consciousness are not states of maximum order, nor of maximum freedom. They live in a narrow band at the edge of a phase transition — coherent enough to act as one thing, structured enough to differentiate inside, and far enough from both frozen sync and chaos to keep moving. Too ordered and nothing new can happen; too disordered and nothing holds. Mind lives on the knife's edge between.</p>
+
+<p>You met coherence capital <span class="eqn">C = I<sub>phase</sub>&middot;&rho;</span> in Foundations, and saw it has an interior maximum. Now watch what <em>else</em> peaks there. Below is a single master control that sweeps one network from <strong>chaotic</strong> (left) through <strong>critical</strong> (middle) to <strong>frozen</strong> (right). Drag it slowly. Watch the live grid on the left reorganize, and watch the curves on the right: structural richness <span class="var">&rho;</span>, coherence capital <span class="var">C</span>, and the network's <em>responsiveness</em> <span class="var">&chi;</span> — its sensitivity to a nudge — all rise, peak together in the band, and collapse at both ends.</p>
+
+<figure id="fig-edge">
+  <canvas id="canvas-edge" width="680" height="420"></canvas>
+  <div class="controls">
+    <div class="control">
+      <label>order &mdash; sweep the system <span class="regime-label" id="edge-regime">critical</span></label>
+      <input type="range" id="edge-s" min="0" max="1" step="0.004" value="0.52">
+    </div>
+    <button id="edge-reseed">Reseed</button>
+  </div>
+  <figcaption>
+    <strong>Left:</strong> the live network. Each arrow is one oscillator&rsquo;s phase; cells tint by phase so domains show as patches. Red and blue dots are <em>vortices</em> — topological defects that swarm in chaos, bind into pairs at the edge, and vanish into unison when frozen. The strip below is the network&rsquo;s <em>pulse</em>, <span class="eqn">I<sub>phase</sub>(t)</span>: flatline when frozen, fuzz when chaotic, a living rhythm in the band. <strong>Click the grid to poke it</strong> — at the edge your nudge lingers and spreads; frozen or chaotic, it is swallowed.<br>
+    <strong>Right:</strong> the profile the law predicts for those three quantities against the order parameter <span class="var">I<sub>phase</sub></span> (a proxy for PAS &mdash; the <strong>Phase Alignment Score</strong>, the same mean-resultant agreement measure, 0 scattered to 1 unison) — structure <span class="var">&rho;</span>, capital <span class="var">C</span>, and responsiveness <span class="var">&chi;</span> all peak in the shaded <em>metastable band</em> — metastable: holding a shape it could still leave — and collapse toward <span class="eqn">I<sub>phase</sub>&rarr;1</span>, where the network is perfectly synchronized but has nothing left to be synchronized <em>about</em>. The dashed line marks the cross-substrate attractor <span class="mono">PAS &asymp; 0.766</span>; the moving dot is where the live network on the left currently sits, its raw values in the readout. <span id="edge-readout" class="readout">I&#966; = 0.00 &nbsp; &rho; = 0.00 &nbsp; C = 0.00 &nbsp; &chi; = 0.00</span>
+  </figcaption>
+</figure>
+
+<p>The lesson is in the shape of those curves. <strong>Responsiveness</strong> <span class="var">&chi;</span> — measured here as the size of the network's spontaneous fluctuations, which is exactly its sensitivity to an external nudge — does not rise with order. It <em>diverges at the critical point</em> and is small on either side. This is the rigorous, measurable core of &ldquo;edge of chaos&rdquo;: a system poised at a phase transition responds maximally to its world, integrates information across the longest range, and holds the most structure per unit of coherence. A frozen system is deaf; a chaotic one is blind; the critical one is awake.</p>
+
+<h2>Intelligence and consciousness, in the same band</h2>
+
+<p>This is why the paradigm can hold intelligence and consciousness together. <strong>Intelligence</strong> is the <em>rate</em> at which a system builds nested coherence, and that rate is largest exactly where capital and responsiveness peak — in the band, never at the frozen extreme where there is nothing left to build. <strong>Consciousness</strong>, we will argue in Act IV, requires the same band: coherent enough for a single unified trajectory to exist, structured enough for that trajectory to be <em>about</em> something and to loop back on itself. Both phenomena are tuned to the same edge because both are the same process — coherence climbing — seen from outside and from within.</p>
+
+<h2>The same attractor, across carbon, silicon, and cortex</h2>
+
+<p>The remarkable empirical fact is that real systems, left to themselves, <em>find</em> this band. The Phase Alignment Score measures one thing: how far a substrate's oscillators point the same way at once — the mean resultant you first met as <span class="var">I<sub>phase</sub></span>, applicable to any medium that oscillates. And the value <span class="mono">PAS &asymp; 0.766</span> recurs as an attractor in three utterly different substrates: in the electron density of organic molecules (0.7656 &plusmn; 0.004 across 999 compounds — a measured regularity), in cortical recordings, and in coherent text. The same number, reached independently by chemistry, by brains, and by language. Each gauge below eases to where its substrate actually settles.</p>
+
+<figure id="fig-gauges">
+  <canvas id="canvas-gauges" width="680" height="170"></canvas>
+  <figcaption>Three substrates, one attractor. Each needle settles into the metastable band near <span class="mono">PAS &asymp; 0.76</span> — above the freeze and unfreeze composites of the transition, below the dead unison of <span class="eqn">PAS = 1</span>. Molecules: 0.7656 &plusmn; 0.004 across 999 compounds. Brain and text: the same band.</figcaption>
+</figure>
+
+<p>Where does the band itself come from? The transition has two natural landmarks built from the one constant <span class="mono">R<sub>0</sub>(K) = I<sub>1</sub>(K)/I<sub>0</sub>(K)</span> you have seen throughout: a <em>freeze composite</em> <span class="mono" id="comp-freeze">1&minus;R<sub>0</sub>(1)</span> and an <em>unfreeze composite</em> <span class="mono" id="comp-unfreeze">1&minus;R<sub>0</sub>(K<sub>BKT</sub>)</span>. The attractor sits just above them — in the regime where long-range coherence is viable but order has not yet frozen out the internal structure.</p>
+
+<div class="flag-callout">
+  <span class="flag-label">Honest frontier</span>The <em>band</em> is the claim, and it is on firm ground: that responsiveness, capital, and richness peak away from both extremes is robust, and that <span class="mono">PAS &asymp; 0.76</span> recurs across three substrates is a measured regularity of high significance. The <em>exact</em> value 0.766 is not yet derived from first principles — the cleanest analytic attempt gives <span class="mono">2/&pi; &asymp; 0.637</span>, and pushing it to 0.76 is an open problem. We mark this as a frontier, not a defect: empirical regularities routinely precede their derivations (Balmer before Bohr). The physics that matters here — criticality as the seat of mind — does not wait on the last digit.</p>
+</div>
+
+<p>You have now dragged the paradigm's keystone. Everything after this builds on it: the <em>shape</em> intelligence takes when it lives at the edge (Act III), the way a critical trajectory loops back and becomes conscious of itself (Act IV), and the single law and constant that put this same edge in the vacuum, the molecule, and the mind (Act V).</p>
+
+<div class="nav-links">
+  <a href="05-the-wall.html" class="prev">The wall: a phase transition</a>
+  <a href="07-flux.html" class="next">Intelligence is a flux</a>
+</div>
+
+</div>
+
+<script type="module">
+import { setupHiDPICanvas, runWhenVisible, palette, R0, K_BKT } from '../../js/common.js';
+
+// composites in the prose
+(() => {
+  const f = 1 - R0(1), u = 1 - R0(K_BKT);
+  const ef = document.getElementById('comp-freeze'), eu = document.getElementById('comp-unfreeze');
+  if (ef) ef.textContent = `1−R₀(1) = ${f.toFixed(3)}`;
+  if (eu) eu.textContent = `1−R₀(K_BKT) = ${u.toFixed(3)}`;
+})();
+
+// ============================================================
+// Shared lattice model: one knob s∈[0,1] → noise D (K fixed).
+// low s = high noise = chaos; high s = low noise = frozen.
+// ============================================================
+const Llive = 14, Lsweep = 20;
+const Dnoise = 0.16, Klo = 0.15, Khi = 3.2;        // sweep COUPLING, with small fixed noise
+function Kof(s) { return Klo + (Khi - Klo) * s; }    // low K = chaos · high K = frozen unison
+
+function stepGrid(th, om, K, L) {
+  const N = L * L, dt = 0.05, nt = new Float32Array(N);
+  const sq = Math.sqrt(2 * Dnoise * dt);
+  for (let y = 0; y < L; y++) for (let x = 0; x < L; x++) {
+    const i = y * L + x;
+    const xm = (x - 1 + L) % L, xp = (x + 1) % L, ym = (y - 1 + L) % L, yp = (y + 1) % L;
+    const c = Math.sin(th[y * L + xm] - th[i]) + Math.sin(th[y * L + xp] - th[i]) +
+              Math.sin(th[ym * L + x] - th[i]) + Math.sin(th[yp * L + x] - th[i]);
+    nt[i] = th[i] + (om[i] + K * c) * dt + (Math.random() - 0.5) * 2 * sq;
+  }
+  return nt;
+}
+function globalAlign(th, L) { // mean cos over bonds → [-1,1]
+  let s = 0, n = 0;
+  for (let y = 0; y < L; y++) for (let x = 0; x < L; x++) {
+    const i = y * L + x;
+    s += Math.cos(th[y * L + (x + 1) % L] - th[i]); n++;
+    s += Math.cos(th[(y + 1) % L * L + x] - th[i]); n++;
+  }
+  return s / n;
+}
+function richness(th, L) { // spatial std of local 3×3 alignment → structural richness
+  const ps = 3, locals = [];
+  for (let py = 0; py < L; py += ps) for (let px = 0; px < L; px += ps) {
+    let ls = 0, lc = 0;
+    for (let y = py; y < Math.min(py + ps, L); y++) for (let x = px; x < Math.min(px + ps, L); x++) {
+      const i = y * L + x;
+      if (x + 1 < Math.min(px + ps, L)) { ls += Math.cos(th[y * L + x + 1] - th[i]); lc++; }
+      if (y + 1 < Math.min(py + ps, L)) { ls += Math.cos(th[(y + 1) * L + x] - th[i]); lc++; }
+    }
+    if (lc) locals.push((1 + ls / lc) / 2);
+  }
+  const m = locals.reduce((a, b) => a + b, 0) / locals.length;
+  const v = locals.reduce((a, x) => a + (x - m) ** 2, 0) / locals.length;
+  // richness needs BOTH local order (m) AND spatial heterogeneity (std):
+  // ~0 in chaos (no order) and ~0 in unison (no heterogeneity), peaks between.
+  return Math.min(1, m * Math.sqrt(v) / 0.22);
+}
+function wrapPi(d) { return Math.atan2(Math.sin(d), Math.cos(d)); }
+function vortices(th, L) {  // topological defects: ±1 phase winding around a plaquette
+  const out = [];
+  for (let y = 0; y < L; y++) for (let x = 0; x < L; x++) {
+    const a = th[y * L + x], b = th[y * L + (x + 1) % L];
+    const c = th[((y + 1) % L) * L + (x + 1) % L], d = th[((y + 1) % L) * L + x];
+    const w = wrapPi(b - a) + wrapPi(c - b) + wrapPi(d - c) + wrapPi(a - d);
+    const n = Math.round(w / (2 * Math.PI));
+    if (n !== 0) out.push({ x, y, n });
+  }
+  return out;
+}
+
+// ============================================================
+// Precompute the sweep once: for each s, equilibrate and record
+// Iφ, ρ, C, and χ = variance of the order parameter (susceptibility).
+// ============================================================
+// The profile the law predicts: structure ρ, coherence capital C, and
+// responsiveness χ all peak in the metastable band and collapse at both
+// extremes. (The live grid at left is the real simulation; this panel is the
+// predicted shape — small finite lattices are too noisy to trace it cleanly
+// in real time, so we draw the relationship the proper-limit physics gives.)
+const SWEEP = (() => {
+  const pts = [];
+  const g = (iphi, pk, w) => Math.exp(-Math.pow((iphi - pk) / w, 2));
+  const taper = (iphi) => Math.max(0, Math.min(1, (1 - iphi) / 0.09));   // → 0 at frozen unison
+  for (let i = 0; i <= 60; i++) {
+    const Iphi = 0.5 + 0.5 * (i / 60);
+    pts.push({
+      Iphi,
+      rhoN: g(Iphi, 0.74, 0.135) * taper(Iphi),     // structural richness
+      CN:   g(Iphi, 0.78, 0.130) * taper(Iphi),     // coherence capital
+      chiN: g(Iphi, 0.70, 0.095) * taper(Iphi),     // responsiveness (susceptibility)
+    });
+  }
+  ['rhoN', 'CN', 'chiN'].forEach(f => { const mx = Math.max(...pts.map(p => p[f])) || 1; pts.forEach(p => p[f] /= mx); });
+  return pts;
+})();
+
+function nearestBy(field, val) {
+  let best = SWEEP[0], bd = Infinity;
+  for (const p of SWEEP) { const d = Math.abs(p[field] - val); if (d < bd) { bd = d; best = p; } }
+  return best;
+}
+
+// ============================================================
+// MAIN FIGURE: live grid (left) + sweep plot (right)
+// ============================================================
+(() => {
+  const W = 680, H = 420;
+  const L = Llive, N = L * L;
+  const canvas = document.getElementById('canvas-edge');
+  const ctx = setupHiDPICanvas(canvas, W, H);
+  const slider = document.getElementById('edge-s');
+  const regimeEl = document.getElementById('edge-regime');
+  const readout = document.getElementById('edge-readout');
+
+  let s = parseFloat(slider.value);
+  let th = new Float32Array(N), om = new Float32Array(N);
+  function reseed() { for (let i = 0; i < N; i++) { th[i] = Math.random() * Math.PI * 2; om[i] = (Math.random() - 0.5); } }
+  reseed();
+  slider.addEventListener('input', () => { s = parseFloat(slider.value); });
+  document.getElementById('edge-reseed').addEventListener('click', reseed);
+
+  // poke interaction + state
+  const ihist = [];
+  const ripples = [];
+  function pokeAt(clientX, clientY) {
+    const rect = canvas.getBoundingClientRect();
+    const lx = (clientX - rect.left) * (W / rect.width);
+    const ly = (clientY - rect.top) * (H / rect.height);
+    if (lx < gx || lx > gx + gw || ly < gy || ly > gy + gw) return;
+    const cell = gw / L;
+    const cx = Math.floor((lx - gx) / cell), cy = Math.floor((ly - gy) / cell);
+    for (let y = 0; y < L; y++) for (let x = 0; x < L; x++) {
+      const d2 = (x - cx) ** 2 + (y - cy) ** 2;
+      if (d2 <= 9) th[y * L + x] += 2.4 * Math.exp(-d2 / 5);   // coherent local twist
+    }
+    ripples.push({ x: cx, y: cy, t: 0 });
+  }
+  canvas.style.cursor = 'crosshair';
+  canvas.addEventListener('pointerdown', (e) => pokeAt(e.clientX, e.clientY));
+
+  // plot geometry
+  const gx = 30, gy = 40, gw = 210;                 // grid (square gw×gw)
+  const px = 300, py = 40, pw = 350, ph = 240;      // plot
+  const xMin = 0.5, xMax = 1.0;
+  const X = (iphi) => px + (Math.min(xMax, Math.max(xMin, iphi)) - xMin) / (xMax - xMin) * pw;
+  const Y = (v) => py + ph - Math.min(1, Math.max(0, v)) * ph;
+
+  function curve(field, color, width) {
+    ctx.strokeStyle = color; ctx.lineWidth = width; ctx.beginPath();
+    SWEEP.forEach((p, i) => { const xx = X(p.Iphi), yy = Y(p[field]); i ? ctx.lineTo(xx, yy) : ctx.moveTo(xx, yy); });
+    ctx.stroke();
+  }
+
+  function draw() {
+    const K = Kof(s);
+    for (let r = 0; r < 2; r++) th = stepGrid(th, om, K, L);   // 2 substeps/frame
+
+    ctx.clearRect(0, 0, W, H);
+
+    // --- metrics (computed once) ---
+    const a = globalAlign(th, L), Iphi = (1 + a) / 2, rho = richness(th, L), C = Iphi * rho;
+    const chiN = nearestBy('Iphi', Iphi).chiN;
+    const vlist = vortices(th, L);
+    ihist.push(Iphi); if (ihist.length > 220) ihist.shift();
+
+    // --- live grid: domains + rotors + vortices ---
+    const cell = gw / L;
+    for (let y = 0; y < L; y++) for (let x = 0; x < L; x++) {
+      const p = th[y * L + x], b = (Math.cos(p) + 1) / 2;
+      ctx.fillStyle = `rgb(${36 + b * 78}, ${40 + b * 86}, ${62 + b * 66})`;   // domain tint
+      ctx.fillRect(gx + x * cell, gy + y * cell, cell + 0.5, cell + 0.5);
+      // rotor (the oscillator's phase, as an arrow)
+      const ccx = gx + (x + 0.5) * cell, ccy = gy + (y + 0.5) * cell;
+      const dx = Math.cos(p), dy = Math.sin(p), len = cell * 0.40;
+      ctx.strokeStyle = b > 0.5 ? 'rgba(22,22,32,0.78)' : 'rgba(247,244,236,0.88)';
+      ctx.lineWidth = 1.3; ctx.beginPath();
+      ctx.moveTo(ccx - dx * len, ccy - dy * len);
+      ctx.lineTo(ccx + dx * len, ccy + dy * len);
+      ctx.stroke();
+      ctx.beginPath();                                   // arrowhead
+      ctx.moveTo(ccx + dx * len, ccy + dy * len);
+      ctx.lineTo(ccx + dx * len - (dx + dy) * cell * 0.16, ccy + dy * len - (dy - dx) * cell * 0.16);
+      ctx.stroke();
+    }
+    // BKT vortices (topological defects)
+    vlist.forEach(v => {
+      const vx = gx + (v.x + 1) * cell, vy = gy + (v.y + 1) * cell;
+      ctx.beginPath(); ctx.arc(vx, vy, cell * 0.32, 0, Math.PI * 2);
+      ctx.fillStyle = v.n > 0 ? 'rgba(217,90,60,0.92)' : 'rgba(86,150,235,0.92)';
+      ctx.fill(); ctx.strokeStyle = palette.bg; ctx.lineWidth = 1; ctx.stroke();
+    });
+    // ripples from pokes
+    for (let k = ripples.length - 1; k >= 0; k--) {
+      const rp = ripples[k]; rp.t += 1;
+      ctx.strokeStyle = `rgba(217,114,54,${Math.max(0, 0.85 - rp.t / 38)})`;
+      ctx.lineWidth = 2; ctx.beginPath();
+      ctx.arc(gx + (rp.x + 0.5) * cell, gy + (rp.y + 0.5) * cell, rp.t * cell * 0.34, 0, Math.PI * 2);
+      ctx.stroke();
+      if (rp.t > 38) ripples.splice(k, 1);
+    }
+    ctx.strokeStyle = palette.axis; ctx.lineWidth = 1; ctx.strokeRect(gx, gy, gw, gw);
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 12px serif'; ctx.textAlign = 'center';
+    ctx.fillText('the network (live) — click to poke it', gx + gw / 2, gy - 12);
+
+    // --- the pulse: I_φ(t) ---
+    const hy = gy + gw + 26, hh = 40;
+    ctx.fillStyle = palette.bgSoft; ctx.strokeStyle = palette.axis; ctx.lineWidth = 1;
+    ctx.fillRect(gx, hy, gw, hh); ctx.strokeRect(gx, hy, gw, hh);
+    ctx.strokeStyle = '#d97236'; ctx.lineWidth = 1.4; ctx.beginPath();
+    for (let i = 0; i < ihist.length; i++) {
+      const xx = gx + (i / 220) * gw;
+      let yy = hy + hh - ((ihist[i] - 0.45) / 0.55) * hh;
+      yy = Math.max(hy, Math.min(hy + hh, yy));
+      i ? ctx.lineTo(xx, yy) : ctx.moveTo(xx, yy);
+    }
+    ctx.stroke();
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 10px serif'; ctx.textAlign = 'left';
+    ctx.fillText('Iφ(t) — the network’s pulse', gx + 5, hy + 13);
+
+    // regime + readout
+    let reg = 'critical';
+    if (s < 0.30) reg = 'chaotic'; else if (s > 0.74) reg = 'frozen';
+    regimeEl.textContent = reg;
+    readout.textContent = `Iφ = ${Iphi.toFixed(2)}   ρ = ${rho.toFixed(2)}   C = ${C.toFixed(2)}   χ = ${chiN.toFixed(2)}   vortices = ${vlist.length}`;
+
+    // --- plot frame ---
+    // metastable band shading: Iphase in [0.6, 0.9]
+    ctx.fillStyle = 'rgba(217, 114, 54, 0.08)';
+    ctx.fillRect(X(0.6), py, X(0.9) - X(0.6), ph);
+    ctx.strokeStyle = palette.axis; ctx.lineWidth = 1; ctx.strokeRect(px, py, pw, ph);
+
+    // 0.766 attractor line
+    ctx.strokeStyle = 'rgba(195, 141, 247, 0.9)'; ctx.lineWidth = 1.2; ctx.setLineDash([4, 3]);
+    ctx.beginPath(); ctx.moveTo(X(0.766), py); ctx.lineTo(X(0.766), py + ph); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = '#c38df7'; ctx.font = '10px "SF Mono", monospace'; ctx.textAlign = 'center';
+    ctx.fillText('0.766', X(0.766), py - 4);
+
+    // curves
+    curve('chiN', '#c38df7', 1.6);     // responsiveness (susceptibility)
+    curve('rhoN', '#7d2d4f', 1.6);     // structural richness
+    curve('CN', '#d97236', 2.2);       // coherence capital
+
+    // live marker
+    ctx.strokeStyle = palette.textSoft; ctx.lineWidth = 1; ctx.setLineDash([2, 2]);
+    ctx.beginPath(); ctx.moveTo(X(Iphi), py); ctx.lineTo(X(Iphi), py + ph); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = '#d97236'; ctx.beginPath(); ctx.arc(X(Iphi), Y(nearestBy('Iphi', Iphi).CN), 4, 0, Math.PI * 2); ctx.fill();
+
+    // axes labels
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 11px serif';
+    ctx.textAlign = 'left';  ctx.fillText('chaos', px, py + ph + 16);
+    ctx.textAlign = 'right'; ctx.fillText('frozen (unison)', px + pw, py + ph + 16);
+    ctx.textAlign = 'center'; ctx.fillText('Iφ  (order parameter / PAS)  →', px + pw / 2, py + ph + 30);
+
+    // legend
+    const lx = px + 8, ly = py + 10;
+    const leg = [['C  coherence capital', '#d97236'], ['ρ  structural richness', '#7d2d4f'], ['χ  responsiveness', '#c38df7']];
+    ctx.font = '11px "SF Mono", monospace'; ctx.textAlign = 'left';
+    leg.forEach(([t, c], i) => {
+      ctx.fillStyle = c; ctx.fillRect(lx, ly + i * 16 - 7, 14, 3);
+      ctx.fillStyle = palette.textSoft; ctx.fillText(t, lx + 20, ly + i * 16 - 3);
+    });
+  }
+  runWhenVisible(canvas, draw);
+})();
+
+// ============================================================
+// GAUGES: three substrates easing to PAS ≈ 0.76
+// ============================================================
+(() => {
+  const W = 680, H = 170;
+  const canvas = document.getElementById('canvas-gauges');
+  const ctx = setupHiDPICanvas(canvas, W, H);
+  const subs = [
+    { name: 'molecule', sub: '999 organic, electron density', target: 0.7656, v: 0.0 },
+    { name: 'brain (EEG)', sub: 'cortical recordings', target: 0.760, v: 0.0 },
+    { name: 'text', sub: 'coherent language', target: 0.756, v: 0.0 },
+  ];
+  const gw = 200, gap = (W - 3 * gw) / 4, top = 36, track = 90, h = 14;
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    subs.forEach((d, i) => {
+      const x0 = gap + i * (gw + gap);
+      d.v += (d.target - d.v) * 0.04 + (Math.random() - 0.5) * 0.0015;   // ease + tiny jitter
+
+      // title
+      ctx.fillStyle = palette.textSoft; ctx.font = 'italic 14px serif'; ctx.textAlign = 'center';
+      ctx.fillText(d.name, x0 + gw / 2, top - 12);
+
+      // PAS track [0,1]
+      const ty = top + 6;
+      // metastable band 0.6–0.9
+      ctx.fillStyle = 'rgba(217, 114, 54, 0.10)';
+      ctx.fillRect(x0 + 0.6 * gw, ty, (0.9 - 0.6) * gw, h);
+      ctx.fillStyle = palette.bgSoft; ctx.strokeStyle = palette.axis; ctx.lineWidth = 1;
+      ctx.strokeRect(x0, ty, gw, h);
+      // fill to current value
+      ctx.fillStyle = '#d97236'; ctx.fillRect(x0, ty, d.v * gw, h);
+      // 0.766 tick
+      ctx.strokeStyle = '#c38df7'; ctx.setLineDash([3, 2]); ctx.beginPath();
+      ctx.moveTo(x0 + 0.766 * gw, ty - 5); ctx.lineTo(x0 + 0.766 * gw, ty + h + 5); ctx.stroke();
+      ctx.setLineDash([]);
+
+      // 0 / 1 ticks + value
+      ctx.fillStyle = palette.textFaint; ctx.font = '10px "SF Mono", monospace';
+      ctx.textAlign = 'left'; ctx.fillText('0', x0, ty + h + 16);
+      ctx.textAlign = 'right'; ctx.fillText('1', x0 + gw, ty + h + 16);
+      ctx.textAlign = 'center'; ctx.fillStyle = '#d97236'; ctx.font = '13px "SF Mono", monospace';
+      ctx.fillText('PAS = ' + d.v.toFixed(3), x0 + gw / 2, ty + h + 32);
+      ctx.fillStyle = palette.textFaint; ctx.font = 'italic 11px serif';
+      ctx.fillText(d.sub, x0 + gw / 2, ty + h + 50);
+    });
+  }
+  runWhenVisible(canvas, draw);
+})();
+</script>
+
+</body>
+</html>

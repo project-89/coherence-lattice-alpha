@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Parallel transport: the honest carry — The Living Lattice</title>
+<meta name="description" content="Carry an arrow around a loop without ever turning it, and on a curved surface it comes back rotated anyway — by exactly the area you enclosed. Plus: a cone that hides all its curvature in one point, and two roads that deliver two different answers.">
+<meta name="author" content="Michael Sharpe">
+<link rel="canonical" href="https://lattice.project89.org/primers/gauge-holonomy/sections/01-parallel-transport.html">
+<link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
+<link rel="apple-touch-icon" href="../../../apple-touch-icon.png">
+<meta property="og:title" content="Parallel transport: the honest carry — The Living Lattice">
+<meta property="og:description" content="Carry an arrow around a loop without turning it — and it comes back rotated by exactly the area enclosed. The first move of gauge theory, assuming nothing.">
+<meta property="og:url" content="https://lattice.project89.org/primers/gauge-holonomy/sections/01-parallel-transport.html">
+<meta property="og:site_name" content="The Living Lattice">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://lattice.project89.org/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Parallel transport: the honest carry — The Living Lattice">
+<meta name="twitter:description" content="The no-twisting carry, the rotation that will not go away, and a cone that hides its curvature in a point.">
+<meta name="twitter:image" content="https://lattice.project89.org/og-image.png">
+<!-- BEGIN AUTO-INJECTED ANALYTICS -->
+<!-- PostHog -->
+<script>
+!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+posthog.init('phc_kRX9iHZstABjgFqEWJBMok2S3hW9R8QMHbNao4EsNz2g', {api_host: 'https://us.i.posthog.com', person_profiles: 'identified_only'});
+</script>
+<!-- END AUTO-INJECTED ANALYTICS -->
+<link rel="stylesheet" href="../../../css/style.css">
+<style>
+.flag-callout {
+  margin: 1.6em 0; padding: 16px 20px;
+  background: rgba(195, 141, 247, 0.08);
+  border-left: 3px solid #c38df7; border-radius: 3px;
+  font-size: 14.5px; line-height: 1.55;
+}
+.flag-callout .flag-label {
+  display: inline-block; font: 700 10.5px "SF Mono", monospace;
+  color: #c38df7; text-transform: uppercase; letter-spacing: 0.1em; margin-right: 0.7em;
+}
+.flag-callout a { font-weight: 600; }
+</style>
+</head>
+<body>
+<div class="page">
+
+<nav class="breadcrumb">
+  <a href="../index.html">&larr; gauge &amp; holonomy</a>
+  <span class="sep">&middot;</span>
+  <span class="section-num">section 01 / 03 &middot; intermediate</span>
+</nav>
+
+<h1>Parallel transport: the honest carry<span class="subtitle">Never turn the arrow — and watch it come back turned</span></h1>
+
+<p class="lead">Here is a question that sounds too simple to be deep. You carry something on a round trip — out and back to where you started — and you are careful never to twist it, turn it, or fiddle with it along the way. When you get home, is it the way it left? On a flat tabletop: obviously yes. On the surface of the Earth: <strong>no.</strong> It comes back <em>rotated</em>, by an angle you can predict exactly, even though you did everything right. This section is three experiments with that fact: the round trip itself, a surface that hides all of its curvature in a single point, and two roads that honestly deliver two different answers.</p>
+
+<h2>1. The walk: carrying an arrow &ldquo;as straight as possible&rdquo;</h2>
+
+<p>The rule of the game is honesty: you hold an arrow flat against the surface you are walking on, and at every step you keep it pointing the way it was pointing — no deliberate turning, ever. If the path bends, you do not bend the arrow with it; you just keep it as straight as the surface allows. This careful no-twisting carry has a name: <strong>parallel transport</strong>. It is the only fair way to compare a direction <em>here</em> with a direction <em>there</em>: walk it over.</p>
+
+<p>Below, the same trip runs on two surfaces at once. On the left, a flat patch: walk the triangle, and the arrow comes home exactly as it left — always, no matter how big the triangle. On the right, a globe: walk down to the equator, along it, and back up to the pole. Watch the arrow closely on each leg — it is never turned, it only rides. And it comes home <strong>rotated anyway</strong>. Widen the triangle and the rotation grows: the mismatch angle equals <em>the area the walk enclosed</em> (in radians, on a globe of radius one). The surface's curvature, which you cannot see from any single point, is sitting right there in the returned arrow.</p>
+
+<figure id="fig-walk">
+  <canvas id="canvas-walk" width="680" height="400"></canvas>
+  <div class="controls" id="walk-controls">
+    <div class="control">
+      <label>triangle width <span class="val" id="walk-w-val">70&deg;</span></label>
+      <input type="range" id="walk-w-slider" min="20" max="170" step="1" value="70">
+    </div>
+    <button id="walk-reset">Reset walk</button>
+  </div>
+  <figcaption><strong>Left — flat:</strong> the carried arrow (orange) never budges from its start direction (ghost); rotation on return = 0&deg;, at any size. <strong>Right — globe:</strong> pole &rarr; equator &rarr; equator &rarr; pole. The arrow is parallel-transported — never turned — yet returns rotated by exactly the enclosed area. <em>Sound on: a drone climbs in pitch by the enclosed area each completed lap — one full turn (2&pi;) is one octave. The drone is the loop's accumulated memory. (A labeled mapping, so you can hear holonomy add up; the physics is the mismatch angle.)</em> <span id="walk-readout" class="readout">flat: 0&deg; &middot; globe: —</span></figcaption>
+</figure>
+
+<p>Two things to hold onto from the figure. First, the rotation is <strong>not an error</strong> — there is no more-careful way of carrying that makes it go away. It is a property of the surface, not of your technique. Second, it is <strong>proportional to enclosed area</strong>: tiny loops pick up almost nothing, big loops pick up a lot. Curvature is invisible locally and unmistakable around a loop. That is why the loop — not the point — is the natural instrument for measuring what a space is really like.</p>
+
+<h2>2. The cone: curvature can hide in a single point</h2>
+
+<p>Now a stranger surface. Take a flat disk of paper, cut a wedge out of it, and glue the two cut edges together: a cone. Here is the point of the experiment — <strong>every part of that cone is still flat paper</strong>. You did not stretch it anywhere; an ant standing anywhere on the slope could run every local test it likes and find nothing but ordinary flat geometry. All of the missing wedge got concentrated into one place: the tip.</p>
+
+<p>So walk a loop around the tip, carrying your arrow honestly. On the left below, the cone is shown <em>unrolled</em> — flat, with the glued seam marked — and there, transport is trivial: the arrow simply holds its direction, because the paper is flat. But the walk ends at the seam, and the seam is a lie the flat picture tells: crossing it means re-entering at the other cut edge, and the arrow comes back <strong>rotated by exactly the wedge you removed</strong>. On the right, the same walk on the assembled cone. Slide the wedge and watch the returned arrow track it, degree for degree.</p>
+
+<figure id="fig-cone">
+  <canvas id="canvas-cone" width="680" height="400"></canvas>
+  <div class="controls" id="cone-controls">
+    <div class="control">
+      <label>wedge removed <span class="val" id="cone-d-val">90&deg;</span></label>
+      <input type="range" id="cone-d-slider" min="20" max="180" step="1" value="90">
+    </div>
+    <button id="cone-reset">Reset walk</button>
+  </div>
+  <figcaption><strong>Left — the cone, unrolled:</strong> flat paper with a wedge missing; the carried arrow holds one direction the whole way (flat transport is trivial), and the seam identification returns it rotated. <strong>Right — the cone, assembled:</strong> same walk in 3D. The loop never touches the tip, the surface it crosses is everywhere flat — and the arrow still comes home rotated by the missing wedge. Curvature can live entirely at one point, detectable only by loops that go around it. <span id="cone-readout" class="readout">returns rotated 90&deg; = the missing wedge</span></figcaption>
+</figure>
+
+<p>Hold onto this one — it is load-bearing for the whole site. A surface that is flat <em>almost everywhere</em>, with its curvature concentrated into point defects that only loops can detect, is exactly the picture behind the <strong>vortices</strong> of <a href="../../../paradigm/sections/05-the-wall.html">The Physics of Mind &sect;05</a>: the phase field is smooth nearly everywhere, and the interesting physics — the defects whose binding and unbinding <em>is</em> the phase transition — lives at cone-tips like this one. When that chapter says a vortex has a winding that "cannot be smoothed away," it is saying: there is a cone-tip here, and loops around it know.</p>
+
+<h2>3. Two roads, two answers</h2>
+
+<p>One more consequence, and it is the one that makes &ldquo;carrying&rdquo; genuinely different from &ldquo;copying&rdquo;. On a flat surface, if two couriers set out from the same point with identical arrows and deliver them to the same destination by different routes, the deliveries agree — always. Direction can be <em>copied</em> across flat space, and the route is irrelevant. On a curved surface, try it:</p>
+
+<figure id="fig-tworoads">
+  <canvas id="canvas-tworoads" width="680" height="400"></canvas>
+  <div class="controls" id="tworoads-controls">
+    <div class="control">
+      <label>separation of the roads <span class="val" id="tr-w-val">70&deg;</span></label>
+      <input type="range" id="tr-w-slider" min="20" max="160" step="1" value="70">
+    </div>
+    <button id="tr-reset">Send the couriers again</button>
+  </div>
+  <figcaption>Two couriers leave the pole with <em>identical</em> arrows (ghost), bound for the same point B on the equator. The <span style="color:#2a5f8f;font-weight:600;">blue</span> courier takes the direct meridian. The <span style="color:#d97236;font-weight:600;">orange</span> courier goes down a different meridian, then along the equator. Both transport honestly — and they arrive <strong>disagreeing by exactly the area between their roads</strong>. Widen the separation and the disagreement grows to match. <span id="tworoads-readout" class="readout">&nbsp;</span></figcaption>
+</figure>
+
+<p>This is why, on a curved surface, there is no such thing as &ldquo;the same direction, over there.&rdquo; Direction is not a global fact you can copy; it is a local fact you must <em>carry</em>, and what arrives depends on the road. The disagreement between roads and the rotation around loops are the same phenomenon — a loop is just two roads glued back to back — and both measure the same thing: the curvature caught in between.</p>
+
+<div class="flag-callout">
+  <span class="flag-label">What's real here</span>
+  All three figures are cartoons with the answer visible: surfaces where the holonomy law is exact textbook geometry, which is why every readout can check itself (sphere: rotation = enclosed area; cone: rotation = deficit angle). The real objects in the theory are high-dimensional trajectories on a coupling manifold, with transport defined by the system's own state-space geometry — that machinery, and what is measured with it, is <a href="03-holonomy.html">section 03's</a> story and <a href="../../../paradigm/sections/10-holonomy.html">The Physics of Mind &sect;10's</a> claim. This section is the honest miniature.
+</div>
+
+<h2>Where this goes</h2>
+
+<p>Next question: to even <em>say</em> &ldquo;the arrow points at 37&deg;&rdquo; you needed a reference direction at every place the arrow visited — and who chose those? Nobody, it turns out, and everybody. That is <a href="02-gauge.html">gauge</a>, and it is where the bookkeeping becomes physics.</p>
+
+<div class="nav-links">
+  <a href="../index.html" class="prev">Gauge &amp; holonomy</a>
+  <a href="02-gauge.html" class="next">Gauge: every town points north its own way</a>
+</div>
+
+</div>
+
+<script type="module">
+import { setupHiDPICanvas, runWhenVisible, palette, makeSoundToggle, makeVoices } from '../../../js/common.js';
+
+// ============================================================
+// FIG A: flat vs globe — parallel transport around a triangle
+// ============================================================
+(() => {
+  const canvas = document.getElementById('canvas-walk');
+  const ctx = setupHiDPICanvas(canvas, 680, 400);
+  const slider = document.getElementById('walk-w-slider');
+  const wval = document.getElementById('walk-w-val');
+  const readout = document.getElementById('walk-readout');
+  const resetBtn = document.getElementById('walk-reset');
+
+  let W = 70 * Math.PI / 180;   // wedge width (radians) — also the holonomy
+  slider.addEventListener('input', () => {
+    W = parseFloat(slider.value) * Math.PI / 180;
+    wval.textContent = slider.value + '°';
+  });
+
+  const sound = makeSoundToggle(document.getElementById('walk-controls'), { label: 'hear the drone' });
+  const voice = makeVoices(sound, 1, { freq: 220 });
+
+  let s = 0;                 // walk clock, one lap = s in [0,3)
+  let laps = 0;
+  let accum = 0;             // accumulated holonomy (radians) → drone pitch
+  let lastGlobeRot = null;   // rotation measured at last completed lap
+  resetBtn.addEventListener('click', () => { s = 0; laps = 0; accum = 0; lastGlobeRot = null; });
+
+  // --- globe geometry: triangle pole → (equator, λ=−W/2) → (equator, λ=+W/2) → pole
+  // Parallel transport along each geodesic leg keeps the arrow's angle to the
+  // leg constant; the per-leg formulas below are the exact closed forms.
+  function globeState(u, Wnow) {
+    // u in [0,3): leg index + progress. Returns {pos, arrow} as 3D unit vectors.
+    const l1 = -Wnow / 2, l2 = Wnow / 2;
+    if (u < 1) {
+      const phi = u * Math.PI / 2;
+      return {
+        pos: [Math.sin(phi) * Math.cos(l1), Math.sin(phi) * Math.sin(l1), Math.cos(phi)],
+        arrow: [Math.cos(phi) * Math.cos(l1), Math.cos(phi) * Math.sin(l1), -Math.sin(phi)],
+      };
+    }
+    if (u < 2) {
+      const lam = l1 + (u - 1) * Wnow;
+      return { pos: [Math.cos(lam), Math.sin(lam), 0], arrow: [0, 0, -1] };
+    }
+    const phi = (3 - u) * Math.PI / 2;
+    return {
+      pos: [Math.sin(phi) * Math.cos(l2), Math.sin(phi) * Math.sin(l2), Math.cos(phi)],
+      arrow: [Math.cos(phi) * Math.cos(l2), Math.cos(phi) * Math.sin(l2), -Math.sin(phi)],
+    };
+  }
+
+  // projector (orthographic, tilted — same family as §10's)
+  const gcx = 480, gcy = 205, gr = 118, tilt = 0.85, yaw = -1.35;
+  function proj(v) {
+    const x = v[0], y = v[1], z = v[2];
+    const x1 = x * Math.cos(yaw) - y * Math.sin(yaw);
+    const y1 = x * Math.sin(yaw) + y * Math.cos(yaw);
+    const z2 = y1 * Math.sin(tilt) + z * Math.cos(tilt);
+    const y2 = y1 * Math.cos(tilt) - z * Math.sin(tilt);
+    return { sx: gcx + gr * x1, sy: gcy - gr * z2, depth: y2 };
+  }
+  function drawArrow3D(pos, dir, len, color, width, alpha) {
+    const tip = [pos[0] + dir[0] * len, pos[1] + dir[1] * len, pos[2] + dir[2] * len];
+    const a = proj(pos), b = proj(tip);
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.strokeStyle = color; ctx.fillStyle = color; ctx.lineWidth = width;
+    ctx.beginPath(); ctx.moveTo(a.sx, a.sy); ctx.lineTo(b.sx, b.sy); ctx.stroke();
+    const ang = Math.atan2(b.sy - a.sy, b.sx - a.sx);
+    ctx.beginPath();
+    ctx.moveTo(b.sx, b.sy);
+    ctx.lineTo(b.sx - 8 * Math.cos(ang - 0.42), b.sy - 8 * Math.sin(ang - 0.42));
+    ctx.lineTo(b.sx - 8 * Math.cos(ang + 0.42), b.sy - 8 * Math.sin(ang + 0.42));
+    ctx.fill();
+    ctx.restore();
+  }
+  function drawArrow2D(x, y, ang, len, color, width, alpha) {
+    const bx = x + Math.cos(ang) * len, by = y - Math.sin(ang) * len;
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.strokeStyle = color; ctx.fillStyle = color; ctx.lineWidth = width;
+    ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(bx, by); ctx.stroke();
+    const a2 = Math.atan2(by - y, bx - x);
+    ctx.beginPath();
+    ctx.moveTo(bx, by);
+    ctx.lineTo(bx - 8 * Math.cos(a2 - 0.42), by - 8 * Math.sin(a2 - 0.42));
+    ctx.lineTo(bx - 8 * Math.cos(a2 + 0.42), by - 8 * Math.sin(a2 + 0.42));
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function draw() {
+    s += 0.008;
+    if (s >= 3) {
+      s -= 3;
+      laps += 1;
+      lastGlobeRot = W;                       // holonomy of the lap just closed
+      accum = Math.min(accum + W, 4 * Math.PI); // drone caps at +2 octaves
+    }
+
+    ctx.clearRect(0, 0, 680, 400);
+
+    // ---------- LEFT: flat patch ----------
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 13px serif'; ctx.textAlign = 'center';
+    ctx.fillText('flat patch', 170, 30);
+
+    // triangle scaled by W (same knob as the globe — size changes nothing here)
+    const scale = 0.45 + 0.55 * (W / Math.PI);
+    const T = [[170, 90], [95, 285], [245, 285]].map(([x, y]) => [170 + (x - 170) * scale, 200 + (y - 200) * scale]);
+    ctx.strokeStyle = '#c38df7'; ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(T[0][0], T[0][1]); ctx.lineTo(T[1][0], T[1][1]); ctx.lineTo(T[2][0], T[2][1]); ctx.closePath();
+    ctx.stroke();
+
+    // walker position along the flat triangle
+    const u = s;
+    let P;
+    if (u < 1)      P = [T[0][0] + (T[1][0] - T[0][0]) * u,       T[0][1] + (T[1][1] - T[0][1]) * u];
+    else if (u < 2) P = [T[1][0] + (T[2][0] - T[1][0]) * (u - 1), T[1][1] + (T[2][1] - T[1][1]) * (u - 1)];
+    else            P = [T[2][0] + (T[0][0] - T[2][0]) * (u - 2), T[2][1] + (T[0][1] - T[2][1]) * (u - 2)];
+
+    // flat transport = the arrow's screen angle never changes
+    const flatStartAng = Math.atan2(-(T[1][1] - T[0][1]), T[1][0] - T[0][0]);
+    drawArrow2D(T[0][0], T[0][1], flatStartAng, 34, palette.textFaint, 1.5, 0.55); // ghost at start
+    drawArrow2D(P[0], P[1], flatStartAng, 34, palette.orange, 2.5, 1);
+    ctx.fillStyle = palette.burgundy;
+    ctx.beginPath(); ctx.arc(P[0], P[1], 5, 0, Math.PI * 2); ctx.fill();
+
+    ctx.fillStyle = palette.textSoft; ctx.font = '13px "SF Mono", monospace';
+    ctx.fillText('returns rotated 0.0°', 170, 360);
+
+    // ---------- RIGHT: globe ----------
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 13px serif';
+    ctx.fillText('globe (unit sphere)', gcx, 30);
+
+    // wireframe
+    for (let li = 1; li < 6; li++) {
+      const phi = (li / 6) * Math.PI;
+      ctx.beginPath();
+      for (let i = 0; i <= 60; i++) {
+        const th = (i / 60) * Math.PI * 2;
+        const p = proj([Math.sin(phi) * Math.cos(th), Math.sin(phi) * Math.sin(th), Math.cos(phi)]);
+        i ? ctx.lineTo(p.sx, p.sy) : ctx.moveTo(p.sx, p.sy);
+      }
+      ctx.strokeStyle = 'rgba(125,125,140,0.28)'; ctx.lineWidth = 1; ctx.stroke();
+    }
+    for (let lo = 0; lo < 10; lo++) {
+      const th = (lo / 10) * Math.PI * 2;
+      ctx.beginPath();
+      for (let i = 0; i <= 60; i++) {
+        const phi = (i / 60) * Math.PI;
+        const p = proj([Math.sin(phi) * Math.cos(th), Math.sin(phi) * Math.sin(th), Math.cos(phi)]);
+        i ? ctx.lineTo(p.sx, p.sy) : ctx.moveTo(p.sx, p.sy);
+      }
+      ctx.strokeStyle = 'rgba(125,125,140,0.18)'; ctx.lineWidth = 1; ctx.stroke();
+    }
+
+    // triangle path: meridian λ=−W/2, equator arc, meridian λ=+W/2
+    ctx.strokeStyle = '#c38df7'; ctx.lineWidth = 2.2;
+    ctx.beginPath();
+    for (let i = 0; i <= 40; i++) { const st = globeState(i / 40, W); const p = proj(st.pos); i ? ctx.lineTo(p.sx, p.sy) : ctx.moveTo(p.sx, p.sy); }
+    for (let i = 0; i <= 40; i++) { const st = globeState(1 + i / 40, W); const p = proj(st.pos); ctx.lineTo(p.sx, p.sy); }
+    for (let i = 0; i <= 40; i++) { const st = globeState(2 + i / 40, W); const p = proj(st.pos); ctx.lineTo(p.sx, p.sy); }
+    ctx.stroke();
+
+    // start arrow (ghost) at the pole: along the outbound meridian
+    const start = globeState(0.0001, W);
+    drawArrow3D([0, 0, 1], start.arrow, 0.38, palette.textFaint, 1.5, 0.55);
+
+    // returned arrow at the pole after ≥1 lap
+    if (lastGlobeRot !== null) {
+      const end = globeState(2.9999, W);
+      drawArrow3D([0, 0, 1], end.arrow, 0.38, palette.green, 2.2, 0.9);
+    }
+
+    // walker + carried arrow
+    const st = globeState(s, W);
+    drawArrow3D(st.pos, st.arrow, 0.34, palette.orange, 2.5, 1);
+    const wp = proj(st.pos);
+    ctx.fillStyle = palette.burgundy;
+    ctx.beginPath(); ctx.arc(wp.sx, wp.sy, 5, 0, Math.PI * 2); ctx.fill();
+
+    // readouts
+    const deg = (W * 180 / Math.PI).toFixed(1);
+    ctx.fillStyle = palette.textSoft; ctx.font = '13px "SF Mono", monospace'; ctx.textAlign = 'center';
+    ctx.fillText(`enclosed area = ${W.toFixed(2)} rad`, gcx, 355);
+    ctx.fillText(lastGlobeRot === null ? 'first lap in progress…' : `returns rotated ${deg}°  =  the area`, gcx, 375);
+
+    readout.textContent = lastGlobeRot === null
+      ? `flat: 0° · globe: first lap in progress… · laps = 0`
+      : `flat: 0° · globe: rotated ${deg}° = enclosed area ${W.toFixed(2)} rad · laps = ${laps}`;
+
+    // drone: pitch climbs by the accumulated holonomy; 2π = one octave
+    voice.set(0, 220 * Math.pow(2, accum / (2 * Math.PI)), 0.9);
+  }
+  runWhenVisible(canvas, draw);
+})();
+
+// ============================================================
+// FIG B: the cone — flat everywhere, curved at one point
+// ============================================================
+(() => {
+  const canvas = document.getElementById('canvas-cone');
+  const ctx = setupHiDPICanvas(canvas, 680, 400);
+  const slider = document.getElementById('cone-d-slider');
+  const dval = document.getElementById('cone-d-val');
+  const readout = document.getElementById('cone-readout');
+  const resetBtn = document.getElementById('cone-reset');
+
+  let delta = 90 * Math.PI / 180;   // wedge removed = the holonomy
+  slider.addEventListener('input', () => {
+    delta = parseFloat(slider.value) * Math.PI / 180;
+    dval.textContent = slider.value + '°';
+  });
+
+  let s = 0;        // walk progress, one lap = s in [0,1)
+  let done = false; // completed at least one lap
+  resetBtn.addEventListener('click', () => { s = 0; done = false; });
+
+  function draw() {
+    s += 0.0035;
+    if (s >= 1) { s -= 1; done = true; }
+
+    ctx.clearRect(0, 0, 680, 400);
+    const beta = 2 * Math.PI - delta;      // sector angle that remains
+
+    // ---------- LEFT: unrolled sector ----------
+    const ax = 168, ay = 205, R = 130, r0 = 88;
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 13px serif'; ctx.textAlign = 'center';
+    ctx.fillText('the cone, unrolled (flat)', ax, 30);
+
+    // sector: from angle a0 to a0+beta (center the sector's bisector pointing down-ish)
+    const a0 = -Math.PI / 2 - beta / 2;
+    ctx.strokeStyle = palette.axis; ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(ax, ay);
+    ctx.arc(ax, ay, R, a0, a0 + beta);
+    ctx.closePath();
+    ctx.stroke();
+    // missing wedge (ghost)
+    ctx.strokeStyle = 'rgba(181,85,106,0.5)'; ctx.setLineDash([4, 4]); ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(ax, ay);
+    ctx.arc(ax, ay, R, a0 + beta, a0 + 2 * Math.PI);
+    ctx.closePath();
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = 'rgba(181,85,106,0.85)'; ctx.font = 'italic 11px serif';
+    const midGhost = a0 + beta + delta / 2;
+    ctx.fillText('the missing wedge', ax + Math.cos(midGhost) * (R + 26), ay + Math.sin(midGhost) * (R + 26));
+    // seam labels
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 10px serif';
+    ctx.fillText('glue', ax + Math.cos(a0) * (R + 12), ay + Math.sin(a0) * (R + 12));
+    ctx.fillText('glue', ax + Math.cos(a0 + beta) * (R + 12), ay + Math.sin(a0 + beta) * (R + 12));
+
+    // apex dot (the tip — where all the curvature lives)
+    ctx.fillStyle = '#b5556a';
+    ctx.beginPath(); ctx.arc(ax, ay, 4.5, 0, Math.PI * 2); ctx.fill();
+
+    // walker arc in the sector at radius r0, from a0 to a0+beta
+    const psi = a0 + s * beta;
+    ctx.strokeStyle = '#c38df7'; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.arc(ax, ay, r0, a0, a0 + beta); ctx.stroke();
+
+    // flat transport: constant screen direction. Start arrow direction:
+    const arrowAngFlat = 0.9; // fixed screen angle (radians, ccw from +x)
+    // ghost at start of walk
+    const sx0 = ax + Math.cos(a0) * r0, sy0 = ay + Math.sin(a0) * r0;
+    drawA(sx0, sy0, arrowAngFlat, palette.textFaint, 1.5, 0.55);
+    // carried arrow
+    const wx = ax + Math.cos(psi) * r0, wy = ay + Math.sin(psi) * r0;
+    drawA(wx, wy, arrowAngFlat, palette.orange, 2.5, 1);
+    ctx.fillStyle = palette.burgundy;
+    ctx.beginPath(); ctx.arc(wx, wy, 5, 0, Math.PI * 2); ctx.fill();
+    // returned arrow at the seam after a lap: physically rotated by +delta
+    if (done) drawA(sx0, sy0, arrowAngFlat + delta, '#6dc48f', 2.2, 0.9);
+
+    function drawA(x, y, ang, color, width, alpha) {
+      const bx = x + Math.cos(ang) * 30, by = y - Math.sin(ang) * 30;
+      ctx.save(); ctx.globalAlpha = alpha;
+      ctx.strokeStyle = color; ctx.fillStyle = color; ctx.lineWidth = width;
+      ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(bx, by); ctx.stroke();
+      const a2 = Math.atan2(by - y, bx - x);
+      ctx.beginPath();
+      ctx.moveTo(bx, by);
+      ctx.lineTo(bx - 8 * Math.cos(a2 - 0.42), by - 8 * Math.sin(a2 - 0.42));
+      ctx.lineTo(bx - 8 * Math.cos(a2 + 0.42), by - 8 * Math.sin(a2 + 0.42));
+      ctx.fill(); ctx.restore();
+    }
+
+    // ---------- RIGHT: assembled cone ----------
+    const ccx = 505, ccy = 210;
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 13px serif'; ctx.textAlign = 'center';
+    ctx.fillText('the cone, assembled', ccx, 30);
+
+    const sinA = beta / (2 * Math.PI);            // cone half-angle: sin α
+    const cosA = Math.sqrt(Math.max(0, 1 - sinA * sinA));
+    const L0 = 1.05;                               // slant distance of the loop
+    const apex = [0, 0, 0.72];
+    const tilt2 = 0.42, sc = 150;
+    function proj2(v) {
+      const y2 = v[1] * Math.cos(tilt2) - v[2] * Math.sin(tilt2);
+      const z2 = v[1] * Math.sin(tilt2) + v[2] * Math.cos(tilt2);
+      return { sx: ccx + sc * v[0], sy: ccy - sc * z2, depth: y2 };
+    }
+    function conePos(phi, L) {
+      return [apex[0] + L * sinA * Math.cos(phi), apex[1] + L * sinA * Math.sin(phi), apex[2] - L * cosA];
+    }
+    // silhouette + a few slope lines
+    ctx.strokeStyle = 'rgba(125,125,140,0.35)'; ctx.lineWidth = 1;
+    for (let k = 0; k < 12; k++) {
+      const phi = (k / 12) * Math.PI * 2;
+      const a = proj2(apex), b = proj2(conePos(phi, 1.45));
+      ctx.beginPath(); ctx.moveTo(a.sx, a.sy); ctx.lineTo(b.sx, b.sy); ctx.stroke();
+    }
+    // base rim
+    ctx.beginPath();
+    for (let i = 0; i <= 72; i++) { const p = proj2(conePos((i / 72) * Math.PI * 2, 1.45)); i ? ctx.lineTo(p.sx, p.sy) : ctx.moveTo(p.sx, p.sy); }
+    ctx.strokeStyle = 'rgba(125,125,140,0.3)'; ctx.stroke();
+    // the loop
+    ctx.beginPath();
+    for (let i = 0; i <= 72; i++) { const p = proj2(conePos((i / 72) * Math.PI * 2, L0)); i ? ctx.lineTo(p.sx, p.sy) : ctx.moveTo(p.sx, p.sy); }
+    ctx.strokeStyle = '#c38df7'; ctx.lineWidth = 2; ctx.stroke();
+    // tip
+    const ap = proj2(apex);
+    ctx.fillStyle = '#b5556a';
+    ctx.beginPath(); ctx.arc(ap.sx, ap.sy, 4.5, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 10px serif';
+    ctx.fillText('all the curvature', ap.sx + 62, ap.sy - 8);
+    ctx.fillText('lives here', ap.sx + 62, ap.sy + 5);
+
+    // carried arrow on the cone: transported angle rel. to down-slope frame
+    // θ_rel(φ) = θ0 − φ·sinα (exact: the unrolled chart is flat)
+    const phiW = s * Math.PI * 2;
+    const th0 = 0.6;
+    function coneArrow(phi) {
+      const thRel = th0 - phi * sinA;
+      const cp = Math.cos(phi), sp = Math.sin(phi);
+      const slope = [sinA * cp, sinA * sp, -cosA];       // down-slope
+      const circ = [-sp, cp, 0];                          // circumferential
+      return [
+        Math.cos(thRel) * slope[0] + Math.sin(thRel) * circ[0],
+        Math.cos(thRel) * slope[1] + Math.sin(thRel) * circ[1],
+        Math.cos(thRel) * slope[2] + Math.sin(thRel) * circ[2],
+      ];
+    }
+    function drawA3(pos, dir, color, width, alpha) {
+      const tip = [pos[0] + dir[0] * 0.34, pos[1] + dir[1] * 0.34, pos[2] + dir[2] * 0.34];
+      const a = proj2(pos), b = proj2(tip);
+      ctx.save(); ctx.globalAlpha = alpha;
+      ctx.strokeStyle = color; ctx.fillStyle = color; ctx.lineWidth = width;
+      ctx.beginPath(); ctx.moveTo(a.sx, a.sy); ctx.lineTo(b.sx, b.sy); ctx.stroke();
+      const a2 = Math.atan2(b.sy - a.sy, b.sx - a.sx);
+      ctx.beginPath();
+      ctx.moveTo(b.sx, b.sy);
+      ctx.lineTo(b.sx - 8 * Math.cos(a2 - 0.42), b.sy - 8 * Math.sin(a2 - 0.42));
+      ctx.lineTo(b.sx - 8 * Math.cos(a2 + 0.42), b.sy - 8 * Math.sin(a2 + 0.42));
+      ctx.fill(); ctx.restore();
+    }
+    // ghost at start
+    drawA3(conePos(0, L0), coneArrow(0), palette.textFaint, 1.5, 0.55);
+    // returned arrow after a lap (θ_rel jumped by −2π·sinα ≡ +δ)
+    if (done) drawA3(conePos(0, L0), coneArrow(2 * Math.PI), '#6dc48f', 2.2, 0.9);
+    // walker
+    drawA3(conePos(phiW, L0), coneArrow(phiW), palette.orange, 2.5, 1);
+    const wpx = proj2(conePos(phiW, L0));
+    ctx.fillStyle = palette.burgundy;
+    ctx.beginPath(); ctx.arc(wpx.sx, wpx.sy, 5, 0, Math.PI * 2); ctx.fill();
+
+    const dd = (delta * 180 / Math.PI).toFixed(0);
+    ctx.fillStyle = palette.textSoft; ctx.font = '13px "SF Mono", monospace'; ctx.textAlign = 'center';
+    ctx.fillText(done ? `returns rotated ${dd}°  =  the missing wedge` : 'first lap in progress…', ccx, 385);
+    readout.textContent = done ? `returns rotated ${dd}° = the missing wedge` : 'first lap in progress…';
+  }
+  runWhenVisible(canvas, draw);
+})();
+
+// ============================================================
+// FIG C: two roads, two answers — path dependence
+// ============================================================
+(() => {
+  const canvas = document.getElementById('canvas-tworoads');
+  const ctx = setupHiDPICanvas(canvas, 680, 400);
+  const slider = document.getElementById('tr-w-slider');
+  const wval = document.getElementById('tr-w-val');
+  const readout = document.getElementById('tworoads-readout');
+  const resetBtn = document.getElementById('tr-reset');
+
+  let W = 70 * Math.PI / 180;      // separation of the two roads
+  slider.addEventListener('input', () => {
+    W = parseFloat(slider.value) * Math.PI / 180;
+    wval.textContent = slider.value + '°';
+  });
+
+  let s = 0;          // courier progress 0..1 (both start together)
+  let arrived = false;
+  resetBtn.addEventListener('click', () => { s = 0; arrived = false; });
+
+  const gcx = 340, gcy = 205, gr = 130, tilt = 0.85, yaw = -1.05;
+  function proj(v) {
+    const x1 = v[0] * Math.cos(yaw) - v[1] * Math.sin(yaw);
+    const y1 = v[0] * Math.sin(yaw) + v[1] * Math.cos(yaw);
+    const z2 = y1 * Math.sin(tilt) + v[2] * Math.cos(tilt);
+    return { sx: gcx + gr * x1, sy: gcy - gr * z2 };
+  }
+  function drawA3(pos, dir, len, color, width, alpha) {
+    const tip = [pos[0] + dir[0] * len, pos[1] + dir[1] * len, pos[2] + dir[2] * len];
+    const a = proj(pos), b = proj(tip);
+    ctx.save(); ctx.globalAlpha = alpha;
+    ctx.strokeStyle = color; ctx.fillStyle = color; ctx.lineWidth = width;
+    ctx.beginPath(); ctx.moveTo(a.sx, a.sy); ctx.lineTo(b.sx, b.sy); ctx.stroke();
+    const a2 = Math.atan2(b.sy - a.sy, b.sx - a.sx);
+    ctx.beginPath();
+    ctx.moveTo(b.sx, b.sy);
+    ctx.lineTo(b.sx - 8 * Math.cos(a2 - 0.42), b.sy - 8 * Math.sin(a2 - 0.42));
+    ctx.lineTo(b.sx - 8 * Math.cos(a2 + 0.42), b.sy - 8 * Math.sin(a2 + 0.42));
+    ctx.fill(); ctx.restore();
+  }
+
+  // Route 1 (blue): meridian at longitude W, pole → B=(cosW, sinW, 0). Start
+  // arrow (1,0,0) decomposes against this meridian; closed-form transport.
+  function route1(u) {
+    const phi = u * Math.PI / 2;
+    const t = [Math.cos(phi) * Math.cos(W), Math.cos(phi) * Math.sin(W), -Math.sin(phi)]; // transported meridian-tangent
+    const n = [-Math.sin(W), Math.cos(W), 0];                                              // constant normal
+    const cW = Math.cos(W), sW = Math.sin(W);
+    return {
+      pos: [Math.sin(phi) * Math.cos(W), Math.sin(phi) * Math.sin(W), Math.cos(phi)],
+      arrow: [cW * t[0] - sW * n[0], cW * t[1] - sW * n[1], cW * t[2] - sW * n[2]],
+    };
+  }
+  // Route 2 (orange): meridian at longitude 0 (u in [0,.5]), then equator 0→W
+  // (u in [.5,1]). Start arrow (1,0,0) is the meridian-0 tangent at the pole.
+  function route2(u) {
+    if (u < 0.5) {
+      const phi = (u / 0.5) * Math.PI / 2;
+      return {
+        pos: [Math.sin(phi), 0, Math.cos(phi)],
+        arrow: [Math.cos(phi), 0, -Math.sin(phi)],
+      };
+    }
+    const lam = ((u - 0.5) / 0.5) * W;
+    return { pos: [Math.cos(lam), Math.sin(lam), 0], arrow: [0, 0, -1] };
+  }
+
+  function draw() {
+    if (s < 1) s = Math.min(1, s + 0.006);
+    if (s >= 1) arrived = true;
+
+    ctx.clearRect(0, 0, 680, 400);
+
+    // wireframe
+    for (let li = 1; li < 6; li++) {
+      const phi = (li / 6) * Math.PI;
+      ctx.beginPath();
+      for (let i = 0; i <= 60; i++) {
+        const th = (i / 60) * Math.PI * 2;
+        const p = proj([Math.sin(phi) * Math.cos(th), Math.sin(phi) * Math.sin(th), Math.cos(phi)]);
+        i ? ctx.lineTo(p.sx, p.sy) : ctx.moveTo(p.sx, p.sy);
+      }
+      ctx.strokeStyle = 'rgba(125,125,140,0.25)'; ctx.lineWidth = 1; ctx.stroke();
+    }
+    for (let lo = 0; lo < 10; lo++) {
+      const th = (lo / 10) * Math.PI * 2;
+      ctx.beginPath();
+      for (let i = 0; i <= 60; i++) {
+        const phi = (i / 60) * Math.PI;
+        const p = proj([Math.sin(phi) * Math.cos(th), Math.sin(phi) * Math.sin(th), Math.cos(phi)]);
+        i ? ctx.lineTo(p.sx, p.sy) : ctx.moveTo(p.sx, p.sy);
+      }
+      ctx.strokeStyle = 'rgba(125,125,140,0.16)'; ctx.lineWidth = 1; ctx.stroke();
+    }
+
+    // roads
+    ctx.strokeStyle = 'rgba(42,95,143,0.9)'; ctx.lineWidth = 2;
+    ctx.beginPath();
+    for (let i = 0; i <= 50; i++) { const p = proj(route1(i / 50).pos); i ? ctx.lineTo(p.sx, p.sy) : ctx.moveTo(p.sx, p.sy); }
+    ctx.stroke();
+    ctx.strokeStyle = 'rgba(217,114,54,0.9)';
+    ctx.beginPath();
+    for (let i = 0; i <= 50; i++) { const p = proj(route2(i / 50).pos); i ? ctx.lineTo(p.sx, p.sy) : ctx.moveTo(p.sx, p.sy); }
+    ctx.stroke();
+
+    // labels A and B
+    const pA = proj([0, 0, 1]);
+    const pB = proj([Math.cos(W), Math.sin(W), 0]);
+    ctx.fillStyle = palette.text; ctx.font = '600 13px serif'; ctx.textAlign = 'center';
+    ctx.fillText('A', pA.sx - 12, pA.sy - 8);
+    ctx.fillText('B', pB.sx + 14, pB.sy + 4);
+
+    // ghost of the shared start arrow at the pole
+    drawA3([0, 0, 1], [1, 0, 0], 0.36, palette.textFaint, 1.5, 0.55);
+
+    // couriers
+    const r1 = route1(s), r2 = route2(s);
+    drawA3(r1.pos, r1.arrow, 0.32, '#2a5f8f', 2.4, 1);
+    drawA3(r2.pos, r2.arrow, 0.32, '#d97236', 2.4, 1);
+    [r1, r2].forEach((r, i) => {
+      const p = proj(r.pos);
+      ctx.fillStyle = i === 0 ? '#2a5f8f' : '#d97236';
+      ctx.beginPath(); ctx.arc(p.sx, p.sy, 5, 0, Math.PI * 2); ctx.fill();
+    });
+
+    const wd = (W * 180 / Math.PI).toFixed(0);
+    ctx.fillStyle = palette.textSoft; ctx.font = '13px "SF Mono", monospace'; ctx.textAlign = 'center';
+    if (arrived) {
+      // verify live: angle between the two delivered arrows
+      const d = r1.arrow[0] * r2.arrow[0] + r1.arrow[1] * r2.arrow[1] + r1.arrow[2] * r2.arrow[2];
+      const mis = Math.acos(Math.max(-1, Math.min(1, d))) * 180 / Math.PI;
+      ctx.fillText(`deliveries disagree by ${mis.toFixed(1)}°  =  area between the roads (${wd}°)`, 340, 385);
+      readout.textContent = `deliveries disagree by ${mis.toFixed(1)}° = area between the roads (${wd}°)`;
+    } else {
+      ctx.fillText('couriers en route…', 340, 385);
+      readout.textContent = 'couriers en route…';
+    }
+  }
+  runWhenVisible(canvas, draw);
+})();
+</script>
+
+</body>
+</html>

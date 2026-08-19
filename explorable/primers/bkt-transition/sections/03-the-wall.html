@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The wall: what unbinding destroys — The Living Lattice</title>
+<meta name="description" content="Below the wall free vortices scramble every correlation; above it bound pairs let order carry. Measured live on two thermal lattices, ending at the constant R₀(2/π) = 0.30320246.">
+<meta name="author" content="Michael Sharpe">
+<link rel="canonical" href="https://lattice.project89.org/primers/bkt-transition/sections/03-the-wall.html">
+<link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
+<link rel="apple-touch-icon" href="../../../apple-touch-icon.png">
+<meta property="og:title" content="The wall: what unbinding destroys — The Living Lattice">
+<meta property="og:description" content="Correlation carried vs correlation scrambled, measured live — and the constant at the wall.">
+<meta property="og:url" content="https://lattice.project89.org/primers/bkt-transition/sections/03-the-wall.html">
+<meta property="og:site_name" content="The Living Lattice">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://lattice.project89.org/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="The wall: what unbinding destroys — The Living Lattice">
+<meta name="twitter:description" content="What free vortices scramble, what bound pairs carry — and the number at the wall.">
+<meta name="twitter:image" content="https://lattice.project89.org/og-image.png">
+<!-- BEGIN AUTO-INJECTED ANALYTICS -->
+<!-- PostHog -->
+<script>
+!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+posthog.init('phc_kRX9iHZstABjgFqEWJBMok2S3hW9R8QMHbNao4EsNz2g', {api_host: 'https://us.i.posthog.com', person_profiles: 'identified_only'});
+</script>
+<!-- END AUTO-INJECTED ANALYTICS -->
+<link rel="stylesheet" href="../../../css/style.css">
+<style>
+.flag-callout {
+  margin: 1.6em 0; padding: 16px 20px;
+  background: rgba(195, 141, 247, 0.08);
+  border-left: 3px solid #c38df7; border-radius: 3px;
+  font-size: 14.5px; line-height: 1.55;
+}
+.flag-callout .flag-label {
+  display: inline-block; font: 700 10.5px "SF Mono", monospace;
+  color: #c38df7; text-transform: uppercase; letter-spacing: 0.1em; margin-right: 0.7em;
+}
+.flag-callout a { font-weight: 600; }
+</style>
+</head>
+<body>
+<div class="page">
+
+<nav class="breadcrumb">
+  <a href="../index.html">&larr; BKT transition</a>
+  <span class="sep">&middot;</span>
+  <span class="section-num">section 03 / 03 &middot; advanced</span>
+</nav>
+
+<h1>The wall<span class="subtitle">What unbinding destroys, what binding carries — and the number left standing at the boundary</span></h1>
+
+<p class="lead">The ledger said: below <span class="mono">K = 2/&pi;</span>, free vortices are a bargain; above, only bound pairs are affordable. This closing section shows what that difference <em>does</em>. It is the difference between a medium that can carry agreement across distance and one that cannot — between a lattice that can hold a pattern, a memory, a computation, and one that is permanently noise. And standing exactly at the boundary is the number this library will not stop meeting: the mean resultant of a bond at critical coupling, <span class="mono">R<sub>0</sub>(2/&pi;)</span>.</p>
+
+<h2>1. Correlation, carried or scrambled — measured</h2>
+
+<p>Ask the simplest long-distance question a phase field can be asked: pick two oscillators r steps apart; on average, how much do they agree? Below, two live thermal lattices from <a href="02-the-argument.html">section 02</a> run side by side — one below the wall, one above — while the figure continuously measures that agreement at every distance. The difference is not subtle. In the vortex gas, agreement dies within two or three neighbors: every free whirlpool between two points randomizes the phase carried from one to the other. In the bound-pair regime, agreement fades slowly and then <em>stops falling</em> on this small lattice — a tight pair is a closed disturbance; the field threads between pairs and delivers the phase nearly intact.</p>
+
+<figure id="fig-corr">
+  <canvas id="canvas-corr" width="680" height="440"></canvas>
+  <div class="controls" id="corr-controls">
+    <button id="corr-rescatter">Re-scatter both</button>
+  </div>
+  <figcaption>Two live lattices, one measurement. Curves: mean agreement cos(&Delta;&theta;) between oscillators r steps apart, accumulated as each simulation runs (so the curves steady over a few seconds). Purple (K = 0.5, vortex gas): agreement at r&nbsp;=&nbsp;4 is already indistinguishable from zero. Green (K = 1.2, bound pairs): agreement holds near 0.5 all the way across the box. Same temperature, same lattice, same noise — the only difference is which side of the ledger the coupling landed on. <span id="corr-readout" class="readout">accumulating&hellip;</span></figcaption>
+</figure>
+
+<p>Two honest refinements, each worth one sentence. In the infinite system the ordered side is <em>quasi</em>-long-range: agreement does not level off but fades as a gentle power law — order without a single frozen direction, a rumor passed carefully forever rather than a broadcast. And the transition between the two behaviors is famously strange: no local quantity jumps at the wall — no sudden magnetization, no latent heat an ordinary thermometer would catch. What changes is <em>topological</em> (whether unpaired winding exists at large scales) and <em>global</em> (the stiffness the long waves feel, which leaps from 2/&pi; to zero — the celebrated universal jump). A transition of infinite order: invisible locally, decisive globally.</p>
+
+<h2>2. The number at the boundary</h2>
+
+<p>Now stand exactly on the wall and ask the <a href="../../sections/06-von-mises.html">von Mises</a> question: at critical coupling, how strongly does one oscillator point the way its neighbor does? That is the mean resultant of a bond at <span class="mono">K = 2/&pi;</span> — the Bessel ratio evaluated at the critical coupling, computed live below from the same code the whole site uses:</p>
+
+<figure id="fig-const">
+  <canvas id="canvas-const" width="680" height="300"></canvas>
+  <figcaption>The order parameter near the wall, zoomed. The purple line is the critical coupling K<sub>BKT</sub> = 2/&pi;; the dot is the bond-level agreement there, printed to eight decimals — no fitting, no dial, just topology (this module) and circular statistics (<a href="../../sections/06-von-mises.html">the von Mises module</a>). <span id="const-readout" class="readout">computing&hellip;</span></figcaption>
+</figure>
+
+<p>This is why the number recurs everywhere on the site: it is not a tuned threshold but the agreement a bond has <em>at the edge of order itself</em>. When the essays gate a phase-locked mode at &tau; &asymp; 0.303, they are asking "is this region more ordered than the wall?" When the &alpha; essay raises it to the fourth power, it is counting one critical bond per lattice direction. One number, standing at the one boundary the physics fixes by itself.</p>
+
+<h2>3. Where this hands off</h2>
+
+<p>You now hold the full argument the essays compress into a sentence: <em>defects are topological (section 01), their ledger is logarithmic (section 02), the coefficients tie at 2/&pi;, and crossing that line is the difference between a medium that carries structure and one that scrambles it (this section).</em> The story continues in three directions. <a href="../../../paradigm/sections/05-the-wall.html">The Physics of Mind &sect;05</a> places the wall in the mind essay and &sect;06 makes the decisive claim that the interesting address is the band <em>at</em> it. <a href="../../../alpha/sections/11-bkt-wall.html">The &alpha; essay &sect;11</a> is the expert treatment — including how bond-level couplings (K<sub>bulk</sub> = 16/&pi;&sup2;) and the wall's stiffness (2/&pi;) are one number in two renormalization languages, the thread <a href="../../coarse-graining/">the coarse-graining module</a> picks up. And <a href="../../../paradigm/sections/14-one-constant.html">&sect;14</a> shows the same constant doing its two jobs, in a transformer and in the vacuum.</p>
+
+<div class="flag-callout">
+  <span class="flag-label">Honest frontier</span>
+  What this module showed is the classic, settled physics: the BKT mechanism (2016 Nobel) on a small live lattice, with its finite-size softenings stated as they appeared. What it did <em>not</em> show — because nobody has finished showing it — is the site's own frontier claims <em>about</em> this wall: that lattice dynamics select z = 4 and pin the system at K<sub>BKT</sub> by themselves. Those are open, actively worked problems in the foundation program, honestly tiered there; this module gives you exactly the background to read them.
+</div>
+
+<div class="nav-links">
+  <a href="02-the-argument.html" class="prev">The argument</a>
+  <a href="../../coarse-graining/" class="next">Coarse-graining and renormalization</a>
+</div>
+
+</div>
+
+<script type="module">
+import { setupHiDPICanvas, runWhenVisible, palette, R0, K_BKT } from '../../../js/common.js';
+
+function wrap(a) { while (a > Math.PI) a -= 2*Math.PI; while (a < -Math.PI) a += 2*Math.PI; return a; }
+
+// ============================================================
+// FIG 1: correlation vs distance, two live lattices
+// ============================================================
+(() => {
+  const canvas = document.getElementById('canvas-corr');
+  const ctx = setupHiDPICanvas(canvas, 680, 440);
+  const readout = document.getElementById('corr-readout');
+  const L = 32, RS = [1, 2, 3, 4, 6, 8, 10, 12];
+
+  function makeSim(K) {
+    const th = new Float64Array(L*L);
+    for (let i = 0; i < L*L; i++) th[i] = Math.random()*2*Math.PI;
+    return { K, th, acc: RS.map(() => 0), n: 0 };
+  }
+  let simLo = makeSim(0.5), simHi = makeSim(1.2);
+  document.getElementById('corr-rescatter').addEventListener('click', () => {
+    simLo = makeSim(0.5); simHi = makeSim(1.2);
+  });
+
+  function gauss() {
+    const u = Math.max(Math.random(), 1e-12), v = Math.random();
+    return Math.sqrt(-2*Math.log(u)) * Math.cos(2*Math.PI*v);
+  }
+  function step(sim) {
+    const dt = 0.04, noise = Math.sqrt(2*dt);
+    const { th, K } = sim;
+    const nt = new Float64Array(L*L);
+    for (let y = 0; y < L; y++) for (let x = 0; x < L; x++) {
+      const i = y*L+x;
+      const xp=(x+1)%L, xm=(x+L-1)%L, yp=(y+1)%L, ym=(y+L-1)%L;
+      const d = K*(Math.sin(th[y*L+xp]-th[i])+Math.sin(th[y*L+xm]-th[i])+Math.sin(th[yp*L+x]-th[i])+Math.sin(th[ym*L+x]-th[i]));
+      nt[i] = th[i] + d*dt + noise*gauss();
+    }
+    sim.th = nt;
+  }
+  function accumulate(sim) {
+    const { th } = sim;
+    RS.forEach((r, k) => {
+      let c = 0;
+      for (let y = 0; y < L; y++) for (let x = 0; x < L; x++) {
+        c += Math.cos(th[y*L+(x+r)%L] - th[y*L+x]);
+      }
+      sim.acc[k] += c / (L*L);
+    });
+    sim.n++;
+  }
+
+  let warm = 0;
+  function draw() {
+    for (let s = 0; s < 5; s++) { step(simLo); step(simHi); }
+    warm++;
+    if (warm > 40) { accumulate(simLo); accumulate(simHi); } // let both thermalize first
+
+    ctx.clearRect(0, 0, 680, 440);
+    const x0 = 80, y0 = 40, w = 540, h = 320;
+    const X = r => x0 + (r - 1) / (RS[RS.length-1] - 1) * w;
+    const Y = c => y0 + h - (Math.max(-0.1, c) + 0.1) / 1.1 * h;
+
+    ctx.strokeStyle = palette.axis; ctx.lineWidth = 1;
+    ctx.strokeRect(x0, y0, w, h);
+    ctx.setLineDash([3, 4]);
+    ctx.beginPath(); ctx.moveTo(x0, Y(0)); ctx.lineTo(x0 + w, Y(0)); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 12px serif'; ctx.textAlign = 'center';
+    ctx.fillText('distance r (lattice steps) →', x0 + w/2, y0 + h + 30);
+    ctx.save(); ctx.translate(x0 - 48, y0 + h/2); ctx.rotate(-Math.PI/2);
+    ctx.fillText('mean agreement cos(Δθ)', 0, 0); ctx.restore();
+    [0, 0.5, 1].forEach(v => {
+      ctx.fillStyle = palette.textFaint; ctx.font = '10px "SF Mono", monospace'; ctx.textAlign = 'right';
+      ctx.fillText(v.toFixed(1), x0 - 6, Y(v) + 3);
+    });
+
+    const curves = [
+      { sim: simLo, color: palette.purple, label: 'K = 0.5 — vortex gas' },
+      { sim: simHi, color: palette.green, label: 'K = 1.2 — bound pairs' },
+    ];
+    let readouts = [];
+    curves.forEach(({ sim, color, label }, ci) => {
+      if (!sim.n) return;
+      const cs = sim.acc.map(a => a / sim.n);
+      ctx.strokeStyle = color; ctx.lineWidth = 2.2;
+      ctx.beginPath();
+      RS.forEach((r, k) => { k ? ctx.lineTo(X(r), Y(cs[k])) : ctx.moveTo(X(r), Y(cs[k])); });
+      ctx.stroke();
+      ctx.fillStyle = color;
+      RS.forEach((r, k) => { ctx.beginPath(); ctx.arc(X(r), Y(cs[k]), 3.5, 0, Math.PI*2); ctx.fill(); });
+      ctx.font = 'italic 12.5px serif'; ctx.textAlign = 'left';
+      ctx.fillText(label, x0 + 12, y0 + 22 + ci * 18);
+      readouts.push(`${label.split(' — ')[0]}: C(1) = ${cs[0].toFixed(2)}, C(12) = ${cs[RS.length-1].toFixed(2)}`);
+    });
+
+    readout.textContent = simLo.n ? readouts.join(' · ') : 'thermalizing…';
+  }
+  runWhenVisible(canvas, draw);
+})();
+
+// ============================================================
+// FIG 2: the constant, zoomed and precise
+// ============================================================
+(() => {
+  const canvas = document.getElementById('canvas-const');
+  const ctx = setupHiDPICanvas(canvas, 680, 300);
+  const readout = document.getElementById('const-readout');
+  const val = R0(K_BKT);
+
+  function draw() {
+    ctx.clearRect(0, 0, 680, 300);
+    const x0 = 70, y0 = 35, w = 400, h = 210;
+    const Kmin = 0.5, Kmax = 0.8;
+    const X = k => x0 + (k - Kmin) / (Kmax - Kmin) * w;
+    const rmin = R0(Kmin), rmax = R0(Kmax);
+    const Y = r => y0 + h - (r - rmin + 0.02) / (rmax - rmin + 0.04) * h;
+
+    ctx.strokeStyle = palette.axis; ctx.lineWidth = 1;
+    ctx.strokeRect(x0, y0, w, h);
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 12px serif'; ctx.textAlign = 'center';
+    ctx.fillText('K (coupling) — zoomed near the wall', x0 + w/2, y0 + h + 28);
+
+    // curve
+    ctx.strokeStyle = palette.blue; ctx.lineWidth = 2.2;
+    ctx.beginPath();
+    for (let i = 0; i <= 120; i++) {
+      const k = Kmin + (i/120) * (Kmax - Kmin);
+      i ? ctx.lineTo(X(k), Y(R0(k))) : ctx.moveTo(X(k), Y(R0(k)));
+    }
+    ctx.stroke();
+
+    // wall + dot
+    ctx.strokeStyle = '#c38df7'; ctx.lineWidth = 1.6; ctx.setLineDash([5, 4]);
+    ctx.beginPath(); ctx.moveTo(X(K_BKT), y0); ctx.lineTo(X(K_BKT), y0 + h); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = '#c38df7';
+    ctx.beginPath(); ctx.arc(X(K_BKT), Y(val), 6, 0, Math.PI*2); ctx.fill();
+    ctx.strokeStyle = palette.bg; ctx.lineWidth = 2; ctx.stroke();
+    ctx.font = '11px "SF Mono", monospace'; ctx.textAlign = 'center';
+    ctx.fillText('K_BKT = 2/π', X(K_BKT), y0 - 8);
+
+    // the number, large
+    ctx.fillStyle = palette.textSoft; ctx.font = 'italic 14px serif'; ctx.textAlign = 'left';
+    ctx.fillText('R₀(2/π) =', 500, 120);
+    ctx.fillStyle = '#c38df7'; ctx.font = '600 22px "SF Mono", monospace';
+    ctx.fillText(val.toFixed(8), 500, 150);
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 11.5px serif';
+    ctx.fillText('computed live — I₁(2/π)/I₀(2/π)', 500, 175);
+
+    readout.textContent = `R₀(2/π) = ${val.toFixed(8)} — the agreement a bond has at the edge of order`;
+  }
+  runWhenVisible(canvas, draw);
+})();
+</script>
+
+</body>
+</html>

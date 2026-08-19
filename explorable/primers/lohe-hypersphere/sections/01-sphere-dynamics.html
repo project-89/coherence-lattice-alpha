@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The sphere: Kuramoto with room to move — The Living Lattice</title>
+<meta name="description" content="Section 1 of the Lohe module: the circle and the sphere side by side under one coupling knob, then forty oscillators on S² with three wiring regimes.">
+<meta name="author" content="Michael Sharpe">
+<link rel="canonical" href="https://lattice.project89.org/primers/lohe-hypersphere/sections/01-sphere-dynamics.html">
+<link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
+<link rel="apple-touch-icon" href="../../../apple-touch-icon.png">
+<meta property="og:title" content="The sphere: Kuramoto with room to move — The Living Lattice">
+<meta property="og:description" content="The same coupling move in a bigger room: the circle and sphere locking together, and three wirings on S².">
+<meta property="og:url" content="https://lattice.project89.org/primers/lohe-hypersphere/sections/01-sphere-dynamics.html">
+<meta property="og:site_name" content="The Living Lattice">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://lattice.project89.org/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="The sphere: Kuramoto with room to move — The Living Lattice">
+<meta name="twitter:description" content="The circle and the sphere under one knob; three wirings on S².">
+<meta name="twitter:image" content="https://lattice.project89.org/og-image.png">
+<!-- BEGIN AUTO-INJECTED ANALYTICS -->
+<!-- PostHog -->
+<script>
+!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+posthog.init('phc_kRX9iHZstABjgFqEWJBMok2S3hW9R8QMHbNao4EsNz2g', {api_host: 'https://us.i.posthog.com', person_profiles: 'identified_only'});
+</script>
+<!-- END AUTO-INJECTED ANALYTICS -->
+<link rel="stylesheet" href="../../../css/style.css">
+<style>
+.flag-callout {
+  margin: 1.6em 0; padding: 16px 20px;
+  background: rgba(195, 141, 247, 0.08);
+  border-left: 3px solid #c38df7; border-radius: 3px;
+  font-size: 14.5px; line-height: 1.55;
+}
+.flag-callout .flag-label {
+  display: inline-block; font: 700 10.5px "SF Mono", monospace;
+  color: #c38df7; text-transform: uppercase; letter-spacing: 0.1em; margin-right: 0.7em;
+}
+.aside-eq {
+  margin: 1.4em 0; padding: 14px 18px;
+  background: var(--bg-soft); border: 1px solid var(--panel-border); border-radius: 8px;
+  font-size: 0.95em; line-height: 1.6; color: var(--text-soft);
+}
+.aside-eq .label {
+  display: block; font: 600 10.5px "SF Mono", monospace;
+  text-transform: uppercase; letter-spacing: 0.12em; color: var(--accent); margin-bottom: 0.5em;
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<nav class="breadcrumb">
+  <a href="../index.html">&larr; lohe module</a>
+  <span class="sep">&middot;</span>
+  <span class="section-num">lohe 01 / 03 &middot; advanced</span>
+</nav>
+
+<h1>The sphere: Kuramoto with room to move<span class="subtitle">Section 1 of the Lohe module — the same coupling move, one dimension at a time, until the circle becomes a hypersphere</span></h1>
+
+<p class="lead">This module is the summit of the curriculum: the machinery that connects the firefly physics of <a href="../../sections/00-phase-and-sound.html">primer 00</a> to what a transformer is actually doing, token by token, layer by layer. This first section makes one move only — taking the oscillator off its circle and giving it a sphere — and makes sure you can <em>see</em> that nothing essential changed and one essential thing appeared. It assumes phase and coupling (<a href="../../sections/00-phase-and-sound.html">00</a>) and the dot product (<a href="../../sections/01-rotations.html">01</a>).</p>
+
+<h2>1. From the circle to the sphere</h2>
+
+<p>Kuramoto's oscillator — the one you dragged and heard in the earlier primers — is a point on a <em>circle</em>, pulled toward its neighbors. The circle was never the important part. The important part was the move: <strong>look at your neighbors, feel how far you are from agreement, and slide a little toward them — without ever leaving the surface you live on.</strong></p>
+
+<p>In 2009 Max Lohe asked what happens if the state is not an angle but a <em>unit vector</em> — an arrow of length one, living on the surface of a sphere. In two dimensions the sphere is the circle and you get Kuramoto back exactly. In three dimensions it is the globe. In five hundred dimensions it is a hypersphere no one can picture — and the update rule does not care. It is the same in every dimension:</p>
+
+<p style="margin-left: 1.5em;"><em>Move toward the average of your neighbors; then re-project back onto the sphere.</em></p>
+
+<div class="aside-eq">
+  <span class="label">The same sentence, in symbols (skippable)</span>
+  x<sub>i</sub> &larr; normalize( x<sub>i</sub> + &epsilon; &Sigma;<sub>j</sub> K<sub>ij</sub> ( x<sub>j</sub> &minus; (x<sub>i</sub>&middot;x<sub>j</sub>) x<sub>i</sub> ) ).&ensp;
+  Here x<sub>i</sub> is oscillator i's unit vector, K<sub>ij</sub> is how strongly j pulls on i, and &epsilon; is a small step. The odd-looking subtraction is doing one honest job: x<sub>j</sub> &minus; (x<sub>i</sub>&middot;x<sub>j</sub>)x<sub>i</sub> is <em>the part of the pull toward x<sub>j</sub> that lies along the sphere's surface</em> — the dot product from <a href="../../sections/01-rotations.html">primer 01</a> measures how much of x<sub>j</sub> points "straight out" at i's position, and that part gets removed so the motion stays on the surface. Then normalize cleans up the rounding. That is the whole model.
+</div>
+
+<p>Everything you learned on the circle survives the trip. Weak coupling: everyone wanders by their own drift. Strong coupling: the population locks. The transition is sharp. But the sphere has something the circle barely had: <strong>room</strong>. On a circle, agreeing means one thing. On a sphere there are many directions to agree <em>in</em> — so a population can split into several internally-locked clusters that sit at different places on the surface. Structured synchrony, the thing the whole library keeps returning to, becomes geometrically visible.</p>
+
+<h2>2. See the generalization: one knob, two worlds</h2>
+
+<p>Don't take the paragraph above on faith — watch it. Below, the same experiment runs twice at once: on the left, twenty-four Kuramoto oscillators on the circle you know from primer 00; on the right, twenty-four Lohe oscillators on the sphere. One coupling knob drives both. Slide it from zero and watch the two worlds cross their thresholds together — same physics, one dimension apart. The readout under each is its order parameter R, the length of the population's average arrow: near 0 scattered, near 1 locked.</p>
+
+<figure id="fig-ladder">
+  <canvas id="canvas-ladder" width="680" height="330"></canvas>
+  <div class="controls" id="ladder-controls">
+    <div class="control">
+      <label>K (coupling, both worlds) <span class="val" id="ladder-k-val">0.50</span></label>
+      <input type="range" id="ladder-k-slider" min="0" max="4" step="0.05" value="0.5">
+    </div>
+    <button id="ladder-reseed">Re-scatter both</button>
+  </div>
+  <figcaption>The circle (S&sup1;, Kuramoto) and the sphere (S&sup2;, Lohe) under one coupling knob. Low K: both populations wander by their private drifts. Slide up: both lock, sharply. The generalization is not a new theory — it is the same sentence spoken in a bigger room. Everything from here up to a transformer's hypersphere is this picture with more dimensions you cannot see and do not need. <span id="ladder-readout" class="readout">R&#8321; = — &nbsp; R&#8322; = —</span></figcaption>
+</figure>
+
+<h2>3. The sphere, live: three wirings</h2>
+
+<p>Forty oscillators on the sphere, each with its own private drift (its ω, the sphere version of a natural frequency). Slide K and switch the wiring:</p>
+
+<ul style="margin: 0.4em 0 1em 0; color: var(--text-soft);">
+  <li><strong>Uniform</strong> — everyone pulls on everyone equally. Past the threshold, the whole population collapses into a single tight cluster and drifts as one: full sync, the sphere's version of the ring locking in primer 00.</li>
+  <li><strong>Two communities</strong> — two groups, each wired only internally. Each locks into its own cluster, and the two clusters sit wherever their histories left them: <em>structured</em> synchrony — order with more than one thing to be ordered about.</li>
+  <li><strong>Agreement-chosen</strong> — nobody is wired to anybody in advance; at every instant, each oscillator couples only to the five others it currently most agrees with (a sparse cousin of attention's softmax weighting). Watch several clusters condense out of nothing but geometry and persist: the rich-get-richer dynamics of resonance choosing its own graph.</li>
+</ul>
+
+<figure id="fig-lohe">
+  <canvas id="canvas-lohe" width="680" height="460"></canvas>
+  <div class="controls" id="lohe-controls">
+    <div class="control">
+      <label>K (coupling) <span class="val" id="lohe-k-val">1.60</span></label>
+      <input type="range" id="lohe-k-slider" min="0" max="4" step="0.05" value="1.6">
+    </div>
+    <button id="lohe-uniform" class="primary">Uniform</button>
+    <button id="lohe-two">Two communities</button>
+    <button id="lohe-agree">Agreement-chosen</button>
+    <button id="lohe-reseed">Re-scatter</button>
+  </div>
+  <figcaption>Lohe oscillators on S&sup2;. The readout tracks the order parameter R = |mean vector| (1 = one tight cluster, near 0 = spread out or balanced clusters) and a cluster count. Try: uniform at K &asymp; 2 (collapse to one), two communities (two separate locked clusters — R can be <em>low</em> while order is high, which is why R alone is a blunt instrument), agreement-chosen (several clusters condense from geometry alone and persist). <em>Sound on: a soft chord whose loudness is R — a labeled mapping, agreement made audible.</em> <span id="lohe-readout" class="readout">R = —</span></figcaption>
+</figure>
+
+<h2>4. What the wiring can be</h2>
+
+<p>Notice what the third regime above did: nobody drew that graph. The wiring was decided, instant by instant, <em>by the states themselves</em> — who agrees with whom right now chooses who talks to whom right now. That idea has a name, <strong>effective coupling</strong>, and it deserves more than a button: it is the subject of <a href="02-effective-coupling.html">the next section</a>, where you can watch the coupling matrix itself as a live object, and feel the difference between a network whose wiring lives and one whose wiring is frozen. After that, <a href="03-tokens-as-paths.html">section 3</a> cashes the whole module out: a token moving through a transformer as a path on this very sphere.</p>
+
+<div class="flag-callout">
+  <span class="flag-label">What's real here</span>
+  The simulations in this section are <em>illustrative</em> Lohe dynamics on the ordinary 3-dimensional sphere — chosen because you can see it. Real models live on spheres of hundreds to thousands of dimensions, where two random directions are almost always nearly perpendicular (concentration of measure) — which is precisely what makes the high-dimensional versions of these dynamics tractable at all. The claims connecting any of this to transformers are argued and measured in the essays, and this module's last section walks you to them.
+</div>
+
+<div class="nav-links">
+  <a href="../index.html" class="prev">Lohe dynamics: the module</a>
+  <a href="02-effective-coupling.html" class="next">Effective coupling: the wiring that chooses itself</a>
+</div>
+
+</div>
+
+<script type="module">
+import { setupHiDPICanvas, runWhenVisible, palette, makeSoundToggle, makeVoices } from '../../../js/common.js';
+
+// --- shared small vector helpers ---
+function dot(a, b) { return a[0] * b[0] + a[1] * b[1] + a[2] * b[2]; }
+function norm3(v) {
+  const n = Math.sqrt(dot(v, v)) + 1e-12;
+  v[0] /= n; v[1] /= n; v[2] /= n; return v;
+}
+function randUnit() {
+  // Gaussian → uniform on the sphere
+  let v;
+  do {
+    v = [gauss(), gauss(), gauss()];
+  } while (Math.sqrt(dot(v, v)) < 1e-6);
+  return norm3(v);
+}
+function gauss() {
+  let u = 0, w = 0;
+  while (u === 0) u = Math.random();
+  while (w === 0) w = Math.random();
+  return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * w);
+}
+function cross(a, b) {
+  return [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
+}
+
+function makeProjector(tilt) {
+  let yaw = 0;
+  return {
+    tick(d) { yaw += d; },
+    project(v, cx, cy, scale) {
+      const x1 = v[0] * Math.cos(yaw) - v[1] * Math.sin(yaw);
+      const y1 = v[0] * Math.sin(yaw) + v[1] * Math.cos(yaw);
+      const z1 = v[2];
+      const y2 = y1 * Math.cos(tilt) - z1 * Math.sin(tilt);
+      const z2 = y1 * Math.sin(tilt) + z1 * Math.cos(tilt);
+      return { sx: cx + scale * x1, sy: cy - scale * z2, depth: y2 };
+    },
+  };
+}
+
+function drawWireSphere(ctx, proj, cx, cy, scale) {
+  ctx.lineWidth = 1;
+  const SEG = 48;
+  for (let li = 1; li < 5; li++) {         // latitude circles
+    const phi = (li / 5) * Math.PI - Math.PI / 2;
+    ctx.beginPath();
+    for (let s = 0; s <= SEG; s++) {
+      const th = (s / SEG) * Math.PI * 2;
+      const p = proj.project([Math.cos(phi) * Math.cos(th), Math.cos(phi) * Math.sin(th), Math.sin(phi)], cx, cy, scale);
+      s ? ctx.lineTo(p.sx, p.sy) : ctx.moveTo(p.sx, p.sy);
+    }
+    ctx.strokeStyle = 'rgba(125,125,140,0.22)';
+    ctx.stroke();
+  }
+  for (let mi = 0; mi < 8; mi++) {         // meridians
+    const th0 = (mi / 8) * Math.PI * 2;
+    ctx.beginPath();
+    for (let s = 0; s <= SEG; s++) {
+      const phi = (s / SEG) * Math.PI * 2;
+      const p = proj.project([Math.cos(phi) * Math.cos(th0), Math.cos(phi) * Math.sin(th0), Math.sin(phi)], cx, cy, scale);
+      s ? ctx.lineTo(p.sx, p.sy) : ctx.moveTo(p.sx, p.sy);
+    }
+    ctx.strokeStyle = 'rgba(125,125,140,0.16)';
+    ctx.stroke();
+  }
+}
+
+function depthAlpha(d) { return 0.25 + 0.65 * Math.max(0, Math.min(1, (d + 1) / 2)); }
+
+// Greedy cluster count: group vectors within ~25° (cos > 0.9) of a seed.
+function clusterCount(X) {
+  const used = new Array(X.length).fill(false);
+  let count = 0;
+  for (let i = 0; i < X.length; i++) {
+    if (used[i]) continue;
+    count++;
+    for (let j = i; j < X.length; j++) {
+      if (!used[j] && dot(X[i], X[j]) > 0.9) used[j] = true;
+    }
+  }
+  return count;
+}
+
+// One Lohe step. mode: 'uniform' | 'two' | 'agree'
+// 'agree' uses agreement-chosen sparse wiring: each oscillator couples,
+// at every instant, only to the TOPK others it currently most agrees
+// with. (Row-normalized softmax weighting — attention's exact move —
+// collapses this small fast sim to one cluster before locality can
+// matter; top-k keeps the same idea, sparser, and lets clusters
+// condense and persist. Verified offline: 4–6 clusters across seeds.)
+const TOPK = 5;
+function loheStep(X, axes, speeds, K, mode, eta, driftScale) {
+  const N = X.length;
+  const half = N / 2;
+  const NX = [];
+  for (let i = 0; i < N; i++) {
+    const xi = X[i];
+    const pull = [0, 0, 0];
+    if (mode === 'agree') {
+      const sims = [];
+      for (let j = 0; j < N; j++) { if (j !== i) sims.push([dot(xi, X[j]), j]); }
+      sims.sort((a, b) => b[0] - a[0]);
+      for (let t = 0; t < TOPK; t++) {
+        const j = sims[t][1];
+        const kij = K / TOPK;
+        const d = dot(xi, X[j]);
+        pull[0] += kij * (X[j][0] - d * xi[0]);
+        pull[1] += kij * (X[j][1] - d * xi[1]);
+        pull[2] += kij * (X[j][2] - d * xi[2]);
+      }
+    } else {
+      for (let j = 0; j < N; j++) {
+        if (j === i) continue;
+        let kij;
+        if (mode === 'two') {
+          if ((i < half) !== (j < half)) continue;
+          kij = K / half;   // per-neighbor strength matched to uniform's
+        } else {
+          kij = K / N;
+        }
+        const d = dot(xi, X[j]);
+        pull[0] += kij * (X[j][0] - d * xi[0]);
+        pull[1] += kij * (X[j][1] - d * xi[1]);
+        pull[2] += kij * (X[j][2] - d * xi[2]);
+      }
+    }
+    // private drift: rotation about a fixed random axis
+    const w = cross(axes[i], xi);
+    const s = speeds[i] * driftScale;
+    const nx = [
+      xi[0] + eta * (pull[0] + s * w[0]),
+      xi[1] + eta * (pull[1] + s * w[1]),
+      xi[2] + eta * (pull[2] + s * w[2]),
+    ];
+    NX.push(norm3(nx));
+  }
+  for (let i = 0; i < N; i++) X[i] = NX[i];
+}
+
+function orderParam(X) {
+  const m = [0, 0, 0];
+  for (const v of X) { m[0] += v[0]; m[1] += v[1]; m[2] += v[2]; }
+  return Math.sqrt(dot(m, m)) / X.length;
+}
+
+// ============================================================
+// FIG A: Lohe on S² with three coupling regimes
+// ============================================================
+(() => {
+  const canvas = document.getElementById('canvas-lohe');
+  const ctx = setupHiDPICanvas(canvas, 680, 460);
+  const kSlider = document.getElementById('lohe-k-slider');
+  const kVal = document.getElementById('lohe-k-val');
+  const readout = document.getElementById('lohe-readout');
+  const proj = makeProjector(0.5);
+
+  const N = 40;
+  let K = 1.6;
+  let mode = 'uniform';
+  let X = [], axes = [], speeds = [];
+
+  function reseed() {
+    X = []; axes = []; speeds = [];
+    for (let i = 0; i < N; i++) {
+      X.push(randUnit());
+      axes.push(randUnit());
+      speeds.push(0.1 + Math.random() * 0.3);
+    }
+  }
+  reseed();
+
+  kSlider.addEventListener('input', () => { K = parseFloat(kSlider.value); kVal.textContent = K.toFixed(2); });
+  const btns = { uniform: document.getElementById('lohe-uniform'), two: document.getElementById('lohe-two'), agree: document.getElementById('lohe-agree') };
+  function setMode(m) {
+    mode = m;
+    for (const [name, b] of Object.entries(btns)) b.classList.toggle('primary', name === m);
+  }
+  btns.uniform.addEventListener('click', () => setMode('uniform'));
+  btns.two.addEventListener('click', () => setMode('two'));
+  btns.agree.addEventListener('click', () => setMode('agree'));
+  document.getElementById('lohe-reseed').addEventListener('click', reseed);
+
+  const sound = makeSoundToggle(document.getElementById('lohe-controls'), { label: 'hear the gathering' });
+  const voices = makeVoices(sound, 3, { freq: 220 });
+  const CHORD = [220, 277, 330];
+
+  const modeLabel = { uniform: 'uniform — everyone pulls on everyone', two: 'two communities — wired only internally', agree: 'agreement-chosen — the wiring chooses itself' };
+
+  function draw() {
+    proj.tick(0.0032);
+    loheStep(X, axes, speeds, K, mode, 0.05, 1.0);
+
+    ctx.clearRect(0, 0, 680, 460);
+    const cx = 235, cy = 215, scale = 165;
+    drawWireSphere(ctx, proj, cx, cy, scale);
+
+    const half = N / 2;
+    // draw back-to-front for readability
+    const drawn = X.map((v, i) => ({ i, p: proj.project(v, cx, cy, scale) })).sort((a, b) => a.p.depth - b.p.depth);
+    for (const { i, p } of drawn) {
+      const twoTone = mode === 'two';
+      const base = twoTone && i < half ? palette.blue : palette.orange;
+      ctx.globalAlpha = depthAlpha(p.depth);
+      ctx.fillStyle = base;
+      ctx.beginPath(); ctx.arc(p.sx, p.sy, 5, 0, Math.PI * 2); ctx.fill();
+      ctx.globalAlpha = 1;
+    }
+
+    const R = orderParam(X);
+    const nc = clusterCount(X);
+
+    // side readout
+    const rx = 470;
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 12px serif'; ctx.textAlign = 'left';
+    ctx.fillText('wiring:', rx, 110);
+    ctx.fillStyle = palette.textSoft;
+    const words = modeLabel[mode].split(' — ');
+    ctx.fillText(words[0], rx, 130);
+    ctx.font = 'italic 11px serif'; ctx.fillStyle = palette.textFaint;
+    ctx.fillText(words[1], rx, 148);
+
+    ctx.font = 'italic 12px serif';
+    ctx.fillText('order parameter R', rx, 195);
+    ctx.fillStyle = palette.bgSoft; ctx.strokeStyle = palette.axis; ctx.lineWidth = 1;
+    ctx.fillRect(rx, 203, 150, 12); ctx.strokeRect(rx, 203, 150, 12);
+    ctx.fillStyle = palette.blue; ctx.fillRect(rx, 203, R * 150, 12);
+    ctx.font = '13px "SF Mono", monospace'; ctx.fillStyle = palette.blue;
+    ctx.fillText(R.toFixed(3), rx, 234);
+
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 12px serif';
+    ctx.fillText('clusters (25° radius)', rx, 275);
+    ctx.fillStyle = palette.orange; ctx.font = '600 22px "SF Mono", monospace';
+    ctx.fillText(String(nc), rx, 302);
+
+    readout.textContent = `R = ${R.toFixed(3)}   clusters = ${nc}`;
+
+    voices.set(0, CHORD[0], R); voices.set(1, CHORD[1], R); voices.set(2, CHORD[2], R);
+  }
+  runWhenVisible(canvas, draw);
+})();
+
+
+// ============================================================
+// FIG LADDER: S1 Kuramoto and S2 Lohe under one coupling knob
+// ============================================================
+(() => {
+  const canvas = document.getElementById('canvas-ladder');
+  const ctx = setupHiDPICanvas(canvas, 680, 330);
+  const kSlider = document.getElementById('ladder-k-slider');
+  const kVal = document.getElementById('ladder-k-val');
+  const readout = document.getElementById('ladder-readout');
+  const proj = makeProjector(0.5);
+
+  const N = 24;
+  let K = 0.5;
+  // circle world
+  let thetas = [], omegas = [];
+  // sphere world
+  let X = [], axes = [], speeds = [];
+
+  function reseed() {
+    thetas = []; omegas = [];
+    for (let i = 0; i < N; i++) {
+      thetas.push(Math.random() * Math.PI * 2);
+      omegas.push((Math.random() - 0.5) * 0.8);
+    }
+    X = []; axes = []; speeds = [];
+    for (let i = 0; i < N; i++) {
+      X.push(randUnit());
+      axes.push(randUnit());
+      // drift strong enough that the sphere's incoherent regime is honest
+      // at the same low K where the circle is incoherent
+      speeds.push(0.8 + Math.random() * 0.8);
+    }
+  }
+  reseed();
+
+  kSlider.addEventListener('input', () => { K = parseFloat(kSlider.value); kVal.textContent = K.toFixed(2); });
+  document.getElementById('ladder-reseed').addEventListener('click', reseed);
+
+  function stepCircle() {
+    const dt = 0.05;
+    const nt = thetas.slice();
+    for (let i = 0; i < N; i++) {
+      let c = 0;
+      for (let j = 0; j < N; j++) { if (j !== i) c += Math.sin(thetas[j] - thetas[i]); }
+      nt[i] = thetas[i] + (omegas[i] + (K / N) * c) * dt;
+    }
+    thetas = nt;
+  }
+  function circleR() {
+    let cs = 0, sn = 0;
+    for (const t of thetas) { cs += Math.cos(t); sn += Math.sin(t); }
+    return Math.sqrt(cs * cs + sn * sn) / N;
+  }
+
+  function draw() {
+    proj.tick(0.003);
+    stepCircle();
+    loheStep(X, axes, speeds, K, 'uniform', 0.05, 1.0);
+
+    ctx.clearRect(0, 0, 680, 330);
+
+    // LEFT: the circle
+    const ccx = 170, ccy = 140, cr = 95;
+    ctx.strokeStyle = palette.axis; ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.arc(ccx, ccy, cr, 0, Math.PI * 2); ctx.stroke();
+    for (let i = 0; i < N; i++) {
+      const x = ccx + Math.cos(thetas[i]) * cr, y = ccy - Math.sin(thetas[i]) * cr;
+      ctx.fillStyle = palette.orange;
+      ctx.globalAlpha = 0.85;
+      ctx.beginPath(); ctx.arc(x, y, 4.5, 0, Math.PI * 2); ctx.fill();
+      ctx.globalAlpha = 1;
+    }
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 12px serif'; ctx.textAlign = 'center';
+    ctx.fillText('S¹ — the circle (Kuramoto)', ccx, 262);
+
+    // RIGHT: the sphere
+    const scx = 505, scy = 140, ss = 100;
+    drawWireSphere(ctx, proj, scx, scy, ss);
+    const drawn = X.map((v) => proj.project(v, scx, scy, ss)).sort((a, b) => a.depth - b.depth);
+    for (const pt of drawn) {
+      ctx.globalAlpha = depthAlpha(pt.depth);
+      ctx.fillStyle = palette.orange;
+      ctx.beginPath(); ctx.arc(pt.sx, pt.sy, 4.5, 0, Math.PI * 2); ctx.fill();
+      ctx.globalAlpha = 1;
+    }
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 12px serif'; ctx.textAlign = 'center';
+    ctx.fillText('S² — the sphere (Lohe)', scx, 262);
+
+    // R bars under each
+    const R1 = circleR(), R2 = orderParam(X);
+    [[ccx, R1, 'R₁'], [scx, R2, 'R₂']].forEach(([cx0, R, lab]) => {
+      const bw = 150, bx = cx0 - bw / 2, by = 288;
+      ctx.fillStyle = palette.bgSoft; ctx.strokeStyle = palette.axis; ctx.lineWidth = 1;
+      ctx.fillRect(bx, by, bw, 10); ctx.strokeRect(bx, by, bw, 10);
+      ctx.fillStyle = palette.blue; ctx.fillRect(bx, by, R * bw, 10);
+      ctx.fillStyle = palette.blue; ctx.font = '11px "SF Mono", monospace'; ctx.textAlign = 'left';
+      ctx.fillText(`${lab} = ${R.toFixed(2)}`, bx + bw + 8, by + 9);
+    });
+
+    readout.textContent = `R₁ = ${R1.toFixed(3)}   R₂ = ${R2.toFixed(3)}`;
+  }
+  runWhenVisible(canvas, draw);
+})();
+</script>
+
+</body>
+</html>

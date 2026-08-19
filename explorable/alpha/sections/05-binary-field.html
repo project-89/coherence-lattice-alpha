@@ -42,7 +42,7 @@ posthog.init('phc_kRX9iHZstABjgFqEWJBMok2S3hW9R8QMHbNao4EsNz2g', {api_host: 'htt
 
 <h1>How a binary field emerges<span class="subtitle">What the Coherence Theorem looks like when you let go of a whole network</span></h1>
 
-<p class="lead">Chapter 4 gave us a rule for one bond and an inequality for one network: <em>I ≥ 0</em>. Now we want to <em>see</em> it. We will run the CLR on a grid, from random initial conditions, and watch the theorem play out. Every bond is deciding, locally. The whole is climbing, globally. Nothing is directed from above.</p>
+<p class="lead">Foundations gave us a rule for one bond and an inequality for one network: <em>I ≥ 0</em>. Now we want to <em>see</em> it. We will run the CLR on a grid, from random initial conditions, and watch the theorem play out. Every bond is deciding, locally. The whole is climbing, globally. Nothing is directed from above.</p>
 
 <h2>Two bonds sharing a node</h2>
 
@@ -90,7 +90,7 @@ posthog.init('phc_kRX9iHZstABjgFqEWJBMok2S3hW9R8QMHbNao4EsNz2g', {api_host: 'htt
 
 <h2>The aggregate form of I ≥ 0</h2>
 
-<p>Chapter 4 proved the Coherence Theorem globally: <em>I(t) = dC/dt ≥ 0</em>. But there is a more concrete way to see why it must hold, which becomes important now that many bonds are evolving at once. The global flux decomposes exactly into per-bond fluxes:</p>
+<p>Foundations proved the Coherence Theorem globally: <em>I(t) = dC/dt ≥ 0</em>. But there is a more concrete way to see why it must hold, which becomes important now that many bonds are evolving at once. The global flux decomposes exactly into per-bond fluxes:</p>
 
 <div class="equation-block" id="eq-aggregate">
   <div class="eq-display">
@@ -113,7 +113,7 @@ posthog.init('phc_kRX9iHZstABjgFqEWJBMok2S3hW9R8QMHbNao4EsNz2g', {api_host: 'htt
 
 <h2>Two attractors, everywhere</h2>
 
-<p>Recall the death threshold from Chapter 4: a bond survives only if <em>cos(Δθ) &gt; 4/r</em>. Below that threshold the potential has no interior well; the only stable K is zero. Above it, there's a single well at K = K*. Every bond is solving the same simple equation at equilibrium:</p>
+<p>Recall the death threshold from Foundations: a bond survives only if <em>cos(Δθ) &gt; 4/r</em>. Below that threshold the potential has no interior well; the only stable K is zero. Above it, there's a single well at K = K*. Every bond is solving the same simple equation at equilibrium:</p>
 
 <div class="equation-block" id="eq-fixedpoint">
   <div class="eq-display">
@@ -172,7 +172,7 @@ posthog.init('phc_kRX9iHZstABjgFqEWJBMok2S3hW9R8QMHbNao4EsNz2g', {api_host: 'htt
 <p>This is already remarkable. But a memory is only as useful as what you can do with it. In the next chapter we ask: <em>what if we drive the network with a specific pattern?</em> What if we shape its natural frequencies externally, or apply a stimulus? Does the CLR learn a specific pattern and retain it when the stimulus is removed? Does it recognize the pattern when shown it again? The answer, as you might by now suspect, is yes — and the analogy to both Chladni plates and neural memory gets very tight, very fast.</p>
 
 <div class="nav-links">
-  <a href="04-clr.html" class="prev">The Coherence Learning Rule</a>
+  <a href="01-prelude.html" class="prev">Prelude</a>
   <a href="06-plm-npd.html" class="next">Phase-locked modes: geometry and memory</a>
 </div>
 
@@ -189,7 +189,7 @@ wireEquation('eq-aggregate', {
   Iglobal: {
     name: 'I(t) — the global intelligence flux',
     pronounce: '"eye of t"',
-    description: 'The rate at which the whole network is climbing coherence capital. Defined as the time derivative of C = I<sub>phase</sub>·ρ. The Coherence Theorem from Chapter 4 says this is always ≥ 0 under CLR dynamics and legality. Here we see why: it\'s the sum of things that are each ≥ 0.',
+    description: 'The rate at which the whole network is climbing coherence capital. Defined as the time derivative of C = I<sub>phase</sub>·ρ. The Coherence Theorem from Foundations says this is always ≥ 0 under CLR dynamics and legality. Here we see why: it\'s the sum of things that are each ≥ 0.',
   },
   sumbonds: {
     name: '∑_(i,j) ∈ E — sum over every bond in the graph',

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Transformers as Oscillators — The Living Lattice</title>
+<meta name="description" content="A transformer is a network of coupled oscillators on the unit sphere. LayerNorm is reprojection, attention is coupling, the residual stream is the shared field. From that identity: a derived dead-head threshold, a low-dimensional coupling manifold, lossless rank-2 projection, and one rotation between any two trained models.">
+<meta name="author" content="Michael Sharpe">
+<link rel="canonical" href="https://lattice.project89.org/transformers/">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<meta property="og:title" content="Transformers as Oscillators — The Living Lattice">
+<meta property="og:description" content="A transformer is coupled oscillators. The physics of attention, made interactive.">
+<meta property="og:url" content="https://lattice.project89.org/transformers/">
+<meta property="og:site_name" content="The Living Lattice">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://lattice.project89.org/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Transformers as Oscillators — The Living Lattice">
+<meta name="twitter:description" content="The physics of attention.">
+<meta name="twitter:image" content="https://lattice.project89.org/og-image.png">
+<!-- BEGIN AUTO-INJECTED ANALYTICS -->
+<!-- PostHog -->
+<script>
+!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+posthog.init('phc_kRX9iHZstABjgFqEWJBMok2S3hW9R8QMHbNao4EsNz2g', {api_host: 'https://us.i.posthog.com', person_profiles: 'identified_only'});
+</script>
+<!-- END AUTO-INJECTED ANALYTICS -->
+<link rel="stylesheet" href="../css/style.css">
+<script type="module">import '../js/common.js';</script>
+<style>
+nav.toc li { align-items: flex-start; }
+nav.toc .toc-item { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+nav.toc .toc-item > a { flex: 0 0 auto; font-weight: 500; }
+nav.toc .toc-sub { color: var(--text-faint); font-size: 0.9em; line-height: 1.45; }
+.toc li.soon .toc-item > a { color: var(--text-soft); cursor: default; }
+.toc li .badge { flex: 0 0 auto; align-self: center; font: italic 0.82em serif; color: var(--text-faint); white-space: nowrap; }
+.plain-intro { margin: 1.4em 0; padding: 18px 22px; background: var(--bg-soft); border: 1px solid var(--panel-border); border-radius: 8px; line-height: 1.62; }
+.plain-intro .pi-label { display:block; font: 600 10.5px "SF Mono", monospace; text-transform: uppercase; letter-spacing: 0.12em; color: var(--accent); margin-bottom: 0.55em; }
+</style>
+</head>
+<body>
+<div class="page">
+
+<nav class="breadcrumb">
+  <a href="../">&larr; library</a>
+  <span class="sep">&middot;</span>
+  <span class="section-num">Transformers as Oscillators</span>
+</nav>
+
+<h1>Transformers as Oscillators<span class="subtitle">The physics of attention — a transformer is a network of coupled oscillators, and it pays off</span></h1>
+
+<p class="lead">Strip a transformer down to its dynamics and a startling identity appears: it is a network of <strong>coupled oscillators on the unit sphere</strong>, the same objects this whole library is built from. LayerNorm is reprojection onto the sphere; an attention head&rsquo;s write-back is a coupling term; the residual stream is the shared field they all read and write. This is not a metaphor — it is a mapping precise enough to <em>predict</em> things about real models, with no fitting.</p>
+
+<div class="plain-intro">
+  <span class="pi-label">The whole idea, in plain words</span>
+  Inside a language model, every word being processed carries a running summary of what it means so far — picture an arrow that can point in many directions. At each layer, every word&rsquo;s arrow looks at the other words&rsquo; arrows, gets <em>nudged</em> toward the ones that matter to it, and is then re-standardized so only its direction counts. Parts nudging each other toward agreement, over and over, on a fixed budget — that is exactly how fireflies fall into blinking together and how metronomes on one shelf lock step. It is a network of coupled oscillators. This essay takes that reading seriously and checks what it <em>predicts</em> about real models: which attention heads are effectively dead, how few dimensions the thinking really uses, and what can be thrown away with literally nothing lost. The predictions come out true, with no knobs tuned. If <em>attention head</em> or <em>residual stream</em> are new words, the curriculum module <a href="../primers/inside-a-transformer/">Inside a transformer</a> builds them from nothing, one draggable diagram at a time — about ten minutes, ears optional.
+</div>
+
+<p>This essay follows that identity into its consequences: a dead-head threshold derived from criticality alone, a coupling manifold of two-to-nineteen dimensions inside hundreds, a lossless rank-2 projection, and the single rotation that relates any two independently trained models. Each is a measurement on real networks (GPT-2 through Gemma), framed by the one law.</p>
+
+<p class="aside"><span class="label">Start here first</span>This essay leans on two kinds of background, both optional but both real. The <em>physics</em> — oscillators, coherence capital, the Coherent Learning Rule — is built in <a href="../foundations/">Foundations</a> (five short chapters). The <em>machine-learning vocabulary</em> — attention heads, the residual stream, LayerNorm — is built from zero in the curriculum module <a href="../primers/inside-a-transformer/">Inside a transformer</a> (four short, draggable sections). For what this low-dimensional shape <em>means</em> for intelligence and consciousness, see <a href="../paradigm/">The Physics of Mind</a>.</p>
+
+<nav class="toc">
+  <ol>
+    <li><span class="toc-item"><a href="sections/01-coupled-oscillators.html">A transformer is coupled oscillators</a><span class="toc-sub">The term-by-term identity — LayerNorm = reprojection, attention = coupling, the residual stream = the shared field — and a live attention pattern running as an oscillator network you can hear.</span></span></li>
+    <li><span class="toc-item"><a href="sections/02-dead-heads.html">Dead heads: a derived threshold</a><span class="toc-sub">&tau; = 0.96/&radic;d, at 95&ndash;100% precision across five published architectures, no fitting.</span></span></li>
+    <li><span class="toc-item"><a href="sections/03-manifold.html">The coupling manifold</a><span class="toc-sub">d_eff = 2&ndash;19 inside 768; watch the dimension collapse as heads synchronize.</span></span></li>
+    <li><span class="toc-item"><a href="sections/04-lossless.html">Lossless: computation on a 2D surface</a><span class="toc-sub">Rank-2 projection at logit cosine 1.0000 &mdash; 384&times;, identical next token.</span></span></li>
+    <li><span class="toc-item"><a href="sections/05-fiber-bundle.html">The fiber bundle</a><span class="toc-sub">Base, fiber, connection: the sequence as a space and RoPE as transport along it — why weights resist the compression activations allow (the 2.5&ndash;2.8&times; multiplier), and the low-dimensional machine running in the high-dimensional room.</span></span></li>
+    <li class="soon"><span class="toc-item"><a>The rotation: meaning is shared</a><span class="toc-sub">Two independently trained embedders, a single rotation apart; 99.3% top-1. (Told, for now, in <a href="../paradigm/sections/15-rotation.html">The Physics of Mind &sect;15</a>.)</span></span><span class="badge">planned</span></li>
+  </ol>
+</nav>
+
+<hr>
+
+<p class="aside"><span class="label">Build status</span>Five chapters are live; the Platonic-rotation chapter is staged (its result is told in the paradigm essay meanwhile). This essay is the home for the transformer-specific physics that the paradigm references but does not derive.</p>
+
+<p style="color: var(--text-faint); font-size: 0.9em; margin-top: 3em;">Companion to the transformer-physics work (the dead-head pruning, coupling-manifold, fiber-bundle, and Platonic-rotation papers), Sharpe 2026.</p>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Manifolds: flat up close, curved as a whole — The Living Lattice</title>
+<meta name="description" content="The ant on the wire, an atlas of overlapping flat maps, and a probe for counting a world's directions. Section 2 of the topology &amp; manifolds module.">
+<meta name="author" content="Michael Sharpe">
+<link rel="canonical" href="https://lattice.project89.org/primers/topology-manifolds/sections/02-manifolds.html">
+<link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
+<link rel="apple-touch-icon" href="../../../apple-touch-icon.png">
+<meta property="og:title" content="Manifolds: flat up close, curved as a whole — The Living Lattice">
+<meta property="og:description" content="What a manifold is, in your hands: zoom an ant's world flat, leaf through an atlas of the sphere, count a world's directions.">
+<meta property="og:url" content="https://lattice.project89.org/primers/topology-manifolds/sections/02-manifolds.html">
+<meta property="og:site_name" content="The Living Lattice">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://lattice.project89.org/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Manifolds: flat up close, curved as a whole — The Living Lattice">
+<meta name="twitter:description" content="The most-used unexplained word on the site, made physical.">
+<meta name="twitter:image" content="https://lattice.project89.org/og-image.png">
+<!-- BEGIN AUTO-INJECTED ANALYTICS -->
+<!-- PostHog -->
+<script>
+!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+posthog.init('phc_kRX9iHZstABjgFqEWJBMok2S3hW9R8QMHbNao4EsNz2g', {api_host: 'https://us.i.posthog.com', person_profiles: 'identified_only'});
+</script>
+<!-- END AUTO-INJECTED ANALYTICS -->
+<link rel="stylesheet" href="../../../css/style.css">
+<style>
+.flag-callout {
+  margin: 1.6em 0; padding: 16px 20px;
+  background: rgba(195, 141, 247, 0.08);
+  border-left: 3px solid #c38df7; border-radius: 3px;
+  font-size: 14.5px; line-height: 1.55;
+}
+.flag-callout .flag-label {
+  display: inline-block; font: 700 10.5px "SF Mono", monospace;
+  color: #c38df7; text-transform: uppercase; letter-spacing: 0.1em; margin-right: 0.7em;
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<nav class="breadcrumb">
+  <a href="../index.html">&larr; topology &amp; manifolds</a>
+  <span class="sep">&middot;</span>
+  <span class="section-num">section 2 / 3</span>
+</nav>
+
+<h1>Manifolds: flat up close, curved as a whole<span class="subtitle">The most-used unexplained word on this site, made physical</span></h1>
+
+<p class="lead">The word <strong>manifold</strong> sounds abstract and means something you have lived on your entire life. The Earth is round; your kitchen floor feels perfectly flat. Both are true. The surface of the Earth is a curved, closed shape — but any small enough patch of it is indistinguishable from a flat plane. A space with that property — <em>every point has a neighborhood that looks like ordinary flat space</em> — is a manifold. That is the whole definition. This section gives you three ways to hold it.</p>
+
+<h2>1. The ant on the wire</h2>
+
+<p>An ant walking a loop of wire can only go forward or back — one direction of travel, however wildly the wire coils through the room. Zoom in on the ant's neighborhood and the coiling disappears: up close, the wire is just a straight line. The wire is a <strong>one-dimensional manifold</strong> living inside a higher-dimensional room. The gap between those two numbers — the room's dimension and the wire's — is the whole reason the word exists.</p>
+
+<figure id="fig-ant">
+  <canvas id="canvas-ant" width="680" height="330"></canvas>
+  <div class="controls" id="ant-controls">
+    <div class="control">
+      <label>zoom <span class="val" id="ant-z-val">4&times;</span></label>
+      <input type="range" id="ant-z-slider" min="2" max="50" step="1" value="4">
+    </div>
+  </div>
+  <figcaption>An ant walks a curved wire. The lens shows the ant's-eye view of its neighborhood. Zoom in and the curve straightens out: up close, the wire is just a line. That is what &ldquo;manifold&rdquo; means — locally flat, whatever the global shape. Your floor is the 2D version of this experience.</figcaption>
+</figure>
+
+<h2>2. The atlas: many flat maps, one curved world</h2>
+
+<p>You cannot draw the whole Earth on one flat page without lying somewhere — every world map distorts. But you can cover the Earth with an <em>atlas</em>: many overlapping flat pages, each honest about its own small region. That is actually the formal definition of a manifold — a space you can cover with flat charts — and the crucial property is what happens where two pages <strong>overlap</strong>: they describe the same territory, and they agree about it, up to each page's private choice of orientation. (If &ldquo;private orientation, shared content&rdquo; rings a bell, it should — it is the same move as the gauge idea in <a href="../../gauge-holonomy/">the gauge &amp; holonomy primer</a>, and it is why these two primers sit next to each other.)</p>
+
+<figure id="fig-atlas">
+  <canvas id="canvas-atlas" width="680" height="360"></canvas>
+  <div class="controls" id="atlas-controls">
+    <div class="control">
+      <label>rotate chart B's page <span class="val" id="atlas-r-val">0&deg;</span></label>
+      <input type="range" id="atlas-r-slider" min="0" max="360" step="2" value="0">
+    </div>
+  </div>
+  <figcaption>Two overlapping patches of a sphere (blue and orange), and each patch's own flat chart. The green dots are the territory both charts cover. Rotate chart B's page: its green dots spin — a chart's orientation is its own business — but the <em>pattern</em> of green dots never changes, and the readout holds steady at every page angle. (It reads 95%, not 100%, and that missing sliver is real mathematics: a flat page <em>must</em> distort a curved world slightly — which is exactly why you need an atlas of small pages instead of one big one.) <span id="atlas-readout" class="readout">overlap agreement: —</span></figcaption>
+</figure>
+
+<h2>3. Counting a world's directions</h2>
+
+<p>The number of directions available in the flat patch is the manifold's <strong>dimension</strong> — and it belongs to the manifold, not to the room it sits in. Probe it:</p>
+
+<figure id="fig-dim">
+  <canvas id="canvas-dim" width="680" height="330"></canvas>
+  <div class="controls" id="dim-controls">
+    <span class="lab" style="margin-right:6px;">move the left dot:</span>
+    <button id="dim-w-left">&#9664;</button>
+    <button id="dim-w-right">&#9654;</button>
+    <span class="lab" style="margin:0 6px 0 18px;">move the right dot:</span>
+    <button id="dim-s-left">&#9664;</button>
+    <button id="dim-s-right">&#9654;</button>
+    <button id="dim-s-up">&#9650;</button>
+    <button id="dim-s-down">&#9660;</button>
+  </div>
+  <figcaption>Two worlds, one dot each. On the wire, the only moves that exist are along the wire — there is no sideways; the world simply doesn't have that direction. On the surface patch, two independent directions open up. Count the arrows each world honors: that count is its dimension. The wire is 1D and the surface is 2D <em>no matter that both sit in a 3D room</em>. <span id="dim-readout" class="readout">wire: 1 direction &middot; surface: 2 directions</span></figcaption>
+</figure>
+
+<h2>4. What the essays are claiming</h2>
+
+<p>Now the payoff for this site. When an essay says a transformer's computation <em>lives on a low-dimensional coupling manifold</em>, it means exactly this: the system's state is described by thousands of numbers — a point in a thousands-dimensional space — but the states it <em>actually visits</em> all lie on a thin curved surface inside that space, a surface with only a handful of directions of its own. The thousands of dimensions are the room; the manifold is the wire; the computation is the ant. Measuring the wire's dimension, and its shape — it turns out to be torus-like, holes and all, which is why <a href="01-topology.html">section 1</a> matters — is what <a href="../../../transformers/sections/03-manifold.html">the coupling-manifold chapter</a> and <a href="../../../paradigm/sections/08-shape.html">the shape chapter</a> are doing.</p>
+
+<div class="flag-callout">
+  <span class="flag-label">What's real here</span>
+  These are cartoons in one and two dimensions, built for your hands. The measured objects are higher-dimensional: the site's essays estimate the actual dimension of the visited surface (a handful, inside 768+), and the atlas idea is not decoration — chart-to-chart transport is literally the machinery the compression research uses when it moves cached states between frames. The cartoon is faithful; the numbers live in the essays.
+</div>
+
+<p>Next: the counting section — what a loop can tell you about the space it lives in, and the three names that counting goes by.</p>
+
+<div class="nav-links">
+  <a href="01-topology.html" class="prev">Topology: the shape that survives stretching</a>
+  <a href="03-counting-loops.html" class="next">Counting loops: winding, &pi;&#8321;, H&#8321;</a>
+</div>
+
+</div>
+
+<script type="module">
+import { setupHiDPICanvas, runWhenVisible, palette } from '../../../js/common.js';
+
+// ============================================================
+// FIG A: the ant on the wire — locally flat
+// ============================================================
+(() => {
+  const W = 680, H = 330, canvas = document.getElementById('canvas-ant');
+  const ctx = setupHiDPICanvas(canvas, W, H);
+  const slider = document.getElementById('ant-z-slider');
+  const zval = document.getElementById('ant-z-val');
+  let zoom = 4;
+  slider.addEventListener('input', () => { zoom = parseFloat(slider.value); zval.textContent = zoom + '×'; });
+
+  const ccx = 190, ccy = 165;
+  function curvePoint(a) {
+    const r = 105 + 24 * Math.sin(3 * a + 1.2) + 12 * Math.sin(5 * a);
+    return [ccx + r * Math.cos(a), ccy + r * Math.sin(a)];
+  }
+
+  let ant = 0;
+
+  function draw() {
+    ant += 0.004;
+    ctx.clearRect(0, 0, W, H); ctx.fillStyle = palette.bg; ctx.fillRect(0, 0, W, H);
+
+    // the wire
+    ctx.strokeStyle = palette.axis; ctx.lineWidth = 2.2;
+    ctx.beginPath();
+    for (let i = 0; i <= 240; i++) { const p = curvePoint((i / 240) * Math.PI * 2); i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]); }
+    ctx.closePath(); ctx.stroke();
+
+    // the ant
+    const pa = curvePoint(ant);
+    ctx.fillStyle = palette.orange;
+    ctx.beginPath(); ctx.arc(pa[0], pa[1], 6.5, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 12px "Charter", serif'; ctx.textAlign = 'center';
+    ctx.fillText('a 1-dimensional world, coiled through 2D', ccx, 315);
+
+    // tangent frame at the ant (numerical)
+    const eps = 0.001;
+    const p1 = curvePoint(ant - eps), p2 = curvePoint(ant + eps);
+    const tx = p2[0] - p1[0], ty = p2[1] - p1[1];
+    const tn = Math.hypot(tx, ty) + 1e-9;
+    const ux = tx / tn, uy = ty / tn;
+
+    // the lens: neighborhood, translated to center, rotated tangent-horizontal, scaled
+    const lx = 520, ly = 150, lr = 95;
+    ctx.save();
+    ctx.beginPath(); ctx.arc(lx, ly, lr, 0, Math.PI * 2); ctx.clip();
+    ctx.fillStyle = palette.bgSoft; ctx.fillRect(lx - lr, ly - lr, lr * 2, lr * 2);
+    ctx.strokeStyle = palette.orange; ctx.lineWidth = 2.6;
+    ctx.beginPath();
+    const win = 1.6 / zoom; // param window shrinks as zoom grows
+    let started = false;
+    for (let i = -80; i <= 80; i++) {
+      const p = curvePoint(ant + (i / 80) * win);
+      const dx = p[0] - pa[0], dy = p[1] - pa[1];
+      // rotate so the tangent is horizontal, then scale
+      const rx = dx * ux + dy * uy, ry = -dx * uy + dy * ux;
+      const sx = lx + rx * zoom, sy = ly + ry * zoom;
+      started ? ctx.lineTo(sx, sy) : ctx.moveTo(sx, sy);
+      started = true;
+    }
+    ctx.stroke();
+    ctx.fillStyle = palette.orange;
+    ctx.beginPath(); ctx.arc(lx, ly, 5.5, 0, Math.PI * 2); ctx.fill();
+    ctx.restore();
+
+    ctx.strokeStyle = palette.axisBold; ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.arc(lx, ly, lr, 0, Math.PI * 2); ctx.stroke();
+    // lens pointer line
+    ctx.strokeStyle = palette.grid; ctx.setLineDash([3, 4]);
+    ctx.beginPath(); ctx.moveTo(pa[0] + 8, pa[1]); ctx.lineTo(lx - lr - 4, ly); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 12px "Charter", serif'; ctx.textAlign = 'center';
+    const straight = zoom >= 25;
+    ctx.fillText(straight ? 'at this zoom: just a straight line' : 'the ant’s-eye view', lx, ly + lr + 20);
+  }
+  runWhenVisible(canvas, draw);
+})();
+
+// ============================================================
+// FIG B: the atlas — two overlapping charts of a sphere
+// ============================================================
+(() => {
+  const W = 680, H = 360, canvas = document.getElementById('canvas-atlas');
+  const ctx = setupHiDPICanvas(canvas, W, H);
+  const slider = document.getElementById('atlas-r-slider');
+  const rval = document.getElementById('atlas-r-val');
+  const readout = document.getElementById('atlas-readout');
+  let rotB = 0, t = 0;
+  slider.addEventListener('input', () => { rotB = parseFloat(slider.value) * Math.PI / 180; rval.textContent = slider.value + '°'; });
+
+  // cap centers ~40° apart, cap angular radius 30°
+  const capR = Math.PI / 6;
+  function sph(lat, lon) { return [Math.cos(lat) * Math.cos(lon), Math.cos(lat) * Math.sin(lon), Math.sin(lat)]; }
+  const cA = sph(0.28, -0.36), cB = sph(0.05, 0.34);
+  function dot3(a, b) { return a[0] * b[0] + a[1] * b[1] + a[2] * b[2]; }
+  function angDist(a, b) { return Math.acos(Math.max(-1, Math.min(1, dot3(a, b)))); }
+
+  // sample points on the sphere near the two caps (fixed grid)
+  const samples = [];
+  for (let la = -0.62; la <= 0.92; la += 0.115) {
+    for (let lo = -1.05; lo <= 1.05; lo += 0.115) {
+      const p = sph(la, lo);
+      const inA = angDist(p, cA) < capR, inB = angDist(p, cB) < capR;
+      if (inA || inB) samples.push({ p, inA, inB });
+    }
+  }
+
+  // tangent bases at each cap center
+  function basis(n) {
+    const up = Math.abs(n[2]) < 0.95 ? [0, 0, 1] : [1, 0, 0];
+    let e1 = [up[1] * n[2] - up[2] * n[1], up[2] * n[0] - up[0] * n[2], up[0] * n[1] - up[1] * n[0]];
+    const n1 = Math.hypot(e1[0], e1[1], e1[2]); e1 = e1.map(v => v / n1);
+    const e2 = [n[1] * e1[2] - n[2] * e1[1], n[2] * e1[0] - n[0] * e1[2], n[0] * e1[1] - n[1] * e1[0]];
+    return [e1, e2];
+  }
+  const [a1, a2] = basis(cA), [b1, b2] = basis(cB);
+  function chart(p, c, e1, e2) { return [dot3(p, e1), dot3(p, e2)]; }
+
+  function draw() {
+    t += 1;
+    const yaw = t * 0.0018;
+    ctx.clearRect(0, 0, W, H); ctx.fillStyle = palette.bg; ctx.fillRect(0, 0, W, H);
+
+    // left: the sphere with both caps
+    const scx = 150, scy = 165, ss = 105;
+    const proj = (p) => {
+      const x1 = p[0] * Math.cos(yaw) - p[1] * Math.sin(yaw), y1 = p[0] * Math.sin(yaw) + p[1] * Math.cos(yaw);
+      const tilt = 0.35;
+      const y2 = y1 * Math.cos(tilt) - p[2] * Math.sin(tilt), z2 = y1 * Math.sin(tilt) + p[2] * Math.cos(tilt);
+      return { sx: scx + ss * x1, sy: scy - ss * z2, front: y2 < 0.15 };
+    };
+    // wire sphere
+    for (let li = 1; li < 6; li++) {
+      const phi = (li / 6) * Math.PI - Math.PI / 2;
+      ctx.beginPath();
+      let on = false;
+      for (let i = 0; i <= 48; i++) { const lo = (i / 48) * Math.PI * 2; const q = proj(sph(phi, lo)); on ? ctx.lineTo(q.sx, q.sy) : ctx.moveTo(q.sx, q.sy); on = true; }
+      ctx.strokeStyle = 'rgba(125,125,140,0.25)'; ctx.lineWidth = 1; ctx.stroke();
+    }
+    for (let lo = 0; lo < 8; lo++) {
+      ctx.beginPath();
+      let on = false;
+      for (let i = 0; i <= 48; i++) { const la = (i / 48) * Math.PI - Math.PI / 2; const q = proj(sph(la, (lo / 8) * Math.PI * 2)); on ? ctx.lineTo(q.sx, q.sy) : ctx.moveTo(q.sx, q.sy); on = true; }
+      ctx.strokeStyle = 'rgba(125,125,140,0.18)'; ctx.lineWidth = 1; ctx.stroke();
+    }
+    samples.forEach(s => {
+      const q = proj(s.p);
+      if (!q.front) return;
+      const both = s.inA && s.inB;
+      ctx.fillStyle = both ? palette.green : s.inA ? palette.blue : palette.orange;
+      ctx.globalAlpha = both ? 0.95 : 0.6;
+      ctx.beginPath(); ctx.arc(q.sx, q.sy, both ? 3 : 2.3, 0, Math.PI * 2); ctx.fill();
+      ctx.globalAlpha = 1;
+    });
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 12px "Charter", serif'; ctx.textAlign = 'center';
+    ctx.fillText('one curved world, two patches', scx, 320);
+
+    // right: the two flat charts
+    const drawChart = (x0, label, c, e1, e2, keep, rot) => {
+      const cs = 138;
+      ctx.strokeStyle = palette.axis; ctx.lineWidth = 1;
+      ctx.strokeRect(x0, 55, 150, 200);
+      samples.forEach(s => {
+        if (!keep(s)) return;
+        let [u, v] = chart(s.p, c, e1, e2);
+        if (rot) { const cu = u * Math.cos(rot) - v * Math.sin(rot), cv = u * Math.sin(rot) + v * Math.cos(rot); u = cu; v = cv; }
+        const both = s.inA && s.inB;
+        ctx.fillStyle = both ? palette.green : (keep === keepA ? palette.blue : palette.orange);
+        ctx.globalAlpha = both ? 0.95 : 0.55;
+        ctx.beginPath(); ctx.arc(x0 + 75 + u * cs, 155 - v * cs, both ? 3.2 : 2.4, 0, Math.PI * 2); ctx.fill();
+        ctx.globalAlpha = 1;
+      });
+      ctx.fillStyle = palette.textFaint; ctx.font = 'italic 12px "Charter", serif'; ctx.textAlign = 'center';
+      ctx.fillText(label, x0 + 75, 290);
+    };
+    const keepA = s => s.inA, keepB = s => s.inB;
+    drawChart(315, 'chart A — its own flat page', cA, a1, a2, keepA, 0);
+    drawChart(505, 'chart B — rotated as it pleases', cB, b1, b2, keepB, rotB);
+
+    // agreement: pairwise distances among overlap points, chart A vs chart B
+    const ov = samples.filter(s => s.inA && s.inB);
+    let err = 0, cnt = 0;
+    for (let i = 0; i < ov.length; i += 2) for (let j = i + 2; j < ov.length; j += 3) {
+      const pa1 = chart(ov[i].p, cA, a1, a2), pa2 = chart(ov[j].p, cA, a1, a2);
+      const pb1 = chart(ov[i].p, cB, b1, b2), pb2 = chart(ov[j].p, cB, b1, b2);
+      const dA = Math.hypot(pa1[0] - pa2[0], pa1[1] - pa2[1]);
+      const dB = Math.hypot(pb1[0] - pb2[0], pb1[1] - pb2[1]);
+      err += Math.abs(dA - dB); cnt++;
+    }
+    const agree = cnt ? 100 * (1 - Math.min(1, (err / cnt) * 12)) : 100;
+    readout.textContent = `overlap agreement: ${agree.toFixed(0)}% — at every page angle`;
+  }
+  runWhenVisible(canvas, draw);
+})();
+
+// ============================================================
+// FIG C: counting a world's directions
+// ============================================================
+(() => {
+  const W = 680, H = 330, canvas = document.getElementById('canvas-dim');
+  const ctx = setupHiDPICanvas(canvas, W, H);
+  const readout = document.getElementById('dim-readout');
+
+  // left world: a wire (1D), parameter tw; right world: a surface patch (2D), (us, vs)
+  let tw = 0.3, us = 0.5, vs = 0.5;
+  let flashWire = 0, flashSurf = 0;
+
+  const wcx = 170, wcy = 160;
+  function wire(a) {
+    const r = 92 + 20 * Math.sin(3 * a + 0.6) + 9 * Math.sin(5 * a + 2);
+    return [wcx + r * Math.cos(a), wcy + r * Math.sin(a)];
+  }
+  // surface: gently curved sheet drawn as a grid in fake-3D
+  function sheet(u, v) {
+    const x = 380 + 240 * u + 55 * v;
+    const y = 255 - 150 * v - 28 * u + 22 * Math.sin(2.4 * u + 1.8 * v);
+    return [x, y];
+  }
+
+  document.getElementById('dim-w-left').addEventListener('click', () => { tw -= 0.13; flashWire = 12; });
+  document.getElementById('dim-w-right').addEventListener('click', () => { tw += 0.13; flashWire = 12; });
+  const clamp01 = x => Math.max(0.06, Math.min(0.94, x));
+  document.getElementById('dim-s-left').addEventListener('click', () => { us = clamp01(us - 0.09); flashSurf = 12; });
+  document.getElementById('dim-s-right').addEventListener('click', () => { us = clamp01(us + 0.09); flashSurf = 12; });
+  document.getElementById('dim-s-up').addEventListener('click', () => { vs = clamp01(vs + 0.09); flashSurf = 12; });
+  document.getElementById('dim-s-down').addEventListener('click', () => { vs = clamp01(vs - 0.09); flashSurf = 12; });
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H); ctx.fillStyle = palette.bg; ctx.fillRect(0, 0, W, H);
+
+    // wire world
+    ctx.strokeStyle = palette.axis; ctx.lineWidth = 2.2;
+    ctx.beginPath();
+    for (let i = 0; i <= 200; i++) { const p = wire((i / 200) * Math.PI * 2); i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]); }
+    ctx.closePath(); ctx.stroke();
+    const pw = wire(tw);
+    if (flashWire > 0) { flashWire--; ctx.strokeStyle = palette.orange; ctx.lineWidth = 4; ctx.beginPath(); for (let i = -14; i <= 14; i++) { const p = wire(tw + i * 0.01); i === -14 ? ctx.moveTo(p[0], p[1]) : ctx.lineTo(p[0], p[1]); } ctx.stroke(); }
+    ctx.fillStyle = palette.blue;
+    ctx.beginPath(); ctx.arc(pw[0], pw[1], 7, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 12px "Charter", serif'; ctx.textAlign = 'center';
+    ctx.fillText('the wire — sideways does not exist here', 170, 305);
+
+    // surface world
+    ctx.strokeStyle = 'rgba(125,125,140,0.3)'; ctx.lineWidth = 1;
+    for (let gu = 0; gu <= 10; gu++) {
+      ctx.beginPath();
+      for (let i = 0; i <= 20; i++) { const p = sheet(gu / 10, i / 20); i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]); }
+      ctx.stroke();
+    }
+    for (let gv = 0; gv <= 10; gv++) {
+      ctx.beginPath();
+      for (let i = 0; i <= 20; i++) { const p = sheet(i / 20, gv / 10); i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]); }
+      ctx.stroke();
+    }
+    const ps = sheet(us, vs);
+    if (flashSurf > 0) { flashSurf--; ctx.strokeStyle = palette.orange; ctx.lineWidth = 2; ctx.strokeRect(ps[0] - 16, ps[1] - 16, 32, 32); }
+    ctx.fillStyle = palette.orange;
+    ctx.beginPath(); ctx.arc(ps[0], ps[1], 7, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 12px "Charter", serif'; ctx.textAlign = 'center';
+    ctx.fillText('the surface — two directions, everywhere', 500, 305);
+
+    readout.textContent = 'wire: 1 direction · surface: 2 directions — each world’s own count';
+  }
+  runWhenVisible(canvas, draw);
+})();
+</script>
+
+</body>
+</html>

@@ -7,12 +7,12 @@
 <!-- BEGIN AUTO-INJECTED META -->
 <meta name="description" content="The full CLR, the potential landscape, the death threshold, and the Coherence Theorem.">
 <meta name="author" content="Michael Sharpe">
-<link rel="canonical" href="https://lattice.project89.org/alpha/sections/04-clr.html">
+<link rel="canonical" href="https://lattice.project89.org/foundations/sections/03-clr.html">
 <link rel="icon" type="image/svg+xml" href="../../favicon.svg">
 <link rel="apple-touch-icon" href="../../apple-touch-icon.png">
 <meta property="og:title" content="The Coherence Learning Rule — The Living Lattice">
 <meta property="og:description" content="The full CLR, the potential landscape, the death threshold, and the Coherence Theorem.">
-<meta property="og:url" content="https://lattice.project89.org/alpha/sections/04-clr.html">
+<meta property="og:url" content="https://lattice.project89.org/foundations/sections/03-clr.html">
 <meta property="og:site_name" content="The Living Lattice">
 <meta property="og:type" content="article">
 <meta property="og:image" content="https://lattice.project89.org/alpha/og-image.png">
@@ -37,7 +37,7 @@ posthog.init('phc_kRX9iHZstABjgFqEWJBMok2S3hW9R8QMHbNao4EsNz2g', {api_host: 'htt
 <nav class="breadcrumb">
   <a href="../index.html">&larr; contents</a>
   <span class="sep">·</span>
-  <span class="section-num">section 04 / 17</span>
+  <span class="section-num">section 03 / 05</span>
 </nav>
 
 <h1>The Coherence Learning Rule<span class="subtitle">What you get when you ask each bond to help maximize C</span></h1>
@@ -88,7 +88,7 @@ posthog.init('phc_kRX9iHZstABjgFqEWJBMok2S3hW9R8QMHbNao4EsNz2g', {api_host: 'htt
 
 <p><strong>The Shannon channel</strong> (first term) is Hebbian. Neuroscientists have a slogan for this kind of rule: <em>cells that fire together, wire together</em>. Bonds whose endpoints tend to agree get stronger; bonds whose endpoints tend to disagree get weaker. It is how a network decides which connections are worth keeping, based only on what each bond can see.</p>
 
-<p><strong>The Fiedler channel</strong> (second term) is structural. The Shannon channel alone would kill bonds that sit at geometric bottlenecks — places where the endpoints have to disagree <em>because of the shape of the network</em>. The Fiedler channel detects these bottlenecks and pumps coupling back into them. It is how the network protects its own geometry from the Shannon channel's enthusiasm for agreement. We'll see its full significance in Chapter 7, when we meet vortices.</p>
+<p><strong>The Fiedler channel</strong> (second term) is structural. The Shannon channel alone would kill bonds that sit at geometric bottlenecks — places where the endpoints have to disagree <em>because of the shape of the network</em>. The Fiedler channel detects these bottlenecks and pumps coupling back into them. It is how the network protects its own geometry from the Shannon channel's enthusiasm for agreement. If &ldquo;Fiedler eigenvector of the graph Laplacian&rdquo; sounds like a wall of words, it is one idea and you can hear it: <a href="../../primers/graphs-spectra/">the graphs &amp; spectra primer</a> builds it from nothing — a network's natural wobbles, and the gentlest one as its bottleneck-detector.</p>
 
 <h2>The potential landscape</h2>
 
@@ -200,8 +200,8 @@ posthog.init('phc_kRX9iHZstABjgFqEWJBMok2S3hW9R8QMHbNao4EsNz2g', {api_host: 'htt
 <p class="aside"><span class="label">Ahead</span>The rest of this essay shows what happens when you run this one mechanism on the right graph. We'll see a binary field crystallize, nested phase-locked modes stack into hierarchies, topological defects nucleate out of random initial conditions, and — at the specific coupling where topology meets dynamics — the fine structure constant read out with six digits of precision. All of it, one inequality at a time.</p>
 
 <div class="nav-links">
-  <a href="03-coherence.html" class="prev">Coherence capital</a>
-  <a href="05-binary-field.html" class="next">How a binary field emerges</a>
+  <a href="02-capital.html" class="prev">Coherence capital</a>
+  <a href="04-coherence-theorem.html" class="next">The arrow of coherence</a>
 </div>
 
 </div>
@@ -247,7 +247,7 @@ wireEquation('eq-clr', {
   S: {
     name: 'Sᵢⱼ — structural gradient',
     pronounce: '"S sub i j"',
-    description: 'A mean-subtracted score that says whether this bond sits at a structural bottleneck of the network. Computed from the Fiedler eigenvector of the graph Laplacian — Chapter 7 will unpack why that matters. For now: S<sub>ij</sub> is positive for bonds at bottlenecks, negative for redundant bonds, and sums to zero across the whole network. It rescues bonds that the Shannon channel would kill even though the topology needs them.',
+    description: 'A mean-subtracted score that says whether this bond sits at a structural bottleneck of the network. Computed from the Fiedler eigenvector of the graph Laplacian — the graphs &amp; spectra primer builds that idea from nothing. For now: S<sub>ij</sub> is positive for bonds at bottlenecks, negative for redundant bonds, and sums to zero across the whole network. It rescues bonds that the Shannon channel would kill even though the topology needs them.',
   },
 });
 

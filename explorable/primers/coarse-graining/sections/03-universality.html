@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Universality: different machines, one physics — The Living Lattice</title>
+<meta name="description" content="Two entirely different microscopic rules become statistical twins under coarse-graining. Play 'guess the engine' and lose — then see why this is the mechanism behind 'one law, every scale'.">
+<meta name="author" content="Michael Sharpe">
+<link rel="canonical" href="https://lattice.project89.org/primers/coarse-graining/sections/03-universality.html">
+<link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
+<link rel="apple-touch-icon" href="../../../apple-touch-icon.png">
+<meta property="og:title" content="Universality: different machines, one physics — The Living Lattice">
+<meta property="og:description" content="Details wash out under the blur; destinations are few. Guess the engine — and lose.">
+<meta property="og:url" content="https://lattice.project89.org/primers/coarse-graining/sections/03-universality.html">
+<meta property="og:site_name" content="The Living Lattice">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://lattice.project89.org/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Universality: different machines, one physics — The Living Lattice">
+<meta name="twitter:description" content="The mechanism behind 'one law, every scale', playable.">
+<meta name="twitter:image" content="https://lattice.project89.org/og-image.png">
+<!-- BEGIN AUTO-INJECTED ANALYTICS -->
+<!-- PostHog -->
+<script>
+!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+posthog.init('phc_kRX9iHZstABjgFqEWJBMok2S3hW9R8QMHbNao4EsNz2g', {api_host: 'https://us.i.posthog.com', person_profiles: 'identified_only'});
+</script>
+<!-- END AUTO-INJECTED ANALYTICS -->
+<link rel="stylesheet" href="../../../css/style.css">
+<style>
+.flag-callout { margin: 1.6em 0; padding: 16px 20px; background: rgba(195,141,247,0.08); border-left: 3px solid #c38df7; border-radius: 3px; font-size: 14.5px; line-height: 1.55; }
+.flag-callout .flag-label { display: inline-block; font: 700 10.5px "SF Mono", monospace; color: #c38df7; text-transform: uppercase; letter-spacing: 0.1em; margin-right: 0.7em; }
+</style>
+</head>
+<body>
+<div class="page">
+
+<nav class="breadcrumb">
+  <a href="../index.html">&larr; coarse-graining</a>
+  <span class="sep">&middot;</span>
+  <span class="section-num">coarse-graining 03 / 03 &middot; advanced</span>
+</nav>
+
+<h1>Universality: different machines, one physics<span class="subtitle">Why the microscopic details stop mattering — and what "one law, every scale" actually claims</span></h1>
+
+<p class="lead">Here is the payoff the whole module has been walking toward. The last section showed that squinting has a small set of destinations. This one shows the consequence: if two systems built from <em>completely different parts, running completely different rules</em> head to the same destination, then after a squint or two they are not merely similar — they are <strong>statistically indistinguishable</strong>. The microscopic details wash out. What remains is shared. Physics calls this <strong>universality</strong>, and it is the license behind every "same law, different substrate" sentence on this site.</p>
+
+<h2>Two engines, one start</h2>
+
+<p>Below, one starting sketch — a field of blobs — is handed to two different machines. The left one is the <strong>thermal engine</strong> from the previous sections: physical temperature, energy bookkeeping, equilibrium. The right one is a <strong>voting machine</strong> — a cellular automaton where each cell repeatedly adopts the majority of its neighborhood, with a little contrarian noise. Different state-update rule, different noise mechanism, different physics tradition entirely; they share only the starting picture. Run them, and each engine dresses the blobs in its own microscopic texture. Then squint.</p>
+
+<figure id="fig-twins">
+  <canvas id="canvas-twins" width="680" height="460"></canvas>
+  <div class="controls" id="tw-controls">
+    <button id="tw-run" class="primary">Run the engines</button>
+    <button id="tw-squint">Squint both</button>
+    <button id="tw-reset">New start</button>
+  </div>
+  <figcaption>The magnifier boxes show each engine's fingerprint up close: thermal speckle on the left, the voting machine's smoother, blockier boundaries on the right — at the microscope level you can tell them apart at a glance. Now squint twice and read the agreement gap <span class="mono">|a<sub>A</sub> &minus; a<sub>B</sub>|</span>: the two coarse pictures become statistical twins (measured gap &le; 0.02 at every level, across seeds). The engines differ; their large-scale physics does not. <span id="tw-readout" class="readout">level 0 &middot; |a_A − a_B| = —</span></figcaption>
+</figure>
+
+<h2>Guess the engine</h2>
+
+<p>If the claim is that coarse-graining erases the difference, there is an honest way to test it: try to tell them apart, and fail. Each round below shows you a mystery lattice made by one of the two engines — sometimes under the microscope, sometimes after two squints — next to a labeled cheat-sheet of both engines' textures. Your job: name the machine.</p>
+
+<figure id="fig-guess">
+  <canvas id="canvas-guess" width="680" height="360"></canvas>
+  <div class="controls" id="gs-controls">
+    <button id="gs-thermal" class="primary">Thermal engine</button>
+    <button id="gs-voting">Voting machine</button>
+    <button id="gs-next">New round</button>
+  </div>
+  <figcaption>Keep score in both modes. Microscope rounds are easy — the fingerprints give the engines away. Squinted rounds hover at a coin-flip, <em>and that is the result</em>: after coarse-graining there is nothing left to recognize. You are not failing the test; the difference itself has been erased. <span id="gs-readout" class="readout">microscope: 0/0 &middot; squinted: 0/0</span></figcaption>
+</figure>
+
+<h2>What this buys the essays</h2>
+
+<p>Universality is why a physicist can compute the boiling of a magnet and have the answer apply to a fluid: near their transitions, both flow to the same fixed point, so their large-scale behavior is <em>the same physics</em>, microscopic differences be damned. Destinations are few; the details of the journey wash out.</p>
+
+<p>Now re-read the boldest sentence in <a href="../../../paradigm/sections/13-scale-ladder.html">the scale-ladder chapter</a>: each level of nature "<em>is</em> the coarse-graining of the level below", and — the mesoscale universality claim — systems whose <em>coarsened</em> structure matches inhabit the same dynamics, "whatever they are physically made of". You now own every word of that sentence's machinery: the coarse-graining is this module's squint; the "same dynamics" is this section's twins. Whether the claim is <em>true</em> across the ladder — brains and lattices and transformers flowing to shared structure — is the empirical program of the essays, argued there with measurements. What this module gives you is the standard of proof to hold them to: same coarsened structure, or it doesn't count. (For the expert-grade use of this machinery — renormalization flows in the α derivation — see the <a href="../../../alpha/sections/11-bkt-wall.html">BKT wall chapter</a>, which speaks this language natively.)</p>
+
+<div class="flag-callout">
+  <span class="flag-label">What's real here &middot; and what's the entry version</span>
+  The two engines genuinely differ (equilibrium thermal dynamics vs. a nonequilibrium voting automaton), and the twin statistics are measured, not staged — though both engines are deliberately handed the <em>same starting sketch</em>, so what you are watching is "different micro-rules, same mesoscale structure &rarr; same coarse fate", exactly the shape of the ladder's claim. This section teaches the <em>entry version</em> of universality: shared destinations and indistinguishable coarse statistics. The deep version — different systems sharing exact critical exponents at a nontrivial fixed point — is the expert story, and it is where universality earns its keep in real physics; the α essay uses it in earnest. The tool is standard textbook physics. The site's cross-substrate application of it is the theory's claim, made and defended in the essays — not smuggled in here.
+</div>
+
+<div class="nav-links">
+  <a href="02-flows.html" class="prev">Flows and the impossible temperature</a>
+  <a href="../index.html" class="next">Back to the curriculum</a>
+</div>
+
+</div>
+
+<script type="module">
+import { setupHiDPICanvas, palette } from '../../../js/common.js';
+
+function mkRng(seed) { let s = seed >>> 0; return () => { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; }; }
+function metro(s, L, T, sweeps, rnd) {
+  for (let sw = 0; sw < sweeps; sw++) for (let n = 0; n < L * L; n++) {
+    const i = (rnd() * L * L) | 0;
+    const x = i % L, y = (i / L) | 0;
+    const nn = s[((x + 1) % L) + y * L] + s[((x - 1 + L) % L) + y * L] + s[x + ((y + 1) % L) * L] + s[x + ((y - 1 + L) % L) * L];
+    const dE = 2 * s[i] * nn;
+    if (dE <= 0 || rnd() < Math.exp(-dE / T)) s[i] = -s[i];
+  }
+}
+function caStep(s, L, q, rnd) {
+  const out = new Int8Array(L * L);
+  for (let y = 0; y < L; y++) for (let x = 0; x < L; x++) {
+    const i = x + y * L;
+    const vote = s[i] + s[((x + 1) % L) + y * L] + s[((x - 1 + L) % L) + y * L] + s[x + ((y + 1) % L) * L] + s[x + ((y - 1 + L) % L) * L];
+    let v = vote > 0 ? 1 : -1;
+    if (rnd() < q) v = -v;
+    out[i] = v;
+  }
+  return out;
+}
+function squint(s, L) {
+  const M = L >> 1;
+  const out = new Int8Array(M * M);
+  for (let y = 0; y < M; y++) for (let x = 0; x < M; x++) {
+    const a = s[2 * x + 2 * y * L], b = s[2 * x + 1 + 2 * y * L], c = s[2 * x + (2 * y + 1) * L], d = s[2 * x + 1 + (2 * y + 1) * L];
+    const sum = a + b + c + d;
+    out[x + y * M] = sum > 0 ? 1 : sum < 0 ? -1 : a;
+  }
+  return out;
+}
+function agreement(s, L) {
+  let ag = 0, tot = 0;
+  for (let y = 0; y < L; y++) for (let x = 0; x < L; x++) {
+    const i = x + y * L;
+    if (s[i] === s[((x + 1) % L) + y * L]) ag++;
+    if (s[i] === s[x + ((y + 1) % L) * L]) ag++;
+    tot += 2;
+  }
+  return ag / tot;
+}
+function blob(L, rnd) {
+  const s = new Int8Array(L * L);
+  const waves = Array.from({ length: 5 }, () => ({ kx: (rnd() - 0.5) * 0.22, ky: (rnd() - 0.5) * 0.22, ph: rnd() * Math.PI * 2 }));
+  for (let y = 0; y < L; y++) for (let x = 0; x < L; x++) {
+    let v = 0;
+    for (const w of waves) v += Math.cos(w.kx * x + w.ky * y + w.ph);
+    s[x + y * L] = v > 0 ? 1 : -1;
+  }
+  return s;
+}
+const _latCache = new Map();
+function drawLattice(ctx, s, L, x0, y0, size) {
+  let oc = _latCache.get(L);
+  if (!oc) { oc = document.createElement('canvas'); oc.width = L; oc.height = L; _latCache.set(L, oc); }
+  const octx = oc.getContext('2d');
+  const img = octx.createImageData(L, L);
+  for (let i = 0; i < L * L; i++) {
+    const up = s[i] > 0, o = i * 4;
+    img.data[o] = up ? 228 : 52; img.data[o + 1] = up ? 196 : 46; img.data[o + 2] = up ? 128 : 40; img.data[o + 3] = 255;
+  }
+  octx.putImageData(img, 0, 0);
+  ctx.imageSmoothingEnabled = false;
+  ctx.drawImage(oc, x0, y0, size, size);
+  ctx.strokeStyle = palette.axis; ctx.lineWidth = 1;
+  ctx.strokeRect(x0, y0, size, size);
+}
+function runThermal(start, L, rnd) { const s = Int8Array.from(start); metro(s, L, 1.8, 80, rnd); return s; }
+function runVoting(start, L, rnd) { let s = Int8Array.from(start); for (let k = 0; k < 150; k++) s = caStep(s, L, 0.02, rnd); return s; }
+
+const L0 = 128;
+
+// ============================================================
+// FIG A: two engines, one start
+// ============================================================
+(() => {
+  const canvas = document.getElementById('canvas-twins');
+  const ctx = setupHiDPICanvas(canvas, 680, 460);
+  const readout = document.getElementById('tw-readout');
+  let rnd = mkRng(9);
+
+  let start, A = [], B = [], lv = 0, ran = false;
+  function reset() { start = blob(L0, rnd); A = [Int8Array.from(start)]; B = [Int8Array.from(start)]; lv = 0; ran = false; }
+  reset();
+
+  document.getElementById('tw-run').addEventListener('click', () => {
+    A = [runThermal(start, L0, rnd)];
+    B = [runVoting(start, L0, rnd)];
+    lv = 0; ran = true;
+    draw();
+  });
+  document.getElementById('tw-squint').addEventListener('click', () => {
+    if (!ran || lv >= 2) return;
+    A[lv + 1] = squint(A[lv], L0 >> lv);
+    B[lv + 1] = squint(B[lv], L0 >> lv);
+    lv++;
+    draw();
+  });
+  document.getElementById('tw-reset').addEventListener('click', () => { reset(); draw(); });
+
+  function draw() {
+    ctx.clearRect(0, 0, 680, 460);
+    const l = L0 >> lv;
+    drawLattice(ctx, A[lv], l, 30, 26, 290);
+    drawLattice(ctx, B[lv], l, 360, 26, 290);
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 12px serif'; ctx.textAlign = 'center';
+    ctx.fillText('thermal engine', 175, 16);
+    ctx.fillText('voting machine', 505, 16);
+    // magnifier insets: fixed 20x20 micro patch of level-0 state
+    const patch = 20, ps = 100 / patch;
+    for (const [src, bx] of [[A[0], 30], [B[0], 360]]) {
+      const ix = bx + 190, iy = 340;
+      for (let y = 0; y < patch; y++) for (let x = 0; x < patch; x++) {
+        ctx.fillStyle = src[40 + x + (52 + y) * L0] > 0 ? 'rgb(228, 196, 128)' : 'rgb(52, 46, 40)';
+        ctx.fillRect(ix + x * ps, iy + y * ps, ps + 0.5, ps + 0.5);
+      }
+      ctx.strokeStyle = palette.textSoft; ctx.lineWidth = 1.5;
+      ctx.strokeRect(ix, iy, 100, 100);
+    }
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 11px serif'; ctx.textAlign = 'left';
+    ctx.fillText('magnifier: the engine’s microscopic fingerprint (always level 0)', 30, 452);
+    if (ran) {
+      const aA = agreement(A[lv], l), aB = agreement(B[lv], l);
+      readout.textContent = `level ${lv} · a_A = ${aA.toFixed(3)} · a_B = ${aB.toFixed(3)} · |gap| = ${Math.abs(aA - aB).toFixed(3)}`;
+    } else {
+      readout.textContent = 'press Run the engines';
+    }
+  }
+  draw();
+  document.addEventListener('themechange', draw);
+})();
+
+// ============================================================
+// FIG B: guess the engine
+// ============================================================
+(() => {
+  const canvas = document.getElementById('canvas-guess');
+  const ctx = setupHiDPICanvas(canvas, 680, 360);
+  const readout = document.getElementById('gs-readout');
+  let rnd = mkRng(1717);
+
+  let refA = null, refB = null;
+  function makeRefs() {
+    const st = blob(L0, rnd);
+    refA = runThermal(st, L0, rnd);
+    refB = runVoting(st, L0, rnd);
+  }
+  makeRefs();
+
+  let mystery = null, truth = null, squinted = false, revealed = '';
+  const score = { micro: [0, 0], coarse: [0, 0] };
+  // round structure gets its own generator: the engines consume millions of
+  // draws from `rnd`, which would leave truth/mode poorly mixed round-to-round
+  const roundRnd = mkRng(24601);
+  function newRound() {
+    const st = blob(L0, rnd);
+    truth = roundRnd() < 0.5 ? 'thermal' : 'voting';
+    squinted = roundRnd() < 0.5;
+    let s = truth === 'thermal' ? runThermal(st, L0, rnd) : runVoting(st, L0, rnd);
+    let l = L0;
+    if (squinted) { s = squint(s, l); l >>= 1; s = squint(s, l); l >>= 1; }
+    mystery = { s, l };
+    revealed = '';
+  }
+  newRound();
+
+  function guess(g) {
+    if (revealed) return;
+    const bucket = squinted ? score.coarse : score.micro;
+    bucket[1]++;
+    if (g === truth) bucket[0]++;
+    revealed = `it was the ${truth === 'thermal' ? 'thermal engine' : 'voting machine'} — ${g === truth ? 'correct' : 'wrong'}`;
+  }
+  document.getElementById('gs-thermal').addEventListener('click', () => { guess('thermal'); draw(); });
+  document.getElementById('gs-voting').addEventListener('click', () => { guess('voting'); draw(); });
+  document.getElementById('gs-next').addEventListener('click', () => { newRound(); draw(); });
+
+  function draw() {
+    ctx.clearRect(0, 0, 680, 360);
+    drawLattice(ctx, mystery.s, mystery.l, 40, 40, 260);
+    ctx.fillStyle = palette.textSoft; ctx.font = 'italic 13px serif'; ctx.textAlign = 'center';
+    ctx.fillText(squinted ? 'mystery — after two squints' : 'mystery — under the microscope', 170, 28);
+    // cheat sheet: 90x90 micro patches, labeled
+    const patch = 22, ps = 110 / patch;
+    for (const [src, iy, lab] of [[refA, 60, 'thermal, up close'], [refB, 210, 'voting, up close']]) {
+      for (let y = 0; y < patch; y++) for (let x = 0; x < patch; x++) {
+        ctx.fillStyle = src[30 + x + (44 + y) * L0] > 0 ? 'rgb(228, 196, 128)' : 'rgb(52, 46, 40)';
+        ctx.fillRect(430 + x * ps, iy + y * ps, ps + 0.5, ps + 0.5);
+      }
+      ctx.strokeStyle = palette.axis; ctx.strokeRect(430, iy, 110, 110);
+      ctx.fillStyle = palette.textFaint; ctx.font = 'italic 11px serif'; ctx.textAlign = 'left';
+      ctx.fillText(lab, 552, iy + 60);
+    }
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 12px serif'; ctx.textAlign = 'center';
+    ctx.fillText(revealed || 'name the machine', 170, 330);
+    readout.textContent = `microscope: ${score.micro[0]}/${score.micro[1]} · squinted: ${score.coarse[0]}/${score.coarse[1]}`;
+  }
+  draw();
+  document.addEventListener('themechange', draw);
+})();
+</script>
+
+</body>
+</html>

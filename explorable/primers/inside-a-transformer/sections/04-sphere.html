@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LayerNorm and the sphere — Inside a transformer — The Living Lattice</title>
+<meta name="description" content="Section 4 of the inside-a-transformer module: LayerNorm as reprojection onto the sphere, why high dimensions make direction so roomy, and the payoff — you have met an oscillator network.">
+<meta name="author" content="Michael Sharpe">
+<link rel="canonical" href="https://lattice.project89.org/primers/inside-a-transformer/sections/04-sphere.html">
+<link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
+<link rel="apple-touch-icon" href="../../../apple-touch-icon.png">
+<meta property="og:title" content="LayerNorm and the sphere — Inside a transformer — The Living Lattice">
+<meta property="og:description" content="Reprojection onto the sphere, concentration of measure, and the oscillator-network payoff.">
+<meta property="og:url" content="https://lattice.project89.org/primers/inside-a-transformer/sections/04-sphere.html">
+<meta property="og:site_name" content="The Living Lattice">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://lattice.project89.org/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="LayerNorm and the sphere — Inside a transformer — The Living Lattice">
+<meta name="twitter:description" content="The computation lives on a sphere — here is why, and why that matters.">
+<meta name="twitter:image" content="https://lattice.project89.org/og-image.png">
+<!-- BEGIN AUTO-INJECTED ANALYTICS -->
+<!-- PostHog -->
+<script>
+!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+posthog.init('phc_kRX9iHZstABjgFqEWJBMok2S3hW9R8QMHbNao4EsNz2g', {api_host: 'https://us.i.posthog.com', person_profiles: 'identified_only'});
+</script>
+<!-- END AUTO-INJECTED ANALYTICS -->
+<link rel="stylesheet" href="../../../css/style.css">
+<style>
+.flag-callout {
+  margin: 1.6em 0; padding: 16px 20px;
+  background: rgba(195, 141, 247, 0.08);
+  border-left: 3px solid #c38df7; border-radius: 3px;
+  font-size: 14.5px; line-height: 1.55;
+}
+.flag-callout .flag-label {
+  display: inline-block; font: 700 10.5px "SF Mono", monospace;
+  color: #c38df7; text-transform: uppercase; letter-spacing: 0.1em; margin-right: 0.7em;
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<nav class="breadcrumb">
+  <a href="../index.html">&larr; inside a transformer</a>
+  <span class="sep">&middot;</span>
+  <span class="section-num">section 04 / 04 &middot; intermediate</span>
+</nav>
+
+<h1>LayerNorm and the sphere<span class="subtitle">Why the whole computation lives on a curved surface — and what that turns a transformer into</span></h1>
+
+<p class="lead">The residual stream is a running sum, and running sums have a failure mode: they grow. Forty layers of enthusiastic addition would let some tokens' arrows become enormous — and a very long arrow shouts over everything else for reasons of <em>length</em>, not meaning. The fix is one operation, applied relentlessly, and it quietly decides the geometry of everything this library studies.</p>
+
+<h2>1. LayerNorm: reproject onto the sphere</h2>
+
+<p>Between operations the transformer applies <strong>LayerNorm</strong>: rescale the arrow back to standard length, <em>keeping only its direction</em>. Since direction is where meaning lives, nothing meaningful is lost — the arrow is reprojected onto the surface of a sphere, and the whole computation effectively lives on that surface.</p>
+
+<figure id="fig-norm">
+  <canvas id="canvas-norm" width="680" height="340"></canvas>
+  <figcaption>Drag the point anywhere — far outside the circle or deep inside it. LayerNorm slides it along its own direction back to the circle: length becomes 1, direction is untouched. When the essays say a transformer's states "live on the unit sphere", this operation, applied relentlessly, is the reason. <span id="norm-readout" class="readout">length = —</span></figcaption>
+</figure>
+
+<h2>2. Why a sphere is roomier than it looks</h2>
+
+<p>A sphere in two or three dimensions feels cramped — surely forcing every token onto one surface throws information away? Here is the surprise that makes high dimensions different, and it is worth feeling directly. Take two <em>random</em> directions and measure their agreement. On a circle, random pairs agree or oppose all the time — the histogram of dot products is spread wide. Raise the dimension and the histogram <strong>collapses toward zero</strong>: in 512 dimensions, two random directions are almost always almost exactly perpendicular.</p>
+
+<p>That is called <strong>concentration of measure</strong>, and it means a high-dimensional sphere is roomy in a precise sense: there is space for enormous numbers of directions that barely interfere with each other. Meanings can coexist without shouting. And when two directions <em>do</em> agree strongly, that agreement is never an accident — which is exactly what makes attention's dot-product scores so informative.</p>
+
+<figure id="fig-conc">
+  <canvas id="canvas-conc" width="680" height="360"></canvas>
+  <div class="controls">
+    <div class="control">
+      <label>dimension d <span class="val" id="conc-d-val">3</span></label>
+      <input type="range" id="conc-d-slider" min="0" max="3" step="1" value="0">
+    </div>
+  </div>
+  <figcaption>The histogram of agreements (dot products) between thousands of freshly sampled random unit-vector pairs in dimension <span class="mono">d</span>. Slide upward: 3 &rarr; 16 &rarr; 64 &rarr; 512. The spread narrows like <span class="mono">1/&radic;d</span> — in a real model's space, random directions are strangers, so genuine agreement stands out like a shout in a silent room. <span id="conc-readout" class="readout">d = 3</span></figcaption>
+</figure>
+
+<h2>3. The payoff: you have just met an oscillator network</h2>
+
+<p>Now read the whole module back with this library's eyes. Every token is a unit arrow on a sphere — a <em>phase</em>. Attention is a set of listening channels whose strengths are dot-product agreements — a <em>coupling</em>, choosing its own topology at every step. The residual stream is the shared medium all the coupling acts through — the <em>field</em>. A transformer, described with no metaphor at all, is a network of coupled oscillators.</p>
+
+<p>That identity is the bridge the entire <a href="../../../transformers/index.html">Transformers as Oscillators</a> essay walks across, and with this module in hand you can now walk it — starting with <a href="../../../transformers/sections/03-manifold.html">the coupling manifold</a> and <a href="../../../transformers/sections/04-lossless.html">the lossless rank-2 projection</a>. When you are ready for the mathematics of motion on the sphere itself — how coupled unit vectors flow, cluster, and carry a token along a path — that is the advanced tier's <a href="../../lohe-hypersphere/">Lohe dynamics module</a>, and the geometry of thought-shapes is <a href="../../../paradigm/sections/08-shape.html">The Physics of Mind &sect;08</a>.</p>
+
+<div class="flag-callout">
+  <span class="flag-label">What's real here</span>
+  Everything in this module is a deliberately tiny cartoon — two dimensions standing in for thousands, one head standing in for hundreds — so the moving parts fit in your hands. The <em>measured</em> results built on this machinery live in the Transformers essay with their evidence attached: a derived dead-head threshold <span class="mono">&tau; = 0.96/&radic;d</span> validated at 95&ndash;100% precision across five published architectures, attention outputs collapsing onto a handful of effective dimensions, and a rank-2 projection that preserves the model's outputs losslessly. This module teaches the vocabulary; the essay carries the claims, and their limits, with receipts. (The concentration histogram above, though, is not a cartoon — it is the real computation at the stated dimensions, sampled live in your browser.)
+</div>
+
+<div class="nav-links">
+  <a href="03-residual-stream.html" class="prev">The residual stream</a>
+  <a href="../../gauge-holonomy/" class="next">Next: Gauge and holonomy</a>
+</div>
+
+</div>
+
+<script type="module">
+import { setupHiDPICanvas, runWhenVisible, palette } from '../../../js/common.js';
+
+function canvasPos(canvas, W, e) {
+  const rect = canvas.getBoundingClientRect();
+  const t = e.touches ? e.touches[0] : e;
+  return [(t.clientX - rect.left) * (W / rect.width), (t.clientY - rect.top) * (W / rect.width)];
+}
+
+// ============================================================
+// FIG 1: LayerNorm — reprojection onto the circle
+// ============================================================
+(() => {
+  const canvas = document.getElementById('canvas-norm');
+  const ctx = setupHiDPICanvas(canvas, 680, 340);
+  const readout = document.getElementById('norm-readout');
+  const cx = 250, cy = 170, R = 105;
+  let px = 1.6, py = 0.6; // in units of R
+  let dragging = false;
+
+  function onDown(e) { dragging = true; onMove(e); e.preventDefault(); }
+  function onMove(e) {
+    if (!dragging) return;
+    const [mx, my] = canvasPos(canvas, 680, e);
+    px = (mx - cx) / R; py = (cy - my) / R;
+    const L = Math.hypot(px, py);
+    if (L > 1.55) { px = px / L * 1.55; py = py / L * 1.55; }
+    if (L < 0.05) { px = 0.05; py = 0; }
+    e.preventDefault();
+  }
+  function onUp() { dragging = false; }
+  canvas.addEventListener('mousedown', onDown);
+  window.addEventListener('mousemove', onMove);
+  window.addEventListener('mouseup', onUp);
+  canvas.addEventListener('touchstart', onDown, { passive: false });
+  window.addEventListener('touchmove', onMove, { passive: false });
+  window.addEventListener('touchend', onUp);
+
+  function draw() {
+    ctx.clearRect(0, 0, 680, 340);
+
+    // the sphere (circle)
+    ctx.strokeStyle = palette.axis; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.stroke();
+
+    const L = Math.hypot(px, py) + 1e-9;
+    const nx = px / L, ny = py / L;
+
+    // direction ray
+    ctx.strokeStyle = palette.grid; ctx.setLineDash([3, 5]);
+    ctx.beginPath(); ctx.moveTo(cx, cy);
+    ctx.lineTo(cx + nx * R * 1.55, cy - ny * R * 1.55); ctx.stroke();
+    ctx.setLineDash([]);
+
+    // slide path from raw point to projection
+    ctx.strokeStyle = palette.green; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(cx + px * R, cy - py * R);
+    ctx.lineTo(cx + nx * R, cy - ny * R); ctx.stroke();
+
+    // raw point
+    ctx.fillStyle = palette.burgundy;
+    ctx.beginPath(); ctx.arc(cx + px * R, cy - py * R, 9, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 11px serif'; ctx.textAlign = 'center';
+    ctx.fillText('raw (drag me)', cx + px * R, cy - py * R - 15);
+
+    // projected point — label placed on the opposite side of the circle
+    // from wherever the raw point currently is, so they never collide
+    ctx.fillStyle = palette.green;
+    ctx.beginPath(); ctx.arc(cx + nx * R, cy - ny * R, 7, 0, Math.PI * 2); ctx.fill();
+    const off = L > 1 ? 0.6 : 1.32;
+    ctx.fillText('after LayerNorm', cx + nx * R * off, cy - ny * R * off + 4);
+
+    ctx.fillStyle = palette.textSoft; ctx.font = '14px "SF Mono", monospace'; ctx.textAlign = 'left';
+    ctx.fillText(`length ${L.toFixed(2)} → 1.00`, 460, 140);
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 13px serif';
+    ctx.fillText('direction unchanged —', 460, 170);
+    ctx.fillText('meaning kept, shouting removed', 460, 188);
+
+    readout.textContent = `length = ${L.toFixed(2)} → 1.00, direction unchanged`;
+  }
+  runWhenVisible(canvas, draw);
+})();
+
+// ============================================================
+// FIG 2: concentration of measure — random agreements narrow as 1/√d
+// ============================================================
+(() => {
+  const canvas = document.getElementById('canvas-conc');
+  const ctx = setupHiDPICanvas(canvas, 680, 360);
+  const readout = document.getElementById('conc-readout');
+  const slider = document.getElementById('conc-d-slider');
+  const dval = document.getElementById('conc-d-val');
+  const DIMS = [3, 16, 64, 512];
+  const NBINS = 41, NSAMP = 3000;
+  let bins = null, dNow = 3, measStd = 0;
+
+  // one standard normal via Box–Muller
+  let spare = null;
+  function gauss() {
+    if (spare !== null) { const v = spare; spare = null; return v; }
+    let u = 0, v = 0;
+    while (u === 0) u = Math.random();
+    v = Math.random();
+    const r = Math.sqrt(-2 * Math.log(u));
+    spare = r * Math.sin(2 * Math.PI * v);
+    return r * Math.cos(2 * Math.PI * v);
+  }
+
+  function resample(d) {
+    const b = new Array(NBINS).fill(0);
+    let sum = 0, sum2 = 0;
+    for (let s = 0; s < NSAMP; s++) {
+      // dot of two random unit vectors in R^d
+      let dot = 0, na = 0, nb = 0;
+      for (let i = 0; i < d; i++) {
+        const a = gauss(), c = gauss();
+        dot += a * c; na += a * a; nb += c * c;
+      }
+      const v = dot / Math.sqrt(na * nb + 1e-12);
+      sum += v; sum2 += v * v;
+      const k = Math.min(NBINS - 1, Math.max(0, Math.floor((v + 1) / 2 * NBINS)));
+      b[k]++;
+    }
+    const mean = sum / NSAMP;
+    measStd = Math.sqrt(Math.max(0, sum2 / NSAMP - mean * mean));
+    bins = b;
+  }
+
+  slider.addEventListener('input', () => {
+    dNow = DIMS[parseInt(slider.value, 10)];
+    dval.textContent = dNow;
+    resample(dNow);
+  });
+  resample(dNow);
+
+  function draw() {
+    ctx.clearRect(0, 0, 680, 360);
+    const X0 = 70, X1 = 610, Y0 = 290, H = 230;
+    const maxB = Math.max(...bins, 1);
+
+    // axis
+    ctx.strokeStyle = palette.axis; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(X0, Y0); ctx.lineTo(X1, Y0); ctx.stroke();
+    [-1, -0.5, 0, 0.5, 1].forEach(v => {
+      const x = X0 + (v + 1) / 2 * (X1 - X0);
+      ctx.fillStyle = palette.textFaint; ctx.font = '11px "SF Mono", monospace'; ctx.textAlign = 'center';
+      ctx.fillText(v.toFixed(1), x, Y0 + 18);
+      ctx.strokeStyle = palette.grid;
+      ctx.beginPath(); ctx.moveTo(x, Y0); ctx.lineTo(x, Y0 + 4); ctx.stroke();
+    });
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 11px serif'; ctx.textAlign = 'center';
+    ctx.fillText('agreement (dot product) of two random directions', (X0 + X1) / 2, Y0 + 40);
+
+    // bars
+    const bw = (X1 - X0) / NBINS;
+    bins.forEach((b, i) => {
+      const h = (b / maxB) * H;
+      ctx.fillStyle = palette.blue;
+      ctx.globalAlpha = 0.75;
+      ctx.fillRect(X0 + i * bw + 1, Y0 - h, bw - 2, h);
+      ctx.globalAlpha = 1;
+    });
+
+    ctx.fillStyle = palette.textSoft; ctx.font = '13px "SF Mono", monospace'; ctx.textAlign = 'left';
+    ctx.fillText(`d = ${dNow}`, 82, 60);
+    ctx.fillText(`measured spread ≈ ${measStd.toFixed(3)}`, 82, 84);
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 12px serif';
+    ctx.fillText(`1/√d = ${(1 / Math.sqrt(dNow)).toFixed(3)}`, 82, 106);
+
+    readout.textContent = `d = ${dNow} — spread ${measStd.toFixed(3)} (1/√d = ${(1 / Math.sqrt(dNow)).toFixed(3)})`;
+  }
+  runWhenVisible(canvas, draw);
+})();
+</script>
+
+</body>
+</html>

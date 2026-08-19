@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The BKT transition: why the wall sits at 2/π — The Living Lattice</title>
+<meta name="description" content="An advanced curriculum module: vortices as topological defects, the energy–entropy tug-of-war (free energy taught in plain words), and why the site's central wall lands at exactly K = 2/π.">
+<meta name="author" content="Michael Sharpe">
+<link rel="canonical" href="https://lattice.project89.org/primers/bkt-transition/">
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+<meta property="og:title" content="The BKT transition: why the wall sits at 2/π — The Living Lattice">
+<meta property="og:description" content="Vortices, the energy–entropy tug-of-war, and the birth of the wall at K = 2/π.">
+<meta property="og:url" content="https://lattice.project89.org/primers/bkt-transition/">
+<meta property="og:site_name" content="The Living Lattice">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://lattice.project89.org/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="The BKT transition: why the wall sits at 2/π — The Living Lattice">
+<meta name="twitter:description" content="Vortices, free energy in plain words, and why the wall lands at 2/π.">
+<meta name="twitter:image" content="https://lattice.project89.org/og-image.png">
+<!-- BEGIN AUTO-INJECTED ANALYTICS -->
+<!-- PostHog -->
+<script>
+!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+posthog.init('phc_kRX9iHZstABjgFqEWJBMok2S3hW9R8QMHbNao4EsNz2g', {api_host: 'https://us.i.posthog.com', person_profiles: 'identified_only'});
+</script>
+<!-- END AUTO-INJECTED ANALYTICS -->
+<link rel="stylesheet" href="../../css/style.css">
+<style>
+nav.toc li { align-items: flex-start; }
+nav.toc .toc-item { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+nav.toc .toc-item > a { flex: 0 0 auto; font-weight: 500; }
+nav.toc .toc-sub { color: var(--text-faint); font-size: 0.9em; line-height: 1.45; }
+</style>
+</head>
+<body>
+<div class="page">
+
+<nav class="breadcrumb">
+  <a href="../index.html">&larr; primers</a>
+  <span class="sep">&middot;</span>
+  <span class="section-num">BKT transition &middot; advanced</span>
+</nav>
+
+<h1>The BKT transition<span class="subtitle">Why the wall sits at 2/&pi; — the site's central constant finally gets its why</span></h1>
+
+<p class="lead">The <a href="../sections/06-von-mises.html">von Mises module</a> gave the site's central number a birth certificate: R<sub>0</sub>(K<sub>BKT</sub>) &asymp; 0.303 is the mean resultant of a circular cloud at the critical coupling. But it left the deepest question standing: why is there a critical coupling at all, and why does it sit at exactly <span class="mono">K = 2/&pi;</span> — a clean ratio of small integers and &pi;, with no dial anyone tuned? This module is the answer. It is a story about <em>defects</em>: little whirlpools in a field of phases, the energy it costs to have one, the freedom you gain by letting it roam, and the knife-edge where those two logarithms exactly cancel. That knife-edge is the wall the whole library keeps returning to.</p>
+
+<p>This is an advanced module. It assumes <a href="../sections/00-phase-and-sound.html">phase</a>, <a href="../topology-manifolds/">winding numbers</a> (you will meet old friends — the loops you drew there come back as whirlpools), and <a href="../sections/06-von-mises.html">the resultant</a>. Everything else is built here, including the site's missing plain-words account of <em>free energy</em>.</p>
+
+<nav class="toc">
+  <ol>
+    <li><span class="toc-item"><a href="sections/01-vortices.html">Vortices: whirlpools in a field of phases</a><span class="toc-sub">A vortex is a point the phase field winds around — a winding number you can place, drag, and fail to comb away. Topological protection, felt.</span></span></li>
+    <li><span class="toc-item"><a href="sections/02-the-argument.html">The argument: energy versus entropy</a><span class="toc-sub">A lone vortex costs &pi;K&middot;ln&nbsp;R; its freedom is worth 2&middot;ln&nbsp;R. Free energy in plain words, both logarithms measured live, and the knife-edge where the slopes cross: K = 2/&pi;.</span></span></li>
+    <li><span class="toc-item"><a href="sections/03-the-wall.html">The wall: what unbinding destroys</a><span class="toc-sub">Below the wall, free vortices scramble every correlation; above it, bound pairs let order carry. The constant, live to eight decimals, and the hand-off to the essays.</span></span></li>
+  </ol>
+</nav>
+
+<div class="nav-links">
+  <a href="../index.html" class="prev">Primers</a>
+  <a href="sections/01-vortices.html" class="next">Start: Vortices</a>
+</div>
+
+</div>
+
+<script type="module">
+import '../../js/common.js';
+</script>
+
+</body>
+</html>

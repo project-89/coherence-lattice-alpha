@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shapes of spaces: topology and manifolds — The Living Lattice</title>
+<meta name="description" content="An intermediate module in three sections: topology as what survives stretching (with a mug-to-donut morph and a hole-counting game), manifolds as locally-flat worlds (with an atlas you can leaf through), and loop-counting — winding numbers, the fundamental group, and homology as one idea.">
+<meta name="author" content="Michael Sharpe">
+<link rel="canonical" href="https://lattice.project89.org/primers/topology-manifolds/">
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+<meta property="og:title" content="Shapes of spaces: topology and manifolds — The Living Lattice">
+<meta property="og:description" content="Three sections of playable topology: stretch a mug into a donut, walk an ant along a wire, and draw your own winding numbers.">
+<meta property="og:url" content="https://lattice.project89.org/primers/topology-manifolds/">
+<meta property="og:site_name" content="The Living Lattice">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://lattice.project89.org/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Shapes of spaces: topology and manifolds — The Living Lattice">
+<meta name="twitter:description" content="Playable topology in three sections: stretching, locally-flat worlds, and counting loops.">
+<meta name="twitter:image" content="https://lattice.project89.org/og-image.png">
+<!-- BEGIN AUTO-INJECTED ANALYTICS -->
+<!-- PostHog -->
+<script>
+!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+posthog.init('phc_kRX9iHZstABjgFqEWJBMok2S3hW9R8QMHbNao4EsNz2g', {api_host: 'https://us.i.posthog.com', person_profiles: 'identified_only'});
+</script>
+<!-- END AUTO-INJECTED ANALYTICS -->
+<link rel="stylesheet" href="../../css/style.css">
+<style>
+nav.toc li { align-items: flex-start; }
+nav.toc .toc-item { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+nav.toc .toc-item > a { flex: 0 0 auto; font-weight: 500; }
+nav.toc .toc-sub { color: var(--text-faint); font-size: 0.9em; line-height: 1.45; }
+</style>
+</head>
+<body>
+<div class="page">
+
+<nav class="breadcrumb">
+  <a href="../index.html">&larr; primers</a>
+  <span class="sep">&middot;</span>
+  <span class="section-num">topology &amp; manifolds &middot; intermediate</span>
+</nav>
+
+<h1>Shapes of spaces<span class="subtitle">Topology and manifolds — the geometry that survives stretching, in three playable sections</span></h1>
+
+<p class="lead">The essays on this site keep saying things like <em>the trajectory lives on a low-dimensional manifold</em>, or <em>the winding number is a topological invariant</em>. Those sentences do real work, and none of it needs equations. It needs three ideas, and each gets a section of its own here: what kind of &ldquo;shape&rdquo; survives stretching, what it means for a space to look flat up close, and how to count the ways a loop can be trapped. Every idea arrives as something you drag, draw, or play before it gets a name.</p>
+
+<p>This module assumes nothing beyond <a href="../sections/01-rotations.html">the rotations primer</a>, and even that only lightly. Twelve chapters of the site lean on what's built here.</p>
+
+<nav class="toc">
+  <ol>
+    <li><span class="toc-item"><a href="sections/01-topology.html">Topology: the shape that survives stretching</a><span class="toc-sub">Clay rules; the loop-of-string argument for why a donut is not a ball; stretch a donut into a mug yourself; then a hole-counting game — because the hole count is the name tag topology hangs on everything.</span></span></li>
+    <li><span class="toc-item"><a href="sections/02-manifolds.html">Manifolds: flat up close, curved as a whole</a><span class="toc-sub">The ant on the wire; an atlas of the sphere — overlapping flat maps that agree wherever they overlap; a probe for counting a world's directions; and what &ldquo;the computation lives on a low-dimensional manifold&rdquo; actually asserts.</span></span></li>
+    <li><span class="toc-item"><a href="sections/03-counting-loops.html">Counting loops: winding, &pi;&#8321;, and H&#8321;</a><span class="toc-sub">Draw your own winding number; wind loops on a flat torus with two live counters — the exact bookkeeping of the shape-of-a-thought chapter; carry a flag around a M&ouml;bius band and get it back mirrored; then the three names, reconciled.</span></span></li>
+  </ol>
+</nav>
+
+<div class="nav-links">
+  <a href="../index.html" class="prev">Primers</a>
+  <a href="sections/01-topology.html" class="next">Start: Topology</a>
+</div>
+
+</div>
+
+<script type="module">
+import '../../js/common.js';
+</script>
+
+</body>
+</html>

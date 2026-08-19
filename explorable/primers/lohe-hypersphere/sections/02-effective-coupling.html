@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Effective coupling: the wiring that chooses itself — The Living Lattice</title>
+<meta name="description" content="Section 2 of the Lohe module: the coupling matrix K as a live object — watch the wiring re-rank as clusters form, click a bond to see it, and quench the wiring to feel the difference between a living network and a frozen one.">
+<meta name="author" content="Michael Sharpe">
+<link rel="canonical" href="https://lattice.project89.org/primers/lohe-hypersphere/sections/02-effective-coupling.html">
+<link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
+<link rel="apple-touch-icon" href="../../../apple-touch-icon.png">
+<meta property="og:title" content="Effective coupling: the wiring that chooses itself — The Living Lattice">
+<meta property="og:description" content="The coupling matrix as a living object: agreement chooses the wiring, the wiring shapes the geometry, and freezing it changes everything.">
+<meta property="og:url" content="https://lattice.project89.org/primers/lohe-hypersphere/sections/02-effective-coupling.html">
+<meta property="og:site_name" content="The Living Lattice">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://lattice.project89.org/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Effective coupling: the wiring that chooses itself — The Living Lattice">
+<meta name="twitter:description" content="Watch K become a living object: re-ranking wiring, clickable bonds, and the quench experiment.">
+<meta name="twitter:image" content="https://lattice.project89.org/og-image.png">
+<!-- BEGIN AUTO-INJECTED ANALYTICS -->
+<!-- PostHog -->
+<script>
+!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+posthog.init('phc_kRX9iHZstABjgFqEWJBMok2S3hW9R8QMHbNao4EsNz2g', {api_host: 'https://us.i.posthog.com', person_profiles: 'identified_only'});
+</script>
+<!-- END AUTO-INJECTED ANALYTICS -->
+<link rel="stylesheet" href="../../../css/style.css">
+<style>
+.flag-callout {
+  margin: 1.6em 0; padding: 16px 20px;
+  background: rgba(195, 141, 247, 0.08);
+  border-left: 3px solid #c38df7; border-radius: 3px;
+  font-size: 14.5px; line-height: 1.55;
+}
+.flag-callout .flag-label {
+  display: inline-block; font: 700 10.5px "SF Mono", monospace;
+  color: #c38df7; text-transform: uppercase; letter-spacing: 0.1em; margin-right: 0.7em;
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<nav class="breadcrumb">
+  <a href="../index.html">&larr; lohe module</a>
+  <span class="sep">&middot;</span>
+  <span class="section-num">lohe 02 / 03 &middot; advanced</span>
+</nav>
+
+<h1>Effective coupling: the wiring that chooses itself<span class="subtitle">Section 2 of the Lohe module — K stops being a knob and becomes the most interesting object in the system</span></h1>
+
+<p class="lead">In every figure you have met so far, the coupling K was a knob you slid — one number, set from outside, the same for every pair. This section takes the knob away. The coupling becomes a <em>matrix</em>: a number K<sub>ij</sub> for every pair of oscillators, and nothing stops that matrix from being different for every pair and different at every instant. The most interesting choice — the one this whole site keeps circling — is to let the states themselves decide it. When agreement chooses the wiring and the wiring shapes the agreement, the network is not running <em>on</em> a graph. It is continuously <em>growing</em> one.</p>
+
+<h2>1. From a knob to a matrix</h2>
+
+<p>Write down who pulls on whom and how hard, and you get a square grid of numbers: row i lists how strongly oscillator i listens to each of the others. A fixed, uniform K is the special case where every entry is the same. A two-community graph is the case where the grid has two blocks and silence elsewhere. And an <strong>effective coupling</strong> is the general case: the entries are computed, moment by moment, from the current states — for instance, "listen most to the five you currently agree with most."</p>
+
+<p>That last rule creates a loop with consequences. Agreeing makes you couple; coupling makes you agree harder. Rich-get-richer, in geometry. Below, watch both halves of the loop at once: the sphere on the left, and the actual K matrix on the right, drawn live. Early on, the wiring flickers — everyone's nearest agreements keep changing as the crowd churns. As clusters condense, the wiring <em>freezes into structure</em>: each oscillator's chosen five stabilize into its clustermates. The matrix stops flickering because the geometry stopped churning — and the geometry stopped churning because the matrix chose it. Neither came first. That is what "the wiring chooses itself" means.</p>
+
+<figure id="fig-matrix">
+  <canvas id="canvas-matrix" width="680" height="440"></canvas>
+  <div class="controls" id="matrix-controls">
+    <div class="control">
+      <label>K (coupling) <span class="val" id="mx-k-val">1.80</span></label>
+      <input type="range" id="mx-k-slider" min="0" max="4" step="0.05" value="1.8">
+    </div>
+    <button id="mx-reseed">Re-scatter</button>
+  </div>
+  <figcaption>Eighteen oscillators, agreement-chosen wiring (each couples to its current top 5). The grid is the live coupling matrix: cell (row i, column j) lights when i is listening to j, brightness = their current agreement. <strong>Click any lit cell</strong> to see that bond drawn on the sphere, with its numbers. The churn meter counts how much of the wiring changed this instant — watch it fall to zero as the clusters and the matrix lock each other in. <span id="mx-readout" class="readout">churn = —</span></figcaption>
+</figure>
+
+<h2>2. Living versus frozen: the quench experiment</h2>
+
+<p>Here is the experiment that shows why any fixed picture of the coupling is an approximation. Two identical populations run side by side with agreement-chosen wiring. Press <strong>Quench the right sphere</strong>: from that instant, the right population keeps the wiring it happens to have — the same partners forever, a snapshot of a living thing — while the left keeps re-choosing every moment. They look identical. They are not, and one shove reveals it.</p>
+
+<p>Press <strong>Kick both</strong>: the same random shove scatters both populations. For a few seconds, look at the <em>bonds</em> — the lines showing who is wired to whom. The living network's bonds stay short: the instant its members landed, each re-chose the five nearest agreements, so its wiring always matches its geometry. The frozen network's bonds are <strong>stretched across the sphere</strong>: each member still pulls toward partners from the vanished arrangement, wherever the kick threw them — and it spends those seconds hauling its old groups back together across the surface.</p>
+
+<p>Then wait, and read the meters. Both networks settle into tidy clusters again — but not the <em>same</em> clusters. The meter under each sphere scores how much of the pre-kick arrangement survived: which pairs that were clustermates before are clustermates again. The frozen network scores high — it has <strong>rebuilt its past</strong>, because its wiring <em>is</em> its past, written down. The living network scores low — it organized whatever the new scatter suggested, with no loyalty to the old grouping. That is the whole distinction in one experiment: <em>a frozen coupling is a memory; a living coupling is a sense organ.</em></p>
+
+<figure id="fig-quench">
+  <canvas id="canvas-quench" width="680" height="430"></canvas>
+  <div class="controls" id="quench-controls">
+    <button id="q-freeze" class="primary">Quench the right sphere</button>
+    <button id="q-kick">Kick both</button>
+    <button id="q-reset">Reset</button>
+  </div>
+  <figcaption>Two identical populations, agreement-chosen wiring, K fixed; the faint lines are the wired bonds. Quench the right sphere, then kick both. Watch the frozen bonds stretch as they haul the old groups back together — then read the meters: the share of pre-kick clustermate pairs that ended up reunited. Frozen: high — it rebuilds its past. Living: low — it organizes its present. (Across test runs: frozen roughly 40&ndash;90%, living roughly 10&ndash;25% — the gap is the point.) <span id="q-readout" class="readout">arrangement memory: living — &middot; right —</span></figcaption>
+</figure>
+
+<h2>3. Why this matters beyond the toy</h2>
+
+<p>This site's research discipline has a blunt rule, stated in its working notes and worth quoting in spirit: <em>the coupling field is dynamical; every fixed-K computation is a quenched approximation and must be labeled as one.</em> You have now felt why. A snapshot of a living network's wiring is not the network — it is where the network happened to be standing. Any analysis done on the snapshot inherits that staleness the moment the states move.</p>
+
+<p>And you have seen this loop before, wearing its most famous clothes: in <a href="../../inside-a-transformer/">the transformer primer</a>, attention computes a fresh who-listens-to-whom matrix from Q&middot;K agreements — <em>per token, per layer</em>. On this site's reading, attention is an agreement-chosen effective coupling recomputed at every step: the wiring choosing itself, industrialized. The <a href="../../../transformers/index.html">Transformers essay</a> develops and measures that identification on real models; <a href="03-tokens-as-paths.html">the next section</a> follows a single token through exactly this kind of living wiring.</p>
+
+<div class="flag-callout">
+  <span class="flag-label">What's real here</span>
+  Both experiments are illustrative dynamics on S&sup2; with a deliberately simple wiring rule (top-5 by agreement — a sparse cousin of attention's softmax weighting, chosen because the full softmax version collapses this small sim to one cluster). The quench experiment is a pedagogical device built for this page, not a published result; the underlying discipline — dynamical coupling, quenched approximations labeled as such — is the site's own working rule, and the measured claims about attention-as-coupling live in the <a href="../../../transformers/index.html">Transformers essay</a>, not here.
+</div>
+
+<div class="nav-links">
+  <a href="01-sphere-dynamics.html" class="prev">The sphere: Kuramoto with room to move</a>
+  <a href="03-tokens-as-paths.html" class="next">Tokens as paths</a>
+</div>
+
+</div>
+
+<script type="module">
+import { setupHiDPICanvas, runWhenVisible, palette } from '../../../js/common.js';
+
+// --- shared helpers (same conventions as section 01) ---
+function dot(a, b) { return a[0] * b[0] + a[1] * b[1] + a[2] * b[2]; }
+function norm3(v) {
+  const n = Math.sqrt(dot(v, v)) + 1e-12;
+  v[0] /= n; v[1] /= n; v[2] /= n; return v;
+}
+function gauss() {
+  let u = 0, w = 0;
+  while (u === 0) u = Math.random();
+  while (w === 0) w = Math.random();
+  return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * w);
+}
+function randUnit() {
+  let v;
+  do { v = [gauss(), gauss(), gauss()]; } while (Math.sqrt(dot(v, v)) < 1e-6);
+  return norm3(v);
+}
+function cross(a, b) {
+  return [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
+}
+function makeProjector(tilt) {
+  let yaw = 0;
+  return {
+    tick(d) { yaw += d; },
+    project(v, cx, cy, scale) {
+      const x1 = v[0] * Math.cos(yaw) - v[1] * Math.sin(yaw);
+      const y1 = v[0] * Math.sin(yaw) + v[1] * Math.cos(yaw);
+      const z1 = v[2];
+      const y2 = y1 * Math.cos(tilt) - z1 * Math.sin(tilt);
+      const z2 = y1 * Math.sin(tilt) + z1 * Math.cos(tilt);
+      return { sx: cx + scale * x1, sy: cy - scale * z2, depth: y2 };
+    },
+  };
+}
+function drawWireSphere(ctx, proj, cx, cy, scale) {
+  ctx.lineWidth = 1;
+  const SEG = 40;
+  for (let li = 1; li < 5; li++) {
+    const phi = (li / 5) * Math.PI - Math.PI / 2;
+    ctx.beginPath();
+    for (let s = 0; s <= SEG; s++) {
+      const th = (s / SEG) * Math.PI * 2;
+      const p = proj.project([Math.cos(phi) * Math.cos(th), Math.cos(phi) * Math.sin(th), Math.sin(phi)], cx, cy, scale);
+      s ? ctx.lineTo(p.sx, p.sy) : ctx.moveTo(p.sx, p.sy);
+    }
+    ctx.strokeStyle = 'rgba(125,125,140,0.22)';
+    ctx.stroke();
+  }
+  for (let mi = 0; mi < 8; mi++) {
+    const th0 = (mi / 8) * Math.PI * 2;
+    ctx.beginPath();
+    for (let s = 0; s <= SEG; s++) {
+      const phi = (s / SEG) * Math.PI * 2;
+      const p = proj.project([Math.cos(phi) * Math.cos(th0), Math.cos(phi) * Math.sin(th0), Math.sin(phi)], cx, cy, scale);
+      s ? ctx.lineTo(p.sx, p.sy) : ctx.moveTo(p.sx, p.sy);
+    }
+    ctx.strokeStyle = 'rgba(125,125,140,0.16)';
+    ctx.stroke();
+  }
+}
+function depthAlpha(d) { return 0.25 + 0.65 * Math.max(0, Math.min(1, (d + 1) / 2)); }
+
+const TOPK = 5;
+// top-k partner sets by current agreement
+function chooseTopK(X) {
+  const sets = [];
+  for (let i = 0; i < X.length; i++) {
+    const sims = [];
+    for (let j = 0; j < X.length; j++) { if (j !== i) sims.push([dot(X[i], X[j]), j]); }
+    sims.sort((a, b) => b[0] - a[0]);
+    sets.push(sims.slice(0, TOPK).map(t => t[1]));
+  }
+  return sets;
+}
+// one step given explicit partner sets
+function stepWithSets(X, axes, speeds, sets, K, eta) {
+  const NX = [];
+  for (let i = 0; i < X.length; i++) {
+    const xi = X[i];
+    const pull = [0, 0, 0];
+    for (const j of sets[i]) {
+      const kij = K / TOPK;
+      const d = dot(xi, X[j]);
+      pull[0] += kij * (X[j][0] - d * xi[0]);
+      pull[1] += kij * (X[j][1] - d * xi[1]);
+      pull[2] += kij * (X[j][2] - d * xi[2]);
+    }
+    const w = cross(axes[i], xi);
+    const sp = speeds[i];
+    NX.push(norm3([
+      xi[0] + eta * (pull[0] + sp * w[0]),
+      xi[1] + eta * (pull[1] + sp * w[1]),
+      xi[2] + eta * (pull[2] + sp * w[2]),
+    ]));
+  }
+  for (let i = 0; i < X.length; i++) X[i] = NX[i];
+}
+// which pairs are clustermates right now (within ~25°)
+function coPairs(X) {
+  const set = new Set();
+  for (let i = 0; i < X.length; i++) for (let j = i + 1; j < X.length; j++) {
+    if (dot(X[i], X[j]) > 0.9) set.add(i * 1000 + j);
+  }
+  return set;
+}
+// how much of partition `pre` survives in the current arrangement (Jaccard)
+function memoryOf(X, pre) {
+  const now = coPairs(X);
+  let inter = 0;
+  for (const k of now) if (pre.has(k)) inter++;
+  const uni = now.size + pre.size - inter;
+  return uni ? inter / uni : 1;
+}
+
+// ============================================================
+// FIG A: the living K matrix, with a bond inspector
+// ============================================================
+(() => {
+  const canvas = document.getElementById('canvas-matrix');
+  const ctx = setupHiDPICanvas(canvas, 680, 440);
+  const kSlider = document.getElementById('mx-k-slider');
+  const kVal = document.getElementById('mx-k-val');
+  const readout = document.getElementById('mx-readout');
+  const proj = makeProjector(0.5);
+
+  const N = 18;
+  let K = 1.8;
+  let X = [], axes = [], speeds = [];
+  let sets = [], prevFlat = new Set();
+  const churnWin = [];
+  let picked = null; // {i, j}
+
+  // heatmap geometry (CSS-pixel space)
+  const CELL = 13, GX = 415, GY = 96;
+
+  function reseed() {
+    X = []; axes = []; speeds = [];
+    for (let i = 0; i < N; i++) {
+      X.push(randUnit());
+      axes.push(randUnit());
+      speeds.push(0.1 + Math.random() * 0.3);
+    }
+    prevFlat = new Set();
+    churnWin.length = 0;
+    picked = null;
+  }
+  reseed();
+
+  kSlider.addEventListener('input', () => { K = parseFloat(kSlider.value); kVal.textContent = K.toFixed(2); });
+  document.getElementById('mx-reseed').addEventListener('click', reseed);
+
+  canvas.addEventListener('click', (e) => {
+    const rect = canvas.getBoundingClientRect();
+    const x = (e.clientX - rect.left) * (680 / rect.width);
+    const y = (e.clientY - rect.top) * (440 / rect.height);
+    const j = Math.floor((x - GX) / CELL), i = Math.floor((y - GY) / CELL);
+    if (i >= 0 && i < N && j >= 0 && j < N && i !== j) picked = { i, j };
+    else picked = null;
+  });
+
+  function draw() {
+    proj.tick(0.003);
+    sets = chooseTopK(X);
+    stepWithSets(X, axes, speeds, sets, K, 0.05);
+
+    // churn: fraction of (i,j) listening pairs that changed since last frame
+    const flat = new Set();
+    for (let i = 0; i < N; i++) for (const j of sets[i]) flat.add(i * N + j);
+    let changed = 0;
+    for (const k of flat) if (!prevFlat.has(k)) changed++;
+    for (const k of prevFlat) if (!flat.has(k)) changed++;
+    churnWin.push(changed);
+    if (churnWin.length > 30) churnWin.shift();
+    // share of the wiring re-chosen over the last ~second
+    const churnSec = Math.min(1, churnWin.reduce((a, b) => a + b, 0) / (2 * N * TOPK));
+    prevFlat = flat;
+
+    ctx.clearRect(0, 0, 680, 440);
+
+    // sphere
+    const cx = 195, cy = 205, scale = 150;
+    drawWireSphere(ctx, proj, cx, cy, scale);
+    const pts = X.map(v => proj.project(v, cx, cy, scale));
+    // picked bond drawn under the dots
+    if (picked) {
+      const a = pts[picked.i], b = pts[picked.j];
+      ctx.strokeStyle = palette.green; ctx.lineWidth = 2.5;
+      ctx.beginPath(); ctx.moveTo(a.sx, a.sy); ctx.lineTo(b.sx, b.sy); ctx.stroke();
+    }
+    const order = pts.map((p, i) => ({ i, p })).sort((a, b) => a.p.depth - b.p.depth);
+    for (const { i, p } of order) {
+      const isP = picked && (i === picked.i || i === picked.j);
+      ctx.globalAlpha = depthAlpha(p.depth);
+      ctx.fillStyle = isP ? palette.green : palette.orange;
+      ctx.beginPath(); ctx.arc(p.sx, p.sy, isP ? 6.5 : 4.5, 0, Math.PI * 2); ctx.fill();
+      ctx.globalAlpha = 1;
+    }
+
+    // heatmap
+    ctx.strokeStyle = palette.axis; ctx.lineWidth = 1;
+    ctx.strokeRect(GX - 0.5, GY - 0.5, N * CELL + 1, N * CELL + 1);
+    for (let i = 0; i < N; i++) {
+      for (const j of sets[i]) {
+        const agree = Math.max(0, dot(X[i], X[j]));
+        ctx.fillStyle = `rgba(217,114,54,${0.18 + 0.72 * agree})`;
+        ctx.fillRect(GX + j * CELL, GY + i * CELL, CELL - 1, CELL - 1);
+      }
+      // diagonal marker
+      ctx.fillStyle = 'rgba(125,125,140,0.25)';
+      ctx.fillRect(GX + i * CELL, GY + i * CELL, CELL - 1, CELL - 1);
+    }
+    if (picked) {
+      ctx.strokeStyle = palette.green; ctx.lineWidth = 2;
+      ctx.strokeRect(GX + picked.j * CELL - 1, GY + picked.i * CELL - 1, CELL + 1, CELL + 1);
+    }
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 11px serif'; ctx.textAlign = 'left';
+    ctx.fillText('the coupling matrix K, live', GX, GY - 26);
+    ctx.fillText('row i listens to column j · click a lit cell', GX, GY - 11);
+
+    // churn meter
+    const mby = GY + N * CELL + 22;
+    ctx.fillText('wiring churn (share re-chosen, last second)', GX, mby - 6);
+    ctx.fillStyle = palette.bgSoft; ctx.strokeStyle = palette.axis;
+    ctx.fillRect(GX, mby, 180, 10); ctx.strokeRect(GX, mby, 180, 10);
+    ctx.fillStyle = palette.burgundy;
+    ctx.fillRect(GX, mby, churnSec * 180, 10);
+
+    // picked info
+    if (picked) {
+      const agree = dot(X[picked.i], X[picked.j]);
+      const listening = sets[picked.i].includes(picked.j);
+      ctx.fillStyle = palette.green; ctx.font = '12px "SF Mono", monospace';
+      ctx.fillText(`bond ${picked.i}→${picked.j}: agreement ${agree.toFixed(2)}`, GX, mby + 34);
+      ctx.fillStyle = palette.textFaint; ctx.font = 'italic 11px serif';
+      ctx.fillText(listening ? `K = ${(K / TOPK).toFixed(2)} — among ${picked.i}'s chosen five` : `K = 0 right now — not among ${picked.i}'s chosen five`, GX, mby + 50);
+    }
+
+    readout.textContent = `churn = ${(churnSec * 100).toFixed(0)}% of wiring re-chosen per second`;
+  }
+  runWhenVisible(canvas, draw);
+})();
+
+// ============================================================
+// FIG B: living vs frozen — the quench experiment
+// ============================================================
+(() => {
+  const canvas = document.getElementById('canvas-quench');
+  const ctx = setupHiDPICanvas(canvas, 680, 430);
+  const readout = document.getElementById('q-readout');
+  const proj = makeProjector(0.5);
+
+  const N = 36, K = 1.4;
+  let L = {}, R = {};
+  let frozenSets = null;
+  let preL = null, preR = null; // co-membership partitions at kick time
+
+  function seedBoth() {
+    const X = [], axes = [], speeds = [];
+    for (let i = 0; i < N; i++) {
+      X.push(randUnit());
+      axes.push(randUnit());
+      speeds.push(0.1 + Math.random() * 0.3);
+    }
+    // deep copies so the two spheres start identical
+    L = { X: X.map(v => v.slice()), axes: axes.map(v => v.slice()), speeds: speeds.slice() };
+    R = { X: X.map(v => v.slice()), axes: axes.map(v => v.slice()), speeds: speeds.slice() };
+    frozenSets = null;
+    preL = null; preR = null;
+    document.getElementById('q-freeze').disabled = false;
+  }
+  seedBoth();
+
+  document.getElementById('q-freeze').addEventListener('click', () => {
+    frozenSets = chooseTopK(R.X);
+    document.getElementById('q-freeze').disabled = true;
+  });
+  document.getElementById('q-kick').addEventListener('click', () => {
+    // remember each sphere's arrangement, then kick
+    preL = coPairs(L.X);
+    preR = coPairs(R.X);
+    // identical random kicks to both populations
+    for (let i = 0; i < N; i++) {
+      const kick = [gauss() * 0.9, gauss() * 0.9, gauss() * 0.9];
+      L.X[i] = norm3([L.X[i][0] + kick[0], L.X[i][1] + kick[1], L.X[i][2] + kick[2]]);
+      R.X[i] = norm3([R.X[i][0] + kick[0], R.X[i][1] + kick[1], R.X[i][2] + kick[2]]);
+    }
+  });
+  document.getElementById('q-reset').addEventListener('click', seedBoth);
+
+  function drawPop(pop, sets, pre, cx, cy, scale, label, state, color) {
+    drawWireSphere(ctx, proj, cx, cy, scale);
+    const pts = pop.X.map(v => proj.project(v, cx, cy, scale));
+    // the wired bonds — the whole point of the figure
+    ctx.lineWidth = 1;
+    for (let i = 0; i < pop.X.length; i++) {
+      for (const j of sets[i]) {
+        if (j < i && sets[j] && sets[j].includes(i)) continue; // draw shared bonds once
+        const a = pts[i], b = pts[j];
+        ctx.globalAlpha = 0.3 * depthAlpha((a.depth + b.depth) / 2);
+        ctx.strokeStyle = color;
+        ctx.beginPath(); ctx.moveTo(a.sx, a.sy); ctx.lineTo(b.sx, b.sy); ctx.stroke();
+        ctx.globalAlpha = 1;
+      }
+    }
+    const order = pts.map((p) => p).sort((a, b) => a.depth - b.depth);
+    for (const p of order) {
+      ctx.globalAlpha = depthAlpha(p.depth);
+      ctx.fillStyle = color;
+      ctx.beginPath(); ctx.arc(p.sx, p.sy, 4.5, 0, Math.PI * 2); ctx.fill();
+      ctx.globalAlpha = 1;
+    }
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 12px serif'; ctx.textAlign = 'center';
+    ctx.fillText(label, cx, 320);
+    ctx.font = 'italic 11px serif';
+    ctx.fillText(state, cx, 336);
+    const bw = 170, bx = cx - bw / 2, by = 352;
+    ctx.fillStyle = palette.bgSoft; ctx.strokeStyle = palette.axis; ctx.lineWidth = 1;
+    ctx.fillRect(bx, by, bw, 11); ctx.strokeRect(bx, by, bw, 11);
+    let M = null;
+    if (pre) {
+      M = memoryOf(pop.X, pre);
+      ctx.fillStyle = color;
+      ctx.fillRect(bx, by, M * bw, 11);
+    }
+    ctx.font = '12px "SF Mono", monospace'; ctx.textAlign = 'center';
+    ctx.fillStyle = pre ? color : palette.textFaint;
+    ctx.fillText(pre ? `arrangement memory = ${(M * 100).toFixed(0)}%` : 'arrangement memory: kick to measure', cx, by + 30);
+    return M;
+  }
+
+  function draw() {
+    proj.tick(0.003);
+    const lSets = chooseTopK(L.X);
+    stepWithSets(L.X, L.axes, L.speeds, lSets, K, 0.05);
+    const rSets = frozenSets || chooseTopK(R.X);
+    stepWithSets(R.X, R.axes, R.speeds, rSets, K, 0.05);
+
+    ctx.clearRect(0, 0, 680, 430);
+    const ML = drawPop(L, lSets, preL, 175, 165, 125, 'living — re-choosing every instant', frozenSets ? 'unquenched control' : 'both still living', palette.blue);
+    const MR = drawPop(R, rSets, preR, 505, 165, 125, frozenSets ? 'frozen — wiring is a snapshot' : 'living (press Quench)', frozenSets ? 'quenched' : 'identical twin, for now', palette.orange);
+
+    readout.textContent = preL
+      ? `arrangement memory: living ${(ML * 100).toFixed(0)}% · right ${(MR * 100).toFixed(0)}%${frozenSets ? ' (frozen)' : ''}`
+      : `arrangement memory: living — · right —${frozenSets ? ' (frozen)' : ''}`;
+  }
+  runWhenVisible(canvas, draw);
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Squinting: what survives the blur — The Living Lattice</title>
+<meta name="description" content="Coarse-graining from zero: replace each block of a lattice by its majority and repeat. Fine speckle dies, large structure survives — and pure noise squints into nothing but fresh noise.">
+<meta name="author" content="Michael Sharpe">
+<link rel="canonical" href="https://lattice.project89.org/primers/coarse-graining/sections/01-squinting.html">
+<link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
+<link rel="apple-touch-icon" href="../../../apple-touch-icon.png">
+<meta property="og:title" content="Squinting: what survives the blur — The Living Lattice">
+<meta property="og:description" content="Block-averaging made playable: what a lattice keeps, and what it loses, when you zoom out.">
+<meta property="og:url" content="https://lattice.project89.org/primers/coarse-graining/sections/01-squinting.html">
+<meta property="og:site_name" content="The Living Lattice">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://lattice.project89.org/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Squinting: what survives the blur — The Living Lattice">
+<meta name="twitter:description" content="Coarse-graining from zero, with your hands on the blur knob.">
+<meta name="twitter:image" content="https://lattice.project89.org/og-image.png">
+<!-- BEGIN AUTO-INJECTED ANALYTICS -->
+<!-- PostHog -->
+<script>
+!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+posthog.init('phc_kRX9iHZstABjgFqEWJBMok2S3hW9R8QMHbNao4EsNz2g', {api_host: 'https://us.i.posthog.com', person_profiles: 'identified_only'});
+</script>
+<!-- END AUTO-INJECTED ANALYTICS -->
+<link rel="stylesheet" href="../../../css/style.css">
+<style>
+.flag-callout { margin: 1.6em 0; padding: 16px 20px; background: rgba(195,141,247,0.08); border-left: 3px solid #c38df7; border-radius: 3px; font-size: 14.5px; line-height: 1.55; }
+.flag-callout .flag-label { display: inline-block; font: 700 10.5px "SF Mono", monospace; color: #c38df7; text-transform: uppercase; letter-spacing: 0.1em; margin-right: 0.7em; }
+</style>
+</head>
+<body>
+<div class="page">
+
+<nav class="breadcrumb">
+  <a href="../index.html">&larr; coarse-graining</a>
+  <span class="sep">&middot;</span>
+  <span class="section-num">coarse-graining 01 / 03 &middot; advanced</span>
+</nav>
+
+<h1>Squinting: what survives the blur<span class="subtitle">The one move under "as above, so below" — replace every block by its majority, and repeat</span></h1>
+
+<p class="lead">Stand close to a pointillist painting and you see dots. Step back and you see a face. Nothing about the painting changed — <em>your description of it</em> changed scale, and at the new scale some information (each dot's exact color) is gone while other information (the face) is not just preserved but finally visible. Physics has a precise version of this step-back, and it is one of the great ideas of the twentieth century. This section puts the knob for it in your hand.</p>
+
+<h2>The move</h2>
+
+<p>Take a lattice of the site's usual kind — a grid of little units, each in one of two states. You can read the two tones as a phase snapped to its two extremes: gold for "up", dark for "down". (Everything here works for full continuous phases too; two tones just make the bookkeeping visible.) Now do the following, exactly:</p>
+
+<p><strong>Cut the grid into 2&times;2 blocks. Replace each block by a single cell carrying the block's majority vote. You now have a lattice half the size. Repeat.</strong></p>
+
+<p>That is the whole operation — physicists call each application a <em>blocking step</em>, and the repeated procedure <strong>coarse-graining</strong>. Each press of the button below throws away three quarters of the information. The question that makes the idea deep is: <em>which</em> three quarters?</p>
+
+<figure id="fig-squint">
+  <canvas id="canvas-squint" width="680" height="430"></canvas>
+  <div class="controls" id="squint-controls">
+    <button id="sq-squint" class="primary">Squint (one blocking step)</button>
+    <button id="sq-reset">Back to the microscope</button>
+    <button id="sq-new">New sample</button>
+  </div>
+  <figcaption>A thermal lattice with structure at several scales: large domains wearing a fuzz of fine speckle. Each squint polls 2&times;2 blocks and keeps the majority. Watch what dies first — the speckle, which never had neighbors that agreed with it — and what refuses to die: the domains. The readout tracks <span class="mono">a</span>, the fraction of neighboring pairs that agree (1 = one solid color, 0.5 = coin-flip). <span id="sq-readout" class="readout">level 0 &middot; 128&times;128 &middot; a = —</span></figcaption>
+</figure>
+
+<p>Play with it. Two things reward attention. First, the speckle — single flipped cells and tiny clusters — vanishes in one or two presses: a lone dissenter is always outvoted by its block. Second, the domains — the big connected regions — survive press after press, keeping their shapes while losing their texture. Squinting is not a uniform forgetting. It is a <em>filter</em>: it forgets the small and keeps the large. Whatever in the picture was organized at scales bigger than the block survives to the next level; whatever lived at one-cell scale is gone.</p>
+
+<h2>Structure is what survives</h2>
+
+<p>To see how sharp this filter is, feed it two extreme diets. On the left below: a field with genuine large-scale structure (smooth blobs, thresholded to two tones). On the right: pure coin-flips, no structure at any scale. Same squint button for both.</p>
+
+<figure id="fig-svn">
+  <canvas id="canvas-svn" width="680" height="400"></canvas>
+  <div class="controls" id="svn-controls">
+    <button id="svn-squint" class="primary">Squint both</button>
+    <button id="svn-reset">Reset</button>
+  </div>
+  <figcaption><strong>Left — structure:</strong> the blobs shrug off squint after squint; agreement stays high until the blobs themselves approach the pixel scale. <strong>Right — noise:</strong> the majority of four coin-flips is another coin-flip. Agreement starts at 0.5 and stays there: squinted noise is not "smoothed noise", it is <em>fresh noise</em>, forever. <span id="svn-readout" class="readout">level 0 &middot; a<sub>structure</sub> = — &middot; a<sub>noise</sub> = —</span></figcaption>
+</figure>
+
+<p>This pair of behaviors is the working definition this module runs on: <strong>structure is exactly the part of a description that survives a change of scale.</strong> Noise is the part that does not — and no amount of squinting turns one into the other. When the essays say a thought, a molecule, or a level of the scale ladder "emerges", the honest cash value is always this: there is a description that survives blur, sitting inside a sea of detail that does not.</p>
+
+<p>One more thing before the next section, because it is where everything is headed. As you squint the thermal lattice above, its agreement number <span class="mono">a</span> <em>changes</em> — the coarse lattice is not just smaller, it is statistically a slightly <em>different</em> lattice, usually a cleaner or messier one. So squinting doesn't merely compress a system. It <em>moves</em> it. Where systems move to, when you squint them over and over, is the subject of <a href="02-flows.html">the next section</a> — and the answer is the mechanism behind the site's whole picture of criticality.</p>
+
+<div class="flag-callout">
+  <span class="flag-label">What's real here</span>
+  The lattice is a genuine two-state thermal system (an Ising model, equilibrated by a standard cluster algorithm — the workhorse of statistical physics, not a cartoon), and the squint is the standard <em>block-spin</em> rule: majority of each 2&times;2 block, with the rare 2&ndash;2 tie broken by the block's top-left cell so no outside randomness is injected. "Spins" are phases snapped to two values; the same machinery drives the full-phase lattices everywhere else on this site. The name for all of this, which you now own: <strong>block-spin renormalization</strong>, after Kadanoff.
+</div>
+
+<div class="nav-links">
+  <a href="../index.html" class="prev">Coarse-graining</a>
+  <a href="02-flows.html" class="next">Flows and the impossible temperature</a>
+</div>
+
+</div>
+
+<script type="module">
+import { setupHiDPICanvas, palette } from '../../../js/common.js';
+
+// ---- shared engine (Ising + blocking) ----
+function mkRng(seed) { let s = seed >>> 0; return () => { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; }; }
+function makeLattice(L, rnd) { const s = new Int8Array(L * L); for (let i = 0; i < L * L; i++) s[i] = rnd() < 0.5 ? 1 : -1; return s; }
+function wolff(s, L, T, nFlips, rnd) {
+  const p = 1 - Math.exp(-2 / T);
+  const stack = new Int32Array(L * L);
+  for (let f = 0; f < nFlips; f++) {
+    const seed = (rnd() * L * L) | 0;
+    const target = s[seed];
+    s[seed] = -target;
+    let top = 0; stack[top++] = seed;
+    while (top > 0) {
+      const i = stack[--top];
+      const x = i % L, y = (i / L) | 0;
+      const nb = [((x + 1) % L) + y * L, ((x - 1 + L) % L) + y * L, x + ((y + 1) % L) * L, x + ((y - 1 + L) % L) * L];
+      for (const j of nb) if (s[j] === target && rnd() < p) { s[j] = -target; stack[top++] = j; }
+    }
+  }
+}
+function metro(s, L, T, sweeps, rnd) {
+  for (let sw = 0; sw < sweeps; sw++) for (let n = 0; n < L * L; n++) {
+    const i = (rnd() * L * L) | 0;
+    const x = i % L, y = (i / L) | 0;
+    const nn = s[((x + 1) % L) + y * L] + s[((x - 1 + L) % L) + y * L] + s[x + ((y + 1) % L) * L] + s[x + ((y - 1 + L) % L) * L];
+    const dE = 2 * s[i] * nn;
+    if (dE <= 0 || rnd() < Math.exp(-dE / T)) s[i] = -s[i];
+  }
+}
+// majority blocking, deterministic top-left tie-break (no injected randomness)
+function squint(s, L) {
+  const M = L >> 1;
+  const out = new Int8Array(M * M);
+  for (let y = 0; y < M; y++) for (let x = 0; x < M; x++) {
+    const a = s[2 * x + 2 * y * L], b = s[2 * x + 1 + 2 * y * L], c = s[2 * x + (2 * y + 1) * L], d = s[2 * x + 1 + (2 * y + 1) * L];
+    const sum = a + b + c + d;
+    out[x + y * M] = sum > 0 ? 1 : sum < 0 ? -1 : a;
+  }
+  return out;
+}
+function agreement(s, L) {
+  let ag = 0, tot = 0;
+  for (let y = 0; y < L; y++) for (let x = 0; x < L; x++) {
+    const i = x + y * L;
+    if (s[i] === s[((x + 1) % L) + y * L]) ag++;
+    if (s[i] === s[x + ((y + 1) % L) * L]) ag++;
+    tot += 2;
+  }
+  return ag / tot;
+}
+const _latCache = new Map();
+function drawLattice(ctx, s, L, x0, y0, size) {
+  let oc = _latCache.get(L);
+  if (!oc) { oc = document.createElement('canvas'); oc.width = L; oc.height = L; _latCache.set(L, oc); }
+  const octx = oc.getContext('2d');
+  const img = octx.createImageData(L, L);
+  for (let i = 0; i < L * L; i++) {
+    const up = s[i] > 0, o = i * 4;
+    img.data[o] = up ? 228 : 52; img.data[o + 1] = up ? 196 : 46; img.data[o + 2] = up ? 128 : 40; img.data[o + 3] = 255;
+  }
+  octx.putImageData(img, 0, 0);
+  ctx.imageSmoothingEnabled = false;
+  ctx.drawImage(oc, x0, y0, size, size);
+  ctx.strokeStyle = palette.axis; ctx.lineWidth = 1;
+  ctx.strokeRect(x0, y0, size, size);
+}
+function blob(L, rnd) {
+  const s = new Int8Array(L * L);
+  const waves = Array.from({ length: 5 }, () => ({ kx: (rnd() - 0.5) * 0.22, ky: (rnd() - 0.5) * 0.22, ph: rnd() * Math.PI * 2 }));
+  for (let y = 0; y < L; y++) for (let x = 0; x < L; x++) {
+    let v = 0;
+    for (const w of waves) v += Math.cos(w.kx * x + w.ky * y + w.ph);
+    s[x + y * L] = v > 0 ? 1 : -1;
+  }
+  return s;
+}
+
+const L0 = 128;
+
+// ============================================================
+// FIG A: squint the thermal lattice
+// ============================================================
+(() => {
+  const canvas = document.getElementById('canvas-squint');
+  const ctx = setupHiDPICanvas(canvas, 680, 430);
+  const readout = document.getElementById('sq-readout');
+  let rnd = mkRng(1234);
+
+  let base = null, levels = [], cur = 0;
+  function brew() {
+    base = makeLattice(L0, rnd);
+    wolff(base, L0, 2.0, 350, rnd);   // T=2.0: big domains + visible speckle
+    metro(base, L0, 2.0, 2, rnd);
+    levels = [base]; cur = 0;
+  }
+  brew();
+
+  document.getElementById('sq-squint').addEventListener('click', () => {
+    const s = levels[cur], l = L0 >> cur;
+    if (l <= 8) return;
+    levels[cur + 1] = squint(s, l);
+    cur++;
+    draw();
+  });
+  document.getElementById('sq-reset').addEventListener('click', () => { cur = 0; draw(); });
+  document.getElementById('sq-new').addEventListener('click', () => { brew(); draw(); });
+
+  function draw() {
+    ctx.clearRect(0, 0, 680, 430);
+    const l = L0 >> cur;
+    drawLattice(ctx, levels[cur], l, 148, 18, 384);
+    const a = agreement(levels[cur], l);
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 12px serif'; ctx.textAlign = 'center';
+    ctx.fillText(cur === 0 ? 'the microscope view' : `after ${cur} squint${cur > 1 ? 's' : ''} — each cell was ${1 << cur}×${1 << cur} cells`, 340, 424);
+    readout.textContent = `level ${cur} · ${l}×${l} · a = ${a.toFixed(3)}`;
+  }
+  draw();
+  document.addEventListener('themechange', draw);
+})();
+
+// ============================================================
+// FIG B: structure vs noise
+// ============================================================
+(() => {
+  const canvas = document.getElementById('canvas-svn');
+  const ctx = setupHiDPICanvas(canvas, 680, 400);
+  const readout = document.getElementById('svn-readout');
+  let rnd = mkRng(77);
+
+  let sLv = [], nLv = [], cur = 0;
+  function reset() {
+    sLv = [blob(L0, rnd)];
+    nLv = [makeLattice(L0, rnd)];
+    cur = 0;
+  }
+  reset();
+
+  document.getElementById('svn-squint').addEventListener('click', () => {
+    const l = L0 >> cur;
+    if (l <= 16) return;
+    sLv[cur + 1] = squint(sLv[cur], l);
+    nLv[cur + 1] = squint(nLv[cur], l);
+    cur++;
+    draw();
+  });
+  document.getElementById('svn-reset').addEventListener('click', () => { reset(); draw(); });
+
+  function draw() {
+    ctx.clearRect(0, 0, 680, 400);
+    const l = L0 >> cur;
+    drawLattice(ctx, sLv[cur], l, 30, 30, 290);
+    drawLattice(ctx, nLv[cur], l, 360, 30, 290);
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 12px serif'; ctx.textAlign = 'center';
+    ctx.fillText('structure — blobs bigger than the blur', 175, 348);
+    ctx.fillText('noise — nothing bigger than a cell', 505, 348);
+    const as = agreement(sLv[cur], l), an = agreement(nLv[cur], l);
+    readout.innerHTML = `level ${cur} &middot; a<sub>structure</sub> = ${as.toFixed(3)} &middot; a<sub>noise</sub> = ${an.toFixed(3)}`;
+  }
+  draw();
+  document.addEventListener('themechange', draw);
+})();
+</script>
+
+</body>
+</html>

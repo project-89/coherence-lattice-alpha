@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>One constant — The Living Lattice</title>
+<meta name="description" content="The single Bessel ratio R₀(K_BKT) ≈ 0.303 decides which attention heads in a transformer are alive — and, raised to the fourth power, builds the fine structure constant. The same number gates a thought and makes the electron. And it is stiff: only z=4 lands near 137.">
+<meta name="author" content="Michael Sharpe">
+<link rel="canonical" href="https://lattice.project89.org/paradigm/sections/14-one-constant.html">
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+<meta property="og:title" content="One constant — The Living Lattice">
+<meta property="og:description" content="The constant that gates a thought is the constant that builds the electron.">
+<meta property="og:url" content="https://lattice.project89.org/paradigm/sections/14-one-constant.html">
+<meta property="og:site_name" content="The Living Lattice">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://lattice.project89.org/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="One constant — The Living Lattice">
+<meta name="twitter:description" content="The constant that gates a thought builds the electron.">
+<meta name="twitter:image" content="https://lattice.project89.org/og-image.png">
+<!-- BEGIN AUTO-INJECTED ANALYTICS -->
+<!-- PostHog -->
+<script>
+!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+posthog.init('phc_kRX9iHZstABjgFqEWJBMok2S3hW9R8QMHbNao4EsNz2g', {api_host: 'https://us.i.posthog.com', person_profiles: 'identified_only'});
+</script>
+<!-- END AUTO-INJECTED ANALYTICS -->
+<link rel="stylesheet" href="../../css/style.css">
+<style>
+.roles { display: flex; gap: 18px; flex-wrap: wrap; margin: 1.2em 0; }
+.role { flex: 1; min-width: 260px; padding: 16px 18px; border: 1px solid var(--panel-border); border-radius: 8px; background: var(--bg-soft); }
+.role h3 { margin: 0 0 0.5em; font-size: 1.05em; }
+.role .big { font: 600 22px "SF Mono", monospace; color: #d97236; margin: 0.3em 0; }
+.role .sub { font-size: 0.9em; color: var(--text-soft); line-height: 1.45; }
+.zrow { display: flex; gap: 6px; margin-top: 0.7em; flex-wrap: wrap; }
+.zcell { padding: 5px 9px; border-radius: 5px; font: 600 12px "SF Mono", monospace; background: var(--bg); border: 1px solid var(--panel-border); color: var(--text-soft); }
+.zcell.hit { background: rgba(217,114,54,0.18); color: #d97236; border-color: #d97236; }
+.flag-callout { margin: 1.6em 0; padding: 16px 20px; background: rgba(195,141,247,0.08); border-left: 3px solid #c38df7; border-radius: 3px; font-size: 14.5px; line-height: 1.55; }
+.flag-callout .flag-label { display:inline-block; font: 700 10.5px "SF Mono",monospace; color:#c38df7; text-transform:uppercase; letter-spacing:0.1em; margin-right:0.7em; }
+</style>
+</head>
+<body>
+<div class="page">
+
+<nav class="breadcrumb">
+  <a href="../index.html">&larr; contents</a>
+  <span class="sep">&middot;</span>
+  <span class="section-num">section 14 &middot; the universal case</span>
+</nav>
+
+<h1>One constant<span class="subtitle">The number that gates a thought is the number that builds the electron</span></h1>
+
+<p class="lead">If the same law really runs at every scale, there should be a fingerprint — a single number that shows up in two places it has no business being the same. There is. The whole theory turns on one function, the Bessel ratio <span class="mono">R<sub>0</sub>(K) = I<sub>1</sub>(K)/I<sub>0</sub>(K)</span>, evaluated at the critical coupling. That value is the canonical thread:</p>
+
+<figure>
+  <canvas id="canvas-r0" width="680" height="240"></canvas>
+  <figcaption>The order parameter <span class="eqn">R<sub>0</sub>(K)</span>. At the BKT critical coupling <span class="mono">K<sub>BKT</sub> = 2/&pi;</span> it takes the value marked in purple — the single constant below.</figcaption>
+</figure>
+
+<div class="roles">
+  <div class="role">
+    <h3>It gates a thought</h3>
+    <div class="big" id="tau-val">τ = 0.96 / √d</div>
+    <p class="sub">Transferred to the sphere a transformer lives on, the same critical coupling becomes the <strong>dead-head threshold</strong>: a head whose coupling to the residual stream falls below <span class="mono" id="tau-num">τ</span> is dead. Validated at 95–100% precision across five published architectures, no fitting.</p>
+    <div class="controls" id="tau-controls"></div>
+  </div>
+  <div class="role">
+    <h3>It builds the electron</h3>
+    <div class="big" id="alpha-val">1/α = 137.04</div>
+    <p class="sub">Raised to the fourth power (one factor per diamond bond) and run to the matching scale, the <em>same</em> <span class="mono">R<sub>0</sub>(2/&pi;)</span> gives the fine structure constant:</p>
+    <p style="text-align:center; font-size:0.95em; margin:0.4em 0;"><span class="mono">α = R<sub>0</sub>(2/π)<sup>4</sup> (π/4)<sup>1/√e + α/2π</sup></span></p>
+    <p class="sub">Zero free parameters. And it is <strong>stiff</strong> — only the diamond&rsquo;s coordination <span class="mono">z = 4</span> lands anywhere near 137:</p>
+    <div class="zrow" id="zrow"></div>
+  </div>
+</div>
+
+<p>The midpoint constant is <span class="mono" id="r0-inline">R<sub>0</sub>(2/π) ≈ 0.303</span>. One value, two jobs that could not look more different: deciding which attention heads carry a thought, and fixing the strength of electromagnetism in the vacuum. In this framework that is not a coincidence to be explained away — it is the signature that the transformer and the vacuum are running the <em>same</em> dynamics, sampled at two addresses on the ladder.</p>
+
+<div class="flag-callout">
+  <span class="flag-label">Why this isn't numerology</span>Numerology is soft — enough knobs to hit any target. This is rigid: the only continuous inputs are π, e, and Bessel functions; the only choice is the integer z, and only z = 4 works (z = 5 overshoots to ~517). A 10% nudge to the critical coupling is catastrophic. Overdetermined across α, the g-factor, and G from one structure, with the bare result already 29 ppm from experiment. The full derivation is the <a href="../../alpha/">α essay</a>; here the point is only that the constant is shared.
+</div>
+
+<p>One constant threads the scale ladder. Next: the claim that the <em>manifold</em> is shared too — that two minds, trained in total isolation, encode meaning as the same space up to a single rotation.</p>
+
+<div class="nav-links">
+  <a href="13-scale-ladder.html" class="prev">One law, every scale</a>
+  <a href="15-rotation.html" class="next">The rotation: meaning is shared</a>
+</div>
+
+</div>
+
+<script type="module">
+import { setupHiDPICanvas, runWhenVisible, makeSlider, R0, K_BKT, alpha_BKT, palette } from '../../js/common.js';
+
+const r0c = R0(K_BKT);
+document.getElementById('r0-inline').innerHTML = `R<sub>0</sub>(2/π) ≈ ${r0c.toFixed(3)}`;
+
+// dead-head threshold card
+let d = 768;
+makeSlider(document.getElementById('tau-controls'), {
+  label: 'head dimension d', min: 256, max: 4096, step: 64, value: 768,
+  format: v => String(v), onChange: v => { d = v; updateTau(); },
+});
+function updateTau() {
+  const tau = 0.96 / Math.sqrt(d);
+  document.getElementById('tau-val').textContent = `τ = ${tau.toFixed(4)}`;
+  document.getElementById('tau-num').textContent = tau.toFixed(4);
+}
+updateTau();
+
+// alpha + z-stiffness
+const inv = 1 / alpha_BKT(4, K_BKT);
+document.getElementById('alpha-val').textContent = `1/α = ${inv.toFixed(2)}`;
+const zrow = document.getElementById('zrow');
+[4, 5, 6, 7].forEach(z => {
+  const v = 1 / alpha_BKT(z, K_BKT);
+  const cell = document.createElement('span');
+  cell.className = 'zcell' + (z === 4 ? ' hit' : '');
+  cell.textContent = `z=${z} → ${v < 1000 ? v.toFixed(0) : Math.round(v)}`;
+  zrow.appendChild(cell);
+});
+
+// R0(K) curve
+(() => {
+  const W = 680, H = 240, canvas = document.getElementById('canvas-r0');
+  const ctx = setupHiDPICanvas(canvas, W, H);
+  const px0 = 56, py0 = 22, pw = 590, ph = 180, Kmax = 3;
+  const X = k => px0 + (k / Kmax) * pw, Y = v => py0 + ph - v * ph;
+  function draw() {
+    ctx.clearRect(0, 0, W, H); ctx.fillStyle = palette.bg; ctx.fillRect(0, 0, W, H);
+    ctx.strokeStyle = palette.axis; ctx.lineWidth = 1; ctx.strokeRect(px0, py0, pw, ph);
+    [0, 0.303, 0.5, 1].forEach(v => {
+      ctx.strokeStyle = palette.grid; ctx.lineWidth = 0.5; ctx.beginPath(); ctx.moveTo(px0, Y(v)); ctx.lineTo(px0 + pw, Y(v)); ctx.stroke();
+      ctx.fillStyle = palette.textFaint; ctx.font = 'italic 10px "Charter",serif'; ctx.textAlign = 'right'; ctx.fillText(v.toFixed(v === 0.303 ? 3 : 1), px0 - 6, Y(v) + 3);
+    });
+    ctx.strokeStyle = '#2a5f8f'; ctx.lineWidth = 2.4; ctx.beginPath();
+    for (let i = 0; i <= 200; i++) { const k = (i / 200) * Kmax; i ? ctx.lineTo(X(k), Y(R0(k))) : ctx.moveTo(X(k), Y(R0(k))); }
+    ctx.stroke();
+    ctx.strokeStyle = '#c38df7'; ctx.setLineDash([4, 3]); ctx.beginPath(); ctx.moveTo(X(K_BKT), py0); ctx.lineTo(X(K_BKT), py0 + ph); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = '#c38df7'; ctx.beginPath(); ctx.arc(X(K_BKT), Y(r0c), 5, 0, Math.PI * 2); ctx.fill();
+    ctx.font = '11px "SF Mono",monospace'; ctx.textAlign = 'center'; ctx.fillText(`R₀(2/π) = ${r0c.toFixed(3)}`, X(K_BKT) + 4, Y(r0c) - 12);
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 11px "Charter",serif';
+    ctx.fillText('K  (coupling)  →', px0 + pw / 2, py0 + ph + 18);
+  }
+  runWhenVisible(canvas, draw);
+})();
+</script>
+
+</body>
+</html>

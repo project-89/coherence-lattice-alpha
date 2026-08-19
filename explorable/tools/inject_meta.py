@@ -270,6 +270,59 @@ def main():
         block = build_block(rel, meta)
         changed = inject(p, rel, block)
         print(f"  {'OK  ' if changed else 'skip'} {rel}")
+    main_analytics_pass(root)
+
+# ---------------------------------------------------------------------------
+# Analytics-only pass — pages NOT in PAGES (the 2026-08 curriculum/essay
+# expansion) carry hand-written canonical/OG meta already verified by QA;
+# they receive ONLY the analytics block, in their own marker pair.
+# ---------------------------------------------------------------------------
+A_START = "<!-- BEGIN AUTO-INJECTED ANALYTICS -->"
+A_END   = "<!-- END AUTO-INJECTED ANALYTICS -->"
+
+def analytics_block():
+    if not POSTHOG_KEY:
+        return ""
+    return f"{A_START}\n{ANALYTICS_SNIPPET}\n{A_END}"
+
+def inject_analytics_only(html_path, rel):
+    txt = html_path.read_text()
+    original = txt
+    block = analytics_block()
+    if not block:
+        return False
+    pat = re.compile(re.escape(A_START) + r".*?" + re.escape(A_END), re.DOTALL)
+    if pat.search(txt):
+        txt = pat.sub(block, txt)
+    elif START_MARK in txt:
+        return False  # full block already present; analytics included there
+    else:
+        idx = txt.find('<link rel="stylesheet"')
+        if idx == -1:
+            idx = txt.find("</head>")
+        if idx == -1:
+            print(f"  SKIP {rel}: no anchor")
+            return False
+        line_start = txt.rfind("\n", 0, idx) + 1
+        txt = txt[:line_start] + block + "\n" + txt[line_start:]
+    if txt != original:
+        html_path.write_text(txt)
+        return True
+    return False
+
+def main_analytics_pass(root):
+    covered = {str(root / rel) for rel in PAGES}
+    n = 0
+    for p in sorted(root.rglob("*.html")):
+        if "tools/" in str(p.relative_to(root)):
+            continue
+        if str(p) in covered:
+            continue
+        rel = str(p.relative_to(root))
+        if inject_analytics_only(p, rel):
+            print(f"  OK-A {rel}")
+            n += 1
+    print(f"analytics-only pass: {n} pages updated")
 
 if __name__ == "__main__":
     main()

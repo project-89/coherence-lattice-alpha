@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gauge: every town points north its own way — The Living Lattice</title>
+<meta name="description" content="Local reference directions are private choices; only convention-independent statements are physics. Nine towns re-choose their norths, two mapmakers build a dictionary, and a Foucault pendulum does parallel transport for real.">
+<meta name="author" content="Michael Sharpe">
+<link rel="canonical" href="https://lattice.project89.org/primers/gauge-holonomy/sections/02-gauge.html">
+<link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
+<link rel="apple-touch-icon" href="../../../apple-touch-icon.png">
+<meta property="og:title" content="Gauge: every town points north its own way — The Living Lattice">
+<meta property="og:description" content="References are conventions; the dictionary between neighbors is the connection; what no convention can remove is curvature. Gauge, assuming nothing.">
+<meta property="og:url" content="https://lattice.project89.org/primers/gauge-holonomy/sections/02-gauge.html">
+<meta property="og:site_name" content="The Living Lattice">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://lattice.project89.org/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Gauge: every town points north its own way — The Living Lattice">
+<meta name="twitter:description" content="Nine towns, two mapmakers, and a real pendulum: gauge theory assuming nothing.">
+<meta name="twitter:image" content="https://lattice.project89.org/og-image.png">
+<!-- BEGIN AUTO-INJECTED ANALYTICS -->
+<!-- PostHog -->
+<script>
+!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+posthog.init('phc_kRX9iHZstABjgFqEWJBMok2S3hW9R8QMHbNao4EsNz2g', {api_host: 'https://us.i.posthog.com', person_profiles: 'identified_only'});
+</script>
+<!-- END AUTO-INJECTED ANALYTICS -->
+<link rel="stylesheet" href="../../../css/style.css">
+<style>
+.flag-callout {
+  margin: 1.6em 0; padding: 16px 20px;
+  background: rgba(195, 141, 247, 0.08);
+  border-left: 3px solid #c38df7; border-radius: 3px;
+  font-size: 14.5px; line-height: 1.55;
+}
+.flag-callout .flag-label {
+  display: inline-block; font: 700 10.5px "SF Mono", monospace;
+  color: #c38df7; text-transform: uppercase; letter-spacing: 0.1em; margin-right: 0.7em;
+}
+.flag-callout a { font-weight: 600; }
+</style>
+</head>
+<body>
+<div class="page">
+
+<nav class="breadcrumb">
+  <a href="../index.html">&larr; gauge &amp; holonomy</a>
+  <span class="sep">&middot;</span>
+  <span class="section-num">section 02 / 03 &middot; intermediate</span>
+</nav>
+
+<h1>Gauge: every town points north its own way<span class="subtitle">References are conventions; the dictionary is the connection; what survives every re-choice is real</span></h1>
+
+<p class="lead">In <a href="01-parallel-transport.html">the last section</a> you carried an arrow and read off angles: &ldquo;returns rotated 70&deg;.&rdquo; But rotated <em>relative to what</em>? To say &ldquo;the arrow points at 37&deg;&rdquo; you need a reference direction — a &ldquo;north&rdquo; — at the place the arrow lives. And here is the thing: <strong>each location's reference is a private choice.</strong> There is no God-given north painted on the universe. Town A can measure from its church spire, town B from its river. Nothing physical depends on those choices — but every <em>number</em> you write down does. Learning to tell the difference between the numbers and the physics is the entire content of the word <strong>gauge</strong>, and this section is three games of exactly that.</p>
+
+<h2>1. Nine towns re-choose their norths</h2>
+
+<p>The collection of local reference choices is called a <strong>gauge</strong>. Watch what happens when the towns below all re-choose:</p>
+
+<figure id="fig-towns">
+  <canvas id="canvas-towns" width="680" height="360"></canvas>
+  <div class="controls" id="towns-controls">
+    <button id="towns-regauge" class="primary">Every town re-chooses its north</button>
+    <button id="towns-physical">Turn the actual arrows</button>
+    <button id="towns-reset">Reset</button>
+  </div>
+  <figcaption>Nine towns. Each has a private reference direction (faint) and reports the orange arrow as an angle measured from it (the number underneath). <strong>Re-choose the norths:</strong> every reported number changes; not one arrow moves. Nothing happened. <strong>Turn the actual arrows:</strong> the arrows visibly move, and every town — whatever its convention — agrees on how much. That distinction, numbers-that-are-convention versus facts-that-are-not, is the entire content of the word <em>gauge</em>. <span id="towns-readout" class="readout">&nbsp;</span></figcaption>
+</figure>
+
+<h2>2. Two mapmakers build a dictionary</h2>
+
+<p>Private conventions are harmless in one town. They become a genuine problem the moment two towns want to <em>compare notes</em>. Suppose two mapmakers chart the same three landmarks. Both are careful, both are correct — and their reports disagree on every single number, because each measured from a different north. To reconcile them you need exactly one fact: <em>how B's north sits relative to A's</em>. One number per pair of neighbors. That dictionary is called a <strong>connection</strong> — and finding the entry is a game you can play:</p>
+
+<figure id="fig-maps">
+  <canvas id="canvas-maps" width="680" height="400"></canvas>
+  <div class="controls" id="maps-controls">
+    <div class="control">
+      <label>dictionary entry: B's north sits <span class="val" id="maps-d-val">0&deg;</span> from A's</label>
+      <input type="range" id="maps-d-slider" min="0" max="359" step="1" value="0">
+    </div>
+    <button id="maps-new">New hidden convention</button>
+  </div>
+  <figcaption>Two charts of the same three landmark arrows. Mapmaker A (left) and mapmaker B (right) each drew what they measured — numbers and all — and they disagree everywhere, because B's north is secretly rotated. Slide the dictionary entry: B's report, translated through your dictionary, appears as ghost arrows on A's chart. When the ghosts snap onto A's arrows, you have found the connection — <strong>one number that makes two honest disagreements into one shared world</strong>. <span id="maps-readout" class="readout">translation match = —</span></figcaption>
+</figure>
+
+<p>Now re-read the walk figure with new eyes: <strong>parallel transport is nothing but applying the dictionary, step by step, along your path.</strong> A <strong>gauge theory</strong> is just physics written so that only dictionary-honest, convention-independent statements count as real. And here is the punchline that connects this section back to the last one. Re-choosing every town's north scrambles every individual dictionary entry — but one quantity survives untouched: <em>the sum of dictionary entries around a closed loop</em>. On a flat grid of towns that loop-sum is zero. On the globe it is not — it is the enclosed area you measured in section 01. <strong>Curvature is the part of the dictionary that no re-choice of conventions can remove.</strong></p>
+
+<h2>3. A pendulum that does the carrying for you</h2>
+
+<p>If all this sounds like philosophy about map margins, here is the same mathematics running as brass-and-wire physics since 1851. A Foucault pendulum swings in a fixed plane while the Earth turns underneath it — which means the Earth is carrying the pendulum's swing-direction around a closed loop (its latitude circle) once per day, honestly, without twisting it. Parallel transport, performed by a planet. The swing plane precesses relative to the floor, and the rate depends on latitude exactly as transport says it must:</p>
+
+<figure id="fig-foucault">
+  <canvas id="canvas-foucault" width="680" height="360"></canvas>
+  <div class="controls" id="fc-controls">
+    <div class="control">
+      <label>latitude <span class="val" id="fc-lat-val">45&deg;</span></label>
+      <input type="range" id="fc-lat-slider" min="0" max="90" step="1" value="45">
+    </div>
+  </div>
+  <figcaption>Left: the pendulum's daily round trip — its latitude circle. Right: the swing line as seen on the floor, precessing. At the pole the floor turns fully under the fixed plane: 360&deg; per day. At the equator: no precession at all. In between, the rate is 360&deg;&nbsp;&times;&nbsp;sin(latitude) — the fraction of a full turn that transport around <em>that</em> circle delivers. The precession you can watch in any science museum is a holonomy readout. <span id="fc-readout" class="readout">precession = 254.6&deg;/day</span></figcaption>
+</figure>
+
+<div class="flag-callout">
+  <span class="flag-label">What's real here</span>
+  The towns and mapmakers are cartoons with the answer visible — the honest miniature of how connections work. The Foucault figure is a real physical effect but an idealized telling: a perfect pendulum, a sidereal day, and none of the engineering (drive magnets, ellipse suppression) that real museum pendulums need. The precession law itself, 360&deg;&middot;sin(latitude) per day, is textbook-exact. Where this machinery earns its keep on this site — connections along a <em>sequence</em> rather than a surface — is the transformer essays' story: position information in attention is implemented as exactly such a neighbor-dictionary (<a href="../../../transformers/index.html">RoPE as a connection</a>).
+</div>
+
+<h2>Where this goes</h2>
+
+<p>You now have the two working parts: the honest carry (transport) and the honest bookkeeping (gauge, connection). <a href="03-holonomy.html">Section 03</a> puts them together into the payoff — the quantity that survives every convention, lives only on loops, and is this site's candidate for what memory <em>is</em>.</p>
+
+<div class="nav-links">
+  <a href="01-parallel-transport.html" class="prev">Parallel transport: the honest carry</a>
+  <a href="03-holonomy.html" class="next">Holonomy: what the loop remembers</a>
+</div>
+
+</div>
+
+<script type="module">
+import { setupHiDPICanvas, runWhenVisible, palette } from '../../../js/common.js';
+
+// ============================================================
+// FIG A: gauge — nine towns, private norths
+// ============================================================
+(() => {
+  const canvas = document.getElementById('canvas-towns');
+  const ctx = setupHiDPICanvas(canvas, 680, 360);
+  const readout = document.getElementById('towns-readout');
+
+  const N = 9;
+  const initG = [0.4, 1.9, 5.4, 2.9, 0.9, 4.1, 3.6, 5.9, 1.4]; // private norths
+  let g = initG.slice();        // current gauge (animated)
+  let gTarget = initG.slice();
+  let Theta = 0.35;             // the physical direction (same everywhere)
+  let ThetaTarget = 0.35;
+  let status = '';
+
+  document.getElementById('towns-regauge').addEventListener('click', () => {
+    gTarget = gTarget.map(() => Math.random() * Math.PI * 2);
+    status = 'every number changed — nothing real did.';
+  });
+  document.getElementById('towns-physical').addEventListener('click', () => {
+    ThetaTarget += Math.PI / 6;
+    status = 'the arrows moved — and every town, whatever its convention, agrees on how much.';
+  });
+  document.getElementById('towns-reset').addEventListener('click', () => {
+    gTarget = initG.slice(); ThetaTarget = 0.35; status = '';
+  });
+
+  function angLerp(a, b, k) {
+    let d = b - a;
+    while (d > Math.PI) d -= 2 * Math.PI;
+    while (d < -Math.PI) d += 2 * Math.PI;
+    return a + d * k;
+  }
+
+  function draw() {
+    for (let i = 0; i < N; i++) g[i] = angLerp(g[i], gTarget[i], 0.12);
+    Theta = angLerp(Theta, ThetaTarget, 0.12);
+
+    ctx.clearRect(0, 0, 680, 360);
+
+    for (let i = 0; i < N; i++) {
+      const cx = 130 + (i % 3) * 210, cy = 70 + Math.floor(i / 3) * 105;
+
+      // town ring
+      ctx.strokeStyle = palette.grid; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.arc(cx, cy, 34, 0, Math.PI * 2); ctx.stroke();
+
+      // private north (faint)
+      ctx.strokeStyle = palette.textFaint; ctx.lineWidth = 1.5;
+      ctx.setLineDash([3, 3]);
+      ctx.beginPath();
+      ctx.moveTo(cx, cy);
+      ctx.lineTo(cx + Math.cos(g[i]) * 30, cy - Math.sin(g[i]) * 30);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // the physical arrow (identical direction in every town)
+      ctx.strokeStyle = palette.orange; ctx.fillStyle = palette.orange; ctx.lineWidth = 2.5;
+      const ax = cx + Math.cos(Theta) * 30, ay = cy - Math.sin(Theta) * 30;
+      ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(ax, ay); ctx.stroke();
+      const aa = Math.atan2(ay - cy, ax - cx);
+      ctx.beginPath();
+      ctx.moveTo(ax, ay);
+      ctx.lineTo(ax - 7 * Math.cos(aa - 0.42), ay - 7 * Math.sin(aa - 0.42));
+      ctx.lineTo(ax - 7 * Math.cos(aa + 0.42), ay - 7 * Math.sin(aa + 0.42));
+      ctx.fill();
+
+      // reported angle = physical minus private north, wrapped to (−180, 180]
+      let rep = (Theta - g[i]) * 180 / Math.PI;
+      while (rep > 180) rep -= 360;
+      while (rep <= -180) rep += 360;
+      ctx.fillStyle = palette.textSoft; ctx.font = '12px "SF Mono", monospace'; ctx.textAlign = 'center';
+      ctx.fillText((rep >= 0 ? '+' : '') + rep.toFixed(0) + '°', cx, cy + 52);
+    }
+
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 12px serif'; ctx.textAlign = 'center';
+    ctx.fillText('faint dashes: each town’s private “north” · orange: the actual arrow · number: what the town reports', 340, 348);
+
+    readout.textContent = status || ' ';
+  }
+  runWhenVisible(canvas, draw);
+})();
+
+// ============================================================
+// FIG B: two mapmakers — find the dictionary entry
+// ============================================================
+(() => {
+  const canvas = document.getElementById('canvas-maps');
+  const ctx = setupHiDPICanvas(canvas, 680, 400);
+  const slider = document.getElementById('maps-d-slider');
+  const dval = document.getElementById('maps-d-val');
+  const readout = document.getElementById('maps-readout');
+  const newBtn = document.getElementById('maps-new');
+
+  // three physical landmark arrows (world-frame angles)
+  const world = [0.5, 2.1, 4.3];
+  const names = ['mill', 'bridge', 'oak'];
+  let Delta = 2.4;             // B's hidden north offset (the dictionary truth)
+  let dial = 0;                // reader's dictionary guess (radians)
+  slider.addEventListener('input', () => {
+    dial = parseFloat(slider.value) * Math.PI / 180;
+    dval.textContent = slider.value + '°';
+  });
+  newBtn.addEventListener('click', () => { Delta = Math.random() * Math.PI * 2; });
+
+  function drawChart(cx, cy, label, northAng, arrows, opts) {
+    // chart ring + north mark (north drawn straight up in the chart's own frame,
+    // i.e. every chart renders ITS OWN north as "up")
+    ctx.strokeStyle = palette.axis; ctx.lineWidth = 1.2;
+    ctx.beginPath(); ctx.arc(cx, cy, 120, 0, Math.PI * 2); ctx.stroke();
+    ctx.strokeStyle = palette.textFaint; ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.moveTo(cx, cy - 104); ctx.lineTo(cx, cy - 122); ctx.stroke();
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 11px serif'; ctx.textAlign = 'center';
+    ctx.fillText('N', cx, cy - 128);
+    ctx.fillText(label, cx, cy + 146);
+
+    // landmark arrows at three fixed pedestals; each drawn at (world − north)
+    arrows.forEach((wAng, i) => {
+      const px = cx + Math.cos((i / 3) * Math.PI * 2 + 0.5) * 62;
+      const py = cy + Math.sin((i / 3) * Math.PI * 2 + 0.5) * 62;
+      const chartAng = wAng - northAng + Math.PI / 2;  // chart's north = screen up
+      const bx = px + Math.cos(chartAng) * 34, by = py - Math.sin(chartAng) * 34;
+      ctx.save();
+      ctx.globalAlpha = opts.alpha;
+      ctx.strokeStyle = opts.color; ctx.fillStyle = opts.color; ctx.lineWidth = opts.width;
+      if (opts.dash) ctx.setLineDash([4, 3]);
+      ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(bx, by); ctx.stroke();
+      ctx.setLineDash([]);
+      const aa = Math.atan2(by - py, bx - px);
+      ctx.beginPath();
+      ctx.moveTo(bx, by);
+      ctx.lineTo(bx - 7 * Math.cos(aa - 0.42), by - 7 * Math.sin(aa - 0.42));
+      ctx.lineTo(bx - 7 * Math.cos(aa + 0.42), by - 7 * Math.sin(aa + 0.42));
+      ctx.fill();
+      ctx.restore();
+      if (opts.labels) {
+        ctx.fillStyle = palette.textFaint; ctx.font = 'italic 10px serif'; ctx.textAlign = 'center';
+        ctx.fillText(names[i], px, py + 16);
+        // reported number
+        let rep = (wAng - northAng) * 180 / Math.PI;
+        while (rep > 180) rep -= 360;
+        while (rep <= -180) rep += 360;
+        ctx.fillStyle = opts.color; ctx.font = '10px "SF Mono", monospace';
+        ctx.fillText((rep >= 0 ? '+' : '') + rep.toFixed(0) + '°', px, py + 28);
+      }
+    });
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, 680, 400);
+
+    // A's chart: north = 0 (world frame)
+    drawChart(168, 185, 'mapmaker A', 0, world, { color: '#2a5f8f', width: 2.4, alpha: 1, labels: true });
+    // B's chart: north = Delta
+    drawChart(512, 185, 'mapmaker B', Delta, world, { color: '#d97236', width: 2.4, alpha: 1, labels: true });
+
+    // translated overlay on A's chart: B's reports pushed through the reader's
+    // dictionary. Overlay angle in A's chart = (world − Delta) + dial.
+    const translated = world.map(w => w - Delta + dial);
+    drawChart(168, 185, '', 0, translated, { color: '#6dc48f', width: 2, alpha: 0.75, dash: true, labels: false });
+
+    // match = mean cos of overlay error
+    let m = 0;
+    for (let i = 0; i < 3; i++) m += Math.cos(translated[i] - world[i]);
+    m /= 3;
+    const pct = Math.max(0, m) * 100;
+
+    ctx.fillStyle = pct > 97 ? '#6dc48f' : palette.textSoft;
+    ctx.font = '600 15px "SF Mono", monospace'; ctx.textAlign = 'center';
+    ctx.fillText(`translation match: ${pct.toFixed(0)}%`, 340, 372);
+    if (pct > 97) {
+      ctx.font = 'italic 12px serif'; ctx.fillStyle = palette.textFaint;
+      ctx.fillText('dictionary found — two honest disagreements, one world', 340, 390);
+    }
+    readout.textContent = `translation match = ${pct.toFixed(0)}%` + (pct > 97 ? ' — dictionary found' : '');
+  }
+  runWhenVisible(canvas, draw);
+})();
+
+// ============================================================
+// FIG C: Foucault — transport performed by a planet
+// ============================================================
+(() => {
+  const canvas = document.getElementById('canvas-foucault');
+  const ctx = setupHiDPICanvas(canvas, 680, 360);
+  const slider = document.getElementById('fc-lat-slider');
+  const lval = document.getElementById('fc-lat-val');
+  const readout = document.getElementById('fc-readout');
+
+  let lat = 45 * Math.PI / 180;
+  slider.addEventListener('input', () => {
+    lat = parseFloat(slider.value) * Math.PI / 180;
+    lval.textContent = slider.value + '°';
+  });
+
+  let swing = 0;      // precession angle of the swing line (radians)
+  let osc = 0;        // fast bob oscillation phase
+
+  const gcx = 180, gcy = 180, gr = 110, tilt = 0.5;
+  function proj(v) {
+    const z2 = v[1] * Math.sin(tilt) + v[2] * Math.cos(tilt);
+    return { sx: gcx + gr * v[0], sy: gcy - gr * z2 };
+  }
+
+  function draw() {
+    // precession rate ∝ sin(latitude); scaled for watchability
+    swing += 0.012 * Math.sin(lat);
+    osc += 0.16;
+
+    ctx.clearRect(0, 0, 680, 360);
+
+    // ------- LEFT: globe with the latitude circle -------
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 13px serif'; ctx.textAlign = 'center';
+    ctx.fillText('the daily round trip', gcx, 28);
+
+    for (let li = 1; li < 6; li++) {
+      const phi = (li / 6) * Math.PI;
+      ctx.beginPath();
+      for (let i = 0; i <= 60; i++) {
+        const th = (i / 60) * Math.PI * 2;
+        const p = proj([Math.sin(phi) * Math.cos(th), Math.sin(phi) * Math.sin(th), Math.cos(phi)]);
+        i ? ctx.lineTo(p.sx, p.sy) : ctx.moveTo(p.sx, p.sy);
+      }
+      ctx.strokeStyle = 'rgba(125,125,140,0.22)'; ctx.lineWidth = 1; ctx.stroke();
+    }
+    // highlighted latitude circle
+    const phiLat = Math.PI / 2 - lat;
+    ctx.beginPath();
+    for (let i = 0; i <= 60; i++) {
+      const th = (i / 60) * Math.PI * 2;
+      const p = proj([Math.sin(phiLat) * Math.cos(th), Math.sin(phiLat) * Math.sin(th), Math.cos(phiLat)]);
+      i ? ctx.lineTo(p.sx, p.sy) : ctx.moveTo(p.sx, p.sy);
+    }
+    ctx.strokeStyle = '#c38df7'; ctx.lineWidth = 2.4; ctx.stroke();
+    // museum dot riding the circle
+    const thDot = swing * 2.5; // decorative: the building going around
+    const dp = proj([Math.sin(phiLat) * Math.cos(thDot), Math.sin(phiLat) * Math.sin(thDot), Math.cos(phiLat)]);
+    ctx.fillStyle = palette.burgundy;
+    ctx.beginPath(); ctx.arc(dp.sx, dp.sy, 5, 0, Math.PI * 2); ctx.fill();
+
+    // ------- RIGHT: the floor view -------
+    const fcx = 505, fcy = 180, fr = 118;
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 13px serif';
+    ctx.fillText('the floor of the museum', fcx, 28);
+
+    // compass rose floor
+    ctx.strokeStyle = palette.axis; ctx.lineWidth = 1.2;
+    ctx.beginPath(); ctx.arc(fcx, fcy, fr, 0, Math.PI * 2); ctx.stroke();
+    for (let k = 0; k < 12; k++) {
+      const a = (k / 12) * Math.PI * 2;
+      ctx.strokeStyle = palette.grid;
+      ctx.beginPath();
+      ctx.moveTo(fcx + Math.cos(a) * (fr - 8), fcy + Math.sin(a) * (fr - 8));
+      ctx.lineTo(fcx + Math.cos(a) * fr, fcy + Math.sin(a) * fr);
+      ctx.stroke();
+    }
+    // ghost: swing line an hour ago (fixed offset behind)
+    const hourAgo = swing - 0.26 * Math.sin(lat) * 2;
+    ctx.strokeStyle = 'rgba(125,125,140,0.4)'; ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(fcx - Math.cos(hourAgo) * fr * 0.85, fcy - Math.sin(hourAgo) * fr * 0.85);
+    ctx.lineTo(fcx + Math.cos(hourAgo) * fr * 0.85, fcy + Math.sin(hourAgo) * fr * 0.85);
+    ctx.stroke();
+    // current swing line
+    ctx.strokeStyle = palette.orange; ctx.lineWidth = 2.4;
+    ctx.beginPath();
+    ctx.moveTo(fcx - Math.cos(swing) * fr * 0.85, fcy - Math.sin(swing) * fr * 0.85);
+    ctx.lineTo(fcx + Math.cos(swing) * fr * 0.85, fcy + Math.sin(swing) * fr * 0.85);
+    ctx.stroke();
+    // bob
+    const bobR = Math.sin(osc) * fr * 0.8;
+    ctx.fillStyle = palette.orange;
+    ctx.beginPath();
+    ctx.arc(fcx + Math.cos(swing) * bobR, fcy + Math.sin(swing) * bobR, 7, 0, Math.PI * 2);
+    ctx.fill();
+
+    const rate = 360 * Math.sin(lat);
+    ctx.fillStyle = palette.textSoft; ctx.font = '13px "SF Mono", monospace'; ctx.textAlign = 'center';
+    ctx.fillText(`precession = 360° × sin(${(lat * 180 / Math.PI).toFixed(0)}°) = ${rate.toFixed(1)}°/day`, 340, 345);
+    readout.textContent = `precession = ${rate.toFixed(1)}°/day`;
+  }
+  runWhenVisible(canvas, draw);
+})();
+</script>
+
+</body>
+</html>

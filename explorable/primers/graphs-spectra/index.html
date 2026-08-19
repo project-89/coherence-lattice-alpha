@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Graphs, coupling, and spectra — The Living Lattice</title>
+<meta name="description" content="A three-section module on eigenvalues for people who bounced off them: pluck a spring chain and hear its overtone recipe, operate the Laplacian by hand, and meet the Fiedler mode — the network's built-in early warning.">
+<meta name="author" content="Michael Sharpe">
+<link rel="canonical" href="https://lattice.project89.org/primers/graphs-spectra/">
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+<meta property="og:title" content="Graphs, coupling, and spectra — The Living Lattice">
+<meta property="og:description" content="Eigenvalues, finally: pluck it, paint it, build it, break it. Three interactive sections from natural wobbles to the Fiedler early-warning mode.">
+<meta property="og:url" content="https://lattice.project89.org/primers/graphs-spectra/">
+<meta property="og:site_name" content="The Living Lattice">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://lattice.project89.org/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Graphs, coupling, and spectra — The Living Lattice">
+<meta name="twitter:description" content="Eigenvalues, finally: pluck it, paint it, build it, break it.">
+<meta name="twitter:image" content="https://lattice.project89.org/og-image.png">
+<!-- BEGIN AUTO-INJECTED ANALYTICS -->
+<!-- PostHog -->
+<script>
+!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+posthog.init('phc_kRX9iHZstABjgFqEWJBMok2S3hW9R8QMHbNao4EsNz2g', {api_host: 'https://us.i.posthog.com', person_profiles: 'identified_only'});
+</script>
+<!-- END AUTO-INJECTED ANALYTICS -->
+<link rel="stylesheet" href="../../css/style.css">
+<style>
+nav.toc li { align-items: flex-start; }
+nav.toc .toc-item { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+nav.toc .toc-item > a { flex: 0 0 auto; font-weight: 500; }
+nav.toc .toc-sub { color: var(--text-faint); font-size: 0.9em; line-height: 1.45; }
+</style>
+</head>
+<body>
+<div class="page">
+
+<nav class="breadcrumb">
+  <a href="../index.html">&larr; curriculum</a>
+  <span class="sep">&middot;</span>
+  <span class="section-num">graphs &amp; spectra &middot; intermediate</span>
+</nav>
+
+<h1>Graphs, coupling, and spectra<span class="subtitle">Hearing the shape of a network — a full workshop on the most wall-like word in mathematics</span></h1>
+
+<p class="lead">"Eigenvalue" guards the door to half of physics and most of this website, and it is almost always taught backwards — symbols first, meaning never. This module goes the other way, with your hands on everything: you will <strong>pluck</strong> a chain of springs and read off the recipe of natural wobbles your pluck was made of, <strong>build</strong> your own network and play its chord, <strong>operate</strong> the one simple machine that generates every mode (a single question: how far am I from my neighbors' average?), watch diffusion kill the wiggly patterns first, and finally meet the <strong>Fiedler mode</strong> — the gentlest way a network can disagree with itself, which finds the weakest seam every time and whose eigenvalue is a live fragility meter. By the end, the sentence in the learning-rule chapter that sent you here reads like plain language.</p>
+
+<p>Three sections, each interactive end to end. Assumes only <a href="../sections/00-phase-and-sound.html">primer 00</a>.</p>
+
+<nav class="toc">
+  <ol>
+    <li><span class="toc-item"><a href="sections/01-modes.html">Modes: a network's natural wobbles</a><span class="toc-sub">Pluck a spring chain and hear which overtones you excited — including the shape that rings one pure tone. Step through a real network's modes. Then build your own graph, edge by edge, and play its chord.</span></span></li>
+    <li><span class="toc-item"><a href="sections/02-laplacian.html">The Laplacian: the disagreement machine</a><span class="toc-sub">Drag values onto a network and watch every node measure its own disagreement. Let go, and diffusion drains it — wiggliest modes first, the cluster-vs-cluster pattern always last. The same machine runs the site's coupling dynamics.</span></span></li>
+    <li><span class="toc-item"><a href="sections/03-fiedler.html">The Fiedler mode: the network's early warning</a><span class="toc-sub">The gentlest disagreement paints the bottleneck on a barbell, a ring, and a grid. Weaken a bridge and watch &lambda;&#8322; slide continuously toward zero — then cut it, and hear the chord lose its lowest voice.</span></span></li>
+  </ol>
+</nav>
+
+<div class="nav-links">
+  <a href="../index.html" class="prev">The curriculum</a>
+  <a href="sections/01-modes.html" class="next">Start: Modes</a>
+</div>
+
+</div>
+
+<script type="module">
+import '../../js/common.js';
+</script>
+
+</body>
+</html>

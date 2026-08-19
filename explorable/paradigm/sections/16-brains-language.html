@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Brains and language on one manifold — The Living Lattice</title>
+<meta name="description" content="When a brain reads and a language model reads the same text, their coherence trajectories trace the same geometry — curvature correlation around 0.71. And the semantic signal lives in the rotational (tangent) dynamics, not the radial: the quality inversion.">
+<meta name="author" content="Michael Sharpe">
+<link rel="canonical" href="https://lattice.project89.org/paradigm/sections/16-brains-language.html">
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+<meta property="og:title" content="Brains and language on one manifold — The Living Lattice">
+<meta property="og:description" content="Brain and language model trace the same trajectory geometry — curvature correlation ~0.71.">
+<meta property="og:url" content="https://lattice.project89.org/paradigm/sections/16-brains-language.html">
+<meta property="og:site_name" content="The Living Lattice">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://lattice.project89.org/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Brains and language on one manifold — The Living Lattice">
+<meta name="twitter:description" content="Brain and language model on one manifold.">
+<meta name="twitter:image" content="https://lattice.project89.org/og-image.png">
+<!-- BEGIN AUTO-INJECTED ANALYTICS -->
+<!-- PostHog -->
+<script>
+!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+posthog.init('phc_kRX9iHZstABjgFqEWJBMok2S3hW9R8QMHbNao4EsNz2g', {api_host: 'https://us.i.posthog.com', person_profiles: 'identified_only'});
+</script>
+<!-- END AUTO-INJECTED ANALYTICS -->
+<link rel="stylesheet" href="../../css/style.css">
+<style>
+.flag-callout { margin: 1.6em 0; padding: 16px 20px; background: rgba(195,141,247,0.08); border-left: 3px solid #c38df7; border-radius: 3px; font-size: 14.5px; line-height: 1.55; }
+.flag-callout .flag-label { display:inline-block; font: 700 10.5px "SF Mono",monospace; color:#c38df7; text-transform:uppercase; letter-spacing:0.1em; margin-right:0.7em; }
+</style>
+</head>
+<body>
+<div class="page">
+
+<nav class="breadcrumb">
+  <a href="../index.html">&larr; contents</a>
+  <span class="sep">&middot;</span>
+  <span class="section-num">section 16 &middot; the universal case</span>
+</nav>
+
+<h1>Brains and language on one manifold<span class="subtitle">A cortex and a language model, reading the same words, trace the same path</span></h1>
+
+<p class="lead">The boldest version of substrate-agnosticism crosses the carbon/silicon line. If meaning lives on a universal manifold, then a brain reading a sentence and a language model reading the same sentence should trace the <em>same trajectory geometry</em> through it — not the same voltages or activations, but the same shape of motion: where it turns, how sharply, in what order. (The two ideas doing the work here — rotations preserve shape, dot products measure agreement — are built from nothing in <a href="../../primers/sections/01-rotations.html">the rotations primer</a>.)</p>
+
+<p>Below, a trajectory derived from EEG (a person reading) and one from a language model (reading the same text), in coherence coordinates. Raw, they sit at different orientations. Press <em>Align (CRT)</em> — the Canonical Resonance Transform, a rotation between substrates — and their <strong>tangent dynamics</strong> line up: where one turns, the other turns.</p>
+
+<figure id="fig-bl">
+  <canvas id="canvas-bl" width="680" height="360"></canvas>
+  <div class="controls" id="bl-controls">
+    <button id="bl-align" class="primary">Align (CRT)</button>
+    <button id="bl-reset">Reset</button>
+    <button id="bl-toggle">Compare: tangent</button>
+  </div>
+  <figcaption>
+    <span style="color:#2a5f8f;font-weight:600;">Text</span> and <span style="color:#d97236;font-weight:600;">EEG</span> trajectories in coherence space. Press <em>Align</em>: the tangent correlation here climbs from <span class="mono">&asymp; 0.1</span> to <span class="mono">&asymp; 0.8</span> (in the measured EEG&harr;text data, the curvature correlation reaches <span class="mono">&asymp; 0.71</span>). Toggle <em>tangent / radial</em>: the semantic signal lives in the <strong>tangent</strong> (rotational) dynamics — how the trajectory <em>turns</em> — not the radial (how far out it sits). The radial needle barely moves, aligned or not: comparing the wrong component hides the correspondence. That is the &ldquo;quality inversion.&rdquo; <span id="bl-readout" class="readout">tangent correlation = —</span>
+  </figcaption>
+</figure>
+
+<p>The measured numbers are a curvature correlation of <strong>0.71</strong> and a temporal correlation of <strong>0.79</strong> between EEG and text trajectories, with the same PAS &asymp; 0.76 attractor recurring in cortex. And the diagnostic that the signal is rotational, not radial, is what a tangent-space decoder would exploit to close the gap from today&rsquo;s ~53% decoding toward the ~79% information ceiling.</p>
+
+<div class="flag-callout">
+  <span class="flag-label">Hypothesis-grade — honest status</span>This is the least-settled rung of the ladder. The curvature/temporal correlations are real measurements on EEG-while-reading data, but the tangent-decoder program that would turn this from suggestive into decisive is <em>staged, not yet run</em>. We mark it as a frontier: a clean prediction (tangent dynamics carry the semantics) with an experiment designed to falsify it. The synthetic trajectories here illustrate the geometry; the claim awaits that run.
+</div>
+
+<p>That is the universal case, end to end: one law and one constant from the vacuum to the mind, one shared manifold of meaning across models, and — provisionally — across the carbon/silicon line. All that remains is to stand back and see what it adds up to.</p>
+
+<div class="nav-links">
+  <a href="15-rotation.html" class="prev">The rotation: meaning is shared</a>
+  <a href="17-coda.html" class="next">Coda: the universe, climbing, awake</a>
+</div>
+
+</div>
+
+<script type="module">
+import { setupHiDPICanvas, runWhenVisible, palette } from '../../js/common.js';
+
+(() => {
+  const W = 680, H = 360, canvas = document.getElementById('canvas-bl');
+  const ctx = setupHiDPICanvas(canvas, W, H);
+  const readout = document.getElementById('bl-readout');
+  const M = 120, theta0 = 1.45;
+  // Shared base trajectory (Lissajous-ish wander), projected to the unit
+  // circle: the SHARED content lives in the tangent (direction) dynamics.
+  // Each substrate then gets its own independent radial breathing — so the
+  // radial component genuinely carries no shared signal, and only the
+  // tangent comparison (which the CRT rotation affects) can reveal the
+  // correspondence. Rotation-invariant measures would sit flat.
+  const base = [];
+  for (let i = 0; i < M; i++) { const t = i / M * Math.PI * 2; base.push([Math.sin(2 * t) * 0.7 + Math.sin(3 * t) * 0.2, Math.sin(3 * t + 0.7) * 0.6 + Math.cos(t) * 0.25]); }
+  const dir = base.map(p => { const r = Math.hypot(p[0], p[1]) + 1e-6; return [p[0] / r, p[1] / r]; });
+  function rotV(p, a) { return [p[0] * Math.cos(a) - p[1] * Math.sin(a), p[0] * Math.sin(a) + p[1] * Math.cos(a)]; }
+  const bT = i => 1 + 0.20 * Math.sin(i * 0.55 + 1.1);
+  const bE = i => 1 + 0.20 * Math.sin(i * 0.43 + 2.6);
+  const text = dir.map((p, i) => [p[0] * bT(i) + Math.sin(i * 1.7) * 0.015, p[1] * bT(i) + Math.cos(i * 1.3) * 0.015]);
+  const eegRaw = dir.map((p, i) => { const r = rotV(p, theta0); return [r[0] * bE(i) + Math.sin(i * 2.3) * 0.015, r[1] * bE(i) + Math.cos(i * 1.9) * 0.015]; });
+
+  let applied = 0, target = 0, animating = false, mode = 'tangent';
+  document.getElementById('bl-align').addEventListener('click', () => { target = -theta0; animating = true; });
+  document.getElementById('bl-reset').addEventListener('click', () => { applied = 0; target = 0; animating = false; });
+  const tgl = document.getElementById('bl-toggle');
+  tgl.addEventListener('click', () => { mode = mode === 'tangent' ? 'radial' : 'tangent'; tgl.textContent = 'Compare: ' + mode; });
+
+  // Tangent comparison: normalized inner product of step velocities.
+  // Unlike turning angles (rotation-invariant), this genuinely responds
+  // to the CRT rotation — it is the aligned-frame tangent overlap.
+  function tangentCorr(a, b) {
+    let dot = 0, na = 0, nb = 0;
+    for (let i = 1; i < Math.min(a.length, b.length); i++) {
+      const vax = a[i][0] - a[i - 1][0], vay = a[i][1] - a[i - 1][1];
+      const vbx = b[i][0] - b[i - 1][0], vby = b[i][1] - b[i - 1][1];
+      dot += vax * vbx + vay * vby;
+      na += vax * vax + vay * vay;
+      nb += vbx * vbx + vby * vby;
+    }
+    return dot / Math.sqrt(na * nb + 1e-9);
+  }
+  function radii(traj) { return traj.map(p => Math.hypot(p[0], p[1])); }
+  function corr(a, b) {
+    const n = Math.min(a.length, b.length); let ma = 0, mb = 0;
+    for (let i = 0; i < n; i++) { ma += a[i]; mb += b[i]; } ma /= n; mb /= n;
+    let cab = 0, va = 0, vb = 0;
+    for (let i = 0; i < n; i++) { const da = a[i] - ma, db = b[i] - mb; cab += da * db; va += da * da; vb += db * db; }
+    return cab / Math.sqrt(va * vb + 1e-9);
+  }
+
+  function draw() {
+    if (animating) { applied += (target - applied) * 0.07; if (Math.abs(target - applied) < 0.004) { applied = target; animating = false; } }
+    const eeg = eegRaw.map(p => rotV(p, applied));
+    ctx.clearRect(0, 0, W, H); ctx.fillStyle = palette.bg; ctx.fillRect(0, 0, W, H);
+    const cx = 250, cy = 185, scl = 120;
+    function drawTraj(tr, color, w) { ctx.strokeStyle = color; ctx.lineWidth = w; ctx.beginPath(); tr.forEach((p, i) => { const x = cx + p[0] * scl, y = cy - p[1] * scl; i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }); ctx.stroke(); }
+    drawTraj(text, 'rgba(42,95,143,0.85)', 2);
+    drawTraj(eeg, 'rgba(217,114,54,0.85)', 2);
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 12px "Charter",serif'; ctx.textAlign = 'left';
+    ctx.fillText('coherence-space trajectories', 24, 28);
+
+    // correlation by mode
+    let c;
+    if (mode === 'tangent') c = tangentCorr(text, eeg);
+    else c = corr(radii(text), radii(eeg));
+    // meter
+    const mx = 510, my = 70, mw = 140, mh = 200;
+    ctx.strokeStyle = palette.axis; ctx.lineWidth = 1; ctx.strokeRect(mx, my, mw, mh);
+    const frac = (c + 1) / 2;  // -1..1 → 0..1
+    ctx.fillStyle = mode === 'tangent' ? 'rgba(109,196,143,0.3)' : 'rgba(181,85,106,0.3)';
+    ctx.fillRect(mx, my + mh - frac * mh, mw, frac * mh);
+    // zero line
+    ctx.strokeStyle = palette.grid; ctx.setLineDash([3, 3]); ctx.beginPath(); ctx.moveTo(mx, my + mh / 2); ctx.lineTo(mx + mw, my + mh / 2); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = mode === 'tangent' ? '#6dc48f' : '#b5556a'; ctx.font = '600 24px "SF Mono",monospace'; ctx.textAlign = 'center';
+    ctx.fillText(c.toFixed(2), mx + mw / 2, my + mh / 2 - 8);
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 11px "Charter",serif';
+    ctx.fillText(mode + ' correlation', mx + mw / 2, my + mh / 2 + 14);
+
+    readout.textContent = `${mode} correlation = ${c.toFixed(2)}` + (mode === 'radial' ? '  (the inversion: signal is not here)' : '');
+  }
+  runWhenVisible(canvas, draw);
+})();
+</script>
+
+</body>
+</html>

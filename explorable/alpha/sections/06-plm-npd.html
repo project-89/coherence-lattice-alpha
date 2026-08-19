@@ -281,7 +281,7 @@ wireEquation('eq-freezing', {
   Kstar: {
     name: 'K*ᵢⱼ — the frozen equilibrium value',
     pronounce: '"K star sub i j"',
-    description: 'The unique coupling strength determined by the balance equation R₀(K*) · cos(Δθ) = 2K*/r from Chapter 4. At a PLM, the cos(Δθ) is constant, so this equation has exactly one stable solution, and K converges to it exponentially.',
+    description: 'The unique coupling strength determined by the balance equation R₀(K*) · cos(Δθ) = 2K*/r from Foundations. At a PLM, the cos(Δθ) is constant, so this equation has exactly one stable solution, and K converges to it exponentially.',
   },
   cosfrozen: {
     name: 'cos(Δθᵢⱼ) — the frozen phase difference',
@@ -1049,7 +1049,7 @@ function shadePhase(baseHex, brightness) {
     // Metrics: compute full coherence capital set
     const m = coherenceMetrics(thetas, L);
     cHistory.push(m.C); cHistory.shift();
-    readout.textContent = `I_phase = ${m.Iphat.toFixed(3)},  ρ = ${m.rho.toFixed(3)},  C = ${m.C.toFixed(3)}`;
+    readout.textContent = `I_phase = ${m.Ipos.toFixed(3)},  ρ = ${m.rho.toFixed(3)},  C = ${m.C.toFixed(3)}`;
 
     // Status line below the grid
     ctx.fillStyle = palette.textFaint;

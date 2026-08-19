@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Phase, beats, and the sound of sync — The Living Lattice</title>
+<meta name="description" content="A zero-assumptions primer: what phase is, why detuned oscillators beat, and what it sounds like when coupling pulls two rhythms into lock. Every figure is audible.">
+<meta name="author" content="Michael Sharpe">
+<link rel="canonical" href="https://lattice.project89.org/primers/sections/00-phase-and-sound.html">
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+<meta property="og:title" content="Phase, beats, and the sound of sync — The Living Lattice">
+<meta property="og:description" content="What phase is, why detuned oscillators beat, and the sound of two rhythms locking. A primer that assumes nothing.">
+<meta property="og:url" content="https://lattice.project89.org/primers/sections/00-phase-and-sound.html">
+<meta property="og:site_name" content="The Living Lattice">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://lattice.project89.org/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Phase, beats, and the sound of sync — The Living Lattice">
+<meta name="twitter:description" content="A zero-assumptions, audible primer on phase and synchronization.">
+<meta name="twitter:image" content="https://lattice.project89.org/og-image.png">
+<!-- BEGIN AUTO-INJECTED ANALYTICS -->
+<!-- PostHog -->
+<script>
+!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+posthog.init('phc_kRX9iHZstABjgFqEWJBMok2S3hW9R8QMHbNao4EsNz2g', {api_host: 'https://us.i.posthog.com', person_profiles: 'identified_only'});
+</script>
+<!-- END AUTO-INJECTED ANALYTICS -->
+<link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+<div class="page">
+
+<nav class="breadcrumb">
+  <a href="../index.html">&larr; primers</a>
+  <span class="sep">&middot;</span>
+  <span class="section-num">primer 00</span>
+</nav>
+
+<h1>Phase, beats, and the sound of sync<span class="subtitle">The one idea under everything in this library, taught to your ears first</span></h1>
+
+<p class="lead">Every essay on this site is about things that repeat — and about what happens when repeating things influence each other. You do not need any math to get the core of it, because your ears already know it. A musical tone <em>is</em> a repeating thing. Two slightly-mismatched tones <em>beat</em> — a slow wobble you can count. And when two rhythms are allowed to pull on each other, there is a sharp, dramatic moment where the wobble stops and they become one. That moment is what this whole library is about. This page lets you hear it.</p>
+
+<p><em>Each figure has a sound button. Sound is off until you press it, and quiet when you do.</em></p>
+
+<h2>1. Phase: where you are in your cycle</h2>
+
+<p>Picture a dot going around a circle at a steady rate. That is the entire mathematical object this site is built from — it is called an <strong>oscillator</strong>. Two numbers describe it: how fast it goes around (its <strong>frequency</strong> — cycles per second), and where on the circle it is <em>right now</em> (its <strong>phase</strong>). Phase is just an address on a circle: think of the hand of a clock, or where in a breath you are — top of the inhale, bottom of the exhale, somewhere in between.</p>
+
+<p>If you track only the height of the dot as it circles, you get a wave. A wave is what a circle looks like when you watch it through time. And if the circling is fast enough — hundreds of times per second — the wave is a sound your ear can hold directly.</p>
+
+<figure id="fig-wave">
+  <canvas id="canvas-wave" width="680" height="300"></canvas>
+  <div class="controls" id="wave-controls">
+    <div class="control">
+      <label>frequency (cycles/sec) <span class="val" id="wave-f-val">1.00</span></label>
+      <input type="range" id="wave-f-slider" min="0.4" max="3" step="0.05" value="1">
+    </div>
+  </div>
+  <figcaption>The dot circles; the trace on the right is its height through time — a wave. Slide the frequency and watch the wave tighten. <em>Sound on: the same motion, sped up into hearing range (your ear needs a few hundred cycles per second). Higher frequency = higher pitch. A pitch is a phase going around fast.</em></figcaption>
+</figure>
+
+<h2>2. Detuning: two rhythms that almost agree</h2>
+
+<p>Now two oscillators. Give them <em>slightly</em> different frequencies — say one circles 1.5 times per second and the other 1.5-and-a-bit. Watch what happens to the gap between them: the faster one pulls ahead, a little more each cycle. The phase difference — the angle between the two dots — grows steadily, laps the circle, and comes around again.</p>
+
+<p>Your ear hears that lap directly. When the two dots happen to be aligned, their waves add and the sound swells. When they are opposite, the waves cancel and the sound dips. The result is a slow, regular wobble in loudness called <strong>beating</strong> — and the wobble rate is exactly the frequency mismatch. Beats are the audible sound of two things drifting through agreement and disagreement, over and over.</p>
+
+<figure id="fig-beats">
+  <canvas id="canvas-beats" width="680" height="320"></canvas>
+  <div class="controls" id="beats-controls">
+    <div class="control">
+      <label>detune (beats per second) <span class="val" id="beats-d-val">1.5</span></label>
+      <input type="range" id="beats-d-slider" min="0" max="4" step="0.1" value="1.5">
+    </div>
+  </div>
+  <figcaption>Two dots, one slightly faster. The lower trace is their two waves added together: the envelope breathes at exactly the detune rate. <em>Sound on: two real tones, 220 Hz and 220-plus-your-slider Hz, genuinely interfering — the wobble you hear is physics, not an effect. Set detune to zero and the wobble vanishes.</em></figcaption>
+</figure>
+
+<h2>3. Coupling: when rhythms pull on each other</h2>
+
+<p>So far the two oscillators ignore each other. Now connect them — let each one <em>nudge</em> the other toward agreement, a little, every instant. The strength of that nudge is called the <strong>coupling</strong>, written <span class="mono">K</span> everywhere on this site. This is the knob that matters. Everything here — the physics essays, the transformer essays, the theory of mind — is about what networks do as coupling changes.</p>
+
+<p>With the detune fixed, slide the coupling up and listen:</p>
+
+<ul style="margin: 0.4em 0 1em 0; color: var(--text-soft);">
+  <li><strong>Weak coupling</strong> — the mismatch wins. The two still lap each other and you hear beats, though the beats slow down: the nudging almost holds them together.</li>
+  <li><strong>Near the threshold</strong> — the beats become long, dramatic, and irregular-feeling: the pair hangs almost-locked for seconds, then slips. This slowing-down-near-the-edge is a signature you will meet again and again in the essays, at every scale.</li>
+  <li><strong>Past the threshold</strong> — the beating <em>stops</em>. The two lock to a single compromise pitch and hold a fixed phase difference forever. They have synchronized.</li>
+</ul>
+
+<p>The important thing to take with you: the change is <strong>sharp</strong>. Sync is not gradual — there is a threshold, a critical coupling, and crossing it changes the character of the system, not just the amount. Physicists call that a <strong>phase transition</strong> (an unlucky name-collision: "phase" there means the regime the system is in — locked vs. slipping — not the angle on the circle). The most interesting behavior in this entire library lives right at that edge.</p>
+
+<figure id="fig-lock">
+  <canvas id="canvas-lock" width="680" height="320"></canvas>
+  <div class="controls" id="lock-controls">
+    <div class="control">
+      <label>K (coupling) <span class="val" id="lock-k-val">0.00</span></label>
+      <input type="range" id="lock-k-slider" min="0" max="3" step="0.02" value="0">
+    </div>
+  </div>
+  <figcaption>Two oscillators, detuned by 0.6 cycles/sec, each nudging the other toward agreement with strength K. <em>Sound on: each tone follows its oscillator's actual instantaneous speed. Slide K up slowly — hear the beats stretch out near the threshold (K &asymp; 1.9), then stop entirely when the pair locks to one pitch.</em> <span id="lock-readout" class="readout">slipping</span></figcaption>
+</figure>
+
+<h2>Where this goes</h2>
+
+<p>That is genuinely the whole toolkit: <strong>phase</strong> (where in the cycle), <strong>frequency</strong> (how fast), <strong>detune</strong> (disagreement), <strong>coupling</strong> (mutual nudging), <strong>locking</strong> (the sharp transition into sync). The essays scale it up — from two oscillators to rings, grids, lattices, brains, and transformers — and let the coupling itself learn and change. But every page of this site is doing some version of what you just heard.</p>
+
+<p>Continue to <a href="../../foundations/sections/01-oscillators.html">Foundations chapter 1</a> to meet the same ideas with 24 oscillators on a ring (it has sound too) — or take <a href="01-rotations.html">the rotations primer</a> next if you are headed for the essays about meaning and minds.</p>
+
+<div class="nav-links">
+  <a href="../index.html" class="prev">Primers</a>
+  <a href="01-rotations.html" class="next">Rotations: same shape, another angle</a>
+</div>
+
+</div>
+
+<script type="module">
+import { setupHiDPICanvas, runWhenVisible, palette, makeSoundToggle, makeVoices } from '../../js/common.js';
+
+// ============================================================
+// FIG A: one oscillator — circle, wave, pitch
+// ============================================================
+(() => {
+  const canvas = document.getElementById('canvas-wave');
+  const ctx = setupHiDPICanvas(canvas, 680, 300);
+  const slider = document.getElementById('wave-f-slider');
+  const fval = document.getElementById('wave-f-val');
+  let f = 1.0;
+  slider.addEventListener('input', () => { f = parseFloat(slider.value); fval.textContent = f.toFixed(2); });
+
+  const sound = makeSoundToggle(document.getElementById('wave-controls'), { label: 'hear the pitch' });
+  const voice = makeVoices(sound, 1, { freq: 220 });
+
+  let theta = 0;
+  const trace = new Array(240).fill(0);
+
+  function draw() {
+    theta += f * 0.033 * Math.PI * 2;
+    trace.push(Math.cos(theta)); trace.shift();
+
+    ctx.clearRect(0, 0, 680, 300);
+    const cx = 130, cy = 150, r = 80;
+
+    ctx.strokeStyle = palette.axis; ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.stroke();
+
+    const dx = cx + Math.cos(theta) * r, dy = cy - Math.sin(theta) * r;
+    ctx.strokeStyle = palette.grid;
+    ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(dx, dy); ctx.stroke();
+    ctx.fillStyle = palette.orange;
+    ctx.beginPath(); ctx.arc(dx, dy, 9, 0, Math.PI * 2); ctx.fill();
+
+    // guide from dot height to trace start
+    ctx.strokeStyle = palette.grid; ctx.setLineDash([2, 4]);
+    ctx.beginPath(); ctx.moveTo(dx, dy); ctx.lineTo(280, cy - Math.cos(theta) * 70); ctx.stroke();
+    ctx.setLineDash([]);
+
+    // wave trace
+    const x0 = 280, w = 370, mid = cy, amp = 70;
+    ctx.strokeStyle = palette.axis; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(x0, mid); ctx.lineTo(x0 + w, mid); ctx.stroke();
+    ctx.strokeStyle = palette.orange; ctx.lineWidth = 2;
+    ctx.beginPath();
+    for (let i = 0; i < trace.length; i++) {
+      const x = x0 + (i / (trace.length - 1)) * w;
+      const y = mid - trace[trace.length - 1 - i] * amp;
+      i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+    }
+    ctx.stroke();
+
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 12px serif'; ctx.textAlign = 'left';
+    ctx.fillText('phase — where on the circle', 60, 272);
+    ctx.fillText('the same motion, through time', x0 + 90, 272);
+
+    voice.set(0, 220 * f, 0.9);
+  }
+  runWhenVisible(canvas, draw);
+})();
+
+// ============================================================
+// FIG B: two detuned oscillators — real beats
+// ============================================================
+(() => {
+  const canvas = document.getElementById('canvas-beats');
+  const ctx = setupHiDPICanvas(canvas, 680, 320);
+  const slider = document.getElementById('beats-d-slider');
+  const dval = document.getElementById('beats-d-val');
+  let detune = 1.5;
+  slider.addEventListener('input', () => { detune = parseFloat(slider.value); dval.textContent = detune.toFixed(1); });
+
+  const sound = makeSoundToggle(document.getElementById('beats-controls'), { label: 'hear the beats' });
+  const voices = makeVoices(sound, 2, { freq: 220 });
+
+  // Visual circling at 1.5 cyc/s; dot B faster by (detune * visualScale)
+  // so the on-screen lap rate matches the audible beat rate exactly.
+  let thA = 0, thB = 0;
+  const trace = new Array(300).fill(0);
+
+  function draw() {
+    const dt = 0.033;
+    thA += 1.5 * dt * Math.PI * 2;
+    thB += (1.5 + detune * 0.25) * dt * Math.PI * 2;
+    // sum of the two audio waves, sampled at the visual frame rate for the
+    // envelope trace (the fast carrier is not resolvable — the envelope is
+    // the point). Use the phase DIFFERENCE for the envelope: |cos(Δθ/2)|.
+    const dphi = thB - thA;
+    trace.push(Math.abs(Math.cos((thB - thA) / 2))); trace.shift();
+
+    ctx.clearRect(0, 0, 680, 320);
+
+    // two circles
+    [[110, thA, palette.blue, 'A'], [270, thB, palette.orange, 'B']].forEach(([cx, th, color, lab]) => {
+      const cy = 100, r = 58;
+      ctx.strokeStyle = palette.axis; ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.stroke();
+      const dx = cx + Math.cos(th) * r, dy = cy - Math.sin(th) * r;
+      ctx.fillStyle = color;
+      ctx.beginPath(); ctx.arc(dx, dy, 8, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = palette.textFaint; ctx.font = 'italic 12px serif'; ctx.textAlign = 'center';
+      ctx.fillText(lab, cx, cy + r + 18);
+    });
+
+    // agreement arc between the dots (drawn on B's circle edge)
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 12px serif'; ctx.textAlign = 'left';
+    const agree = Math.cos(dphi);
+    ctx.fillText(`agreement cos(Δθ) = ${agree.toFixed(2)}`, 360, 96);
+    ctx.fillText(agree > 0.7 ? 'aligned — waves add, sound swells' : agree < -0.7 ? 'opposed — waves cancel, sound dips' : 'in between', 360, 118);
+
+    // envelope trace
+    const x0 = 60, w = 560, mid = 250, amp = 55;
+    ctx.strokeStyle = palette.axis; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(x0, mid); ctx.lineTo(x0 + w, mid); ctx.stroke();
+    ctx.strokeStyle = palette.burgundy; ctx.lineWidth = 2;
+    ctx.beginPath();
+    for (let i = 0; i < trace.length; i++) {
+      const x = x0 + (i / (trace.length - 1)) * w;
+      const y = mid - trace[trace.length - 1 - i] * amp;
+      i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+    }
+    ctx.stroke();
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 12px serif'; ctx.textAlign = 'left';
+    ctx.fillText('loudness of the two waves added — breathing at the detune rate', x0, mid + amp + 4);
+
+    voices.set(0, 220, 1);
+    voices.set(1, 220 + detune, 1);
+  }
+  runWhenVisible(canvas, draw);
+})();
+
+// ============================================================
+// FIG C: coupling — the audible lock
+// ============================================================
+(() => {
+  const canvas = document.getElementById('canvas-lock');
+  const ctx = setupHiDPICanvas(canvas, 680, 320);
+  const slider = document.getElementById('lock-k-slider');
+  const kval = document.getElementById('lock-k-val');
+  const readout = document.getElementById('lock-readout');
+  let K = 0;
+  slider.addEventListener('input', () => { K = parseFloat(slider.value); kval.textContent = K.toFixed(2); });
+
+  const sound = makeSoundToggle(document.getElementById('lock-controls'), { label: 'hear the lock' });
+  const voices = makeVoices(sound, 2, { freq: 220 });
+
+  // Detune 0.6 cyc/s → Δω = 2π·0.6. Symmetric coupling: lock at K ≥ Δω/2 ≈ 1.88.
+  const wA = 2 * Math.PI * 1.5, wB = 2 * Math.PI * 2.1;
+  let thA = 0, thB = 0.5;
+  let vA = wA, vB = wB; // smoothed instantaneous angular velocity
+
+  function draw() {
+    const dt = 0.016;
+    for (let s = 0; s < 2; s++) {
+      const dA = wA + K * Math.sin(thB - thA);
+      const dB = wB + K * Math.sin(thA - thB);
+      thA += dA * dt; thB += dB * dt;
+      vA = 0.92 * vA + 0.08 * dA;
+      vB = 0.92 * vB + 0.08 * dB;
+    }
+
+    ctx.clearRect(0, 0, 680, 320);
+
+    // bond line thickens with K
+    ctx.strokeStyle = palette.axis; ctx.lineWidth = 1 + K * 2.2;
+    ctx.beginPath(); ctx.moveTo(168, 130); ctx.lineTo(342, 130); ctx.stroke();
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 11px serif'; ctx.textAlign = 'center';
+    ctx.fillText('K', 255, 120);
+
+    [[110, thA, palette.blue, 'A — wants 1.5 cyc/s'], [400, thB, palette.orange, 'B — wants 2.1 cyc/s']].forEach(([cx, th, color, lab]) => {
+      const cy = 130, r = 58;
+      ctx.strokeStyle = palette.axis; ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.stroke();
+      const dx = cx + Math.cos(th) * r, dy = cy - Math.sin(th) * r;
+      ctx.fillStyle = color;
+      ctx.beginPath(); ctx.arc(dx, dy, 8, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = palette.textFaint; ctx.font = 'italic 12px serif'; ctx.textAlign = 'center';
+      ctx.fillText(lab, cx, cy + r + 20);
+    });
+
+    // measured frequencies
+    const fA = vA / (2 * Math.PI), fB = vB / (2 * Math.PI);
+    const slip = Math.abs(fB - fA);
+    const locked = slip < 0.02;
+    ctx.fillStyle = palette.textSoft; ctx.font = '13px "SF Mono", monospace'; ctx.textAlign = 'left';
+    ctx.fillText(`measured: A ${fA.toFixed(2)} cyc/s   B ${fB.toFixed(2)} cyc/s`, 490, 100);
+    ctx.fillStyle = locked ? palette.green : palette.burgundy;
+    ctx.fillText(locked ? 'LOCKED — one rhythm' : `slipping — beats at ${slip.toFixed(2)}/s`, 490, 126);
+
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 12px serif';
+    ctx.fillText('threshold near K ≈ 1.9 — approach it slowly', 490, 160);
+
+    readout.textContent = locked ? `locked — common rhythm ${fA.toFixed(2)} cyc/s` : `slipping — beat rate ${slip.toFixed(2)}/s`;
+
+    // pitch tracks the real measured instantaneous frequency of each
+    voices.set(0, 220 * (fA / 1.5), 1);
+    voices.set(1, 220 * (fB / 1.5), 1);
+  }
+  runWhenVisible(canvas, draw);
+})();
+</script>
+
+</body>
+</html>

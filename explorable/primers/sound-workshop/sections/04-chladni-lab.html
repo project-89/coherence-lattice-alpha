@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Chladni laboratory — The Living Lattice</title>
+<meta name="description" content="A free-play Chladni bench: sweep any frequency (into the ultrasonic), free or clamped edges, finger-pins, two coupled drivers, and a 3D plate with bouncing sand.">
+<meta name="author" content="Michael Sharpe">
+<link rel="canonical" href="https://lattice.project89.org/primers/sound-workshop/sections/04-chladni-lab.html">
+<link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
+<link rel="apple-touch-icon" href="../../../apple-touch-icon.png">
+<meta property="og:title" content="The Chladni laboratory — The Living Lattice">
+<meta property="og:description" content="Sweep the whole spectrum — past your own hearing — hunt the Tyndall figures, couple two drivers, and watch sand bounce on a 3D plate.">
+<meta property="og:url" content="https://lattice.project89.org/primers/sound-workshop/sections/04-chladni-lab.html">
+<meta property="og:site_name" content="The Living Lattice">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://lattice.project89.org/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="The Chladni laboratory — The Living Lattice">
+<meta name="twitter:description" content="A free-play Chladni bench: any frequency, free edges, coupled drivers, 3D bouncing sand.">
+<meta name="twitter:image" content="https://lattice.project89.org/og-image.png">
+<!-- BEGIN AUTO-INJECTED ANALYTICS -->
+<!-- PostHog -->
+<script>
+!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+posthog.init('phc_kRX9iHZstABjgFqEWJBMok2S3hW9R8QMHbNao4EsNz2g', {api_host: 'https://us.i.posthog.com', person_profiles: 'identified_only'});
+</script>
+<!-- END AUTO-INJECTED ANALYTICS -->
+<link rel="stylesheet" href="../../../css/style.css">
+<style>
+.flag-callout {
+  margin: 1.6em 0; padding: 16px 20px;
+  background: rgba(195, 141, 247, 0.08);
+  border-left: 3px solid #c38df7; border-radius: 3px;
+  font-size: 14.5px; line-height: 1.55;
+}
+.flag-callout .flag-label {
+  display: inline-block; font: 700 10.5px "SF Mono", monospace;
+  color: #c38df7; text-transform: uppercase; letter-spacing: 0.1em; margin-right: 0.7em;
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<nav class="breadcrumb">
+  <a href="../index.html">&larr; sound workshop</a>
+  <span class="sep">&middot;</span>
+  <span class="section-num">workshop 04 / 04 &middot; beginner</span>
+</nav>
+
+<h1>The Chladni laboratory<span class="subtitle">The whole bench at once: every frequency, every edge, two drivers, and sand in the air</span></h1>
+
+<p class="lead">You know what a mode is, and you know why it forms. This page hands you the bench. John Tyndall's 1869 lectures printed page after page of Chladni figures — crosses, diamonds, nested rings, woven grids — and every one of them is hiding in a plate like this one, waiting at some frequency, some edge condition, some placement of the bow and the fingers. Hunt them.</p>
+
+<h2>1. The frequency explorer</h2>
+
+<p>One driver, one dial, the whole spectrum. The strip under the plate is the plate's <strong>response curve</strong> — how loudly it answers at each drive frequency. The peaks are the resonances; between them the plate barely replies, and the sand just smears. Two things to try beyond sightseeing. <strong>Free the edges:</strong> clamped edges force silence at the rim (sand piles there); free edges let the rim swing, and the figures become the curvier, X-shaped, diamond families Tyndall actually engraved. <strong>Use your finger:</strong> Chladni selected patterns by touching the plate while bowing — a touch forces a quiet point, and the plate must pick a figure that is silent there. Click the plate to place up to four fingers.</p>
+
+<p>And keep turning the dial when the tone gets uncomfortable, and then when it disappears. The shaded end of the dial is beyond human hearing — <strong>the plate does not know that</strong>. The resonances keep coming, the figures keep getting finer, the physics does not blink. Only your ear gives out.</p>
+
+<figure id="fig-explorer">
+  <canvas id="canvas-explorer" width="680" height="620"></canvas>
+  <div class="controls" id="exp-controls">
+    <div class="control" style="flex: 1 1 260px;">
+      <label>drive frequency <span class="val" id="exp-f-val">2.7 kHz</span></label>
+      <input type="range" id="exp-f-slider" min="1.2" max="24" step="0.02" value="2.7">
+    </div>
+    <button id="exp-prev">&larr; snap to peak</button>
+    <button id="exp-next" class="primary">snap to peak &rarr;</button>
+    <button id="exp-edges">edges: clamped</button>
+    <button id="exp-driver">driver: corner</button>
+    <button id="exp-flash">hide the flashing</button>
+    <button id="exp-sprinkle">re-sprinkle</button>
+    <button id="exp-pins">lift all fingers</button>
+  </div>
+  <figcaption>The full bench. The response strip is computed from the plate's actual mode ledger (peaks = resonances; the dot is you); <em>snap to peak</em> hops the dial along it. Click the plate to press a finger (up to four) — the figure must go quiet there, so the plate re-chooses its pattern. The dial's shaded end is past human hearing: <em>sound on, the tone is the true pitch, and it fades out near 16&nbsp;kHz while the plate plays on.</em> For a small brass plate this dial spans roughly 1&ndash;24&nbsp;kHz; ears stop near 16&ndash;20; the sand never does. <span id="exp-readout" class="readout">&mdash;</span></figcaption>
+</figure>
+
+<h2>2. Two drivers: the plate as a relationship-meter</h2>
+
+<p>Every figure so far came from <em>one</em> frequency. So here is a sharper question — the one this workshop exists to ask: what does the plate show when it is driven by <strong>two</strong> frequencies at once? Answer: it shows their <em>relationship</em>. Two drivers at exactly the same frequency make a fixed interference pattern set by their phase difference. Detune one slightly and that phase difference drifts — the pattern is never still; it breathes through its whole family at exactly the beat rate your ear knows from <a href="../../sections/00-phase-and-sound.html">primer 00</a>. And if you let the drivers <em>couple</em> — the same phase-pulling the harmonograph used — then past the locking threshold the drift stops and the pattern <strong>crystallizes</strong>.</p>
+
+<figure id="fig-duet">
+  <canvas id="canvas-duet" width="680" height="560"></canvas>
+  <div class="controls" id="duet-controls">
+    <div class="control">
+      <label>f&#8321; <span class="val" id="duet-f-val">2.7 kHz</span></label>
+      <input type="range" id="duet-f-slider" min="1.8" max="5" step="0.02" value="2.7">
+    </div>
+    <div class="control">
+      <label>detune <span class="val" id="duet-d-val">3.0%</span></label>
+      <input type="range" id="duet-d-slider" min="0" max="8" step="0.1" value="3">
+    </div>
+    <div class="control">
+      <label>K (couple the drivers) <span class="val" id="duet-k-val">0.00</span></label>
+      <input type="range" id="duet-k-slider" min="0" max="2.5" step="0.02" value="0">
+    </div>
+    <button id="duet-flash">hide the flashing</button>
+    <button id="duet-sprinkle">re-sprinkle</button>
+  </div>
+  <figcaption>Two drivers, left and right. With detune and no coupling, watch the interference pattern <em>breathe</em> — the sand can never quite commit, and the churn meter stays hot at the beat rate. Slide K past the threshold: the drive phases lock (beat rate 0.00), the pattern freezes mid-breath, and the sand finally gets a still figure to find. <strong>A Chladni plate can visualize coupled frequencies</strong> — not by drawing either tone, but by drawing whether they have come to an agreement. <em>Sound on: both tones, real pitches — you hear the beats slow and stop as the pattern crystallizes.</em> <span id="duet-readout" class="readout">&mdash;</span></figcaption>
+</figure>
+
+<h2>3. The plate in three dimensions</h2>
+
+<p>Finally, the honest picture of what the sand is actually doing — not walking, <em>flying</em>. A real grain on a real plate is thrown upward every time the surface accelerates beneath it, sails ballistically, lands somewhere slightly different, and is thrown again. Grains on loud regions are launched constantly and travel far; a grain that lands near a quiet line is barely disturbed. The figure assembles from thousands of tiny flights.</p>
+
+<figure id="fig-3d">
+  <canvas id="canvas-3d" width="680" height="540"></canvas>
+  <div class="controls" id="d3-controls">
+    <button id="d3-m0" class="primary">one line</button>
+    <button id="d3-m1">the cross</button>
+    <button id="d3-m2">Chladni&rsquo;s curves</button>
+    <button id="d3-flash">hide the flashing</button>
+    <button id="d3-sprinkle">re-sprinkle</button>
+  </div>
+  <figcaption>The same simulation, seen as a surface. The plate ripples (motion greatly exaggerated); the grains bounce ballistically — kicked by the surface where it moves, left in peace where it doesn&rsquo;t — and hop their way to the nodal lines. Toggle the flashing off and the surface goes flat and dark while the grains keep hopping: the real lab, where the plate looks perfectly still and the leaping sand is the only witness that it isn&rsquo;t. <span id="d3-readout" class="readout">&mdash;</span></figcaption>
+</figure>
+
+<div class="flag-callout">
+  <span class="flag-label">What's real here</span>
+  All three figures run the same verified wave engine as <a href="03-why-the-pattern.html">the previous page</a> (96&times;96 finite differences; measured resonances match the operator's exact mode frequencies; sand rides a lock-in measurement of the steady response, which is how a laboratory would measure it too). Honest limits: this is a <em>membrane</em>, not a stiff plate — Tyndall's brass plates obey a stiffer equation whose frequencies climb faster and whose figures curve more, so hunt families and shapes here, not exact reproductions of his engravings. The kHz dial is a calibration <em>choice</em> (a coaster-sized plate; the simulation itself is scale-free), the response strip ignores your fingers (it is the bare plate's ledger), and at the dial's very top the grid resolves the finest figures with only a few cells per wave, so treat that end as a sketch. The 3D grains trade exact ballistics for a capped, stable cartoon of throw-fly-land — the mechanism, not the metallurgy.
+</div>
+
+<div class="nav-links">
+  <a href="03-why-the-pattern.html" class="prev">Why the pattern</a>
+  <a href="../../sections/01-rotations.html" class="next">Next primer: Rotations</a>
+</div>
+
+</div>
+
+<script type="module">
+import { setupHiDPICanvas, runWhenVisible, palette, makeSoundToggle, makeVoices } from '../../../js/common.js';
+
+// ---- shared FDTD engine (verified offline; identical constants to section 03) ----
+const N = 96, GH = 1 / (N - 1), CFL = 0.5, DT = CFL * GH, GAMMA = 0.12;
+const KHZ_PER_SIM = 2.4;     // calibration: f_real = 2.4 kHz × f_sim
+function makeEngine(bc) {
+  const u = new Float32Array(N * N), up = new Float32Array(N * N), un = new Float32Array(N * N);
+  const pinMask = new Float32Array(N * N); // extra damping from "fingers"
+  const eng = {
+    u, up, bc, pinMask, t: 0,
+    clear() { u.fill(0); up.fill(0); this.t = 0; },
+    step(driveFn) {
+      const l2 = CFL * CFL, g = GAMMA * DT;
+      for (let j = 0; j < N; j++) {
+        for (let i = 0; i < N; i++) {
+          const k = j * N + i;
+          if (eng.bc === 'dirichlet' && (i === 0 || j === 0 || i === N - 1 || j === N - 1)) { un[k] = 0; continue; }
+          const im = i === 0 ? 1 : i - 1, ip = i === N - 1 ? N - 2 : i + 1;
+          const jm = j === 0 ? 1 : j - 1, jp = j === N - 1 ? N - 2 : j + 1;
+          const lap = u[j * N + im] + u[j * N + ip] + u[jm * N + i] + u[jp * N + i] - 4 * u[k];
+          un[k] = 2 * u[k] - up[k] + l2 * lap - (g + pinMask[k]) * (u[k] - up[k]);
+        }
+      }
+      if (driveFn) driveFn(un, eng.t + DT);
+      up.set(u); u.set(un);
+      eng.t += DT;
+    },
+  };
+  return eng;
+}
+const DRIVE_SCALE = DT * DT * 4 / (GH * GH * 0.01);
+function fDiscrete(n, m) {
+  const s1 = Math.sin(n * Math.PI * GH / 2), s2 = Math.sin(m * Math.PI * GH / 2);
+  return (2 / GH) * Math.sqrt(s1 * s1 + s2 * s2) / (2 * Math.PI);
+}
+function makeScaler() {
+  let s = 1e-6;
+  return {
+    update(u, stride = 7) {
+      let mx = 0;
+      for (let k = 0; k < u.length; k += stride) { const a = Math.abs(u[k]); if (a > mx) mx = a; }
+      s = Math.max(s * 0.995, mx * 0.75, 1e-6);
+      return s;
+    },
+  };
+}
+function drawPlateInto(ctx, u, x0, y0, w, scale, show) {
+  const cell = w / N;
+  if (!show) { ctx.fillStyle = 'rgb(30, 28, 26)'; ctx.fillRect(x0, y0, w, w); }
+  else {
+    for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) {
+      const v = Math.max(-1, Math.min(1, u[j * N + i] / scale));
+      const b = (v + 1) / 2;
+      ctx.fillStyle = `rgb(${40 + b * 215 | 0}, ${40 + b * 170 | 0}, ${50 + b * 80 | 0})`;
+      ctx.fillRect(x0 + i * cell, y0 + j * cell, cell + 0.5, cell + 0.5);
+    }
+  }
+  ctx.strokeStyle = palette.axis; ctx.lineWidth = 1.5; ctx.strokeRect(x0, y0, w, w);
+}
+// continuous lock-in sand rig
+function makeSandRig(NP) {
+  const Sq = new Float32Array(N * N), Cq = new Float32Array(N * N);
+  const sx = new Float32Array(NP), sy = new Float32Array(NP);
+  let ampScale = 1e-6;
+  const rig = {
+    Sq, Cq, sx, sy, NP,
+    sprinkle() { for (let i = 0; i < NP; i++) { sx[i] = 0.02 + Math.random() * 0.96; sy[i] = 0.02 + Math.random() * 0.96; } },
+    resetLockin() { Sq.fill(0); Cq.fill(0); },
+    accumulate(u, phase, al = 0.002) {
+      const sn = Math.sin(phase), cs = Math.cos(phase);
+      for (let k = 0; k < N * N; k++) { Sq[k] += al * (u[k] * sn - Sq[k]); Cq[k] += al * (u[k] * cs - Cq[k]); }
+    },
+    rescale() {
+      let mx = 0;
+      for (let k = 0; k < N * N; k += 11) { const a = Math.hypot(Sq[k], Cq[k]); if (a > mx) mx = a; }
+      ampScale = Math.max(ampScale * 0.99, mx * 0.8, 1e-6);
+    },
+    amp(x, y) {
+      const gi = Math.min(N - 1.001, Math.max(0, x * (N - 1))), gj = Math.min(N - 1.001, Math.max(0, y * (N - 1)));
+      const i0 = gi | 0, j0 = gj | 0, fx = gi - i0, fy = gj - j0;
+      const A = (k) => Math.hypot(Sq[k], Cq[k]);
+      const v = A(j0 * N + i0) * (1 - fx) * (1 - fy) + A(j0 * N + i0 + 1) * fx * (1 - fy) +
+                A((j0 + 1) * N + i0) * (1 - fx) * fy + A((j0 + 1) * N + i0 + 1) * fx * fy;
+      return Math.min(1, v / ampScale);
+    },
+    walk(passes = 2) {
+      for (let p = 0; p < passes; p++) for (let i = 0; i < NP; i++) {
+        const a = rig.amp(sx[i], sy[i]);
+        const kick = 0.0012 + 0.016 * a;
+        sx[i] += kick * (Math.random() + Math.random() - 1);
+        sy[i] += kick * (Math.random() + Math.random() - 1);
+        if (sx[i] < 0.004) sx[i] = 0.004; else if (sx[i] > 0.996) sx[i] = 0.996;
+        if (sy[i] < 0.004) sy[i] = 0.004; else if (sy[i] > 0.996) sy[i] = 0.996;
+      }
+    },
+    settled() {
+      let c = 0;
+      for (let i = 0; i < NP; i++) if (rig.amp(sx[i], sy[i]) < 0.18) c++;
+      return c / NP;
+    },
+    drawSand(ctx, x0, y0, w) {
+      ctx.fillStyle = 'rgba(247, 240, 220, 0.92)';
+      for (let i = 0; i < NP; i++) ctx.fillRect(x0 + sx[i] * w - 0.9, y0 + sy[i] * w - 0.9, 1.8, 1.8);
+    },
+  };
+  rig.sprinkle();
+  return rig;
+}
+
+// ============================================================
+// FIG A: the frequency explorer
+// ============================================================
+(() => {
+  const canvas = document.getElementById('canvas-explorer');
+  const ctx = setupHiDPICanvas(canvas, 680, 620);
+  const readout = document.getElementById('exp-readout');
+  const eng = makeEngine('dirichlet');
+  const scaler = makeScaler();
+  const rig = makeSandRig(1500);
+  let fkhz = 2.7;
+  let showFlash = true;
+  const DRIVERS = [
+    { name: 'corner', i: 6, j: 6 },
+    { name: 'edge', i: Math.round(N / 2), j: 6 },
+    { name: 'center', i: Math.round(N / 2), j: Math.round(N / 2) },
+  ];
+  let drv = 0;
+  const pins = [];
+
+  const sound = makeSoundToggle(document.getElementById('exp-controls'), { label: 'hear the plate' });
+  const voice = makeVoices(sound, 1, { freq: 2700 });
+
+  // ---- response strip from the mode ledger (bare plate, current driver) ----
+  const STRIP_PTS = 460;
+  let strip = new Float32Array(STRIP_PTS);
+  let peaks = [];
+  function phi(bc, n, m, x, y) {
+    return bc === 'dirichlet'
+      ? Math.sin(n * Math.PI * x) * Math.sin(m * Math.PI * y)
+      : Math.cos(n * Math.PI * x) * Math.cos(m * Math.PI * y);
+  }
+  function rebuildStrip() {
+    const bc = eng.bc;
+    const d = DRIVERS[drv];
+    const dx = d.i / (N - 1), dy = d.j / (N - 1);
+    const modes = [];
+    const lo = bc === 'dirichlet' ? 1 : 0;
+    for (let n = lo; n <= 22; n++) for (let m = lo; m <= 22; m++) {
+      if (bc === 'neumann' && n === 0 && m === 0) continue;
+      const f = fDiscrete(n, m) * KHZ_PER_SIM;
+      if (f < 1.0 || f > 25) continue;
+      const w = phi(bc, n, m, dx, dy);
+      if (Math.abs(w) < 1e-4) continue;
+      modes.push({ f, w2: w * w, n, m });
+    }
+    const G = 0.10 * KHZ_PER_SIM; // display linewidth (kHz)
+    for (let s = 0; s < STRIP_PTS; s++) {
+      const f = 1.2 + (24 - 1.2) * s / (STRIP_PTS - 1);
+      let r = 0;
+      for (const md of modes) {
+        const df = f * f - md.f * md.f;
+        r += md.w2 / (df * df + G * G * f * f);
+      }
+      strip[s] = r;
+    }
+    let mx = 0; for (let s = 0; s < STRIP_PTS; s++) mx = Math.max(mx, strip[s]);
+    for (let s = 0; s < STRIP_PTS; s++) strip[s] = Math.pow(strip[s] / mx, 0.3); // compress for display
+    // peak list for snapping (local maxima of the strip)
+    peaks = [];
+    for (let s = 2; s < STRIP_PTS - 2; s++) {
+      if (strip[s] > strip[s - 1] && strip[s] >= strip[s + 1] && strip[s] > 0.12) {
+        peaks.push(1.2 + (24 - 1.2) * s / (STRIP_PTS - 1));
+      }
+    }
+    // nearest-mode labels
+    rebuildStrip.modes = modes;
+  }
+  rebuildStrip();
+  function nearestModeLabel() {
+    let best = null, bd = 1e9;
+    for (const md of rebuildStrip.modes) {
+      const d = Math.abs(md.f - fkhz);
+      if (d < bd) { bd = d; best = md; }
+    }
+    if (!best || bd > 0.25) return 'between resonances';
+    return `near mode (${best.n},${best.m})`;
+  }
+
+  const fSlider = document.getElementById('exp-f-slider');
+  const fVal = document.getElementById('exp-f-val');
+  function setF(v) {
+    fkhz = Math.max(1.2, Math.min(24, v));
+    fSlider.value = fkhz;
+    fVal.textContent = fkhz.toFixed(2) + ' kHz';
+    rig.resetLockin();
+  }
+  fSlider.addEventListener('input', () => setF(parseFloat(fSlider.value)));
+  document.getElementById('exp-prev').addEventListener('click', () => {
+    const c = peaks.filter(p => p < fkhz - 0.03);
+    if (c.length) setF(c[c.length - 1]);
+  });
+  document.getElementById('exp-next').addEventListener('click', () => {
+    const c = peaks.filter(p => p > fkhz + 0.03);
+    if (c.length) setF(c[0]);
+  });
+  const edgesBtn = document.getElementById('exp-edges');
+  edgesBtn.addEventListener('click', () => {
+    eng.bc = eng.bc === 'dirichlet' ? 'neumann' : 'dirichlet';
+    edgesBtn.textContent = 'edges: ' + (eng.bc === 'dirichlet' ? 'clamped' : 'free');
+    eng.clear(); rig.resetLockin(); rebuildStrip();
+  });
+  const drvBtn = document.getElementById('exp-driver');
+  drvBtn.addEventListener('click', () => {
+    drv = (drv + 1) % DRIVERS.length;
+    drvBtn.textContent = 'driver: ' + DRIVERS[drv].name;
+    eng.clear(); rig.resetLockin(); rebuildStrip();
+  });
+  const flashBtn = document.getElementById('exp-flash');
+  flashBtn.addEventListener('click', () => {
+    showFlash = !showFlash;
+    flashBtn.textContent = showFlash ? 'hide the flashing' : 'show the flashing';
+  });
+  document.getElementById('exp-sprinkle').addEventListener('click', () => rig.sprinkle());
+  document.getElementById('exp-pins').addEventListener('click', () => { pins.length = 0; eng.pinMask.fill(0); rig.resetLockin(); });
+
+  // plate geometry on canvas
+  const PX = 30, PY = 20, PW = 420;
+  canvas.addEventListener('click', (ev) => {
+    const rect = canvas.getBoundingClientRect();
+    const mx = (ev.clientX - rect.left) * (680 / rect.width);
+    const my = (ev.clientY - rect.top) * (620 / rect.height);
+    if (mx < PX || mx > PX + PW || my < PY || my > PY + PW) return;
+    const x = (mx - PX) / PW, y = (my - PY) / PW;
+    // near an existing pin → remove it
+    for (let p = 0; p < pins.length; p++) {
+      if (Math.hypot(pins[p].x - x, pins[p].y - y) < 0.05) { pins.splice(p, 1); rebuildPins(); return; }
+    }
+    if (pins.length >= 4) return;
+    pins.push({ x, y });
+    rebuildPins();
+  });
+  function rebuildPins() {
+    eng.pinMask.fill(0);
+    for (const p of pins) {
+      const ci = Math.round(p.x * (N - 1)), cj = Math.round(p.y * (N - 1));
+      for (let j = Math.max(0, cj - 2); j <= Math.min(N - 1, cj + 2); j++)
+        for (let i = Math.max(0, ci - 2); i <= Math.min(N - 1, ci + 2); i++) {
+          const r = Math.hypot(i - ci, j - cj);
+          if (r <= 2.2) eng.pinMask[j * N + i] = 0.35 * (1 - r / 3);
+        }
+    }
+    rig.resetLockin();
+  }
+
+  function draw() {
+    const d = DRIVERS[drv];
+    const fsim = fkhz / KHZ_PER_SIM;
+    const OM = 2 * Math.PI * fsim;
+    for (let s = 0; s < 40; s++) {
+      eng.step((un, t) => { un[d.j * N + d.i] += DRIVE_SCALE * Math.sin(OM * t); });
+      rig.accumulate(eng.u, OM * eng.t);
+    }
+    rig.rescale();
+    rig.walk(2);
+
+    ctx.clearRect(0, 0, 680, 620);
+    const scale = scaler.update(eng.u);
+    drawPlateInto(ctx, eng.u, PX, PY, PW, scale, showFlash);
+    rig.drawSand(ctx, PX, PY, PW);
+    // driver + pins
+    ctx.fillStyle = '#d97236';
+    ctx.beginPath(); ctx.arc(PX + d.i * (PW / N), PY + d.j * (PW / N), 5, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = palette.bg; ctx.lineWidth = 1.5; ctx.stroke();
+    for (const p of pins) {
+      ctx.strokeStyle = '#7db3dd'; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.arc(PX + p.x * PW, PY + p.y * PW, 7, 0, Math.PI * 2); ctx.stroke();
+    }
+
+    // right column: labels
+    const rx = PX + PW + 22;
+    ctx.fillStyle = palette.textSoft; ctx.font = 'italic 13px "Charter", serif'; ctx.textAlign = 'left';
+    ctx.fillText(nearestModeLabel(), rx, 56);
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 12px "Charter", serif';
+    ctx.fillText('sand on the quiet', rx, 100);
+    ctx.fillText('lines: ' + (rig.settled() * 100).toFixed(0) + '%', rx, 118);
+    ctx.fillText('click plate = finger', rx, 160);
+    ctx.fillText('(forces a quiet spot)', rx, 178);
+    if (fkhz > 16) {
+      ctx.fillStyle = '#c38df7';
+      ctx.fillText('beyond most ears —', rx, 226);
+      ctx.fillText('the plate plays on', rx, 244);
+    }
+
+    // response strip
+    const sx0 = 30, sy0 = 470, sw = 620, sh = 110;
+    ctx.strokeStyle = palette.axis; ctx.lineWidth = 1; ctx.strokeRect(sx0, sy0, sw, sh);
+    // audible shading: fade zone 16–20, ultrasonic ≥ 20
+    const xAt = (f) => sx0 + sw * (f - 1.2) / (24 - 1.2);
+    ctx.fillStyle = 'rgba(195, 141, 247, 0.07)';
+    ctx.fillRect(xAt(16), sy0, xAt(20) - xAt(16), sh);
+    ctx.fillStyle = 'rgba(195, 141, 247, 0.15)';
+    ctx.fillRect(xAt(20), sy0, sx0 + sw - xAt(20), sh);
+    ctx.strokeStyle = '#d97236'; ctx.lineWidth = 1.6;
+    ctx.beginPath();
+    for (let s = 0; s < STRIP_PTS; s++) {
+      const x = sx0 + sw * s / (STRIP_PTS - 1);
+      const y = sy0 + sh - strip[s] * (sh - 8);
+      s ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+    }
+    ctx.stroke();
+    // current frequency dot
+    ctx.fillStyle = '#7db3dd';
+    ctx.beginPath(); ctx.arc(xAt(fkhz), sy0 + sh - strip[Math.round((STRIP_PTS - 1) * (fkhz - 1.2) / (24 - 1.2))] * (sh - 8), 4.5, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 11px "Charter", serif'; ctx.textAlign = 'left';
+    ctx.fillText('the plate’s response curve — peaks are resonances', sx0 + 4, sy0 + 14);
+    ctx.textAlign = 'center';
+    ctx.fillText('audible', (sx0 + xAt(16)) / 2, sy0 + sh + 16);
+    ctx.fillText('fading', (xAt(16) + xAt(20)) / 2, sy0 + sh + 16);
+    ctx.fillText('ultrasonic', (xAt(20) + sx0 + sw) / 2, sy0 + sh + 16);
+
+    // audio: true pitch, fading out toward the edge of hearing
+    const gain = fkhz < 14 ? 0.9 : fkhz < 16 ? 0.9 * (16 - fkhz) / 2 : 0;
+    voice.set(0, fkhz * 1000, gain);
+
+    readout.textContent = fkhz.toFixed(2) + ' kHz · ' + nearestModeLabel() + ' · edges ' + (eng.bc === 'dirichlet' ? 'clamped' : 'free') + (pins.length ? ' · ' + pins.length + ' finger' + (pins.length > 1 ? 's' : '') : '') + (fkhz > 16 ? ' · beyond most ears' : '');
+  }
+  runWhenVisible(canvas, draw);
+})();
+
+// ============================================================
+// FIG B: two coupled drivers
+// ============================================================
+(() => {
+  const canvas = document.getElementById('canvas-duet');
+  const ctx = setupHiDPICanvas(canvas, 680, 560);
+  const readout = document.getElementById('duet-readout');
+  const eng = makeEngine('dirichlet');
+  const scaler = makeScaler();
+  const rig = makeSandRig(1500);
+  let f1k = 2.7, det = 0.03, K = 0;
+  let th1 = 0, th2 = 1.0;
+  let showFlash = true;
+  let beatSmooth = 0;
+  const d1 = { i: 6, j: Math.round(N / 2) }, d2 = { i: N - 7, j: Math.round(N / 2) };
+
+  // churn meter: the demodulated (lock-in) pattern is steady exactly when
+  // the drives hold a fixed phase relation — so churn = how fast that
+  // pattern is changing, sampled at a cadence slow beats can register on
+  const SqPrev = new Float32Array(N * N), CqPrev = new Float32Array(N * N);
+  let churnMeter = 0, churnTick = 0;
+
+  const sound = makeSoundToggle(document.getElementById('duet-controls'), { label: 'hear both' });
+  const voices = makeVoices(sound, 2, { freq: 2700 });
+
+  const f1S = document.getElementById('duet-f-slider'), f1V = document.getElementById('duet-f-val');
+  const dS = document.getElementById('duet-d-slider'), dV = document.getElementById('duet-d-val');
+  const kS = document.getElementById('duet-k-slider'), kV = document.getElementById('duet-k-val');
+  f1S.addEventListener('input', () => { f1k = parseFloat(f1S.value); f1V.textContent = f1k.toFixed(2) + ' kHz'; rig.resetLockin(); });
+  dS.addEventListener('input', () => { det = parseFloat(dS.value) / 100; dV.textContent = parseFloat(dS.value).toFixed(1) + '%'; });
+  kS.addEventListener('input', () => { K = parseFloat(kS.value); kV.textContent = K.toFixed(2); });
+  const flashBtn = document.getElementById('duet-flash');
+  flashBtn.addEventListener('click', () => { showFlash = !showFlash; flashBtn.textContent = showFlash ? 'hide the flashing' : 'show the flashing'; });
+  document.getElementById('duet-sprinkle').addEventListener('click', () => rig.sprinkle());
+
+  function draw() {
+    const f1 = f1k / KHZ_PER_SIM, f2 = f1 * (1 + det);
+    const w1 = 2 * Math.PI * f1, w2 = 2 * Math.PI * f2;
+    let beatAcc = 0;
+    for (let s = 0; s < 40; s++) {
+      const dth1 = w1 + K * Math.sin(th2 - th1);
+      const dth2 = w2 + K * Math.sin(th1 - th2);
+      th1 += dth1 * DT; th2 += dth2 * DT;
+      beatAcc += Math.abs(dth2 - dth1);
+      eng.step((un) => {
+        un[d1.j * N + d1.i] += DRIVE_SCALE * Math.sin(th1);
+        un[d2.j * N + d2.i] += DRIVE_SCALE * Math.sin(th2);
+      });
+      // lock-in against driver 1's clock: the pattern is steady exactly when
+      // the two drives hold a fixed phase relation
+      rig.accumulate(eng.u, th1);
+    }
+    rig.rescale();
+    rig.walk(2);
+    // churn: distance the demodulated pattern moved since the last snapshot
+    churnTick++;
+    if (churnTick >= 24) {
+      churnTick = 0;
+      let num = 0, den = 0;
+      for (let k = 0; k < N * N; k += 2) {
+        num += Math.abs(rig.Sq[k] - SqPrev[k]) + Math.abs(rig.Cq[k] - CqPrev[k]);
+        den += Math.hypot(rig.Sq[k], rig.Cq[k]);
+      }
+      SqPrev.set(rig.Sq); CqPrev.set(rig.Cq);
+      churnMeter = 0.7 * churnMeter + 0.3 * (num / (den || 1));
+    }
+    const churn = churnMeter;
+    // beat rate in real terms: sim-units/sec ≈ 40 steps × DT × 60 fps
+    const simPerSec = 40 * DT * 60;
+    const beatHz = (beatAcc / 40 / (2 * Math.PI)) * simPerSec;
+    beatSmooth = 0.9 * beatSmooth + 0.1 * beatHz;
+
+    ctx.clearRect(0, 0, 680, 560);
+    const scale = scaler.update(eng.u);
+    drawPlateInto(ctx, eng.u, 30, 20, 420, scale, showFlash);
+    rig.drawSand(ctx, 30, 20, 420);
+    [d1, d2].forEach((d, idx) => {
+      ctx.fillStyle = idx ? '#7db3dd' : '#d97236';
+      ctx.beginPath(); ctx.arc(30 + d.i * (420 / N), 20 + d.j * (420 / N), 5, 0, Math.PI * 2); ctx.fill();
+      ctx.strokeStyle = palette.bg; ctx.lineWidth = 1.5; ctx.stroke();
+    });
+
+    // right column: beat + churn meters
+    const rx = 480;
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 12px "Charter", serif'; ctx.textAlign = 'left';
+    ctx.fillText('beat rate', rx, 60);
+    const locked = beatSmooth < 0.05 && det > 0.001;
+    ctx.fillStyle = locked ? palette.green : '#d97236';
+    ctx.font = '600 20px "SF Mono", monospace';
+    ctx.fillText(beatSmooth.toFixed(2) + '/s', rx, 86);
+    ctx.fillStyle = locked ? palette.green : palette.textFaint; ctx.font = 'italic 12px "Charter", serif';
+    ctx.fillText(locked ? 'LOCKED — pattern crystallized' : det < 0.001 ? 'no detune — nothing to fight' : 'drifting — pattern breathing', rx, 110);
+
+    ctx.fillStyle = palette.textFaint;
+    ctx.fillText('pattern churn', rx, 160);
+    ctx.strokeStyle = palette.axis; ctx.lineWidth = 1; ctx.strokeRect(rx, 170, 160, 12);
+    ctx.fillStyle = locked ? 'rgba(109,196,143,0.7)' : 'rgba(217,114,54,0.7)';
+    ctx.fillRect(rx, 170, Math.min(1, churn * 4) * 160, 12);
+
+    ctx.fillStyle = palette.textFaint;
+    ctx.fillText('sand settled: ' + (rig.settled() * 100).toFixed(0) + '%', rx, 216);
+    ctx.fillText('threshold: K ≈ ' + (Math.PI * (f2 - f1)).toFixed(2), rx, 250);
+
+    voices.set(0, f1k * 1000, 0.9);
+    voices.set(1, f1k * (1 + det) * 1000, 0.9);
+
+    readout.textContent = (locked ? 'LOCKED · ' : '') + 'beat ' + beatSmooth.toFixed(2) + '/s · churn ' + churn.toFixed(3) + ' · sand ' + (rig.settled() * 100).toFixed(0) + '%';
+  }
+  runWhenVisible(canvas, draw);
+})();
+
+// ============================================================
+// FIG C: the plate in 3D with bouncing sand
+// ============================================================
+(() => {
+  const canvas = document.getElementById('canvas-3d');
+  const ctx = setupHiDPICanvas(canvas, 680, 540);
+  const readout = document.getElementById('d3-readout');
+  const eng = makeEngine('dirichlet');
+  const rig = makeSandRig(0); // reuse lock-in only (no 2D walkers)
+  let showFlash = true;
+
+  const MODES3 = [
+    { id: 'd3-m0', label: 'one line', di: Math.round(N / 2), dj: 6, f: fDiscrete(2, 1) },
+    { id: 'd3-m1', label: 'the cross', di: 10, dj: 10, f: fDiscrete(2, 2) },
+    { id: 'd3-m2', label: 'Chladni’s curves', di: 10, dj: 10, f: fDiscrete(3, 1) },
+  ];
+  let mi = 0;
+  MODES3.forEach((m, idx) => {
+    document.getElementById(m.id).addEventListener('click', () => {
+      mi = idx;
+      MODES3.forEach(mm => document.getElementById(mm.id).classList.toggle('primary', mm === m));
+      eng.clear(); rig.resetLockin();
+    });
+  });
+  const flashBtn = document.getElementById('d3-flash');
+  flashBtn.addEventListener('click', () => { showFlash = !showFlash; flashBtn.textContent = showFlash ? 'hide the flashing' : 'show the flashing'; });
+
+  // grains: ballistic hoppers
+  const NG = 800;
+  const gx = new Float32Array(NG), gy = new Float32Array(NG), gz = new Float32Array(NG), gv = new Float32Array(NG);
+  function sprinkle3() { for (let i = 0; i < NG; i++) { gx[i] = 0.03 + Math.random() * 0.94; gy[i] = 0.03 + Math.random() * 0.94; gz[i] = 20 + Math.random() * 30; gv[i] = 0; } }
+  sprinkle3();
+  document.getElementById('d3-sprinkle').addEventListener('click', sprinkle3);
+
+  let dispScale = 1e-6;
+  const H = 34;             // vertical exaggeration (px)
+  let yaw = 0.6;
+  const uPrev = new Float32Array(N * N);
+
+  function uAt(x, y, arr) {
+    const gi = Math.min(N - 1.001, Math.max(0, x * (N - 1))), gj = Math.min(N - 1.001, Math.max(0, y * (N - 1)));
+    const i0 = gi | 0, j0 = gj | 0, fx = gi - i0, fy = gj - j0;
+    return arr[j0 * N + i0] * (1 - fx) * (1 - fy) + arr[j0 * N + i0 + 1] * fx * (1 - fy) +
+           arr[(j0 + 1) * N + i0] * (1 - fx) * fy + arr[(j0 + 1) * N + i0 + 1] * fx * fy;
+  }
+  function project(x, y, z) {
+    // x,y in [0,1] plate coords; z in px above plate plane
+    const X = (x - 0.5), Y = (y - 0.5);
+    const xr = X * Math.cos(yaw) - Y * Math.sin(yaw);
+    const yr = X * Math.sin(yaw) + Y * Math.cos(yaw);
+    const TILT = 0.52;
+    return {
+      sx: 340 + xr * 420,
+      sy: 300 + yr * 420 * TILT - z,
+      depth: yr,
+    };
+  }
+
+  function draw() {
+    yaw += 0.0022;
+    const md = MODES3[mi];
+    const OM = 2 * Math.PI * md.f;
+    uPrev.set(eng.u);
+    for (let s = 0; s < 24; s++) {
+      eng.step((un, t) => { un[md.dj * N + md.di] += DRIVE_SCALE * Math.sin(OM * t); });
+      rig.accumulate(eng.u, OM * eng.t);
+    }
+    rig.rescale();
+    // display normalization
+    let mx = 0;
+    for (let k = 0; k < N * N; k += 9) { const a = Math.abs(eng.u[k]); if (a > mx) mx = a; }
+    dispScale = Math.max(dispScale * 0.995, mx * 0.8, 1e-6);
+    const frameDt = 24 * DT;
+
+    // grain physics (velocity kicks from the plate surface)
+    let settled = 0;
+    for (let i = 0; i < NG; i++) {
+      const plateU = uAt(gx[i], gy[i], eng.u) / dispScale;
+      const plateV = (uAt(gx[i], gy[i], eng.u) - uAt(gx[i], gy[i], uPrev)) / dispScale / frameDt;
+      const pz = showFlash ? plateU * H : plateU * H; // physics identical either way
+      // integrate
+      gv[i] -= 430 * 0.016;                 // gravity px/s²·dt
+      gz[i] += gv[i] * 0.016;
+      // continuous rattle while riding near the surface — a real grain on a
+      // shaking plate is never at rest; this is the migration workhorse
+      if (gz[i] - pz < 8) {
+        const ar = rig.amp(gx[i], gy[i]);
+        gx[i] += 0.009 * ar * (Math.random() + Math.random() - 1);
+        gy[i] += 0.009 * ar * (Math.random() + Math.random() - 1);
+        if (gx[i] < 0.01) gx[i] = 0.01; else if (gx[i] > 0.99) gx[i] = 0.99;
+        if (gy[i] < 0.01) gy[i] = 0.01; else if (gy[i] > 0.99) gy[i] = 0.99;
+      }
+      if (gz[i] <= pz) {
+        gz[i] = pz;
+        const launch = Math.max(0, plateV) * H * 0.012;
+        gv[i] = Math.max(0, -gv[i] * 0.25) + launch;
+        // horizontal scatter ∝ local lock-in amplitude → migration to nodes
+        const a = rig.amp(gx[i], gy[i]);
+        gx[i] += 0.016 * a * (Math.random() + Math.random() - 1);
+        gy[i] += 0.016 * a * (Math.random() + Math.random() - 1);
+        if (gx[i] < 0.01) gx[i] = 0.01; else if (gx[i] > 0.99) gx[i] = 0.99;
+        if (gy[i] < 0.01) gy[i] = 0.01; else if (gy[i] > 0.99) gy[i] = 0.99;
+      }
+      if (rig.amp(gx[i], gy[i]) < 0.2) settled++;
+    }
+
+    // ---- render ----
+    ctx.clearRect(0, 0, 680, 540);
+    // surface wireframe: rows every 3, cols every 6
+    const SS = 3;
+    ctx.lineWidth = 1;
+    for (let j = 0; j < N; j += SS) {
+      ctx.beginPath();
+      let first = true;
+      for (let i = 0; i < N; i += 2) {
+        const z = showFlash ? (eng.u[j * N + i] / dispScale) * H : 0;
+        const p = project(i / (N - 1), j / (N - 1), z);
+        first ? ctx.moveTo(p.sx, p.sy) : ctx.lineTo(p.sx, p.sy);
+        first = false;
+      }
+      const mid = project(0.5, j / (N - 1), 0);
+      const al = 0.14 + 0.3 * (0.5 + mid.depth);
+      ctx.strokeStyle = showFlash ? `rgba(217, 160, 90, ${al})` : `rgba(125, 125, 140, ${al * 0.7})`;
+      ctx.stroke();
+    }
+    for (let i = 0; i < N; i += 8) {
+      ctx.beginPath();
+      let first = true;
+      for (let j = 0; j < N; j += 2) {
+        const z = showFlash ? (eng.u[j * N + i] / dispScale) * H : 0;
+        const p = project(i / (N - 1), j / (N - 1), z);
+        first ? ctx.moveTo(p.sx, p.sy) : ctx.lineTo(p.sx, p.sy);
+        first = false;
+      }
+      ctx.strokeStyle = showFlash ? 'rgba(217, 160, 90, 0.18)' : 'rgba(125, 125, 140, 0.12)';
+      ctx.stroke();
+    }
+
+    // grains, depth-sorted coarse (two passes: back then front)
+    for (const pass of [0, 1]) {
+      for (let i = 0; i < NG; i++) {
+        const p = project(gx[i], gy[i], gz[i]);
+        if ((pass === 0) !== (p.depth < 0)) continue;
+        const airborne = gz[i] - uAt(gx[i], gy[i], eng.u) / dispScale * H > 1.5;
+        ctx.fillStyle = airborne ? 'rgba(247, 240, 220, 0.95)' : 'rgba(230, 218, 190, 0.8)';
+        const r = airborne ? 1.9 : 1.5;
+        ctx.fillRect(p.sx - r / 2, p.sy - r / 2, r, r);
+      }
+    }
+
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 12px "Charter", serif'; ctx.textAlign = 'center';
+    ctx.fillText(showFlash ? 'surface motion exaggerated — bright grains are airborne' : 'plate shown still (the real view) — the sand is the only witness', 340, 528);
+    readout.textContent = MODES3[mi].label + ' · grains near the quiet lines: ' + (100 * settled / NG).toFixed(0) + '%';
+  }
+  runWhenVisible(canvas, draw);
+})();
+</script>
+
+</body>
+</html>

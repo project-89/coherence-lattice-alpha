@@ -31,6 +31,15 @@ posthog.init('phc_kRX9iHZstABjgFqEWJBMok2S3hW9R8QMHbNao4EsNz2g', {api_host: 'htt
 <!-- END AUTO-INJECTED META -->
 <link rel="stylesheet" href="../css/style.css">
 <script type="module">import '../js/common.js';</script>
+<style>
+.foundations-card {
+  margin: 0.4em 0 1.4em; padding: 18px 22px;
+  background: var(--bg-soft); border: 1px solid var(--panel-border); border-radius: 8px;
+  line-height: 1.6;
+}
+.foundations-card .fc-label { display:block; font: 600 10.5px "SF Mono", monospace; text-transform: uppercase; letter-spacing: 0.12em; color: var(--accent); margin-bottom: 0.5em; }
+.foundations-card a { font-weight: 600; }
+</style>
 </head>
 <body>
 <div class="page">
@@ -52,9 +61,16 @@ posthog.init('phc_kRX9iHZstABjgFqEWJBMok2S3hW9R8QMHbNao4EsNz2g', {api_host: 'htt
 <nav class="toc">
   <ol>
     <li><a href="sections/01-prelude.html">Prelude: what it means for a lattice to be alive</a></li>
-    <li><a href="sections/02-oscillators.html">Oscillators on a graph</a></li>
-    <li><a href="sections/03-coherence.html">Coherence capital</a></li>
-    <li><a href="sections/04-clr.html">The Coherence Learning Rule</a></li>
+  </ol>
+</nav>
+
+<div class="foundations-card">
+  <span class="fc-label">Foundations &middot; built once, shared</span>
+  The next three steps &mdash; <strong>oscillators on a graph</strong>, <strong>coherence capital</strong> <span class="mono">C = I<sub>phase</sub>&middot;&rho;</span>, and the <strong>Coherent Learning Rule</strong> with its arrow <span class="mono">&Ccirc; &ge; 0</span> &mdash; are the shared physics behind every essay in this library. They live, interactive and built from scratch, in <a href="../foundations/">Foundations</a>. This essay assumes them and picks the story back up at the binary field.
+</div>
+
+<nav class="toc">
+  <ol style="counter-reset: section 4">
     <li><a href="sections/05-binary-field.html">How a binary field emerges</a></li>
     <li><a href="sections/06-plm-npd.html">Phase-locked modes: geometry and memory in the K-field</a></li>
     <li><a href="sections/07-vortices.html">Spontaneous vortices</a></li>

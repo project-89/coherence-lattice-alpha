@@ -64,6 +64,23 @@ posthog.init('phc_kRX9iHZstABjgFqEWJBMok2S3hW9R8QMHbNao4EsNz2g', {api_host: 'htt
   gap: 22px;
   margin: 2.4em 0 3em;
 }
+.section-label {
+  font: 600 11px "SF Mono", monospace;
+  text-transform: uppercase; letter-spacing: 0.16em;
+  color: var(--text-faint);
+  margin: 2.8em 0 0.2em;
+  text-align: center;
+}
+.essay-card .status.beginner     { background: rgba(109, 196, 143, 0.16); color: #6dc48f; }
+.essay-card .status.intermediate { background: rgba(125, 179, 221, 0.18); color: #7db3dd; }
+.essay-card .status.advanced     { background: rgba(195, 141, 247, 0.16); color: #c38df7; }
+.path-note {
+  margin: 0.9em 0 0;
+  color: var(--text-faint);
+  font-size: 0.9em;
+  font-style: italic;
+  text-align: center;
+}
 .essay-card {
   display: block;
   padding: 22px 26px 24px;
@@ -144,7 +161,53 @@ posthog.init('phc_kRX9iHZstABjgFqEWJBMok2S3hW9R8QMHbNao4EsNz2g', {api_host: 'htt
   <p class="intro">A library of interactive essays built around a single inequality &mdash; <em>I</em>&nbsp;&ge;&nbsp;0, the Coherence Theorem &mdash; and what happens when you run it on different substrates. Each piece is self-contained, written in the browser, and pursues one idea to its consequence.</p>
 </section>
 
+<div class="section-label">The curriculum &mdash; the math, by ear and eye, assuming nothing</div>
+
 <div class="essay-grid">
+
+  <a class="essay-card live" href="primers/#beginner">
+    <div class="status beginner">start here &middot; beginner</div>
+    <h2>Hear it first</h2>
+    <div class="card-subtitle">Phase, sound, and shape. No math assumed; ears recommended.</div>
+    <p class="card-description">
+      Phase and beats, and the audible moment two rhythms lock. The sound workshop: a digital harmonograph where locking means the drawing holds still, and Chladni plates where sand walks to the quiet lines. Rotations: what turning cannot change.
+    </p>
+  </a>
+
+  <a class="essay-card live" href="primers/#intermediate">
+    <div class="status intermediate">intermediate</div>
+    <h2>The language of structure</h2>
+    <div class="card-subtitle">The vocabulary the essays actually speak &mdash; one module per idea.</div>
+    <p class="card-description">
+      Topology and manifolds. Inside a transformer. Gauge and holonomy. Eigenvalues as a network's ways of wobbling &mdash; hear its chord, cut its bridge. The von Mises circle, where the constant 0.303 is born. Rotation groups, from a turntable to 768 dimensions.
+    </p>
+  </a>
+
+  <a class="essay-card live" href="primers/#advanced">
+    <div class="status advanced">advanced</div>
+    <h2>The frontier's mathematics</h2>
+    <div class="card-subtitle">Where the curriculum meets the research itself.</div>
+    <p class="card-description">
+      Lohe dynamics on the unit hypersphere and tokens as paths. Living K: the learning rule as a phase portrait, and the repair demonstration. The BKT transition: why the wall sits at 2/&pi;. Coarse-graining: squint, and the law survives. The full ladder from the essays' hardest words to their actual mathematics.
+    </p>
+  </a>
+
+</div>
+
+<p class="path-note">The path: beginner &rarr; intermediate &rarr; <a href="foundations/">Foundations</a> &rarr; any essay &rarr; advanced. Or skip ahead and come back when a word stops you &mdash; the essays link down to the module they lean on.</p>
+
+<div class="section-label">The essays</div>
+
+<div class="essay-grid">
+
+  <a class="essay-card live" href="foundations/">
+    <div class="status shipped">foundations &middot; 5 chapters</div>
+    <h2>Foundations</h2>
+    <div class="card-subtitle">The one law, built once.</div>
+    <p class="card-description">
+      The shared physics every other essay assumes: coupled oscillators, coherence capital <span class="mono">C = I<sub>phase</sub>&middot;&rho;</span>, the Coherent Learning Rule, the arrow <span class="mono">&Ccirc; &ge; 0</span>, and how a substrate remembers and thinks. Start here.
+    </p>
+  </a>
 
   <a class="essay-card live" href="alpha/">
     <div class="status shipped">shipped &middot; 17 chapters</div>
@@ -155,30 +218,30 @@ posthog.init('phc_kRX9iHZstABjgFqEWJBMok2S3hW9R8QMHbNao4EsNz2g', {api_host: 'htt
     </p>
   </a>
 
+  <a class="essay-card live" href="paradigm/">
+    <div class="status in-research">in progress</div>
+    <h2>The Physics of Mind</h2>
+    <div class="card-subtitle">Intelligence &amp; consciousness, at the edge.</div>
+    <p class="card-description">
+      One law from the vacuum to the mind. Intelligence is the flux of coherence; consciousness is that flux observing itself; both are sharpest at the edge of a phase transition. The companion to <em>The Coherence Theory of Intelligence and Consciousness</em>.
+    </p>
+  </a>
+
+  <a class="essay-card live" href="transformers/">
+    <div class="status in-research">in progress</div>
+    <h2>Transformers as Oscillators</h2>
+    <div class="card-subtitle">The physics of attention.</div>
+    <p class="card-description">
+      A transformer is a network of coupled oscillators. LayerNorm is reprojection, attention is coupling, the residual stream is the field. From that identity: a derived dead-head threshold, a low-dimensional coupling manifold, lossless rank-2 projection, and one rotation between any two trained models.
+    </p>
+  </a>
+
   <div class="essay-card coming">
-    <div class="status in-research">in research</div>
+    <div class="status planning">planned</div>
     <h2>The proton mass</h2>
     <div class="card-subtitle">Frame-sector SU(2) and the Skyrmion.</div>
     <p class="card-description">
       The next physics chapter: extending the same machinery from electrons to hadrons. Frame-sector dynamics on the diamond lattice, Skyrmion topology, and the proton&rsquo;s mass as the target.
-    </p>
-  </div>
-
-  <div class="essay-card coming">
-    <div class="status planning">planning</div>
-    <h2>Life as an entropy pump</h2>
-    <div class="card-subtitle">The duality between entropy and coherence.</div>
-    <p class="card-description">
-      The mathematics of ordered systems paying for their order in exported heat. From lattices to cells to minds, every coherent process is an entropy pump. Biological examples for the math.
-    </p>
-  </div>
-
-  <div class="essay-card coming">
-    <div class="status planning">planning</div>
-    <h2>A primer on coherence</h2>
-    <div class="card-subtitle">What <em>is</em> <em>I</em>&nbsp;&ge;&nbsp;0?</div>
-    <p class="card-description">
-      The inequality at the heart of the paradigm, for anyone who hasn&rsquo;t done graduate-level physics. Coupled oscillators, phase-locking, and why the universe has a direction.
     </p>
   </div>
 

@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Holonomy: what the loop remembers — The Living Lattice</title>
+<meta name="description" content="Draw any closed loop on a sphere and read what it remembers: the carried arrow returns rotated by the enclosed area — measured two independent ways that agree live. Holonomy as memory, assuming nothing.">
+<meta name="author" content="Michael Sharpe">
+<link rel="canonical" href="https://lattice.project89.org/primers/gauge-holonomy/sections/03-holonomy.html">
+<link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
+<link rel="apple-touch-icon" href="../../../apple-touch-icon.png">
+<meta property="og:title" content="Holonomy: what the loop remembers — The Living Lattice">
+<meta property="og:description" content="Draw a loop, any loop. The arrow you carry around it comes back rotated by exactly the area you enclosed — and the figure checks itself two ways, live.">
+<meta property="og:url" content="https://lattice.project89.org/primers/gauge-holonomy/sections/03-holonomy.html">
+<meta property="og:site_name" content="The Living Lattice">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://lattice.project89.org/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Holonomy: what the loop remembers — The Living Lattice">
+<meta name="twitter:description" content="Draw any loop and read its memory: rotation = enclosed area, verified live two ways.">
+<meta name="twitter:image" content="https://lattice.project89.org/og-image.png">
+<!-- BEGIN AUTO-INJECTED ANALYTICS -->
+<!-- PostHog -->
+<script>
+!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+posthog.init('phc_kRX9iHZstABjgFqEWJBMok2S3hW9R8QMHbNao4EsNz2g', {api_host: 'https://us.i.posthog.com', person_profiles: 'identified_only'});
+</script>
+<!-- END AUTO-INJECTED ANALYTICS -->
+<link rel="stylesheet" href="../../../css/style.css">
+<style>
+.flag-callout {
+  margin: 1.6em 0; padding: 16px 20px;
+  background: rgba(195, 141, 247, 0.08);
+  border-left: 3px solid #c38df7; border-radius: 3px;
+  font-size: 14.5px; line-height: 1.55;
+}
+.flag-callout .flag-label {
+  display: inline-block; font: 700 10.5px "SF Mono", monospace;
+  color: #c38df7; text-transform: uppercase; letter-spacing: 0.1em; margin-right: 0.7em;
+}
+.flag-callout a { font-weight: 600; }
+#canvas-freeloop { cursor: crosshair; touch-action: none; }
+</style>
+</head>
+<body>
+<div class="page">
+
+<nav class="breadcrumb">
+  <a href="../index.html">&larr; gauge &amp; holonomy</a>
+  <span class="sep">&middot;</span>
+  <span class="section-num">section 03 / 03 &middot; intermediate</span>
+</nav>
+
+<h1>Holonomy: what the loop remembers<span class="subtitle">The convention-proof residue of a round trip — drawn by you, checked two ways</span></h1>
+
+<p class="lead">Now name the payoff. The net rotation an arrow picks up around a closed loop is the loop's <strong>holonomy</strong>. Flat space: every loop's holonomy is &ldquo;no change&rdquo; — round trips are forgetful, and coming home means being as you left. Curved space: loops come home <em>changed by what they enclosed</em>. The holonomy is a record — written into the arrow itself — of structure the traveler never saw locally at any single step. In <a href="01-parallel-transport.html">section 01</a> the loops were mine. This time, the loop is yours.</p>
+
+<h2>1. Draw a loop. Any loop.</h2>
+
+<p>Drag on the sphere to draw a closed path — any wandering shape you like; release, and it closes. The figure then does two <em>completely independent</em> computations. First, it actually performs the honest carry: an arrow is parallel-transported step by step around your loop, and the mismatch on return is measured. Second, it computes the area your loop encloses, by pure geometry, without ever touching an arrow. If everything this module has claimed is true, the two numbers must agree — for <em>every</em> loop, including the lopsided one you are about to draw. Try to break it.</p>
+
+<figure id="fig-freeloop">
+  <canvas id="canvas-freeloop" width="680" height="440"></canvas>
+  <div class="controls" id="freeloop-controls">
+    <button id="fl-demo" class="primary">Draw a triangle for me</button>
+    <button id="fl-clear">Clear</button>
+  </div>
+  <figcaption>Draw on the sphere; release to close the loop. The walker then re-runs your path, carrying an arrow honestly, and the readout shows both measurements: what the <strong>transport</strong> actually delivered, and what the <strong>area</strong> demands. They agree — that is curvature keeping its books. Counterclockwise loops count positive; draw the same loop the other way and watch the sign flip. <em>Sound on: the drone climbs by your loop's holonomy each time the walker completes it.</em> <span id="fl-readout" class="readout">draw a loop to begin</span></figcaption>
+</figure>
+
+<p>Notice what you just verified by hand: the answer never depended on any choice of &ldquo;north&rdquo; — you never picked one. Holonomy is the quantity <a href="02-gauge.html">section 02</a> promised: the loop-sum of the dictionary, the one number that survives every re-choice of every convention. It is not bookkeeping <em>about</em> the world; it is the part of the bookkeeping that <strong>is</strong> the world.</p>
+
+<h2>2. Why this is the site's picture of memory</h2>
+
+<p>That is why this site cares. The essays' claim, made precise in <a href="../../../paradigm/sections/10-holonomy.html">The Physics of Mind &sect;10, &ldquo;Holonomy: how a loop remembers&rdquo;</a>, is that memory and understanding work this way: a trajectory of thought loops through a curved space of meaning and returns <em>rotated by what it went around</em> — no separate memory organ required, because the record is geometric. What you learn by going around something is written into the state that comes back, exactly as your drawn loop wrote its area into the returned arrow. And when the loop runs through the system's picture of <em>itself</em>, the record it carries back is a record of being the one who traveled — the seed of a point of view (<a href="../../../paradigm/sections/12-witness.html">&sect;12, the witness</a>).</p>
+
+<p>Even the transformer essays speak this language: position information in attention is implemented as a neighbor-dictionary along the sequence — a connection, in section 02's exact sense — which is why the site keeps treating trained models as <a href="../../../transformers/index.html">geometric objects</a>, and why the compression work's care to &ldquo;preserve transport&rdquo; is engineering, not metaphor.</p>
+
+<div class="flag-callout">
+  <span class="flag-label">What's real here</span>
+  Your drawing board is a two-dimensional sphere, where holonomy-equals-enclosed-area is exact textbook geometry — which is precisely what lets the figure check itself with two independent computations. The real objects in the theory are high-dimensional: trajectories looping on a coupling manifold, with transport defined by the geometry of the system's own state space, and the holonomy <em>measured</em> — not assumed — around detected loops. That measurement protocol, and what hangs on it, live in <a href="../../../paradigm/sections/10-holonomy.html">&sect;10</a> and the paper it accompanies. The loop you drew is the honest miniature of that machine, not the machine.
+</div>
+
+<h2>Where this goes</h2>
+
+<p>You now own the module's three words. <strong>Parallel transport</strong>: carry without twisting; the only fair comparison across distance. <strong>Gauge</strong>: local references are conventions; only convention-independent statements are physics. <strong>Holonomy</strong>: what a closed loop provably remembers about what it enclosed. Take them to <a href="../../../paradigm/sections/10-holonomy.html">&sect;10 (how a loop remembers)</a> and <a href="../../../paradigm/sections/12-witness.html">&sect;12 (the witness)</a> — or continue the curriculum with the network mathematics the learning rule leans on.</p>
+
+<div class="nav-links">
+  <a href="02-gauge.html" class="prev">Gauge: every town points north its own way</a>
+  <a href="../../graphs-spectra/" class="next">Next: Graphs, coupling, and spectra</a>
+</div>
+
+</div>
+
+<script type="module">
+import { setupHiDPICanvas, runWhenVisible, palette, makeSoundToggle, makeVoices } from '../../../js/common.js';
+
+(() => {
+  const canvas = document.getElementById('canvas-freeloop');
+  const ctx = setupHiDPICanvas(canvas, 680, 440);
+  const readout = document.getElementById('fl-readout');
+  const clearBtn = document.getElementById('fl-clear');
+  const demoBtn = document.getElementById('fl-demo');
+
+  const sound = makeSoundToggle(document.getElementById('freeloop-controls'), { label: 'hear the drone' });
+  const voice = makeVoices(sound, 1, { freq: 220 });
+
+  // ---- vector helpers ----
+  const cross = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
+  const dot = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+  const add = (a, b) => [a[0] + b[0], a[1] + b[1], a[2] + b[2]];
+  const scl = (a, s) => [a[0] * s, a[1] * s, a[2] * s];
+  const nrm = (a) => { const n = Math.hypot(a[0], a[1], a[2]) || 1; return [a[0] / n, a[1] / n, a[2] / n]; };
+  function rotAbout(v, axis, ang) {
+    const k = nrm(axis), c = Math.cos(ang), s = Math.sin(ang);
+    return add(add(scl(v, c), scl(cross(k, v), s)), scl(k, dot(k, v) * (1 - c)));
+  }
+  function slerp(a, b, t) {
+    const w = Math.acos(Math.max(-1, Math.min(1, dot(a, b))));
+    if (w < 1e-9) return a;
+    return nrm(add(scl(a, Math.sin((1 - t) * w) / Math.sin(w)), scl(b, Math.sin(t * w) / Math.sin(w))));
+  }
+
+  // ---- projector (static view; drawing needs a still sphere) ----
+  const gcx = 340, gcy = 210, gr = 165, tilt = 0.45;
+  function proj(v) {
+    const z2 = v[1] * Math.sin(tilt) + v[2] * Math.cos(tilt);
+    const y2 = v[1] * Math.cos(tilt) - v[2] * Math.sin(tilt);
+    return { sx: gcx + gr * v[0], sy: gcy - gr * z2, depth: y2 };
+  }
+  // inverse: screen → front-hemisphere unit vector (branch chosen for continuity)
+  function unproj(sx, sy, prev) {
+    const u = (sx - gcx) / gr, w = (gcy - sy) / gr;
+    const rho2 = 1 - u * u;
+    if (rho2 <= 0.0004 || u * u + w * w >= 0.985) return null; // off/edge of sphere
+    const rho = Math.sqrt(rho2);
+    if (Math.abs(w / rho) > 0.9995) return null;
+    const dpsi = Math.acos(Math.max(-1, Math.min(1, w / rho)));
+    const cand = [tilt - dpsi, tilt + dpsi].map(psi => [u, rho * Math.sin(psi), rho * Math.cos(psi)]);
+    if (!prev) return cand[0][1] * Math.cos(tilt) - cand[0][2] * Math.sin(tilt) <
+                       cand[1][1] * Math.cos(tilt) - cand[1][2] * Math.sin(tilt) ? cand[0] : cand[1];
+    // continuity: pick the branch nearer the previous point
+    const d0 = dot(add(cand[0], scl(prev, -1)), add(cand[0], scl(prev, -1)));
+    const d1 = dot(add(cand[1], scl(prev, -1)), add(cand[1], scl(prev, -1)));
+    return d0 < d1 ? cand[0] : cand[1];
+  }
+
+  // ---- state ----
+  let drawing = false;
+  let raw = [];          // user's captured points (unit vectors)
+  let loop = null;       // closed, densified loop
+  let areaHol = null, transHol = null;
+  let replayI = 0;       // walker index into loop
+  let carried = null;    // transported vector during replay
+  let startTan = null;
+  let laps = 0, accum = 0;
+
+  function screenXY(e) {
+    const r = canvas.getBoundingClientRect();
+    const t = e.touches ? e.touches[0] : e;
+    return [ (t.clientX - r.left) * (680 / r.width), (t.clientY - r.top) * (440 / r.height) ];
+  }
+  function down(e) {
+    const [sx, sy] = screenXY(e);
+    const v = unproj(sx, sy, null);
+    if (!v) return;
+    drawing = true; raw = [v]; loop = null; areaHol = transHol = null;
+    e.preventDefault();
+  }
+  function move(e) {
+    if (!drawing) return;
+    const [sx, sy] = screenXY(e);
+    const v = unproj(sx, sy, raw[raw.length - 1]);
+    if (!v) return;
+    if (Math.acos(Math.max(-1, Math.min(1, dot(v, raw[raw.length - 1])))) > 0.045) raw.push(v);
+    e.preventDefault();
+  }
+  function up() {
+    if (!drawing) return;
+    drawing = false;
+    if (raw.length >= 8) closeLoop(raw);
+    else { raw = []; readout.textContent = 'loop too small — draw a bigger one'; }
+  }
+  canvas.addEventListener('mousedown', down);
+  window.addEventListener('mousemove', move);
+  window.addEventListener('mouseup', up);
+  canvas.addEventListener('touchstart', down, { passive: false });
+  canvas.addEventListener('touchmove', move, { passive: false });
+  canvas.addEventListener('touchend', up);
+
+  clearBtn.addEventListener('click', () => { raw = []; loop = null; areaHol = transHol = null; laps = 0; accum = 0; readout.textContent = 'draw a loop to begin'; });
+  demoBtn.addEventListener('click', () => {
+    const W = 70 * Math.PI / 180;
+    const verts = [[0, Math.sin(tilt) * 0.0 , 1],
+      [Math.sin(Math.PI / 2) * Math.cos(-W / 2 + 1.2), Math.sin(Math.PI / 2) * Math.sin(-W / 2 + 1.2), 0],
+      [Math.sin(Math.PI / 2) * Math.cos(W / 2 + 1.2), Math.sin(Math.PI / 2) * Math.sin(W / 2 + 1.2), 0]];
+    // orient CCW as seen from outside near the centroid: pole → +λ → −λ ordering
+    const pts = [];
+    const order = [nrm([0, 0, 1]), nrm(verts[2]), nrm(verts[1])];
+    for (let i = 0; i < 3; i++) {
+      const a = order[i], b = order[(i + 1) % 3];
+      for (let k = 0; k < 30; k++) pts.push(slerp(a, b, k / 30));
+    }
+    closeLoop(pts);
+  });
+
+  function closeLoop(pts) {
+    // densify user points into even arcs
+    const dense = [];
+    for (let i = 0; i < pts.length; i++) {
+      const a = pts[i], b = pts[(i + 1) % pts.length];
+      const w = Math.acos(Math.max(-1, Math.min(1, dot(a, b))));
+      const n = Math.max(1, Math.ceil(w / 0.03));
+      for (let k = 0; k < n; k++) dense.push(slerp(a, b, k / n));
+    }
+    loop = dense;
+    // (a) area: signed solid angle via triangulation from the centroid direction
+    const c = nrm(loop.reduce((s, p) => add(s, p), [0, 0, 0]));
+    let om = 0;
+    for (let i = 0; i < loop.length; i++) {
+      const v2 = loop[i], v3 = loop[(i + 1) % loop.length];
+      const num = dot(c, cross(v2, v3));
+      const den = 1 + dot(c, v2) + dot(v2, v3) + dot(v3, c);
+      om += 2 * Math.atan2(num, den);
+    }
+    areaHol = om;
+    // (b) transport: carry a tangent vector edge by edge, measure the mismatch
+    const p0 = loop[0];
+    let t0 = cross(p0, [0, 0, 1]);
+    if (Math.hypot(...t0) < 1e-6) t0 = cross(p0, [1, 0, 0]);
+    startTan = nrm(t0);
+    let v = startTan.slice();
+    for (let i = 0; i < loop.length; i++) {
+      const a = loop[i], b = loop[(i + 1) % loop.length];
+      const axis = cross(a, b);
+      const ang = Math.atan2(Math.hypot(...axis), dot(a, b));
+      if (Math.hypot(...axis) > 1e-12) v = rotAbout(v, axis, ang);
+      const p = loop[(i + 1) % loop.length];
+      v = add(v, scl(p, -dot(v, p)));
+      v = nrm(v);
+    }
+    transHol = Math.atan2(dot(cross(startTan, v), p0), dot(startTan, v));
+    replayI = 0; carried = startTan.slice(); laps = 0;
+    raw = [];
+  }
+
+  function drawArrow3D(pos, dir, len, color, width, alpha) {
+    const tip = add(pos, scl(dir, len));
+    const a = proj(pos), b = proj(tip);
+    ctx.save(); ctx.globalAlpha = alpha;
+    ctx.strokeStyle = color; ctx.fillStyle = color; ctx.lineWidth = width;
+    ctx.beginPath(); ctx.moveTo(a.sx, a.sy); ctx.lineTo(b.sx, b.sy); ctx.stroke();
+    const a2 = Math.atan2(b.sy - a.sy, b.sx - a.sx);
+    ctx.beginPath();
+    ctx.moveTo(b.sx, b.sy);
+    ctx.lineTo(b.sx - 8 * Math.cos(a2 - 0.42), b.sy - 8 * Math.sin(a2 - 0.42));
+    ctx.lineTo(b.sx - 8 * Math.cos(a2 + 0.42), b.sy - 8 * Math.sin(a2 + 0.42));
+    ctx.fill(); ctx.restore();
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, 680, 440);
+
+    // wireframe
+    for (let li = 1; li < 6; li++) {
+      const phi = (li / 6) * Math.PI;
+      ctx.beginPath();
+      for (let i = 0; i <= 60; i++) {
+        const th = (i / 60) * Math.PI * 2;
+        const p = proj([Math.sin(phi) * Math.cos(th), Math.sin(phi) * Math.sin(th), Math.cos(phi)]);
+        i ? ctx.lineTo(p.sx, p.sy) : ctx.moveTo(p.sx, p.sy);
+      }
+      ctx.strokeStyle = 'rgba(125,125,140,0.24)'; ctx.lineWidth = 1; ctx.stroke();
+    }
+    for (let lo = 0; lo < 10; lo++) {
+      const th = (lo / 10) * Math.PI * 2;
+      ctx.beginPath();
+      for (let i = 0; i <= 60; i++) {
+        const phi = (i / 60) * Math.PI;
+        const p = proj([Math.sin(phi) * Math.cos(th), Math.sin(phi) * Math.sin(th), Math.cos(phi)]);
+        i ? ctx.lineTo(p.sx, p.sy) : ctx.moveTo(p.sx, p.sy);
+      }
+      ctx.strokeStyle = 'rgba(125,125,140,0.15)'; ctx.lineWidth = 1; ctx.stroke();
+    }
+
+    // in-progress stroke
+    if (raw.length > 1) {
+      ctx.strokeStyle = 'rgba(195,141,247,0.8)'; ctx.lineWidth = 2;
+      ctx.beginPath();
+      raw.forEach((v, i) => { const p = proj(v); i ? ctx.lineTo(p.sx, p.sy) : ctx.moveTo(p.sx, p.sy); });
+      ctx.stroke();
+    }
+
+    if (loop) {
+      // the closed loop
+      ctx.strokeStyle = '#c38df7'; ctx.lineWidth = 2.2;
+      ctx.beginPath();
+      loop.forEach((v, i) => { const p = proj(v); i ? ctx.lineTo(p.sx, p.sy) : ctx.moveTo(p.sx, p.sy); });
+      ctx.closePath(); ctx.stroke();
+
+      // replay: walker + carried arrow
+      const steps = 3;
+      for (let k = 0; k < steps; k++) {
+        const a = loop[replayI], b = loop[(replayI + 1) % loop.length];
+        const axis = cross(a, b);
+        const ang = Math.atan2(Math.hypot(...axis), dot(a, b));
+        if (Math.hypot(...axis) > 1e-12) carried = rotAbout(carried, axis, ang);
+        carried = nrm(add(carried, scl(b, -dot(carried, b))));
+        replayI = (replayI + 1) % loop.length;
+        if (replayI === 0) {
+          laps += 1;
+          accum = Math.min(accum + Math.abs(transHol), 4 * Math.PI);
+          carried = startTan.slice();
+        }
+      }
+      // ghost start arrow + carried arrow
+      drawArrow3D(loop[0], startTan, 0.4, palette.textFaint, 1.5, 0.55);
+      const pos = loop[replayI];
+      drawArrow3D(pos, carried, 0.36, palette.orange, 2.5, 1);
+      const wp = proj(pos);
+      ctx.fillStyle = palette.burgundy;
+      ctx.beginPath(); ctx.arc(wp.sx, wp.sy, 5, 0, Math.PI * 2); ctx.fill();
+
+      const tDeg = transHol * 180 / Math.PI, aDeg = areaHol * 180 / Math.PI;
+      const agree = Math.abs(tDeg - aDeg) < 1.5;
+      ctx.fillStyle = agree ? '#6dc48f' : palette.textSoft;
+      ctx.font = '13px "SF Mono", monospace'; ctx.textAlign = 'center';
+      ctx.fillText(`transport says ${tDeg >= 0 ? '+' : ''}${tDeg.toFixed(1)}°  ·  area says ${aDeg >= 0 ? '+' : ''}${aDeg.toFixed(1)}°${agree ? '  — they agree' : ''}`, 340, 425);
+      readout.textContent = `transport ${tDeg >= 0 ? '+' : ''}${tDeg.toFixed(1)}° · area ${aDeg >= 0 ? '+' : ''}${aDeg.toFixed(1)}°${agree ? ' — they agree' : ''} · laps = ${laps}`;
+    } else if (!drawing) {
+      ctx.fillStyle = palette.textFaint; ctx.font = 'italic 13px serif'; ctx.textAlign = 'center';
+      ctx.fillText('drag on the sphere to draw a loop — release to close it', 340, 425);
+    }
+
+    voice.set(0, 220 * Math.pow(2, accum / (2 * Math.PI)), 0.9);
+  }
+  runWhenVisible(canvas, draw);
+})();
+</script>
+
+</body>
+</html>

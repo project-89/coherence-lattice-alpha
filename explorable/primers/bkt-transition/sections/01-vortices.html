@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vortices: whirlpools in a field of phases — The Living Lattice</title>
+<meta name="description" content="A vortex is a point the phase field winds around. Place them, try to smooth them away (you cannot — topology forbids it), and drag a pair together to watch them annihilate.">
+<meta name="author" content="Michael Sharpe">
+<link rel="canonical" href="https://lattice.project89.org/primers/bkt-transition/sections/01-vortices.html">
+<link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
+<link rel="apple-touch-icon" href="../../../apple-touch-icon.png">
+<meta property="og:title" content="Vortices: whirlpools in a field of phases — The Living Lattice">
+<meta property="og:description" content="Place vortices, fail to comb them flat, and annihilate a pair — topological defects, felt.">
+<meta property="og:url" content="https://lattice.project89.org/primers/bkt-transition/sections/01-vortices.html">
+<meta property="og:site_name" content="The Living Lattice">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://lattice.project89.org/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Vortices: whirlpools in a field of phases — The Living Lattice">
+<meta name="twitter:description" content="Topological defects in a phase field: place them, drag them, fail to erase them.">
+<meta name="twitter:image" content="https://lattice.project89.org/og-image.png">
+<!-- BEGIN AUTO-INJECTED ANALYTICS -->
+<!-- PostHog -->
+<script>
+!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+posthog.init('phc_kRX9iHZstABjgFqEWJBMok2S3hW9R8QMHbNao4EsNz2g', {api_host: 'https://us.i.posthog.com', person_profiles: 'identified_only'});
+</script>
+<!-- END AUTO-INJECTED ANALYTICS -->
+<link rel="stylesheet" href="../../../css/style.css">
+<style>
+.flag-callout {
+  margin: 1.6em 0; padding: 16px 20px;
+  background: rgba(195, 141, 247, 0.08);
+  border-left: 3px solid #c38df7; border-radius: 3px;
+  font-size: 14.5px; line-height: 1.55;
+}
+.flag-callout .flag-label {
+  display: inline-block; font: 700 10.5px "SF Mono", monospace;
+  color: #c38df7; text-transform: uppercase; letter-spacing: 0.1em; margin-right: 0.7em;
+}
+.flag-callout a { font-weight: 600; }
+</style>
+</head>
+<body>
+<div class="page">
+
+<nav class="breadcrumb">
+  <a href="../index.html">&larr; BKT transition</a>
+  <span class="sep">&middot;</span>
+  <span class="section-num">section 01 / 03 &middot; advanced</span>
+</nav>
+
+<h1>Vortices<span class="subtitle">Whirlpools in a field of phases — the defects the whole transition is about</span></h1>
+
+<p class="lead">Fill a plane with oscillators, one at every point, each carrying a phase — an arrow on its own little clock face. If the coupling is doing its job, neighbors mostly agree, and the field of arrows looks like a well-combed lawn. But there is one kind of disturbance that combing cannot fix: a point the arrows <em>circulate around</em>. Walk a small loop around such a point and the phase you carry turns through one full 2&pi; — the loop has a <strong>winding number</strong>. You drew exactly this integer with your own hand in <a href="../../topology-manifolds/sections/03-counting-loops.html">the topology module</a>; here it stops being a game and becomes a physical object. A point the field winds around is called a <strong>vortex</strong>, and every claim in this module — and the wall the whole library is built on — is about what a population of these costs and does.</p>
+
+<h2>1. Place them and look</h2>
+
+<p>The figure below is a field of phase arrows (hue underneath repeats the same information, since phase is a color wheel as naturally as it is an angle). Click to drop a vortex with winding <span class="mono">+1</span>; toggle the button to drop <span class="mono">&minus;1</span> instead (an anti-vortex — the arrows circulate the other way). The readout measures the winding of the phase carried around the border of the whole box: it always equals the sum of the charges you placed inside. Individual arrows change everywhere with every vortex you add — but that one integer is doing bookkeeping no local rearrangement can cheat.</p>
+
+<figure id="fig-place">
+  <canvas id="canvas-place" width="680" height="430"></canvas>
+  <div class="controls" id="place-controls">
+    <button id="place-sign" class="primary">placing: +1 vortex</button>
+    <button id="place-clear">Clear</button>
+  </div>
+  <figcaption>Click anywhere to place a vortex. Arrows show the phase field; the background hue is the same field as color. The readout integrates the phase around the box border — it reads exactly the total charge inside, however the field between rearranges. <span id="place-readout" class="readout">border winding = 0 &middot; charges placed: none</span></figcaption>
+</figure>
+
+<h2>2. Try to comb it away</h2>
+
+<p>Why call this a <em>defect</em> rather than just a messy spot? Because of what happens when you let the field relax. Relaxation is the coupling doing what coupling does: every arrow turns, a little at a time, toward the average of its neighbors. Smooth ripples iron out and their energy drains toward zero. A vortex does not. The arrows near it can shuffle, the core can shift, but the winding is an integer counted around any loop — and an integer cannot change by a sequence of tiny moves. To remove it you would have to tear the field somewhere, which coupling will not do. This is <strong>topological protection</strong>: the same reason your drawn loop in the topology module could not unwind without crossing the hole.</p>
+
+<figure id="fig-comb">
+  <canvas id="canvas-comb" width="680" height="400"></canvas>
+  <div class="controls" id="comb-controls">
+    <button id="comb-relax" class="primary">Relax both fields</button>
+    <button id="comb-reset">Reset</button>
+  </div>
+  <figcaption><strong>Left:</strong> a smooth random ripple. <strong>Right:</strong> one vortex. The same relaxation runs on both. The ripple's gradient energy drains toward zero — combed flat. The vortex's energy falls to a floor and stops, and its winding stays exactly 1: there is no continuous path from "winds once" to "winds zero times". <span id="comb-readout" class="readout">press relax</span></figcaption>
+</figure>
+
+<h2>3. The one legal way out: meet your opposite</h2>
+
+<p>There is exactly one way a vortex can die, and it is the way that matters for everything in the next section: find an anti-vortex. A <span class="mono">+1</span> and a <span class="mono">&minus;1</span> close together look, from far away, like nothing at all — walk a big loop around the pair and the windings cancel; the far field barely knows they exist. Drag them together and they annihilate outright, leaving a combed lawn. Drag them apart and you must pay for every step: the field between them stays torqued. That cost of separation is the entire subject of <a href="02-the-argument.html">section 02</a>.</p>
+
+<figure id="fig-pair">
+  <canvas id="canvas-pair" width="680" height="430"></canvas>
+  <div class="controls" id="pair-controls">
+    <button id="pair-reset">Reset pair</button>
+  </div>
+  <figcaption>A vortex (orange core) and an anti-vortex (purple core). Drag either. The meter reads the disturbance the pair leaves on the far border: tight pair — the outside barely ripples; pulled apart — the disturbance grows. Bring them within touching distance and they annihilate. <span id="pair-readout" class="readout">drag a core</span></figcaption>
+</figure>
+
+<div class="flag-callout">
+  <span class="flag-label">What's real here</span>
+  These fields are ideal textbook constructions — phase patterns written directly by formula on a small grid, so you can play with the topology bare-handed. Nothing is simulated thermally yet; that begins in <a href="02-the-argument.html">section 02</a>, where a live finite-temperature lattice takes over. Vortices themselves are entirely real physics: they are the defects of the 2-D XY model (superfluid films, arrays of coupled oscillators, the site's lattices), and the winding-number bookkeeping shown here is exact, not illustrative. In the essays these same objects appear as the defects that set the wall (<a href="../../../paradigm/sections/05-the-wall.html">The Physics of Mind &sect;05</a>) and as the topologically protected structures the Coherent Learning Rule must not starve (<a href="../../../foundations/sections/03-clr.html">Foundations &sect;03</a>'s Fiedler channel).
+</div>
+
+<div class="nav-links">
+  <a href="../index.html" class="prev">The BKT transition</a>
+  <a href="02-the-argument.html" class="next">The argument: energy versus entropy</a>
+</div>
+
+</div>
+
+<script type="module">
+import { setupHiDPICanvas, runWhenVisible, palette } from '../../../js/common.js';
+
+function wrap(a) { while (a > Math.PI) a -= 2*Math.PI; while (a < -Math.PI) a += 2*Math.PI; return a; }
+
+// Shared field-drawing helper: arrows on a coarse grid + hue underlay.
+function drawField(ctx, theta, N, x0, y0, w, cores) {
+  const cell = w / N;
+  for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) {
+    const t = theta(x + 0.5, y + 0.5);
+    const hue = ((t + Math.PI) / (2*Math.PI)) * 360;
+    ctx.fillStyle = `hsla(${hue.toFixed(0)}, 32%, 38%, 0.35)`;
+    ctx.fillRect(x0 + x*cell, y0 + y*cell, cell + 0.5, cell + 0.5);
+  }
+  ctx.strokeStyle = palette.text; ctx.lineWidth = 1.4;
+  const step = Math.max(2, Math.round(N / 14));
+  for (let y = step; y < N; y += step) for (let x = step; x < N; x += step) {
+    const t = theta(x, y);
+    const cx = x0 + x*cell, cy = y0 + y*cell, L = cell*step*0.32;
+    ctx.beginPath();
+    ctx.moveTo(cx - Math.cos(t)*L, cy - Math.sin(t)*L);
+    ctx.lineTo(cx + Math.cos(t)*L, cy + Math.sin(t)*L);
+    ctx.stroke();
+    ctx.fillStyle = palette.text;
+    ctx.beginPath(); ctx.arc(cx + Math.cos(t)*L, cy + Math.sin(t)*L, 1.8, 0, Math.PI*2); ctx.fill();
+  }
+  if (cores) cores.forEach(c => {
+    ctx.fillStyle = c.q > 0 ? palette.orange : palette.purple;
+    ctx.beginPath(); ctx.arc(x0 + c.x*cell, y0 + c.y*cell, 7, 0, Math.PI*2); ctx.fill();
+    ctx.strokeStyle = palette.bg; ctx.lineWidth = 2; ctx.stroke();
+  });
+  ctx.strokeStyle = palette.axis; ctx.lineWidth = 1;
+  ctx.strokeRect(x0, y0, w, w);
+}
+
+// Winding measured around the border of an N×N field function.
+function borderWinding(theta, N) {
+  const pts = [];
+  const m = 1.5;
+  for (let x = m; x <= N - m; x += 0.5) pts.push([x, m]);
+  for (let y = m; y <= N - m; y += 0.5) pts.push([N - m, y]);
+  for (let x = N - m; x >= m; x -= 0.5) pts.push([x, N - m]);
+  for (let y = N - m; y >= m; y -= 0.5) pts.push([m, y]);
+  let tot = 0, prev = theta(pts[0][0], pts[0][1]);
+  for (let i = 1; i <= pts.length; i++) {
+    const t = theta(pts[i % pts.length][0], pts[i % pts.length][1]);
+    tot += wrap(t - prev); prev = t;
+  }
+  return Math.round(tot / (2*Math.PI));
+}
+
+// ============================================================
+// FIG 1: place vortices
+// ============================================================
+(() => {
+  const canvas = document.getElementById('canvas-place');
+  const ctx = setupHiDPICanvas(canvas, 680, 430);
+  const readout = document.getElementById('place-readout');
+  const signBtn = document.getElementById('place-sign');
+  const N = 46, x0 = 150, y0 = 25, w = 380;
+  let sign = 1;
+  const cores = [];
+
+  signBtn.addEventListener('click', () => {
+    sign = -sign;
+    signBtn.textContent = sign > 0 ? 'placing: +1 vortex' : 'placing: −1 vortex';
+  });
+  document.getElementById('place-clear').addEventListener('click', () => { cores.length = 0; });
+
+  const theta = (x, y) => {
+    let t = 0.4;
+    for (const c of cores) t += c.q * Math.atan2(y - c.y, x - c.x);
+    return t;
+  };
+
+  canvas.addEventListener('click', (e) => {
+    const r = canvas.getBoundingClientRect();
+    const px = (e.clientX - r.left) * (680 / r.width), py = (e.clientY - r.top) * (430 / r.height);
+    const gx = (px - x0) / (w / N), gy = (py - y0) / (w / N);
+    if (gx > 2 && gx < N - 2 && gy > 2 && gy < N - 2 && cores.length < 6) cores.push({ x: gx, y: gy, q: sign });
+  });
+
+  function draw() {
+    ctx.clearRect(0, 0, 680, 430);
+    drawField(ctx, theta, N, x0, y0, w, cores);
+    const wind = borderWinding(theta, N);
+    const list = cores.length ? cores.map(c => (c.q > 0 ? '+1' : '−1')).join(', ') : 'none';
+    readout.textContent = `border winding = ${wind} · charges placed: ${list}`;
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 12px serif'; ctx.textAlign = 'center';
+    ctx.fillText('click inside the box to place (max 6)', x0 + w/2, y0 + w + 22);
+  }
+  runWhenVisible(canvas, draw);
+})();
+
+// ============================================================
+// FIG 2: comb it away — relaxation on ripple vs vortex
+// ============================================================
+(() => {
+  const canvas = document.getElementById('canvas-comb');
+  const ctx = setupHiDPICanvas(canvas, 680, 400);
+  const readout = document.getElementById('comb-readout');
+  const N = 36, w = 290, xL = 30, xR = 360, y0 = 25;
+  let ripple, vortex, relaxing = false;
+
+  function seed() {
+    ripple = new Float64Array(N*N);
+    vortex = new Float64Array(N*N);
+    for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) {
+      ripple[y*N+x] = 0.9*Math.sin(x*0.45) * Math.cos(y*0.3) + 0.5*Math.sin((x+y)*0.22);
+      vortex[y*N+x] = Math.atan2(y - N/2 + 0.5, x - N/2 + 0.5);
+    }
+    relaxing = false;
+  }
+  seed();
+  document.getElementById('comb-relax').addEventListener('click', () => { relaxing = true; });
+  document.getElementById('comb-reset').addEventListener('click', seed);
+
+  function relaxStep(th) {
+    const nt = new Float64Array(th);
+    for (let y = 1; y < N-1; y++) for (let x = 1; x < N-1; x++) {
+      const i = y*N+x;
+      const pull = wrap(th[i+1]-th[i]) + wrap(th[i-1]-th[i]) + wrap(th[i+N]-th[i]) + wrap(th[i-N]-th[i]);
+      nt[i] = th[i] + 0.18 * pull;
+    }
+    // free edges: border follows its interior neighbor, so boundary values
+    // can't pin gradient energy (a clamped border would stop the ripple
+    // from ever combing flat)
+    for (let x = 0; x < N; x++) { nt[x] = nt[N + x]; nt[(N-1)*N + x] = nt[(N-2)*N + x]; }
+    for (let y = 0; y < N; y++) { nt[y*N] = nt[y*N + 1]; nt[y*N + N - 1] = nt[y*N + N - 2]; }
+    th.set(nt);
+  }
+  function gradE(th) {
+    let E = 0;
+    for (let y = 0; y < N-1; y++) for (let x = 0; x < N-1; x++) {
+      const i = y*N+x;
+      E += 1 - Math.cos(wrap(th[i+1]-th[i]));
+      E += 1 - Math.cos(wrap(th[i+N]-th[i]));
+    }
+    return E;
+  }
+  function windCenter(th) {
+    // winding around a mid-radius square loop
+    const m = Math.round(N*0.25), M = N - m;
+    const pts = [];
+    for (let x = m; x <= M; x++) pts.push([x, m]);
+    for (let y = m; y <= M; y++) pts.push([M, y]);
+    for (let x = M; x >= m; x--) pts.push([x, M]);
+    for (let y = M; y >= m; y--) pts.push([m, y]);
+    let tot = 0, prev = th[pts[0][1]*N + pts[0][0]];
+    for (let i = 1; i <= pts.length; i++) {
+      const p = pts[i % pts.length];
+      const t = th[p[1]*N + p[0]];
+      tot += wrap(t - prev); prev = t;
+    }
+    return Math.round(tot / (2*Math.PI));
+  }
+
+  function draw() {
+    if (relaxing) { for (let s = 0; s < 10; s++) { relaxStep(ripple); relaxStep(vortex); } }
+    ctx.clearRect(0, 0, 680, 400);
+    const fr = (x, y) => ripple[Math.min(N-1,Math.max(0,Math.round(y)))*N + Math.min(N-1,Math.max(0,Math.round(x)))];
+    const fv = (x, y) => vortex[Math.min(N-1,Math.max(0,Math.round(y)))*N + Math.min(N-1,Math.max(0,Math.round(x)))];
+    drawField(ctx, fr, N, xL, y0, w, null);
+    drawField(ctx, fv, N, xR, y0, w, [{ x: N/2, y: N/2, q: 1 }]);
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 12px serif'; ctx.textAlign = 'center';
+    ctx.fillText('smooth ripple', xL + w/2, y0 + w + 20);
+    ctx.fillText('one vortex', xR + w/2, y0 + w + 20);
+    const eR = gradE(ripple), eV = gradE(vortex), wV = windCenter(vortex);
+    readout.textContent = `ripple energy ${eR.toFixed(1)} · vortex energy ${eV.toFixed(1)} · vortex winding still ${wV}`;
+  }
+  runWhenVisible(canvas, draw);
+})();
+
+// ============================================================
+// FIG 3: pair — drag, far-field meter, annihilation
+// ============================================================
+(() => {
+  const canvas = document.getElementById('canvas-pair');
+  const ctx = setupHiDPICanvas(canvas, 680, 430);
+  const readout = document.getElementById('pair-readout');
+  const N = 46, x0 = 150, y0 = 25, w = 380;
+  let plus, minus, alive, dragging = null;
+
+  function seed() {
+    plus = { x: N*0.38, y: N*0.5, q: 1 };
+    minus = { x: N*0.62, y: N*0.5, q: -1 };
+    alive = true; dragging = null;
+  }
+  seed();
+  document.getElementById('pair-reset').addEventListener('click', seed);
+
+  const theta = (x, y) => {
+    if (!alive) return 0.4;
+    return 0.4 + Math.atan2(y - plus.y, x - plus.x) - Math.atan2(y - minus.y, x - minus.x);
+  };
+
+  function toGrid(e) {
+    const r = canvas.getBoundingClientRect();
+    const px = (e.clientX - r.left) * (680 / r.width), py = (e.clientY - r.top) * (430 / r.height);
+    return [(px - x0) / (w / N), (py - y0) / (w / N)];
+  }
+  function down(e) {
+    if (!alive) return;
+    const [gx, gy] = toGrid(e.touches ? e.touches[0] : e);
+    for (const c of [plus, minus]) {
+      if (Math.hypot(gx - c.x, gy - c.y) < 3.5) { dragging = c; e.preventDefault(); }
+    }
+  }
+  function move(e) {
+    if (!dragging) return;
+    const [gx, gy] = toGrid(e.touches ? e.touches[0] : e);
+    dragging.x = Math.min(N-3, Math.max(3, gx));
+    dragging.y = Math.min(N-3, Math.max(3, gy));
+    e.preventDefault();
+  }
+  function up() {
+    dragging = null;
+    if (alive && Math.hypot(plus.x - minus.x, plus.y - minus.y) < 2.4) alive = false;
+  }
+  canvas.addEventListener('mousedown', down);
+  window.addEventListener('mousemove', move);
+  window.addEventListener('mouseup', up);
+  canvas.addEventListener('touchstart', down, { passive: false });
+  window.addEventListener('touchmove', move, { passive: false });
+  window.addEventListener('touchend', up);
+
+  function borderDisturbance() {
+    // mean |neighbor phase difference| along the border ring
+    let s = 0, n = 0;
+    const m = 2;
+    const ring = [];
+    for (let x = m; x <= N - m; x++) { ring.push([x, m]); ring.push([x, N - m]); }
+    for (let y = m; y <= N - m; y++) { ring.push([m, y]); ring.push([N - m, y]); }
+    for (const [x, y] of ring) {
+      s += Math.abs(wrap(theta(x + 0.7, y) - theta(x, y)));
+      n++;
+    }
+    return s / n;
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, 680, 430);
+    drawField(ctx, theta, N, x0, y0, w, alive ? [plus, minus] : null);
+    if (!alive) {
+      ctx.fillStyle = palette.textSoft; ctx.font = 'italic 15px serif'; ctx.textAlign = 'center';
+      ctx.fillText('annihilated — the lawn is combed', x0 + w/2, y0 + w/2);
+      readout.textContent = 'annihilated · far-field disturbance 0.000';
+    } else {
+      const sep = Math.hypot(plus.x - minus.x, plus.y - minus.y);
+      const d = borderDisturbance();
+      readout.textContent = `separation ${sep.toFixed(1)} cells · far-field disturbance ${d.toFixed(3)}`;
+    }
+  }
+  runWhenVisible(canvas, draw);
+})();
+</script>
+
+</body>
+</html>

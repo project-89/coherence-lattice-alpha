@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Fiedler mode: the network's early warning — The Living Lattice</title>
+<meta name="description" content="The gentlest way a network can disagree with itself finds the bottleneck every time: paint the Fiedler split on three different graphs, weaken a bridge and watch λ₂ slide continuously to zero, then cut it and hear the chord lose its lowest voice.">
+<meta name="author" content="Michael Sharpe">
+<link rel="canonical" href="https://lattice.project89.org/primers/graphs-spectra/sections/03-fiedler.html">
+<link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
+<link rel="apple-touch-icon" href="../../../apple-touch-icon.png">
+<meta property="og:title" content="The Fiedler mode: the network's early warning — The Living Lattice">
+<meta property="og:description" content="The bottleneck-finder: Fiedler splits on three graphs, λ₂ sliding to zero as a bridge weakens, and the chord losing its lowest voice at the cut.">
+<meta property="og:url" content="https://lattice.project89.org/primers/graphs-spectra/sections/03-fiedler.html">
+<meta property="og:site_name" content="The Living Lattice">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://lattice.project89.org/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="The Fiedler mode — The Living Lattice">
+<meta name="twitter:description" content="Watch λ₂ slide to zero as a bridge weakens, then cut it and hear the chord lose its lowest voice.">
+<meta name="twitter:image" content="https://lattice.project89.org/og-image.png">
+<!-- BEGIN AUTO-INJECTED ANALYTICS -->
+<!-- PostHog -->
+<script>
+!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+posthog.init('phc_kRX9iHZstABjgFqEWJBMok2S3hW9R8QMHbNao4EsNz2g', {api_host: 'https://us.i.posthog.com', person_profiles: 'identified_only'});
+</script>
+<!-- END AUTO-INJECTED ANALYTICS -->
+<link rel="stylesheet" href="../../../css/style.css">
+<style>
+.flag-callout {
+  margin: 1.6em 0; padding: 16px 20px;
+  background: rgba(195, 141, 247, 0.08);
+  border-left: 3px solid #c38df7; border-radius: 3px;
+  font-size: 14.5px; line-height: 1.55;
+}
+.flag-callout .flag-label {
+  display: inline-block; font: 700 10.5px "SF Mono", monospace;
+  color: #c38df7; text-transform: uppercase; letter-spacing: 0.1em; margin-right: 0.7em;
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<nav class="breadcrumb">
+  <a href="../index.html">&larr; graphs &amp; spectra</a>
+  <span class="sep">&middot;</span>
+  <span class="section-num">section 03 / 03</span>
+</nav>
+
+<h1>The Fiedler mode: the network's early warning<span class="subtitle">The gentlest way to disagree finds the weakest seam — every time, on every graph</span></h1>
+
+<p class="lead">Two sections of preparation come down to one question: of all the ways a network can wobble, which costs <em>least</em>? Not mode 0 — that one is free precisely because it is not really a disagreement at all. The gentlest <em>genuine</em> wobble is <strong>mode 1</strong>, the second entry of the spectrum, with eigenvalue <span class="mono">&lambda;&#8322;</span>. It is called the <strong>Fiedler mode</strong>, and it has two superpowers you are about to watch: its <em>shape</em> finds the network's weakest seam without being told to look, and its <em>eigenvalue</em> is a live fragility meter — an early warning that a network is about to stop being one network.</p>
+
+<h2>1. The split-finder, on three very different graphs</h2>
+
+<p>Why would the gentlest disagreement know where the weak seam is? Because being gentle <em>means</em> avoiding stretched edges. The cheapest way for a network to disagree with itself is to keep every node comfortably agreeing with its own neighborhood and dump the entire cost onto as few, as weak, edges as possible — which is to say, onto the bottleneck. The Fiedler mode doesn't search for the seam; it is simply what "cheapest" looks like, and cheapest always lives at the seam. Paint its sign pattern on three graphs with three very different kinds of seam:</p>
+
+<figure id="fig-painter">
+  <canvas id="canvas-painter" width="680" height="400"></canvas>
+  <div class="controls" id="painter-controls">
+    <button id="pg-barbell" class="primary">Barbell</button>
+    <button id="pg-ring">Ring</button>
+    <button id="pg-grid">Grid</button>
+  </div>
+  <figcaption>Nodes colored by the sign of their Fiedler-mode entry (blue positive, orange negative; stronger color = larger entry), computed live. <strong>Barbell</strong> — two dense cliques, one bridge: the split lands exactly on the bridge, and the entries are large and flat on each side (everyone in a clique agrees about which side they're on). <strong>Ring</strong> — no bridge anywhere, yet the mode still splits it into two arcs: on a perfectly uniform graph every diameter is equally a bottleneck, and the mode picks one (which one is chance — re-press the button). <strong>Grid</strong> — the split runs down the middle, the largest cut a grid has. Three shapes, one rule: the gentlest disagreement paints the seam. <span id="painter-readout" class="readout">&lambda;&#8322; = —</span></figcaption>
+</figure>
+
+<h2>2. Fragility as a number: watch &lambda;&#8322; feel the bridge weakening</h2>
+
+<p>The Fiedler mode's eigenvalue is not just a pitch — it is a <em>meter</em>. &lambda;&#8322; measures how cheap the cheapest split is: the smaller it gets, the closer the network is to being two networks. And crucially, it moves <em>continuously</em>: a network doesn't have to break to be fragile, and &lambda;&#8322; sees the fragility coming long before the break. Weaken the bridge gradually — don't cut it, just turn its coupling down — and watch:</p>
+
+<figure id="fig-weaken">
+  <canvas id="canvas-weaken" width="680" height="400"></canvas>
+  <div class="controls" id="weaken-controls">
+    <div class="control">
+      <label>bridge strength <span class="val" id="wk-val">1.00</span></label>
+      <input type="range" id="wk-slider" min="0" max="1" step="0.01" value="1">
+    </div>
+  </div>
+  <figcaption>The two-cluster network with a <em>weighted</em> bridge. As you turn the bridge down, the whole spectrum is recomputed live and &lambda;&#8322; slides down its curve — the network gets measurably more fragile while still perfectly connected. The wobble slows as the split gets cheaper. At zero the curve lands on exactly &lambda;&#8322; = 0: two free pieces. <em>Sound on: the Fiedler mode's own tone, sagging as the bridge weakens — the network's early-warning siren, running down to silence.</em> <span id="weaken-readout" class="readout">&lambda;&#8322; = —</span></figcaption>
+</figure>
+
+<h2>3. The cut, and the chord</h2>
+
+<p>And here is the ending you have been headed toward since the first pluck of section 01 — the discontinuous version, the full break, with the whole chord listening:</p>
+
+<figure id="fig-bridge">
+  <canvas id="canvas-bridge" width="680" height="380"></canvas>
+  <div class="controls" id="bridge-controls">
+    <button id="bridge-cut" class="primary">Cut the bridge</button>
+  </div>
+  <figcaption>The same network, wobbling in its Fiedler mode, with the spectrum's first four ringing tones drawn as bars. Cut the bridge: <span class="mono">&lambda;&#8322;</span> collapses to exactly zero, the two halves drift apart as free, separate wholes, and the chord loses its lowest voice. <em>Sound on: the network's actual chord — one tone per mode, pitch &prop; &radic;&lambda;, recomputed live from the graph. This is a labeled mapping of the real computed spectrum: what changes when you cut is genuinely the mathematics, not a sound effect.</em> <span id="bridge-readout" class="readout">&lambda;&#8322; = —</span></figcaption>
+</figure>
+
+<p>This is the moment to say why this module exists. The <a href="../../../foundations/sections/03-clr.html">Coherent Learning Rule chapter</a> tells you its rule protects bridges using "the Fiedler eigenvector of the graph Laplacian" — and now you can read that sentence. A pure use-it-or-lose-it learning rule would happily prune a quiet bridge; but the bridge is where <span class="mono">&lambda;&#8322;</span> lives, and <span class="mono">&lambda;&#8322;</span> is what stands between a coherent network and rubble. Cut it and structural richness &rho; collapses, taking coherence capital <span class="mono">C = I<sub>phase</sub>&middot;&rho;</span> to zero — a perfectly synchronized pair of fragments is worth nothing, because it is no longer one thing. The learning rule listens to the Fiedler mode for exactly the reason your ear just heard: it is the network's early warning that it is about to stop being a network.</p>
+
+<div class="flag-callout">
+  <span class="flag-label">What's real here</span>
+  Every graph on this page is a cartoon built so you can watch every mode with the naked eye; the spectra, eigenvectors, the &lambda;&#8322;(bridge) curve, and the &lambda;&#8322; &rarr; 0 collapse are computed live from the exact graphs shown and are exact. The result they are cartoons <em>of</em> is measured at scale in the research corpus: in vortex configurations, bridge bonds carry a Fiedler sensitivity roughly 10&sup2;&#8309; times larger than bulk bonds, and the pure use-it-or-lose-it rule really does sever them — killing capital at <span class="mono">I<sub>phase</sub> &asymp; 0.99</span> — until the Shannon-CLR structural correction (zero new parameters, budget-conserving) restores protection. That story, with numbers, is in <a href="../../../foundations/sections/03-clr.html">foundations &sect;03</a> and the General Theory paper it summarizes.
+</div>
+
+<h2>Where this goes</h2>
+
+<p>You now own the whole arc: a network's modes are its natural wobbles (<a href="01-modes.html">section 01</a>), one simple disagreement-measuring machine generates them all and runs the site's coupling dynamics besides (<a href="02-laplacian.html">section 02</a>), and the gentlest genuine mode is a built-in bottleneck-finder whose eigenvalue is the network's fragility meter (this page). From here, <a href="../../../foundations/sections/03-clr.html">foundations &sect;03</a> reads differently — and the transformer essays' talk of spectra and low-dimensional structure, the idea that a huge network's behavior is dominated by a few gentle modes, is this module's drum, scaled up ten thousand times.</p>
+
+<div class="nav-links">
+  <a href="02-laplacian.html" class="prev">The Laplacian: the disagreement machine</a>
+  <a href="../../sections/06-von-mises.html" class="next">Next: The von Mises circle</a>
+</div>
+
+</div>
+
+<script type="module">
+import { setupHiDPICanvas, runWhenVisible, palette, makeSoundToggle, makeVoices } from '../../../js/common.js';
+
+const FREQ_SCALE = 260;
+
+// spectrum solver (same as sections 01/02; verified offline: P3, C4, P6,
+// weighted-bridge λ₂ curve 0.208→0.129→0.073→0.032→0)
+function spectrum(edges, n, k) {
+  const L = Array.from({ length: n }, () => new Float64Array(n));
+  for (const e of edges) { const a = e[0], b = e[1], w = e[2] ?? 1; L[a][b] -= w; L[b][a] -= w; L[a][a] += w; L[b][b] += w; }
+  let maxdeg = 0;
+  for (let i = 0; i < n; i++) maxdeg = Math.max(maxdeg, L[i][i]);
+  const c = 2 * maxdeg + 1;
+  const found = [];
+  for (let m = 0; m < k; m++) {
+    let v = Float64Array.from({ length: n }, () => Math.random() - 0.5);
+    for (let it = 0; it < 3000; it++) {
+      for (const f of found) {
+        let d = 0;
+        for (let i = 0; i < n; i++) d += v[i] * f.v[i];
+        for (let i = 0; i < n; i++) v[i] -= d * f.v[i];
+      }
+      const w2 = new Float64Array(n);
+      for (let i = 0; i < n; i++) {
+        let Lv = 0;
+        for (let j = 0; j < n; j++) Lv += L[i][j] * v[j];
+        w2[i] = c * v[i] - Lv;
+      }
+      let norm = 0;
+      for (let i = 0; i < n; i++) norm += w2[i] * w2[i];
+      norm = Math.sqrt(norm) + 1e-12;
+      for (let i = 0; i < n; i++) v[i] = w2[i] / norm;
+    }
+    let lam = 0;
+    for (let i = 0; i < n; i++) {
+      let Lv = 0;
+      for (let j = 0; j < n; j++) Lv += L[i][j] * v[j];
+      lam += v[i] * Lv;
+    }
+    found.push({ lam: Math.max(0, lam), v });
+  }
+  found.sort((a, b) => a.lam - b.lam);
+  for (const f of found) {
+    if (f.v[0] > 0) for (let i = 0; i < n; i++) f.v[i] = -f.v[i];
+    let mx = 0;
+    for (let i = 0; i < n; i++) mx = Math.max(mx, Math.abs(f.v[i]));
+    if (mx > 1e-9) for (let i = 0; i < n; i++) f.v[i] /= mx;
+  }
+  return found;
+}
+
+// the 12-node two-cluster graph (shared by figs 2 and 3)
+const N12 = 12;
+const CLUSTER_EDGES = [
+  [0,1],[1,2],[2,3],[3,4],[4,5],[5,0],[0,2],[3,5],
+  [6,7],[7,8],[8,9],[9,10],[10,11],[11,6],[6,8],[7,10],[9,11],
+];
+const BRIDGE = [2, 8];
+const POS12 = [];
+for (let i = 0; i < 6; i++) {
+  const a = (i / 6) * Math.PI * 2 + Math.PI / 6;
+  POS12.push([-1.05 + Math.cos(a) * 0.55, Math.sin(a) * 0.55]);
+}
+for (let i = 0; i < 6; i++) {
+  const a = (i / 6) * Math.PI * 2 - Math.PI / 2;
+  POS12.push([1.05 + Math.cos(a) * 0.55, Math.sin(a) * 0.55]);
+}
+
+// ============================================================
+// FIG A: Fiedler split painter on three graphs
+// ============================================================
+(() => {
+  const canvas = document.getElementById('canvas-painter');
+  const ctx = setupHiDPICanvas(canvas, 680, 400);
+  const readout = document.getElementById('painter-readout');
+
+  function barbell() {
+    const edges = [], pos = [];
+    for (let i = 0; i < 5; i++) for (let j = i + 1; j < 5; j++) { edges.push([i, j]); edges.push([i + 5, j + 5]); }
+    edges.push([4, 5]);
+    for (let i = 0; i < 5; i++) {
+      const a = (i / 5) * Math.PI * 2;
+      pos.push([-1.15 + Math.cos(a) * 0.5, Math.sin(a) * 0.5]);
+    }
+    for (let i = 0; i < 5; i++) {
+      const a = (i / 5) * Math.PI * 2 + Math.PI;
+      pos.push([1.15 + Math.cos(a) * 0.5, Math.sin(a) * 0.5]);
+    }
+    return { edges, pos, n: 10, name: 'barbell' };
+  }
+  function ring() {
+    const n = 12, edges = [], pos = [];
+    for (let i = 0; i < n; i++) {
+      edges.push([i, (i + 1) % n]);
+      const a = (i / n) * Math.PI * 2 - Math.PI / 2;
+      pos.push([Math.cos(a) * 1.15, Math.sin(a) * 1.15]);
+    }
+    return { edges, pos, n, name: 'ring' };
+  }
+  function grid() {
+    const edges = [], pos = [];
+    const gi = (r, c) => r * 4 + c;
+    for (let r = 0; r < 4; r++) for (let c = 0; c < 4; c++) {
+      pos[gi(r, c)] = [(c - 1.5) * 0.62, (1.5 - r) * 0.62];
+      if (c < 3) edges.push([gi(r, c), gi(r, c + 1)]);
+      if (r < 3) edges.push([gi(r, c), gi(r + 1, c)]);
+    }
+    return { edges, pos, n: 16, name: 'grid' };
+  }
+
+  let g = barbell(), modes = spectrum(g.edges, g.n, 2);
+  function pick(maker) { g = maker(); modes = spectrum(g.edges, g.n, 2); }
+  document.getElementById('pg-barbell').addEventListener('click', () => pick(barbell));
+  document.getElementById('pg-ring').addEventListener('click', () => pick(ring));
+  document.getElementById('pg-grid').addEventListener('click', () => pick(grid));
+
+  function draw() {
+    ctx.clearRect(0, 0, 680, 400);
+    const cx = 340, cy = 185, s = 128;
+    const fied = modes[1];
+    const px = (i) => cx + g.pos[i][0] * s;
+    const py = (i) => cy - g.pos[i][1] * s;
+    ctx.strokeStyle = palette.axis; ctx.lineWidth = 1.3;
+    for (const [a, b] of g.edges) {
+      const crossing = (fied.v[a] > 0) !== (fied.v[b] > 0);
+      ctx.strokeStyle = crossing ? palette.burgundy : palette.axis;
+      ctx.lineWidth = crossing ? 2.6 : 1.3;
+      ctx.beginPath(); ctx.moveTo(px(a), py(a)); ctx.lineTo(px(b), py(b)); ctx.stroke();
+    }
+    for (let i = 0; i < g.n; i++) {
+      const v = fied.v[i];
+      ctx.fillStyle = v > 0 ? `rgba(42,95,143,${0.3 + 0.7 * Math.min(1, Math.abs(v))})`
+                            : `rgba(217,114,54,${0.3 + 0.7 * Math.min(1, Math.abs(v))})`;
+      ctx.beginPath(); ctx.arc(px(i), py(i), 11, 0, Math.PI * 2); ctx.fill();
+    }
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 12px serif'; ctx.textAlign = 'center';
+    ctx.fillText('dark red edges = where the split pays its whole cost', 340, 378);
+    readout.textContent = `λ₂ = ${fied.lam.toFixed(3)} (${g.name})`;
+  }
+  runWhenVisible(canvas, draw);
+})();
+
+// ============================================================
+// FIG B: weaken the bridge — λ₂(w) slides to zero
+// ============================================================
+(() => {
+  const canvas = document.getElementById('canvas-weaken');
+  const ctx = setupHiDPICanvas(canvas, 680, 400);
+  const readout = document.getElementById('weaken-readout');
+  const slider = document.getElementById('wk-slider');
+  const wval = document.getElementById('wk-val');
+
+  // precompute λ₂(w) curve
+  const CURVE = [];
+  for (let i = 0; i <= 40; i++) {
+    const w = i / 40;
+    const s = spectrum(CLUSTER_EDGES.concat([[BRIDGE[0], BRIDGE[1], w]]), N12, 2);
+    CURVE.push({ w, lam: s[1].lam });
+  }
+  let w = 1, modes = spectrum(CLUSTER_EDGES.concat([[BRIDGE[0], BRIDGE[1], 1]]), N12, 2);
+  let pending = null;
+  slider.addEventListener('input', () => {
+    w = parseFloat(slider.value);
+    wval.textContent = w.toFixed(2);
+    // debounce the live recompute a touch
+    clearTimeout(pending);
+    pending = setTimeout(() => {
+      modes = spectrum(CLUSTER_EDGES.concat([[BRIDGE[0], BRIDGE[1], Math.max(w, 1e-9)]]), N12, 2);
+    }, 60);
+  });
+
+  const sound = makeSoundToggle(document.getElementById('weaken-controls'), { label: 'hear the siren sag' });
+  const voice = makeVoices(sound, 1, { freq: 220 });
+
+  let t = 0;
+  function draw() {
+    const fied = modes[1];
+    const wobble = fied.lam < 1e-5 ? 0.4 : 0.9 + 1.5 * Math.sqrt(fied.lam);
+    t += wobble * 0.045;
+
+    ctx.clearRect(0, 0, 680, 400);
+    // graph at left
+    const cx = 200, cy = 160, s = 100;
+    const px = (i) => cx + POS12[i][0] * s;
+    const py = (i) => cy - POS12[i][1] * s - fied.v[i] * 26 * Math.cos(t);
+    for (const [a, b] of CLUSTER_EDGES) {
+      ctx.strokeStyle = palette.axis; ctx.lineWidth = 1.3;
+      ctx.beginPath(); ctx.moveTo(px(a), py(a)); ctx.lineTo(px(b), py(b)); ctx.stroke();
+    }
+    // bridge with weight-proportional thickness
+    ctx.strokeStyle = palette.burgundy; ctx.lineWidth = Math.max(0.4, w * 4);
+    ctx.globalAlpha = Math.max(0.25, w);
+    ctx.beginPath(); ctx.moveTo(px(BRIDGE[0]), py(BRIDGE[0])); ctx.lineTo(px(BRIDGE[1]), py(BRIDGE[1])); ctx.stroke();
+    ctx.globalAlpha = 1;
+    for (let i = 0; i < N12; i++) {
+      const v = fied.v[i];
+      ctx.fillStyle = v > 0.06 ? palette.blue : v < -0.06 ? palette.orange : palette.textFaint;
+      ctx.beginPath(); ctx.arc(px(i), py(i), 9, 0, Math.PI * 2); ctx.fill();
+    }
+
+    // λ₂(w) curve at right
+    const gx = 430, gy = 60, gw = 210, gh = 220;
+    ctx.strokeStyle = palette.axis; ctx.lineWidth = 1; ctx.strokeRect(gx, gy, gw, gh);
+    const lamMax = 0.24;
+    ctx.strokeStyle = palette.blue; ctx.lineWidth = 2;
+    ctx.beginPath();
+    CURVE.forEach((p, i) => {
+      const X = gx + p.w * gw, Y = gy + gh - (p.lam / lamMax) * gh;
+      i ? ctx.lineTo(X, Y) : ctx.moveTo(X, Y);
+    });
+    ctx.stroke();
+    // live dot
+    const lam = modes[1].lam;
+    ctx.fillStyle = palette.burgundy;
+    ctx.beginPath(); ctx.arc(gx + w * gw, gy + gh - (lam / lamMax) * gh, 5.5, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 11px serif'; ctx.textAlign = 'center';
+    ctx.fillText('bridge strength →', gx + gw / 2, gy + gh + 18);
+    ctx.save(); ctx.translate(gx - 12, gy + gh / 2); ctx.rotate(-Math.PI / 2);
+    ctx.fillText('λ₂ — fragility meter', 0, 0); ctx.restore();
+
+    readout.textContent = w < 0.01 ? 'λ₂ = 0.000 — two pieces (the curve lands exactly on zero)'
+      : `λ₂ = ${lam.toFixed(3)} — connected, ${lam < 0.05 ? 'critically fragile' : lam < 0.13 ? 'fragile' : 'sturdy'}`;
+
+    voice.set(0, Math.max(1, FREQ_SCALE * Math.sqrt(lam)), lam < 1e-4 ? 0 : 0.9);
+  }
+  runWhenVisible(canvas, draw);
+})();
+
+// ============================================================
+// FIG C: cut the bridge — λ₂ → 0, the chord loses a voice
+// ============================================================
+(() => {
+  const canvas = document.getElementById('canvas-bridge');
+  const ctx = setupHiDPICanvas(canvas, 680, 380);
+  const readout = document.getElementById('bridge-readout');
+  const cutBtn = document.getElementById('bridge-cut');
+  const FULL_EDGES = CLUSTER_EDGES.concat([BRIDGE]);
+  const MODES_FULL = spectrum(FULL_EDGES, N12, 5);
+
+  let cut = false;
+  let modes = MODES_FULL;
+  cutBtn.addEventListener('click', () => {
+    cut = !cut;
+    modes = cut ? spectrum(CLUSTER_EDGES, N12, 5) : MODES_FULL;
+    if (cut) {
+      // The λ=0 space is now two-dimensional and power iteration returns an
+      // arbitrary combination; display the component indicator instead — an
+      // equally exact eigenvector (constant on each piece), and the honest
+      // picture: two free, separate wholes.
+      modes[1] = { lam: 0, v: Float64Array.from({ length: N12 }, (_, i) => (i < 6 ? -1 : 1)) };
+    }
+    cutBtn.textContent = cut ? 'Restore the bridge' : 'Cut the bridge';
+  });
+
+  const sound = makeSoundToggle(document.getElementById('bridge-controls'), { label: "hear the graph's chord" });
+  const NV = 4;
+  const voices = makeVoices(sound, NV, { freq: 220 });
+
+  let t = 0;
+  function draw() {
+    const fied = modes[1];
+    const w = fied.lam < 1e-6 ? 0.5 : 0.9 + 1.5 * Math.sqrt(fied.lam);
+    t += w * 0.045;
+
+    ctx.clearRect(0, 0, 680, 380);
+    const cx = 210, cy = 165, s = 105;
+    const px = (i) => cx + POS12[i][0] * s;
+    const py = (i) => cy - POS12[i][1] * s - fied.v[i] * 34 * Math.cos(t);
+    const edges = cut ? CLUSTER_EDGES : FULL_EDGES;
+    for (const [a, b] of edges) {
+      const isBridge = (a === BRIDGE[0] && b === BRIDGE[1]);
+      ctx.strokeStyle = isBridge ? palette.burgundy : palette.axis;
+      ctx.lineWidth = isBridge ? 2.4 : 1.4;
+      ctx.beginPath(); ctx.moveTo(px(a), py(a)); ctx.lineTo(px(b), py(b)); ctx.stroke();
+    }
+    if (cut) {
+      ctx.strokeStyle = palette.burgundy; ctx.lineWidth = 1.2; ctx.setLineDash([3, 5]);
+      ctx.beginPath(); ctx.moveTo(px(BRIDGE[0]), py(BRIDGE[0])); ctx.lineTo(px(BRIDGE[1]), py(BRIDGE[1])); ctx.stroke();
+      ctx.setLineDash([]);
+    }
+    for (let i = 0; i < N12; i++) {
+      const d = fied.v[i] * Math.cos(t);
+      ctx.fillStyle = fied.v[i] > 0.06 ? palette.blue : fied.v[i] < -0.06 ? palette.orange : palette.textFaint;
+      ctx.beginPath(); ctx.arc(px(i), py(i), 9 + Math.abs(d) * 2, 0, Math.PI * 2); ctx.fill();
+    }
+
+    const by = 240, bw = 42, bh = 80;
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 11px serif'; ctx.textAlign = 'left';
+    ctx.fillText('the chord — one bar per mode, height ∝ pitch', 434, by - bh - 16);
+    for (let m = 1; m <= NV; m++) {
+      const lam = modes[m].lam;
+      const h = Math.min(1, Math.sqrt(lam) / 2.0) * bh;
+      const x = 434 + (m - 1) * (bw + 14);
+      ctx.fillStyle = palette.bgSoft; ctx.strokeStyle = palette.axis; ctx.lineWidth = 1;
+      ctx.fillRect(x, by - bh, bw, bh); ctx.strokeRect(x, by - bh, bw, bh);
+      ctx.fillStyle = m === 1 ? palette.burgundy : palette.blue;
+      if (h > 0.5) ctx.fillRect(x, by - h, bw, h);
+      ctx.fillStyle = palette.textFaint; ctx.font = '10px "SF Mono", monospace'; ctx.textAlign = 'center';
+      ctx.fillText(lam < 1e-4 ? 'silent' : `${(FREQ_SCALE * Math.sqrt(lam)).toFixed(0)}Hz`, x + bw / 2, by + 14);
+      ctx.fillText(`λ=${lam.toFixed(2)}`, x + bw / 2, by + 28);
+      ctx.textAlign = 'left';
+    }
+
+    ctx.fillStyle = cut ? palette.burgundy : palette.green;
+    ctx.font = '600 15px "SF Mono", monospace'; ctx.textAlign = 'left';
+    ctx.fillText(cut ? 'λ₂ = 0.000 — fallen apart' : `λ₂ = ${modes[1].lam.toFixed(3)} — connected, fragile`, 40, 340);
+
+    readout.textContent = cut
+      ? 'λ₂ = 0.000 — splitting is free: the split already happened'
+      : `λ₂ = ${modes[1].lam.toFixed(3)} — the cost of the gentlest split`;
+
+    for (let m = 1; m <= NV; m++) {
+      const lam = modes[m].lam;
+      voices.set(m - 1, Math.max(1, FREQ_SCALE * Math.sqrt(lam)), lam < 1e-4 ? 0 : 1);
+    }
+  }
+  runWhenVisible(canvas, draw);
+})();
+</script>
+
+</body>
+</html>

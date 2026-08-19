@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Attention: who listens to whom — Inside a transformer — The Living Lattice</title>
+<meta name="description" content="Section 2 of the inside-a-transformer module: attention as a listening competition. Drag tokens, sharpen the softmax, watch two heads specialize, and step through the causal mask.">
+<meta name="author" content="Michael Sharpe">
+<link rel="canonical" href="https://lattice.project89.org/primers/inside-a-transformer/sections/02-attention.html">
+<link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
+<link rel="apple-touch-icon" href="../../../apple-touch-icon.png">
+<meta property="og:title" content="Attention: who listens to whom — Inside a transformer — The Living Lattice">
+<meta property="og:description" content="Q, K, V, softmax as competition, heads that specialize, and the causal mask — all draggable.">
+<meta property="og:url" content="https://lattice.project89.org/primers/inside-a-transformer/sections/02-attention.html">
+<meta property="og:site_name" content="The Living Lattice">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://lattice.project89.org/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Attention: who listens to whom — Inside a transformer — The Living Lattice">
+<meta name="twitter:description" content="Attention as a listening competition you can drag, hear, and step through.">
+<meta name="twitter:image" content="https://lattice.project89.org/og-image.png">
+<!-- BEGIN AUTO-INJECTED ANALYTICS -->
+<!-- PostHog -->
+<script>
+!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+posthog.init('phc_kRX9iHZstABjgFqEWJBMok2S3hW9R8QMHbNao4EsNz2g', {api_host: 'https://us.i.posthog.com', person_profiles: 'identified_only'});
+</script>
+<!-- END AUTO-INJECTED ANALYTICS -->
+<link rel="stylesheet" href="../../../css/style.css">
+</head>
+<body>
+<div class="page">
+
+<nav class="breadcrumb">
+  <a href="../index.html">&larr; inside a transformer</a>
+  <span class="sep">&middot;</span>
+  <span class="section-num">section 02 / 04 &middot; intermediate</span>
+</nav>
+
+<h1>Attention: who listens to whom<span class="subtitle">The mechanism that lets context act — a listening competition run on dot products</span></h1>
+
+<p class="lead">The last section ended on a promise: context is a force that moves a token's arrow, and something has to apply the force. This is that something. An <strong>attention head</strong> is how tokens influence each other — how &ldquo;sat&rdquo; finds out who did the sitting — and it works like a room full of people deciding who to listen to:</p>
+
+<ul style="margin: 0.4em 0 1em 0; color: var(--text-soft);">
+  <li>Each token asks a <strong>question</strong> — an arrow written <span class="mono">Q</span> — its <em>listening direction</em>: "what am I looking for?"</li>
+  <li>Each token also <strong>advertises</strong> — an arrow written <span class="mono">K</span> — its broadcast: "here is what I have."</li>
+  <li>Listening strength between two tokens is the <strong>dot product of Q and K</strong> — literally the agreement measure you dragged in the rotations primer. Question aligns with advertisement: strong pull. At right angles: nothing.</li>
+  <li>Those raw agreements then go through the <strong>softmax</strong> — a rule that turns scores into a <em>competition</em>: every token gets a share of the listener's attention, all shares sum to 1, and the softmax's sharpness decides whether attention spreads evenly or the best match takes nearly everything.</li>
+  <li>What actually flows along the winning channels is a third arrow, <span class="mono">V</span> — the <strong>content</strong> each token carries. The listener's whiteboard receives the weighted blend.</li>
+</ul>
+
+<p>Drag the tokens below and feel it. The blue token is listening; every arrow's thickness is a share of its attention.</p>
+
+<figure id="fig-attn">
+  <canvas id="canvas-attn" width="680" height="400"></canvas>
+  <div class="controls" id="attn-controls">
+    <div class="control">
+      <label>softmax sharpness <span class="val" id="attn-b-val">3.0</span></label>
+      <input type="range" id="attn-b-slider" min="0" max="10" step="0.1" value="3">
+    </div>
+  </div>
+  <figcaption>The blue token is the listener; its direction is its question <span class="mono">Q</span>. Every other token's direction is its advertisement <span class="mono">K</span>. Drag any dot: the listening arrows re-thicken as the Q&middot;K agreements change. Slide the sharpness: at 0 the softmax splits attention evenly no matter what; high, it becomes winner-take-all. <em>Sound on: one voice per speaking token, loudness = its share of attention — the same loudness-is-agreement mapping used across this site. Sharpen the softmax and hear a chord collapse to a solo.</em> <span id="attn-readout" class="readout">weights = —</span></figcaption>
+</figure>
+
+<h2>Heads specialize</h2>
+
+<p>A real layer does not run one such competition — it runs many, side by side, each with its own learned notion of what to listen for. These are the <strong>heads</strong>. One head may listen by <em>position</em> — whatever is nearby. Another by <em>meaning</em> — whatever agrees with my question, however far away it sits. Nothing coordinates them; each simply learned a different Q and K, and different Q and K produce different rooms.</p>
+
+<p>Below, the same sentence heard by two heads at once. The listener is <span class="mono">sat</span>. Head A listens nearby; head B listens by meaning — and reaches straight across the sentence to <span class="mono">mat</span>. Drag the words along the line and watch the heads disagree about what matters: move <span class="mono">mat</span> next door and head A starts hearing it too; head B never cared where it was.</p>
+
+<figure id="fig-heads">
+  <canvas id="canvas-heads" width="680" height="380"></canvas>
+  <figcaption>One sentence, two heads, same listener (<span class="mono">sat</span>, blue ring). <strong>Head A</strong> (orange, arcs above) scores by closeness in the sentence; <strong>head B</strong> (blue, arcs below) scores by agreement of meaning-directions, position-blind. Tokens are draggable horizontally. The two patterns differing — over the same words at the same moment — is what "heads specialize" means. <span id="heads-readout" class="readout">head A top = — · head B top = —</span></figcaption>
+</figure>
+
+<h2>The causal mask: no listening forward</h2>
+
+<p>One more rule, and it explains a lot about how these models think. A transformer that predicts the next word is trained on a strict discipline: <strong>a token may only listen backward</strong>. When &ldquo;sat&rdquo; is being processed, &ldquo;on&rdquo;, &ldquo;the&rdquo;, &ldquo;mat&rdquo; do not exist yet — letting it peek would be letting it cheat at the only exam it ever takes. The rule is enforced by the <strong>causal mask</strong>: a triangle of permissions, listener by listener.</p>
+
+<figure id="fig-causal">
+  <canvas id="canvas-causal" width="680" height="360"></canvas>
+  <div class="controls" id="causal-controls">
+    <button id="causal-next" class="primary">Next token arrives</button>
+    <button id="causal-reset">Reset</button>
+  </div>
+  <figcaption>Press the button and the sentence arrives one token at a time. Each new token sends listening arcs <em>only backward</em>; the triangle on the right is the mask itself filling in — row = who is listening, column = who may be heard, and the empty upper triangle is the future, permanently off-limits. <span id="causal-readout" class="readout">tokens = 0</span></figcaption>
+</figure>
+
+<p>Hold this section's picture: many simultaneous listening competitions, each scored by dot-product agreement, each sharpened by softmax, all facing backward. What the winners actually deliver — and where it gets written — is the next section.</p>
+
+<div class="nav-links">
+  <a href="01-tokens.html" class="prev">Tokens and embeddings</a>
+  <a href="03-residual-stream.html" class="next">The residual stream</a>
+</div>
+
+</div>
+
+<script type="module">
+import { setupHiDPICanvas, runWhenVisible, palette, makeSoundToggle, makeVoices } from '../../../js/common.js';
+
+function canvasPos(canvas, W, e) {
+  const rect = canvas.getBoundingClientRect();
+  const t = e.touches ? e.touches[0] : e;
+  return [(t.clientX - rect.left) * (W / rect.width), (t.clientY - rect.top) * (W / rect.width)];
+}
+
+// ============================================================
+// FIG 1: an attention head — softmax of dot products
+// ============================================================
+(() => {
+  const canvas = document.getElementById('canvas-attn');
+  const ctx = setupHiDPICanvas(canvas, 680, 400);
+  const readout = document.getElementById('attn-readout');
+  const slider = document.getElementById('attn-b-slider');
+  const bval = document.getElementById('attn-b-val');
+  let beta = 3.0;
+  slider.addEventListener('input', () => { beta = parseFloat(slider.value); bval.textContent = beta.toFixed(1); });
+
+  const sound = makeSoundToggle(document.getElementById('attn-controls'), { label: 'hear the competition' });
+
+  const cx = 250, cy = 195, R = 140;
+  // token angles on the meaning circle; index 0 is the listener
+  const toks = [
+    { a: 1.95, label: 'sat',  listener: true },
+    { a: 0.55, label: 'cat' },
+    { a: 2.75, label: 'the' },
+    { a: 4.10, label: 'mat' },
+    { a: 5.30, label: 'on' },
+  ];
+  const PITCH = [0, 196, 233, 262, 311]; // speakers only (index 1..4)
+  const voices = makeVoices(sound, toks.length - 1, { freq: 233 });
+
+  let dragging = -1;
+  function tokXY(t) { return [cx + Math.cos(t.a) * R, cy - Math.sin(t.a) * R]; }
+  function onDown(e) {
+    const [mx, my] = canvasPos(canvas, 680, e);
+    toks.forEach((t, i) => {
+      const [x, y] = tokXY(t);
+      if (Math.hypot(mx - x, my - y) < 20) dragging = i;
+    });
+    if (dragging >= 0) e.preventDefault();
+  }
+  function onMove(e) {
+    if (dragging < 0) return;
+    const [mx, my] = canvasPos(canvas, 680, e);
+    toks[dragging].a = Math.atan2(cy - my, mx - cx);
+    e.preventDefault();
+  }
+  function onUp() { dragging = -1; }
+  canvas.addEventListener('mousedown', onDown);
+  window.addEventListener('mousemove', onMove);
+  window.addEventListener('mouseup', onUp);
+  canvas.addEventListener('touchstart', onDown, { passive: false });
+  window.addEventListener('touchmove', onMove, { passive: false });
+  window.addEventListener('touchend', onUp);
+
+  function draw() {
+    ctx.clearRect(0, 0, 680, 400);
+
+    ctx.strokeStyle = palette.grid; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.stroke();
+
+    const q = toks[0].a;
+    // softmax over speakers
+    const scores = toks.slice(1).map(t => Math.cos(t.a - q));
+    let zsum = 0;
+    const zs = scores.map(sc => { const z = Math.exp(beta * sc); zsum += z; return z; });
+    const w = zs.map(z => z / zsum);
+
+    const [lx, ly] = tokXY(toks[0]);
+
+    // listening arrows, thickness = weight
+    toks.slice(1).forEach((t, i) => {
+      const [x, y] = tokXY(t);
+      ctx.strokeStyle = palette.orange;
+      ctx.globalAlpha = 0.25 + 0.75 * w[i];
+      ctx.lineWidth = 1 + w[i] * 14;
+      ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(lx, ly); ctx.stroke();
+      ctx.globalAlpha = 1;
+    });
+
+    // Q direction of the listener
+    ctx.strokeStyle = palette.blue; ctx.lineWidth = 2; ctx.setLineDash([4, 4]);
+    ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(lx, ly); ctx.stroke();
+    ctx.setLineDash([]);
+
+    // tokens
+    toks.forEach((t, i) => {
+      const [x, y] = tokXY(t);
+      ctx.fillStyle = i === 0 ? palette.blue : palette.orange;
+      ctx.beginPath(); ctx.arc(x, y, i === 0 ? 13 : 10, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = palette.text; ctx.font = 'italic 13px serif'; ctx.textAlign = 'center';
+      ctx.fillText(t.label, x + Math.cos(t.a) * 26, y - Math.sin(t.a) * 26 + 4);
+    });
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 11px serif'; ctx.textAlign = 'left';
+    ctx.fillText('blue = the listener; its direction = its question Q', 24, 388);
+
+    // weight table
+    ctx.font = '13px "SF Mono", monospace'; ctx.textAlign = 'left';
+    ctx.fillStyle = palette.textSoft;
+    ctx.fillText('attention of “sat”:', 470, 110);
+    toks.slice(1).forEach((t, i) => {
+      ctx.fillStyle = palette.orange;
+      const bar = '█'.repeat(Math.max(1, Math.round(w[i] * 18)));
+      ctx.fillText(`${t.label.padEnd(4)} ${(w[i] * 100).toFixed(0).padStart(3)}%`, 470, 140 + i * 24);
+      ctx.globalAlpha = 0.5;
+      ctx.fillText(bar, 578, 140 + i * 24);
+      ctx.globalAlpha = 1;
+    });
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 12px serif';
+    ctx.fillText('shares always sum to 100% —', 470, 260);
+    ctx.fillText('that is the softmax competition', 470, 277);
+
+    readout.textContent = 'weights = ' + toks.slice(1).map((t, i) => `${t.label} ${(w[i] * 100).toFixed(0)}%`).join(' · ');
+
+    // sound: one voice per speaker, loudness = its share (labeled mapping)
+    toks.slice(1).forEach((t, i) => voices.set(i, PITCH[i + 1], w[i]));
+  }
+  runWhenVisible(canvas, draw);
+})();
+
+// ============================================================
+// FIG 2: two heads specialize — nearby vs. by-meaning
+// ============================================================
+(() => {
+  const canvas = document.getElementById('canvas-heads');
+  const ctx = setupHiDPICanvas(canvas, 680, 380);
+  const readout = document.getElementById('heads-readout');
+  const rowY = 190;
+
+  // x in [0,1] along the sentence line; dir = meaning direction (radians)
+  const toks = [
+    { label: 'the', x: 0.05, dir: 2.60 },
+    { label: 'cat', x: 0.22, dir: 1.90 },
+    { label: 'sat', x: 0.40, dir: 0.70, listener: true },
+    { label: 'on',  x: 0.58, dir: 3.90 },
+    { label: 'the', x: 0.74, dir: 2.60 },
+    { label: 'mat', x: 0.92, dir: 0.55 },
+  ];
+  const LI = 2;
+  const X0 = 70, X1 = 610;
+  const tx = (t) => X0 + t.x * (X1 - X0);
+
+  let dragging = -1;
+  function onDown(e) {
+    const [mx, my] = canvasPos(canvas, 680, e);
+    toks.forEach((t, i) => {
+      if (i !== LI && Math.hypot(mx - tx(t), my - rowY) < 20) dragging = i;
+    });
+    if (dragging >= 0) e.preventDefault();
+  }
+  function onMove(e) {
+    if (dragging < 0) return;
+    const [mx] = canvasPos(canvas, 680, e);
+    toks[dragging].x = Math.max(0, Math.min(1, (mx - X0) / (X1 - X0)));
+    e.preventDefault();
+  }
+  function onUp() { dragging = -1; }
+  canvas.addEventListener('mousedown', onDown);
+  window.addEventListener('mousemove', onMove);
+  window.addEventListener('mouseup', onUp);
+  canvas.addEventListener('touchstart', onDown, { passive: false });
+  window.addEventListener('touchmove', onMove, { passive: false });
+  window.addEventListener('touchend', onUp);
+
+  function softmax(scores, beta) {
+    let zsum = 0;
+    const zs = scores.map(s => { const z = Math.exp(beta * s); zsum += z; return z; });
+    return zs.map(z => z / zsum);
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, 680, 380);
+
+    // sentence line
+    ctx.strokeStyle = palette.axis; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(X0 - 20, rowY); ctx.lineTo(X1 + 20, rowY); ctx.stroke();
+
+    const others = toks.map((t, i) => i).filter(i => i !== LI);
+    // head A: nearby (score = negative distance in the sentence, scaled)
+    const wA = softmax(others.map(i => -Math.abs(toks[i].x - toks[LI].x) * 6), 1.0);
+    // head B: by meaning (score = cos of direction difference), position-blind
+    const wB = softmax(others.map(i => Math.cos(toks[i].dir - toks[LI].dir)), 3.0);
+
+    // arcs: head A above (orange), head B below (blue)
+    others.forEach((i, k) => {
+      const x1 = tx(toks[i]), x2 = tx(toks[LI]);
+      const mid = (x1 + x2) / 2;
+      const span = Math.abs(x2 - x1);
+      ctx.strokeStyle = palette.orange;
+      ctx.globalAlpha = 0.25 + 0.75 * wA[k];
+      ctx.lineWidth = 1 + wA[k] * 13;
+      ctx.beginPath(); ctx.moveTo(x1, rowY - 12);
+      ctx.quadraticCurveTo(mid, rowY - 30 - span * 0.35, x2, rowY - 12); ctx.stroke();
+      ctx.strokeStyle = palette.blue;
+      ctx.globalAlpha = 0.25 + 0.75 * wB[k];
+      ctx.lineWidth = 1 + wB[k] * 13;
+      ctx.beginPath(); ctx.moveTo(x1, rowY + 12);
+      ctx.quadraticCurveTo(mid, rowY + 30 + span * 0.35, x2, rowY + 12); ctx.stroke();
+      ctx.globalAlpha = 1;
+    });
+
+    // tokens: dot + small meaning-direction needle + label
+    toks.forEach((t, i) => {
+      const x = tx(t);
+      ctx.fillStyle = palette.bgSoft;
+      ctx.strokeStyle = i === LI ? palette.blue : palette.axis;
+      ctx.lineWidth = i === LI ? 3 : 1.5;
+      ctx.beginPath(); ctx.arc(x, rowY, 13, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+      ctx.strokeStyle = palette.text; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(x, rowY);
+      ctx.lineTo(x + Math.cos(t.dir) * 9, rowY - Math.sin(t.dir) * 9); ctx.stroke();
+      ctx.fillStyle = palette.text; ctx.font = 'italic 13px serif'; ctx.textAlign = 'center';
+      ctx.fillText(t.label, x, rowY + 34);
+    });
+
+    // labels + tops
+    const topA = others[wA.indexOf(Math.max(...wA))];
+    const topB = others[wB.indexOf(Math.max(...wB))];
+    ctx.fillStyle = palette.orange; ctx.font = 'italic 13px serif'; ctx.textAlign = 'left';
+    ctx.fillText('head A — listens nearby', 70, 46);
+    ctx.font = '12px "SF Mono", monospace';
+    ctx.fillText(`top: "${toks[topA].label}" ${(Math.max(...wA) * 100).toFixed(0)}%`, 70, 66);
+    ctx.fillStyle = palette.blue; ctx.font = 'italic 13px serif';
+    ctx.fillText('head B — listens by meaning (needle = direction)', 70, 330);
+    ctx.font = '12px "SF Mono", monospace';
+    ctx.fillText(`top: "${toks[topB].label}" ${(Math.max(...wB) * 100).toFixed(0)}%`, 70, 350);
+
+    readout.textContent = `head A top = ${toks[topA].label} · head B top = ${toks[topB].label}` +
+      (topA !== topB ? ' — same words, different rooms' : ' — drag tokens apart to see them disagree');
+  }
+  runWhenVisible(canvas, draw);
+})();
+
+// ============================================================
+// FIG 3: the causal mask — tokens arrive, listening faces backward
+// ============================================================
+(() => {
+  const canvas = document.getElementById('canvas-causal');
+  const ctx = setupHiDPICanvas(canvas, 680, 360);
+  const readout = document.getElementById('causal-readout');
+  const SENT = ['the', 'cat', 'sat', 'on', 'the', 'mat'];
+  let n = 0;
+  let flash = 0; // animation for newest arcs
+
+  document.getElementById('causal-next').addEventListener('click', () => {
+    if (n < SENT.length) { n++; flash = 1; }
+  });
+  document.getElementById('causal-reset').addEventListener('click', () => { n = 0; });
+
+  const rowY = 120, X0 = 50, X1 = 380;
+  const tx = (i) => X0 + (i / (SENT.length - 1)) * (X1 - X0);
+  // mask grid
+  const G0x = 470, G0y = 60, cell = 32;
+
+  function draw() {
+    flash = Math.max(0, flash - 0.02);
+    ctx.clearRect(0, 0, 680, 360);
+
+    ctx.strokeStyle = palette.axis; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(X0 - 15, rowY); ctx.lineTo(X1 + 15, rowY); ctx.stroke();
+
+    // arrived tokens + backward arcs from the newest
+    for (let i = 0; i < SENT.length; i++) {
+      const x = tx(i);
+      if (i < n) {
+        // arcs from newest token (i === n-1) to all earlier tokens
+        if (i === n - 1) {
+          for (let j = 0; j < i; j++) {
+            const x2 = tx(j);
+            ctx.strokeStyle = palette.orange;
+            ctx.globalAlpha = 0.5 + 0.5 * flash;
+            ctx.lineWidth = 2;
+            ctx.beginPath(); ctx.moveTo(x, rowY - 12);
+            ctx.quadraticCurveTo((x + x2) / 2, rowY - 40 - Math.abs(x - x2) * 0.2, x2, rowY - 12);
+            ctx.stroke();
+            ctx.globalAlpha = 1;
+          }
+        }
+        ctx.fillStyle = i === n - 1 ? palette.orange : palette.bgSoft;
+        ctx.strokeStyle = palette.axis; ctx.lineWidth = 1.5;
+        ctx.beginPath(); ctx.arc(x, rowY, 12, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+        ctx.fillStyle = palette.text; ctx.font = 'italic 12px serif'; ctx.textAlign = 'center';
+        ctx.fillText(SENT[i], x, rowY + 30);
+      } else {
+        // not yet arrived: ghost slot
+        ctx.strokeStyle = palette.grid; ctx.lineWidth = 1; ctx.setLineDash([2, 4]);
+        ctx.beginPath(); ctx.arc(x, rowY, 12, 0, Math.PI * 2); ctx.stroke();
+        ctx.setLineDash([]);
+      }
+    }
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 11px serif'; ctx.textAlign = 'left';
+    ctx.fillText('the newest token listens only backward', X0, rowY + 60);
+
+    // the mask triangle
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 11px serif'; ctx.textAlign = 'center';
+    ctx.fillText('may be heard →', G0x + cell * 3, G0y - 28);
+    ctx.save();
+    ctx.translate(G0x - 26, G0y + cell * 3); ctx.rotate(-Math.PI / 2);
+    ctx.fillText('listener →', 0, 0);
+    ctx.restore();
+    for (let r = 0; r < SENT.length; r++) {
+      for (let c = 0; c < SENT.length; c++) {
+        const x = G0x + c * cell, y = G0y + r * cell;
+        const allowed = c <= r;
+        const active = r < n && c < n && allowed;
+        ctx.strokeStyle = palette.grid; ctx.lineWidth = 1;
+        ctx.strokeRect(x, y, cell - 3, cell - 3);
+        if (allowed) {
+          ctx.fillStyle = active ? palette.orange : palette.bgSoft;
+          ctx.globalAlpha = active ? 0.75 : 0.4;
+          ctx.fillRect(x, y, cell - 3, cell - 3);
+          ctx.globalAlpha = 1;
+        } else {
+          // the future: hatched out
+          ctx.strokeStyle = palette.grid;
+          ctx.beginPath();
+          ctx.moveTo(x + 3, y + cell - 6); ctx.lineTo(x + cell - 6, y + 3);
+          ctx.stroke();
+        }
+      }
+    }
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 11px serif'; ctx.textAlign = 'center';
+    ctx.fillText('the empty triangle is the future', G0x + cell * 3, G0y + cell * 6 + 22);
+
+    readout.textContent = n === 0 ? 'tokens = 0 — press the button' :
+      `tokens = ${n} — “${SENT[n - 1]}” listens to ${n - 1} earlier token${n - 1 === 1 ? '' : 's'}, and to nothing ahead`;
+  }
+  runWhenVisible(canvas, draw);
+})();
+</script>
+
+</body>
+</html>

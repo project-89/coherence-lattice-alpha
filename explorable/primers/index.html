@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The curriculum — The Living Lattice</title>
+<meta name="description" content="A three-tier curriculum for the Living Lattice: beginner (phase, sound, harmonograph, Chladni), intermediate (topology, transformers, holonomy, eigenvalues, von Mises), advanced (Lohe dynamics on the hypersphere). Assume nothing, climb to the frontier.">
+<meta name="author" content="Michael Sharpe">
+<link rel="canonical" href="https://lattice.project89.org/primers/">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<meta property="og:title" content="The curriculum — The Living Lattice">
+<meta property="og:description" content="The math you need for the Living Lattice essays, taught by ear and eye, assuming nothing.">
+<meta property="og:url" content="https://lattice.project89.org/primers/">
+<meta property="og:site_name" content="The Living Lattice">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://lattice.project89.org/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="The curriculum — The Living Lattice">
+<meta name="twitter:description" content="Beginner to advanced: from a single tone to Lohe dynamics on the hypersphere.">
+<meta name="twitter:image" content="https://lattice.project89.org/og-image.png">
+<!-- BEGIN AUTO-INJECTED ANALYTICS -->
+<!-- PostHog -->
+<script>
+!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+posthog.init('phc_kRX9iHZstABjgFqEWJBMok2S3hW9R8QMHbNao4EsNz2g', {api_host: 'https://us.i.posthog.com', person_profiles: 'identified_only'});
+</script>
+<!-- END AUTO-INJECTED ANALYTICS -->
+<link rel="stylesheet" href="../css/style.css">
+<style>
+.tier-head {
+  display: flex; align-items: baseline; gap: 12px;
+  margin: 2.2em 0 0.3em;
+}
+.tier-head h2 { margin: 0; }
+.tier-chip {
+  font: 600 10px "SF Mono", monospace; text-transform: uppercase;
+  letter-spacing: 0.12em; padding: 3px 9px; border-radius: 3px; white-space: nowrap;
+  position: relative; top: -3px;
+}
+.tier-chip.beginner     { background: rgba(109, 196, 143, 0.16); color: #6dc48f; }
+.tier-chip.intermediate { background: rgba(125, 179, 221, 0.18); color: #7db3dd; }
+.tier-chip.advanced     { background: rgba(195, 141, 247, 0.16); color: #c38df7; }
+.tier-note { margin: 0 0 1em; color: var(--text-soft); font-style: italic; }
+ul.modules { list-style: none; margin: 0 0 1.4em; padding: 0; display: flex; flex-direction: column; gap: 13px; }
+ul.modules li { display: flex; gap: 14px; align-items: flex-start; line-height: 1.5; }
+ul.modules .num {
+  flex: 0 0 auto; font: 500 12px "SF Mono", monospace; color: var(--text-faint);
+  border: 1px solid var(--panel-border); border-radius: 999px; padding: 3px 10px;
+  margin-top: 2px; white-space: nowrap;
+}
+ul.modules .mod { flex: 1; }
+ul.modules .mod > a { font-weight: 500; }
+ul.modules .mod .sub { display: block; color: var(--text-faint); font-size: 0.9em; line-height: 1.45; }
+ul.modules .soon-tag {
+  align-self: center; font: 600 10px "SF Mono", monospace; text-transform: uppercase;
+  letter-spacing: 0.1em; padding: 3px 8px; border-radius: 3px;
+  background: rgba(125, 179, 221, 0.18); color: #7db3dd; white-space: nowrap;
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<nav class="breadcrumb">
+  <a href="../">&larr; library</a>
+  <span class="sep">&middot;</span>
+  <span class="section-num">Primers</span>
+</nav>
+
+<h1>The curriculum<span class="subtitle">From a single tone to the hypersphere — the math, by ear and eye, assuming nothing</span></h1>
+
+<p class="lead">The essays in this library are written to be followed, but they move through real physics and real geometry, and sometimes a single unfamiliar word — <em>phase</em>, <em>rotation</em>, <em>holonomy</em> — is the whole wall. This curriculum exists to take the walls down, in order. It climbs three tiers: <strong>beginner</strong> modules you can hear before you can name, <strong>intermediate</strong> modules that build the vocabulary the essays actually use, and <strong>advanced</strong> modules that walk you to the research frontier itself — rotation groups, effective coupling, and the dynamics of tokens on the unit hypersphere. No prior math is assumed anywhere. Not being "good at math" is exactly who this is for: the ideas are physical, and the notation is always the last step, not the first.</p>
+
+<p>You do not need to climb it all before the essays. Read a module <em>when a word stops you</em> — every essay links back to the module it leans on. A module is one page unless its topic needs more; multi-section modules get their own small table of contents.</p>
+
+<div class="tier-head" id="beginner"><span class="tier-chip beginner">Beginner</span><h2>Hear it first</h2></div>
+<p class="tier-note">Phase, sound, and shape. Nothing assumed; ears recommended. Start at 00 and everything else on the site becomes reachable.</p>
+<ul class="modules">
+  <li><span class="num">00</span><span class="mod"><a href="sections/00-phase-and-sound.html">Phase, beats, and the sound of sync</a><span class="sub">The one idea under everything: what phase is, why detuned rhythms beat, and the audible moment two oscillators lock. Unlocks: every essay on the site.</span></span></li>
+  <li><span class="num">workshop</span><span class="mod"><a href="sound-workshop/">The sound workshop: drawing with phases</a><span class="sub">A four-section studio: a digital harmonograph where two phases locking means the drawing holds still; Chladni plates where sand walks to the quiet lines; the wave laboratory that shows WHY — watch vibration flow, reflect, and lock into a standing pattern; and free play from clamped to Tyndall free-edge patterns, beyond the audible range, with coupled drivers and 3D bouncing sand.</span></span></li>
+  <li><span class="num">01</span><span class="mod"><a href="sections/01-rotations.html">Rotations: same shape, another angle</a><span class="sub">Rotation preserves relationships; the dot product measures agreement; two star maps one rotation apart. Unlocks: the shared manifold of meaning, brain&harr;text alignment, and holonomy.</span></span></li>
+</ul>
+
+<div class="tier-head" id="intermediate"><span class="tier-chip intermediate">Intermediate</span><h2>The language of structure</h2></div>
+<p class="tier-note">The vocabulary the essays actually use — one idea per module, notation always last. Read in any order; each names its own prerequisites.</p>
+<ul class="modules">
+  <li><span class="num">02</span><span class="mod"><a href="topology-manifolds/">Shapes of spaces: topology and manifolds</a><span class="sub">What survives stretching; what a manifold is in plain words; draw your own winding number, thread the flat torus, mirror a flag on a M&ouml;bius band. Three sections. Unlocks: the shape-of-a-thought and strange-loop chapters.</span></span></li>
+  <li><span class="num">03</span><span class="mod"><a href="inside-a-transformer/">Inside a transformer, for people who have never opened one</a><span class="sub">Attention heads, the residual stream, and LayerNorm, one draggable diagram each — softmax as a competition you can hear, heads that specialize, the stream as a running sum, and the sphere where meaning lives. Four sections. Unlocks: Transformers as Oscillators, and half the mind essays.</span></span></li>
+  <li><span class="num">04</span><span class="mod"><a href="gauge-holonomy/">Gauge and holonomy: the arrow you carry around a loop</a><span class="sub">Carry an arrow around a globe triangle and it comes back turned by exactly the area it enclosed — the loop learned something. The cone where curvature hides in a point, a Foucault pendulum, and a draw-your-own-loop holonomy meter. Three sections. Unlocks: memory, self-observation, and the consciousness chapters.</span></span></li>
+  <li><span class="num">05</span><span class="mod"><a href="graphs-spectra/">Graphs, coupling, and spectra</a><span class="sub">Eigenvalues and eigenvectors as a network's ways of wobbling; hear the graph's chord, cut the bridge, and watch &lambda;&#8322; hit zero — plus a pluckable spring-chain and a paint-the-nodes Laplacian. Three sections. Unlocks: the learning-rule chapter's hardest paragraph, and the routing chapters.</span></span></li>
+  <li><span class="num">06</span><span class="mod"><a href="sections/06-von-mises.html">The von Mises circle: where 0.303 comes from</a><span class="sub">Why averaging angles is a trap, the resultant as honest agreement, and the birth certificate of the site's central constant R&#8320;(K<sub>BKT</sub>) &asymp; 0.303.</span></span></li>
+  <li><span class="num">07</span><span class="mod"><a href="sections/07-rotation-groups.html">Rotation groups: from a turntable to 768 dimensions</a><span class="sub">In 2D rotations commute; in 3D they don't — feel it. Then SO(D) as a stack of independent turntables, and the sphere where tokens live.</span></span></li>
+</ul>
+
+<div class="tier-head" id="advanced"><span class="tier-chip advanced">Advanced</span><h2>The frontier's mathematics</h2></div>
+<p class="tier-note">Where the curriculum meets the research itself. These assume the tiers below and end by handing you to the essays' actual claims.</p>
+<ul class="modules">
+  <li><span class="num">08</span><span class="mod"><a href="lohe-hypersphere/">Lohe dynamics: oscillators on the hypersphere, and how tokens move</a><span class="sub">Kuramoto's big brother: unit vectors on a sphere, coupling that pulls along the surface, effective coupling chosen by agreement itself — a token's journey through a transformer as a path on the hypersphere, and the quench experiment: a frozen coupling is a memory, a living coupling is a sense organ. Three sections.</span></span></li>
+  <li><span class="num">09</span><span class="mod"><a href="living-k/">Living K: the coupling field as the dynamical object</a><span class="sub">Quenched vs. living wiring; the learning rule as a phase portrait you can seed by clicking; and the repair flagship — fray a memory's bonds and watch the rule heal them, bridges resurrected by the Fiedler channel. Three sections.</span></span></li>
+  <li><span class="num">10</span><span class="mod"><a href="bkt-transition/">The BKT transition: why the wall sits at 2/&pi;</a><span class="sub">Place vortices and fail to comb them away; the energy&ndash;entropy ledger finding its tie at exactly 0.637; free vortices collapsing across the wall — with free energy taught in plain words on the way. Three sections.</span></span></li>
+  <li><span class="num">11</span><span class="mod"><a href="coarse-graining/">Coarse-graining and renormalization: squint and the law survives</a><span class="sub">Block-average a real lattice; watch three fates flow to their fixed points; then try to tell two different engines apart after squinting — you can't, and that is the mechanism behind "one law, every scale". Three sections.</span></span></li>
+</ul>
+
+<p style="color: var(--text-faint); font-size: 0.92em;">Further back in the queue: free energy &amp; entropy · singular values &amp; SVD · complex numbers as rotating arrows. (The running list lives in the curriculum review.)</p>
+
+<div class="nav-links">
+  <a href="../" class="prev">The library</a>
+  <a href="sections/00-phase-and-sound.html" class="next">Start: Phase, beats, and the sound of sync</a>
+</div>
+
+</div>
+
+<script type="module">
+import '../js/common.js';
+</script>
+
+</body>
+</html>

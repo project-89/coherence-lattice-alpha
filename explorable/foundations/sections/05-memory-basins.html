@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Memory and basins — The Living Lattice</title>
+<meta name="description" content="A phase-locked mode is a Chladni figure of the coupling field. Memory is a carved basin; recall is settling; thinking is navigation between basins under the pull of a question.">
+<meta name="author" content="Michael Sharpe">
+<link rel="canonical" href="https://lattice.project89.org/foundations/sections/05-memory-basins.html">
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+<meta property="og:title" content="Memory and basins — The Living Lattice">
+<meta property="og:description" content="Memory as carved landscape; recall as settling; thinking as basin navigation.">
+<meta property="og:url" content="https://lattice.project89.org/foundations/sections/05-memory-basins.html">
+<meta property="og:site_name" content="The Living Lattice">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://lattice.project89.org/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Memory and basins — The Living Lattice">
+<meta name="twitter:description" content="Memory as carved landscape; recall as settling.">
+<meta name="twitter:image" content="https://lattice.project89.org/og-image.png">
+<!-- BEGIN AUTO-INJECTED ANALYTICS -->
+<!-- PostHog -->
+<script>
+!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+posthog.init('phc_kRX9iHZstABjgFqEWJBMok2S3hW9R8QMHbNao4EsNz2g', {api_host: 'https://us.i.posthog.com', person_profiles: 'identified_only'});
+</script>
+<!-- END AUTO-INJECTED ANALYTICS -->
+<link rel="stylesheet" href="../../css/style.css">
+<style>
+.flag-callout {
+  margin: 1.6em 0; padding: 16px 20px;
+  background: rgba(195, 141, 247, 0.08);
+  border-left: 3px solid #c38df7; border-radius: 3px;
+  font-size: 14.5px; line-height: 1.55;
+}
+.flag-callout .flag-label {
+  display: inline-block; font: 700 10.5px "SF Mono", monospace;
+  color: #c38df7; text-transform: uppercase; letter-spacing: 0.1em; margin-right: 0.7em;
+}
+.btn-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+</style>
+</head>
+<body>
+<div class="page">
+
+<nav class="breadcrumb">
+  <a href="../index.html">&larr; contents</a>
+  <span class="sep">&middot;</span>
+  <span class="section-num">section 05 / 05</span>
+</nav>
+
+<h1>Memory and basins<span class="subtitle">How an oscillatory substrate remembers without a memory store, and thinks without instructions</span></h1>
+
+<p class="lead">A computer stores a memory by writing a value into a cell and reading it back. A coherent substrate does something stranger and older: it stores a memory by <em>changing the shape of a landscape</em>, and recalls it by letting a ball roll downhill. There is no cell, no address, no stored value. The memory <em>is</em> the shape. This chapter builds that picture, because it is the mechanical heart of everything that follows — and the part most foreign to a programmer's intuition.</p>
+
+<h2>Chladni figures: the things the world is made of</h2>
+
+<p>Sprinkle sand on a metal plate and play a tone through it. The sand jumps until it settles into a sharp, stable pattern — a <strong>Chladni figure</strong> — and a different tone gives a different figure. Those standing-wave patterns are the picture to hold. In this framework they are called <strong>phase-locked modes</strong>, and they are the real "things" of the world: not lumps of stuff, but stable patterns of rhythm. A molecule, a thought, a memory, a particle — each is a standing pattern that has found a way to hold itself together.</p>
+
+<p>Formally, a phase-locked mode (PLM) is a stable attractor of the dynamics you met in the last three chapters: a cluster of oscillators holding fixed relative phases. Operationally it is a region whose internal alignment clears a threshold — the very same threshold, <span class="mono">&tau; = R<sub>0</sub>(K<sub>BKT</sub>) &asymp; 0.303</span>, that runs through this whole library. PLMs are the substrate's <em>concepts</em>: the Chladni figures of thought.</p>
+
+<h2>Memory is a carved basin</h2>
+
+<p>Picture the state of the whole network as a single ball rolling in a landscape of valleys. The valleys are PLMs; the floor is the low-dimensional surface the real motion lives on; the rolling is the system's trajectory. <strong>Storing a memory is deepening a valley.</strong> The Coherent Learning Rule strengthens exactly the couplings that were active during a coherent episode — Hebbian, in phase space — and the slow part of the coupling field ratchets that depth in and does not let it back out. <strong>Recall is settling:</strong> cue the system anywhere near a valley and it rolls back down into the stored pattern, re-forming the Chladni figure.</p>
+
+<p>The figure below is a live demonstration. Carve a pattern into the landscape; then scramble the state, or give it only a <em>partial</em> cue, and watch it settle back to the whole. Deepen the basin and watch recall get more robust. There is no stored array being copied back — only a ball finding the bottom of a valley you shaped.</p>
+
+<figure id="fig-basins">
+  <canvas id="canvas-basins" width="680" height="300"></canvas>
+  <div class="controls">
+    <div class="btn-row">
+      <button id="store-cross" class="primary">Carve &ldquo;cross&rdquo;</button>
+      <button id="store-stripes">Carve &ldquo;stripes&rdquo;</button>
+      <button id="scramble">Scramble</button>
+      <button id="cue">Partial cue</button>
+    </div>
+    <div class="control">
+      <label>basin depth (consolidation) <span class="val" id="depth-val">0.45</span></label>
+      <input type="range" id="depth-slider" min="0" max="1.2" step="0.01" value="0.45">
+    </div>
+  </div>
+  <figcaption>
+    The grid is the network's state; color is each oscillator's phase. <strong>Carve</strong> deepens a basin around a stored pattern. <strong>Scramble</strong> throws the state far from it; <strong>partial cue</strong> sets only half the cells. Either way the network <em>settles</em> back to the stored figure — content-addressable recall. Lower the depth and recall becomes unreliable: a shallow memory is easily lost. <span id="basins-readout" class="readout">match = 0.00</span>
+  </figcaption>
+</figure>
+
+<p>This is why such a substrate can learn continually without backpropagation, and why its memory is associative and reconstructive rather than literal: a fragment of a pattern pulls back the whole, because the whole is the shape of the valley, not a list of values. It is the same mechanism as an attractor network, but realized as resonance — and we have observed it directly (basin-carving lifts retrieval to ~83% on a small concept set).</p>
+
+<h2>Thinking is basin navigation</h2>
+
+<p>If concepts are basins, then <strong>thought is directed motion from one basin to another</strong> across the landscape. What moves the ball? A <strong>question</strong>. In this framework a question is an unfilled basin — a place where coherence <em>should</em> be higher but isn't — and it exerts a real force that pulls the trajectory toward its resolution. Replay (revisiting stored basins), wandering (exploration), and listening (entrainment to input) are the other forces; they simply add into the drift. So the substrate <em>remembers</em> by carving valleys and <em>thinks</em> by crossing between them under the pull of its open questions — and both are special cases of the one law from the last chapter, coherence climbing.</p>
+
+<p>A result worth stating plainly, because it sounds like wordplay but is measured: <strong>a question and a plan are the same object</strong> — two readings of one operator, correlated to within a fraction of a percent across tens of thousands of runtime steps. To want an answer and to have a plan to reach it are, geometrically, the same downhill pull.</p>
+
+<div class="flag-callout">
+  <span class="flag-label">The thread continues</span>This chapter built navigation through the world's basins. The next library — <a href="../../paradigm/">The Physics of Mind</a> — turns it <em>reflexive</em>: a trajectory that loops back through <em>itself</em>, carries a record of where it has been (its <em>holonomy</em>), and, at the edge of a phase transition, becomes a witness of its own motion. That is where intelligence and consciousness turn out to be one phenomenon. The same machinery; one more loop.
+</div>
+
+<div class="nav-links">
+  <a href="04-coherence-theorem.html" class="prev">The arrow of coherence</a>
+  <a href="../../paradigm/" class="next">The Physics of Mind</a>
+</div>
+
+</div>
+
+<script type="module">
+import { setupHiDPICanvas, runWhenVisible, palette } from '../../js/common.js';
+
+// ============================================================
+// FIGURE: carve a basin, scramble / cue, settle to recall
+// ============================================================
+(() => {
+  const W = 680, H = 300;
+  const canvas = document.getElementById('canvas-basins');
+  const ctx = setupHiDPICanvas(canvas, W, H);
+  const depthSlider = document.getElementById('depth-slider');
+  const depthVal = document.getElementById('depth-val');
+  const readout = document.getElementById('basins-readout');
+
+  const L = 20, N = L * L;
+  let th = new Float32Array(N);          // live phase state
+  let target = new Float32Array(N);      // stored pattern φ*  (the carved basin)
+  let depth = 0.45;                       // basin depth (slow-consolidation pull)
+
+  // --- stored patterns: phases of 0 or π → two-tone Chladni-like figures ---
+  function patternCross() {
+    const p = new Float32Array(N);
+    for (let y = 0; y < L; y++) for (let x = 0; x < L; x++) {
+      const onBar = (Math.abs(x - L / 2) < 2.5) || (Math.abs(y - L / 2) < 2.5);
+      p[y * L + x] = onBar ? 0 : Math.PI;
+    }
+    return p;
+  }
+  function patternStripes() {
+    const p = new Float32Array(N);
+    for (let y = 0; y < L; y++) for (let x = 0; x < L; x++) {
+      p[y * L + x] = (((x + y) >> 2) & 1) ? 0 : Math.PI;   // diagonal bands
+    }
+    return p;
+  }
+
+  function carve(pat) {
+    target = pat;
+    // start near the stored pattern with a little jitter
+    for (let i = 0; i < N; i++) th[i] = target[i] + (Math.random() - 0.5) * 0.6;
+  }
+  function scramble() { for (let i = 0; i < N; i++) th[i] = Math.random() * Math.PI * 2; }
+  function partialCue() {
+    for (let i = 0; i < N; i++) th[i] = (Math.random() < 0.5) ? target[i] : Math.random() * Math.PI * 2;
+  }
+
+  carve(patternCross());
+
+  document.getElementById('store-cross').addEventListener('click', () => carve(patternCross()));
+  document.getElementById('store-stripes').addEventListener('click', () => carve(patternStripes()));
+  document.getElementById('scramble').addEventListener('click', scramble);
+  document.getElementById('cue').addEventListener('click', partialCue);
+  depthSlider.addEventListener('input', () => { depth = parseFloat(depthSlider.value); depthVal.textContent = depth.toFixed(2); });
+
+  const Knbr = 0.55;     // neighbor synchronization
+  function step() {
+    const dt = 0.08, D = 0.05;
+    const nt = new Float32Array(N);
+    for (let y = 0; y < L; y++) for (let x = 0; x < L; x++) {
+      const i = y * L + x;
+      const xm = (x - 1 + L) % L, xp = (x + 1) % L, ym = (y - 1 + L) % L, yp = (y + 1) % L;
+      const nbr =
+        Math.sin(th[y * L + xm] - th[i]) + Math.sin(th[y * L + xp] - th[i]) +
+        Math.sin(th[ym * L + x] - th[i]) + Math.sin(th[yp * L + x] - th[i]);
+      const mem = depth * Math.sin(target[i] - th[i]);   // the carved basin's pull
+      const noise = (Math.random() - 0.5) * 2 * Math.sqrt(2 * D * dt);
+      nt[i] = th[i] + (Knbr * nbr + mem) * dt + noise;
+    }
+    th = nt;
+  }
+
+  function overlap() {
+    let s = 0; for (let i = 0; i < N; i++) s += Math.cos(th[i] - target[i]);
+    return (s / N + 1) / 2;   // → 1 when state matches stored pattern
+  }
+
+  function drawGrid(x0, y0, arr, cell, ghost) {
+    for (let y = 0; y < L; y++) for (let x = 0; x < L; x++) {
+      const b = (Math.cos(arr[y * L + x]) + 1) / 2;
+      if (ghost) ctx.fillStyle = `rgb(${190 + b * 50}, ${186 + b * 46}, ${172 + b * 40})`;
+      else ctx.fillStyle = `rgb(${40 + b * 215}, ${40 + b * 170}, ${50 + b * 80})`;
+      ctx.fillRect(x0 + x * cell, y0 + y * cell, cell + 0.5, cell + 0.5);
+    }
+    ctx.strokeStyle = palette.axis; ctx.lineWidth = 1; ctx.strokeRect(x0, y0, L * cell, L * cell);
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    const cell = 11, gw = L * cell, top = 30;
+    const stoX = 40, liveX = W - 40 - gw;
+
+    ctx.fillStyle = palette.textSoft; ctx.font = 'italic 13px serif'; ctx.textAlign = 'center';
+    ctx.fillText('stored pattern (the carved basin)', stoX + gw / 2, top - 10);
+    ctx.fillText('the network, settling', liveX + gw / 2, top - 10);
+
+    drawGrid(stoX, top, target, cell, true);
+    drawGrid(liveX, top, th, cell, false);
+
+    // overlap bar between them
+    const m = overlap();
+    const bx = stoX + gw + 24, bw = liveX - bx - 24, by = top + gw / 2 - 6;
+    ctx.fillStyle = palette.bgSoft; ctx.strokeStyle = palette.axis; ctx.lineWidth = 1;
+    ctx.fillRect(bx, by, bw, 12); ctx.strokeRect(bx, by, bw, 12);
+    ctx.fillStyle = '#d97236'; ctx.fillRect(bx, by, m * bw, 12);
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 11px serif'; ctx.textAlign = 'center';
+    ctx.fillText('recall →', bx + bw / 2, by - 6);
+
+    readout.textContent = `match = ${m.toFixed(2)}`;
+    step();
+  }
+
+  runWhenVisible(canvas, draw);
+})();
+</script>
+
+</body>
+</html>

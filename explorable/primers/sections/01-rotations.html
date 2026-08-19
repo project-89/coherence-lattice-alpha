@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rotations: same shape, another angle — The Living Lattice</title>
+<meta name="description" content="A zero-assumptions primer on rotations and dot products: rotation changes where things are but not how they relate — which is why two minds can hold the same meaning at different angles.">
+<meta name="author" content="Michael Sharpe">
+<link rel="canonical" href="https://lattice.project89.org/primers/sections/01-rotations.html">
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+<meta property="og:title" content="Rotations: same shape, another angle — The Living Lattice">
+<meta property="og:description" content="Rotation changes where things are, not how they relate. Drag one star map onto another and feel what 'one rotation apart' means.">
+<meta property="og:url" content="https://lattice.project89.org/primers/sections/01-rotations.html">
+<meta property="og:site_name" content="The Living Lattice">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://lattice.project89.org/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Rotations: same shape, another angle — The Living Lattice">
+<meta name="twitter:description" content="A zero-assumptions primer on rotations, dot products, and shared shape.">
+<meta name="twitter:image" content="https://lattice.project89.org/og-image.png">
+<!-- BEGIN AUTO-INJECTED ANALYTICS -->
+<!-- PostHog -->
+<script>
+!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+posthog.init('phc_kRX9iHZstABjgFqEWJBMok2S3hW9R8QMHbNao4EsNz2g', {api_host: 'https://us.i.posthog.com', person_profiles: 'identified_only'});
+</script>
+<!-- END AUTO-INJECTED ANALYTICS -->
+<link rel="stylesheet" href="../../css/style.css">
+<style>
+.flag-callout {
+  margin: 1.6em 0; padding: 16px 20px;
+  background: rgba(195, 141, 247, 0.08);
+  border-left: 3px solid #c38df7; border-radius: 3px;
+  font-size: 14.5px; line-height: 1.55;
+}
+.flag-callout .flag-label {
+  display: inline-block; font: 700 10.5px "SF Mono", monospace;
+  color: #c38df7; text-transform: uppercase; letter-spacing: 0.1em; margin-right: 0.7em;
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<nav class="breadcrumb">
+  <a href="../index.html">&larr; primers</a>
+  <span class="sep">&middot;</span>
+  <span class="section-num">primer 01</span>
+</nav>
+
+<h1>Rotations: same shape, another angle<span class="subtitle">Why two completely different systems can hold the same meaning — and how you would check</span></h1>
+
+<p class="lead">Some of the most surprising claims in this library sound like this: <em>two language models trained by different companies on different data hold their words in the same shape, just rotated</em>. Or: <em>a brain trajectory and a text trajectory line up after one rotation</em>. To feel what those claims mean — and what would make them true or false — you only need two ideas: what a rotation preserves, and how the dot product measures agreement. Both fit on this page, and you can drag both.</p>
+
+<h2>1. What a rotation is: everything moves, nothing changes</h2>
+
+<p>Take a little constellation of points — stars, or cities on a map, or (hold the thought) <em>words</em>. Now turn the whole thing, rigidly, around its center. Every point moves. And yet, in the sense that matters, <strong>nothing has changed</strong>: every distance between every pair of points is exactly what it was. Every angle. Every neighborhood. Who is close to whom, who is far from whom — the entire web of <em>relationships</em> — is untouched. A rotation is a change of <em>where</em> that preserves all of <em>how things relate</em>.</p>
+
+<p>That is the whole definition. The heavy notation you may meet elsewhere on this site — "a rotation <span class="mono">R &isin; SO(D)</span>" — says only this, in D dimensions instead of two: a rigid turn that preserves all distances and does not mirror-flip.</p>
+
+<figure id="fig-rigid">
+  <canvas id="canvas-rigid" width="680" height="340"></canvas>
+  <div class="controls" id="rigid-controls">
+    <div class="control">
+      <label>rotation angle <span class="val" id="rigid-a-val">0&deg;</span></label>
+      <input type="range" id="rigid-a-slider" min="0" max="360" step="1" value="0">
+    </div>
+  </div>
+  <figcaption>Turn the constellation. The readout tracks three of its internal distances: they do not budge, at any angle. Position is relative to you; <em>shape</em> belongs to the constellation itself. Shape is what rotation cannot touch.</figcaption>
+</figure>
+
+<h2>2. The dot product: a number for agreement</h2>
+
+<p>Now two arrows from a common origin. How much do they <em>agree</em> — point the same way? The natural measure: let one arrow cast a shadow onto the other's direction and ask how long that shadow is. That shadow-length (times the other arrow's length) is the <strong>dot product</strong>. Arrows aligned: big and positive. At right angles: zero — no agreement, no opposition, just unrelated. Opposite: maximally negative.</p>
+
+<p>If both arrows have length one, the dot product is exactly <span class="mono">cos(angle between them)</span> — the same cosine-as-agreement you may have met in <a href="00-phase-and-sound.html">the phase primer</a> or <a href="../../foundations/sections/01-oscillators.html">Foundations 1</a>, where the "arrows" are phases on a circle. One idea, everywhere: <strong>cosine measures agreement</strong>. When the essays score how well two things line up — two oscillators, two attention heads, two whole minds — they are composing this one little measure at scale.</p>
+
+<figure id="fig-dot">
+  <canvas id="canvas-dot" width="680" height="340"></canvas>
+  <div class="controls" id="dot-controls">
+    <div class="control">
+      <label>angle of arrow B <span class="val" id="dot-a-val">40&deg;</span></label>
+      <input type="range" id="dot-a-slider" min="0" max="360" step="1" value="40">
+    </div>
+  </div>
+  <figcaption>Swing arrow B and watch its shadow on A. The dot product is the shadow length: full agreement at 0&deg;, zero at 90&deg;, full opposition at 180&deg;. <em>Sound on: loudness is the agreement — the same mapping as the phase figures, so your ear learns one language for the whole library.</em></figcaption>
+</figure>
+
+<h2>3. "One rotation apart": aligning two star maps</h2>
+
+<p>Now put the two ideas together. Suppose two systems each hold the same set of concepts as points — the same <em>shape</em> — but each at its own arbitrary angle (why would two separately-built systems agree on an orientation?). Looking at raw positions, they seem to disagree about everything. But if the shapes truly match, there exists <strong>one single rotation</strong> that lays every point of one onto the corresponding point of the other, all at once. Find it, and the correspondence snaps into view.</p>
+
+<p>Try it by hand:</p>
+
+<figure id="fig-align">
+  <canvas id="canvas-align" width="680" height="380"></canvas>
+  <div class="controls" id="align-controls">
+    <div class="control">
+      <label>rotate map B <span class="val" id="align-a-val">0&deg;</span></label>
+      <input type="range" id="align-a-slider" min="0" max="360" step="1" value="0">
+    </div>
+    <button id="align-new">New hidden angle</button>
+  </div>
+  <figcaption>Map A (blue) and map B (orange) hold the same seven concepts; B was turned by a hidden angle and lightly jittered. Slide until the maps snap together — the match score is the average agreement between corresponding points. One number, one knob, and suddenly two "different" systems are revealed to hold one shape. <span id="align-readout" class="readout">match = —</span></figcaption>
+</figure>
+
+<div class="flag-callout">
+  <span class="flag-label">What's real here</span>
+  This figure is a cartoon built from seven made-up points in two dimensions, so you can feel the logic in your hands. The real measurement it is a cartoon <em>of</em> lives in <a href="../../paradigm/sections/15-rotation.html">The Physics of Mind &sect;15</a>: two independently trained language embedders, hundreds of dimensions, and a single rotation that aligns them at 99.3% held-out top-1 accuracy. The claim "meaning has one shape" is exactly the claim that this game is winnable there — not just here.
+</div>
+
+<h2>Where this goes</h2>
+
+<p>With rotation-preserves-shape and dot-product-measures-agreement in hand, you can now read three of the site's bigger moves: the <a href="../../paradigm/sections/15-rotation.html">shared manifold of meaning</a> (two models, one rotation apart), the <a href="../../paradigm/sections/16-brains-language.html">brain&harr;text alignment</a> (the same trick across substrates — there the rotation is called the Canonical Resonance Transform), and — one primer further — <em>holonomy</em>: what it means when carrying something around a loop brings it back <em>rotated</em>, which is where this library locates memory and self-observation. That primer is coming; until then, the gentle on-ramp is <a href="../../paradigm/sections/10-holonomy.html">&sect;10 itself</a>.</p>
+
+<div class="nav-links">
+  <a href="00-phase-and-sound.html" class="prev">Phase, beats, and the sound of sync</a>
+  <a href="../topology-manifolds/" class="next">Shapes of spaces: topology and manifolds</a>
+</div>
+
+</div>
+
+<script type="module">
+import { setupHiDPICanvas, runWhenVisible, palette, makeSoundToggle, makeVoices } from '../../js/common.js';
+
+const STARS = [
+  [0.00, 1.00], [0.87, 0.50], [0.71, -0.71], [0.00, -0.95],
+  [-0.81, -0.59], [-0.95, 0.31], [-0.31, 0.31],
+];
+const LABELS = ['sun', 'day', 'warm', 'fire', 'cold', 'night', 'moon'];
+
+function rot(p, a) { return [p[0] * Math.cos(a) - p[1] * Math.sin(a), p[0] * Math.sin(a) + p[1] * Math.cos(a)]; }
+
+// ============================================================
+// FIG A: rigid rotation preserves internal distances
+// ============================================================
+(() => {
+  const canvas = document.getElementById('canvas-rigid');
+  const ctx = setupHiDPICanvas(canvas, 680, 340);
+  const slider = document.getElementById('rigid-a-slider');
+  const aval = document.getElementById('rigid-a-val');
+  let ang = 0;
+  slider.addEventListener('input', () => { ang = parseFloat(slider.value) * Math.PI / 180; aval.textContent = slider.value + '°'; });
+
+  const PAIRS = [[0, 3], [1, 5], [2, 6]];
+
+  function draw() {
+    ctx.clearRect(0, 0, 680, 340);
+    const cx = 240, cy = 170, s = 120;
+    const pts = STARS.map(p => rot(p, ang));
+
+    // faint web
+    ctx.strokeStyle = palette.grid; ctx.lineWidth = 1;
+    for (let i = 0; i < pts.length; i++) for (let j = i + 1; j < pts.length; j++) {
+      ctx.beginPath();
+      ctx.moveTo(cx + pts[i][0] * s, cy - pts[i][1] * s);
+      ctx.lineTo(cx + pts[j][0] * s, cy - pts[j][1] * s);
+      ctx.stroke();
+    }
+    // highlighted pairs
+    const colors = [palette.orange, palette.blue, palette.burgundy];
+    PAIRS.forEach(([i, j], k) => {
+      ctx.strokeStyle = colors[k]; ctx.lineWidth = 2.2;
+      ctx.beginPath();
+      ctx.moveTo(cx + pts[i][0] * s, cy - pts[i][1] * s);
+      ctx.lineTo(cx + pts[j][0] * s, cy - pts[j][1] * s);
+      ctx.stroke();
+    });
+    // stars
+    pts.forEach((p, i) => {
+      ctx.fillStyle = palette.text;
+      ctx.beginPath(); ctx.arc(cx + p[0] * s, cy - p[1] * s, 5, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = palette.textFaint; ctx.font = 'italic 11px serif'; ctx.textAlign = 'center';
+      ctx.fillText(LABELS[i], cx + p[0] * s, cy - p[1] * s - 10);
+    });
+
+    // distance readouts
+    ctx.font = '13px "SF Mono", monospace'; ctx.textAlign = 'left';
+    ctx.fillStyle = palette.textFaint;
+    ctx.font = 'italic 13px serif';
+    ctx.fillText('internal distances:', 470, 110);
+    PAIRS.forEach(([i, j], k) => {
+      const d = Math.hypot(STARS[i][0] - STARS[j][0], STARS[i][1] - STARS[j][1]);
+      ctx.fillStyle = colors[k];
+      ctx.font = '13px "SF Mono", monospace';
+      ctx.fillText(`${LABELS[i]}↔${LABELS[j]}  ${(d).toFixed(3)}`, 470, 140 + k * 26);
+    });
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 12px serif';
+    ctx.fillText('— at every angle', 470, 224);
+  }
+  runWhenVisible(canvas, draw);
+})();
+
+// ============================================================
+// FIG B: dot product as shadow / agreement
+// ============================================================
+(() => {
+  const canvas = document.getElementById('canvas-dot');
+  const ctx = setupHiDPICanvas(canvas, 680, 340);
+  const slider = document.getElementById('dot-a-slider');
+  const aval = document.getElementById('dot-a-val');
+  let ang = 40 * Math.PI / 180;
+  slider.addEventListener('input', () => { ang = parseFloat(slider.value) * Math.PI / 180; aval.textContent = slider.value + '°'; });
+
+  const sound = makeSoundToggle(document.getElementById('dot-controls'), { label: 'hear the agreement' });
+  const voice = makeVoices(sound, 1, { freq: 220 });
+
+  function draw() {
+    ctx.clearRect(0, 0, 680, 340);
+    const cx = 250, cy = 200, L = 130;
+
+    // arrow A along +x
+    ctx.strokeStyle = palette.blue; ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + L, cy); ctx.stroke();
+    ctx.fillStyle = palette.blue;
+    ctx.beginPath(); ctx.moveTo(cx + L + 10, cy); ctx.lineTo(cx + L - 4, cy - 7); ctx.lineTo(cx + L - 4, cy + 7); ctx.fill();
+    ctx.font = 'italic 13px serif'; ctx.textAlign = 'left';
+    ctx.fillText('A', cx + L + 16, cy + 4);
+
+    // arrow B
+    const bx = Math.cos(ang), by = Math.sin(ang);
+    ctx.strokeStyle = palette.orange; ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + bx * L, cy - by * L); ctx.stroke();
+    ctx.fillStyle = palette.orange;
+    ctx.fillText('B', cx + bx * (L + 18), cy - by * (L + 18));
+
+    // shadow of B on A
+    const dot = Math.cos(ang);
+    ctx.strokeStyle = palette.grid; ctx.setLineDash([3, 4]);
+    ctx.beginPath(); ctx.moveTo(cx + bx * L, cy - by * L); ctx.lineTo(cx + dot * L, cy); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.strokeStyle = palette.burgundy; ctx.lineWidth = 6;
+    ctx.beginPath(); ctx.moveTo(cx, cy + 14); ctx.lineTo(cx + dot * L, cy + 14); ctx.stroke();
+    ctx.fillStyle = palette.burgundy; ctx.font = 'italic 12px serif';
+    ctx.fillText('the shadow', cx + 8, cy + 38);
+
+    ctx.fillStyle = palette.textSoft; ctx.font = '15px "SF Mono", monospace';
+    ctx.fillText(`A·B = cos(angle) = ${dot.toFixed(3)}`, 460, 120);
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 13px serif';
+    ctx.fillText(dot > 0.7 ? 'agreement' : dot > 0.2 ? 'partial agreement' : dot > -0.2 ? 'unrelated' : dot > -0.7 ? 'partial opposition' : 'opposition', 460, 148);
+
+    voice.set(0, 220, (1 + dot) / 2);
+  }
+  runWhenVisible(canvas, draw);
+})();
+
+// ============================================================
+// FIG C: find the rotation between two maps
+// ============================================================
+(() => {
+  const canvas = document.getElementById('canvas-align');
+  const ctx = setupHiDPICanvas(canvas, 680, 380);
+  const slider = document.getElementById('align-a-slider');
+  const aval = document.getElementById('align-a-val');
+  const readout = document.getElementById('align-readout');
+  const newBtn = document.getElementById('align-new');
+
+  let hidden = 2.2;
+  let jitter = STARS.map(() => [(Math.random() - 0.5) * 0.06, (Math.random() - 0.5) * 0.06]);
+  let ang = 0;
+  slider.addEventListener('input', () => { ang = parseFloat(slider.value) * Math.PI / 180; aval.textContent = slider.value + '°'; });
+  newBtn.addEventListener('click', () => {
+    hidden = Math.random() * Math.PI * 2;
+    jitter = STARS.map(() => [(Math.random() - 0.5) * 0.06, (Math.random() - 0.5) * 0.06]);
+  });
+
+  function draw() {
+    ctx.clearRect(0, 0, 680, 380);
+    const cx = 260, cy = 185, s = 130;
+
+    const A = STARS;
+    const B = STARS.map((p, i) => {
+      const q = rot(p, hidden);
+      return rot([q[0] + jitter[i][0], q[1] + jitter[i][1]], ang);
+    });
+
+    // match: mean agreement (unit-normalized dot) between corresponding points
+    let m = 0;
+    for (let i = 0; i < A.length; i++) {
+      const na = Math.hypot(A[i][0], A[i][1]) + 1e-9, nb = Math.hypot(B[i][0], B[i][1]) + 1e-9;
+      m += (A[i][0] * B[i][0] + A[i][1] * B[i][1]) / (na * nb);
+    }
+    m /= A.length;
+    const pct = Math.max(0, m) * 100;
+
+    // connection lines
+    ctx.strokeStyle = palette.grid; ctx.lineWidth = 1;
+    for (let i = 0; i < A.length; i++) {
+      ctx.beginPath();
+      ctx.moveTo(cx + A[i][0] * s, cy - A[i][1] * s);
+      ctx.lineTo(cx + B[i][0] * s, cy - B[i][1] * s);
+      ctx.stroke();
+    }
+    A.forEach((p, i) => {
+      ctx.fillStyle = palette.blue;
+      ctx.beginPath(); ctx.arc(cx + p[0] * s, cy - p[1] * s, 5.5, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = palette.textFaint; ctx.font = 'italic 11px serif'; ctx.textAlign = 'center';
+      ctx.fillText(LABELS[i], cx + p[0] * s, cy - p[1] * s - 10);
+    });
+    B.forEach((p) => {
+      ctx.fillStyle = palette.orange;
+      ctx.beginPath(); ctx.arc(cx + p[0] * s, cy - p[1] * s, 5.5, 0, Math.PI * 2); ctx.fill();
+    });
+
+    // match meter
+    const mx = 500, my = 90, mw = 130, mh = 180;
+    ctx.strokeStyle = palette.axis; ctx.lineWidth = 1; ctx.strokeRect(mx, my, mw, mh);
+    ctx.fillStyle = pct > 95 ? 'rgba(109,196,143,0.35)' : 'rgba(217,114,54,0.25)';
+    ctx.fillRect(mx, my + mh - (pct / 100) * mh, mw, (pct / 100) * mh);
+    ctx.fillStyle = pct > 95 ? palette.green : palette.orange;
+    ctx.font = '600 22px "SF Mono", monospace'; ctx.textAlign = 'center';
+    ctx.fillText(pct.toFixed(0) + '%', mx + mw / 2, my + mh / 2);
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 11px serif';
+    ctx.fillText('match', mx + mw / 2, my + mh / 2 + 20);
+    if (pct > 95) ctx.fillText('one shape.', mx + mw / 2, my + mh + 20);
+
+    readout.textContent = `match = ${pct.toFixed(0)}%`;
+  }
+  runWhenVisible(canvas, draw);
+})();
+</script>
+
+</body>
+</html>

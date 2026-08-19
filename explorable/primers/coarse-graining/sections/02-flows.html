@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flows and the impossible temperature — The Living Lattice</title>
+<meta name="description" content="Squinting moves systems: cold ones rush to solid order, hot ones to coin-flip noise — and one special temperature refuses to commit. Fixed points, criticality as scale-invariance, and the renormalization flow, playable.">
+<meta name="author" content="Michael Sharpe">
+<link rel="canonical" href="https://lattice.project89.org/primers/coarse-graining/sections/02-flows.html">
+<link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
+<link rel="apple-touch-icon" href="../../../apple-touch-icon.png">
+<meta property="og:title" content="Flows and the impossible temperature — The Living Lattice">
+<meta property="og:description" content="Squinting has destinations — and one point that refuses to choose. Criticality is scale-invariance.">
+<meta property="og:url" content="https://lattice.project89.org/primers/coarse-graining/sections/02-flows.html">
+<meta property="og:site_name" content="The Living Lattice">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://lattice.project89.org/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Flows and the impossible temperature — The Living Lattice">
+<meta name="twitter:description" content="Fixed points and the renormalization flow, with your hands on the temperature dial.">
+<meta name="twitter:image" content="https://lattice.project89.org/og-image.png">
+<!-- BEGIN AUTO-INJECTED ANALYTICS -->
+<!-- PostHog -->
+<script>
+!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+posthog.init('phc_kRX9iHZstABjgFqEWJBMok2S3hW9R8QMHbNao4EsNz2g', {api_host: 'https://us.i.posthog.com', person_profiles: 'identified_only'});
+</script>
+<!-- END AUTO-INJECTED ANALYTICS -->
+<link rel="stylesheet" href="../../../css/style.css">
+<style>
+.flag-callout { margin: 1.6em 0; padding: 16px 20px; background: rgba(195,141,247,0.08); border-left: 3px solid #c38df7; border-radius: 3px; font-size: 14.5px; line-height: 1.55; }
+.flag-callout .flag-label { display: inline-block; font: 700 10.5px "SF Mono", monospace; color: #c38df7; text-transform: uppercase; letter-spacing: 0.1em; margin-right: 0.7em; }
+</style>
+</head>
+<body>
+<div class="page">
+
+<nav class="breadcrumb">
+  <a href="../index.html">&larr; coarse-graining</a>
+  <span class="sep">&middot;</span>
+  <span class="section-num">coarse-graining 02 / 03 &middot; advanced</span>
+</nav>
+
+<h1>Flows and the impossible temperature<span class="subtitle">Squinting has destinations — and one point in the dial that refuses to choose</span></h1>
+
+<p class="lead">The last section ended on the important observation: squinting doesn't just shrink a lattice, it <em>changes</em> it — usually into a cleaner or a messier one. So imagine squinting over and over, and tracking where the system goes. It turns out almost every starting point rushes to one of two dead ends. The exceptions — the starting points that refuse to commit — are rare, special, and they are where this entire library lives.</p>
+
+<h2>Three fates</h2>
+
+<p>Below are three copies of the same thermal lattice, prepared at three temperatures: <strong>cold</strong> (well-ordered, a little speckle), <strong>near the transition</strong>, and <strong>hot</strong> (nearly random). One button squints all three at once. Under them, a chart tracks each one's agreement <span class="mono">a</span> level by level — its <em>trajectory</em> under repeated squinting.</p>
+
+<figure id="fig-fates">
+  <canvas id="canvas-fates" width="680" height="470"></canvas>
+  <div class="controls" id="fates-controls">
+    <button id="ft-squint" class="primary">Squint all three</button>
+    <button id="ft-reset">New samples</button>
+  </div>
+  <figcaption>The faint dashed curves are reference trajectories (means of repeated offline runs); the bright dots are your three live lattices. <strong>Cold</strong> rushes upward and saturates: total order, one solid color — squinting a mostly-ordered thing distills its order. <strong>Hot</strong> crashes to the coin-flip line and stays: pure noise is a destination too. <strong>The middle one</strong> does neither — it descends slowly, still between the two dead ends at every level, structure appearing under every squint. <span id="ft-readout" class="readout">level 0</span></figcaption>
+</figure>
+
+<p>The two dead ends deserve names. A lattice at <span class="mono">a = 1</span> squints to itself forever: solid gold is solid gold at every scale. A lattice at <span class="mono">a = 0.5</span> also squints to itself forever: the majority of four coin-flips is a fresh coin-flip. Both are <strong>fixed points</strong> of the squinting operation — states that look the same at every scale for the dullest possible reason: they have no scale-dependent structure left to lose. Order is one attractor; noise is the other; nearly every lattice you can prepare is secretly en route to one of them, and squinting just reveals which.</p>
+
+<h2>The point that refuses</h2>
+
+<p>Which makes the middle trajectory the interesting one. Between "flows up" and "flows down" there must sit a knife-edge — a temperature where the system, squinted, reproduces <em>itself</em>: not solid, not random, but the same statistical texture at every magnification. Domains inside domains inside domains. At that special point the system is <strong>scale-invariant</strong> — a third fixed point, nothing like the two dead ends, rich instead of empty. Physics calls the neighborhood of that point <strong>criticality</strong>.</p>
+
+<p>Hunt for it yourself:</p>
+
+<figure id="fig-hunt">
+  <canvas id="canvas-hunt" width="680" height="330"></canvas>
+  <div class="controls" id="hunt-controls">
+    <div class="control">
+      <label>temperature <span class="val" id="hunt-t-val">2.27</span></label>
+      <input type="range" id="hunt-t-slider" min="1.6" max="3.6" step="0.01" value="2.27">
+    </div>
+    <button id="hunt-run" class="primary">Equilibrate &amp; run the squints</button>
+  </div>
+  <figcaption>Pick a temperature, press run: the machine prepares a fresh lattice there and squints it twice, drawing its trajectory over the three reference fates. Far below the transition it commits to order almost instantly; far above, to noise. The closer you dial toward the transition — from <em>either</em> side — the longer the trajectory lingers between the dead ends before committing. Exactly at the critical point, in the infinite ideal, it would linger forever. <span id="hunt-readout" class="readout">verdict = —</span></figcaption>
+</figure>
+
+<p>Now connect this to everything you have read on this site. The essays keep insisting that minds, and living structure generally, sit <em>at the edge of a phase transition</em> — the critical band of <a href="../../../paradigm/sections/06-the-edge.html">the keystone chapter</a>, the sharp threshold you first heard as beats stopping in <a href="../../sections/00-phase-and-sound.html">primer 00</a>. This section is what that placement <em>means</em> in scale language: the critical point is the one place on the dial where the system is not en route to a dead end. Order has no news left in it; noise never had any; the scale-invariant point is the only regime where every level of magnification contains real structure — where zooming out never exhausts the thing. If you want a system whose coarse description is as alive as its fine one — a scale ladder worth climbing — there is exactly one place to stand.</p>
+
+<p>The full machinery — trajectories through the space of <em>systems</em>, with fixed points as destinations — is called the <strong>renormalization group flow</strong>, and you have now run it with your own hands. One more idea completes the toolkit: what happens when two <em>different</em> machines flow to the <em>same</em> place. That is <a href="03-universality.html">the next section</a>, and it is the punchline the whole module exists for.</p>
+
+<div class="flag-callout">
+  <span class="flag-label">Honest finite-size numbers</span>
+  On an infinite lattice the critical trajectory would hold perfectly level — that is what "fixed point" means. On our 128&times;128 lattice with a 2&times;2 majority rule, the measured critical trajectory drifts slowly downward (mean over seeds: <span class="mono">a</span> = 0.730 &rarr; 0.641 &rarr; 0.560 across two squints, versus the hot run's immediate crash toward 0.5 and the cold run's immediate saturation at 1.0). Two honest reasons: the lattice runs out of levels, and the majority rule is an imperfect (truncated) squint — both standard, both stated in every textbook treatment. The qualitative signature survives the imperfection: near the critical point the system takes conspicuously longer to commit, and the pictures stay domains-within-domains rather than solid or speckle. The critical temperature of this lattice family is known exactly: <span class="mono">T_c = 2/ln(1+&radic;2) &asymp; 2.269</span>.
+</div>
+
+<div class="nav-links">
+  <a href="01-squinting.html" class="prev">Squinting: what survives the blur</a>
+  <a href="03-universality.html" class="next">Universality: different machines, one physics</a>
+</div>
+
+</div>
+
+<script type="module">
+import { setupHiDPICanvas, palette } from '../../../js/common.js';
+
+function mkRng(seed) { let s = seed >>> 0; return () => { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; }; }
+function makeLattice(L, rnd) { const s = new Int8Array(L * L); for (let i = 0; i < L * L; i++) s[i] = rnd() < 0.5 ? 1 : -1; return s; }
+function wolff(s, L, T, nFlips, rnd) {
+  const p = 1 - Math.exp(-2 / T);
+  const stack = new Int32Array(L * L);
+  for (let f = 0; f < nFlips; f++) {
+    const seed = (rnd() * L * L) | 0;
+    const target = s[seed];
+    s[seed] = -target;
+    let top = 0; stack[top++] = seed;
+    while (top > 0) {
+      const i = stack[--top];
+      const x = i % L, y = (i / L) | 0;
+      const nb = [((x + 1) % L) + y * L, ((x - 1 + L) % L) + y * L, x + ((y + 1) % L) * L, x + ((y - 1 + L) % L) * L];
+      for (const j of nb) if (s[j] === target && rnd() < p) { s[j] = -target; stack[top++] = j; }
+    }
+  }
+}
+function metro(s, L, T, sweeps, rnd) {
+  for (let sw = 0; sw < sweeps; sw++) for (let n = 0; n < L * L; n++) {
+    const i = (rnd() * L * L) | 0;
+    const x = i % L, y = (i / L) | 0;
+    const nn = s[((x + 1) % L) + y * L] + s[((x - 1 + L) % L) + y * L] + s[x + ((y + 1) % L) * L] + s[x + ((y - 1 + L) % L) * L];
+    const dE = 2 * s[i] * nn;
+    if (dE <= 0 || rnd() < Math.exp(-dE / T)) s[i] = -s[i];
+  }
+}
+function squint(s, L) {
+  const M = L >> 1;
+  const out = new Int8Array(M * M);
+  for (let y = 0; y < M; y++) for (let x = 0; x < M; x++) {
+    const a = s[2 * x + 2 * y * L], b = s[2 * x + 1 + 2 * y * L], c = s[2 * x + (2 * y + 1) * L], d = s[2 * x + 1 + (2 * y + 1) * L];
+    const sum = a + b + c + d;
+    out[x + y * M] = sum > 0 ? 1 : sum < 0 ? -1 : a;
+  }
+  return out;
+}
+function agreement(s, L) {
+  let ag = 0, tot = 0;
+  for (let y = 0; y < L; y++) for (let x = 0; x < L; x++) {
+    const i = x + y * L;
+    if (s[i] === s[((x + 1) % L) + y * L]) ag++;
+    if (s[i] === s[x + ((y + 1) % L) * L]) ag++;
+    tot += 2;
+  }
+  return ag / tot;
+}
+const _latCache = new Map();
+function drawLattice(ctx, s, L, x0, y0, size) {
+  let oc = _latCache.get(L);
+  if (!oc) { oc = document.createElement('canvas'); oc.width = L; oc.height = L; _latCache.set(L, oc); }
+  const octx = oc.getContext('2d');
+  const img = octx.createImageData(L, L);
+  for (let i = 0; i < L * L; i++) {
+    const up = s[i] > 0, o = i * 4;
+    img.data[o] = up ? 228 : 52; img.data[o + 1] = up ? 196 : 46; img.data[o + 2] = up ? 128 : 40; img.data[o + 3] = 255;
+  }
+  octx.putImageData(img, 0, 0);
+  ctx.imageSmoothingEnabled = false;
+  ctx.drawImage(oc, x0, y0, size, size);
+  ctx.strokeStyle = palette.axis; ctx.lineWidth = 1;
+  ctx.strokeRect(x0, y0, size, size);
+}
+
+const L0 = 128;
+// reference trajectories: means of 4-5 offline seeds (see module verification)
+const REF = {
+  cold: [0.963, 0.985, 0.997, 1.000],
+  crit: [0.730, 0.641, 0.560, 0.521],
+  hot:  [0.646, 0.573, 0.530, 0.506],
+};
+const COLORS = { cold: '#6dc48f', crit: '#c38df7', hot: '#d97236' };
+
+function drawFlowChart(ctx, x0, y0, w, h, live, maxLevel) {
+  ctx.strokeStyle = palette.axis; ctx.lineWidth = 1;
+  ctx.strokeRect(x0, y0, w, h);
+  const X = (lv) => x0 + 24 + (lv / maxLevel) * (w - 44);
+  const Y = (a) => y0 + h - ((a - 0.45) / 0.57) * h;
+  // guide lines at the two dead ends
+  ctx.setLineDash([3, 4]);
+  for (const [val, lab] of [[1.0, 'order'], [0.5, 'coin-flip']]) {
+    ctx.strokeStyle = palette.grid;
+    ctx.beginPath(); ctx.moveTo(x0, Y(val)); ctx.lineTo(x0 + w, Y(val)); ctx.stroke();
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 10px serif'; ctx.textAlign = 'left';
+    ctx.fillText(lab, x0 + 4, Y(val) - 3);
+  }
+  // reference curves
+  for (const key of ['cold', 'crit', 'hot']) {
+    ctx.strokeStyle = COLORS[key]; ctx.globalAlpha = 0.4;
+    ctx.beginPath();
+    REF[key].slice(0, maxLevel + 1).forEach((a, i) => { i ? ctx.lineTo(X(i), Y(a)) : ctx.moveTo(X(i), Y(a)); });
+    ctx.stroke();
+    ctx.globalAlpha = 1;
+  }
+  ctx.setLineDash([]);
+  // live trajectories
+  for (const t of live) {
+    ctx.strokeStyle = t.color; ctx.lineWidth = 2;
+    ctx.beginPath();
+    t.prof.forEach((a, i) => { i ? ctx.lineTo(X(i), Y(a)) : ctx.moveTo(X(i), Y(a)); });
+    ctx.stroke();
+    t.prof.forEach((a, i) => {
+      ctx.fillStyle = t.color;
+      ctx.beginPath(); ctx.arc(X(i), Y(a), 3.5, 0, Math.PI * 2); ctx.fill();
+    });
+  }
+  ctx.fillStyle = palette.textFaint; ctx.font = 'italic 10px serif'; ctx.textAlign = 'center';
+  for (let lv = 0; lv <= maxLevel; lv++) ctx.fillText(String(lv), X(lv), y0 + h + 12);
+  ctx.fillText('squint level', x0 + w / 2, y0 + h + 24);
+}
+
+// ============================================================
+// FIG A: three fates
+// ============================================================
+(() => {
+  const canvas = document.getElementById('canvas-fates');
+  const ctx = setupHiDPICanvas(canvas, 680, 470);
+  const readout = document.getElementById('ft-readout');
+  let rnd = mkRng(31);
+  const TEMPS = [['cold', 1.8], ['crit', 2.27], ['hot', 3.6]];
+  let lv = 0, lattices = {}, profs = {};
+
+  function prep() {
+    lv = 0;
+    for (const [key, T] of TEMPS) {
+      const s = makeLattice(L0, rnd);
+      wolff(s, L0, T, 350, rnd);
+      metro(s, L0, T, 2, rnd);
+      lattices[key] = [s];
+      profs[key] = [agreement(s, L0)];
+    }
+  }
+  prep();
+
+  document.getElementById('ft-squint').addEventListener('click', () => {
+    if (lv >= 3) return;
+    for (const [key] of TEMPS) {
+      const s = squint(lattices[key][lv], L0 >> lv);
+      lattices[key][lv + 1] = s;
+      profs[key].push(agreement(s, L0 >> (lv + 1)));
+    }
+    lv++;
+    draw();
+  });
+  document.getElementById('ft-reset').addEventListener('click', () => { prep(); draw(); });
+
+  function draw() {
+    ctx.clearRect(0, 0, 680, 470);
+    const labels = { cold: 'cold (T=1.8)', crit: 'near the transition (T≈2.27)', hot: 'hot (T=3.6)' };
+    TEMPS.forEach(([key], i) => {
+      const x0 = 20 + i * 220;
+      drawLattice(ctx, lattices[key][lv], L0 >> lv, x0, 22, 200);
+      ctx.fillStyle = COLORS[key]; ctx.font = 'italic 12px serif'; ctx.textAlign = 'center';
+      ctx.fillText(labels[key], x0 + 100, 14);
+    });
+    drawFlowChart(ctx, 20, 260, 640, 160, TEMPS.map(([key]) => ({ color: COLORS[key], prof: profs[key] })), 3);
+    readout.textContent = `level ${lv}` + (lv >= 3 ? ' — out of pixels; press New samples' : '');
+  }
+  draw();
+  document.addEventListener('themechange', draw);
+})();
+
+// ============================================================
+// FIG B: hunt the special temperature
+// ============================================================
+(() => {
+  const canvas = document.getElementById('canvas-hunt');
+  const ctx = setupHiDPICanvas(canvas, 680, 330);
+  const readout = document.getElementById('hunt-readout');
+  const slider = document.getElementById('hunt-t-slider');
+  const tval = document.getElementById('hunt-t-val');
+  let rnd = mkRng(53);
+  let T = 2.27;
+  slider.addEventListener('input', () => { T = parseFloat(slider.value); tval.textContent = T.toFixed(2); });
+
+  let trace = null, verdict = 'verdict = —';
+  document.getElementById('hunt-run').addEventListener('click', () => {
+    const s0 = makeLattice(L0, rnd);
+    wolff(s0, L0, T, 350, rnd);
+    metro(s0, L0, T, 2, rnd);
+    const prof = [agreement(s0, L0)];
+    let s = s0, l = L0;
+    for (let k = 0; k < 2; k++) { s = squint(s, l); l >>= 1; prof.push(agreement(s, l)); }
+    trace = { color: '#7db3dd', prof };
+    const aEnd = prof[2];
+    verdict = aEnd >= 0.90 ? `T=${T.toFixed(2)}: committed to ORDER (a → ${aEnd.toFixed(3)})`
+            : aEnd <= 0.55 ? `T=${T.toFixed(2)}: committed to NOISE (a → ${aEnd.toFixed(3)})`
+            : `T=${T.toFixed(2)}: still undecided after 2 squints (a = ${aEnd.toFixed(3)}) — you are near the knife-edge`;
+    draw();
+  });
+
+  function draw() {
+    ctx.clearRect(0, 0, 680, 330);
+    drawFlowChart(ctx, 20, 20, 640, 260, trace ? [trace] : [], 2);
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 12px serif'; ctx.textAlign = 'center';
+    ctx.fillText('faint dashed curves: the three reference fates · your run draws in blue', 340, 316);
+    readout.textContent = verdict;
+  }
+  draw();
+  document.addEventListener('themechange', draw);
+})();
+</script>
+
+</body>
+</html>

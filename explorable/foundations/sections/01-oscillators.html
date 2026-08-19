@@ -7,12 +7,12 @@
 <!-- BEGIN AUTO-INJECTED META -->
 <meta name="description" content="Phases, couplings, and the alignment integral. The von Mises distribution and R₀(K).">
 <meta name="author" content="Michael Sharpe">
-<link rel="canonical" href="https://lattice.project89.org/alpha/sections/02-oscillators.html">
+<link rel="canonical" href="https://lattice.project89.org/foundations/sections/01-oscillators.html">
 <link rel="icon" type="image/svg+xml" href="../../favicon.svg">
 <link rel="apple-touch-icon" href="../../apple-touch-icon.png">
 <meta property="og:title" content="Oscillators on a graph — The Living Lattice">
 <meta property="og:description" content="Phases, couplings, and the alignment integral. The von Mises distribution and R₀(K).">
-<meta property="og:url" content="https://lattice.project89.org/alpha/sections/02-oscillators.html">
+<meta property="og:url" content="https://lattice.project89.org/foundations/sections/01-oscillators.html">
 <meta property="og:site_name" content="The Living Lattice">
 <meta property="og:type" content="article">
 <meta property="og:image" content="https://lattice.project89.org/alpha/og-image.png">
@@ -55,12 +55,16 @@ posthog.init('phc_kRX9iHZstABjgFqEWJBMok2S3hW9R8QMHbNao4EsNz2g', {api_host: 'htt
 <nav class="breadcrumb">
   <a href="../index.html">&larr; contents</a>
   <span class="sep">·</span>
-  <span class="section-num">section 02 / 17</span>
+  <span class="section-num">section 01 / 05</span>
 </nav>
 
 <h1>Oscillators on a graph<span class="subtitle">Kuramoto, fireflies, and the math of the unit circle</span></h1>
 
 <p class="lead">Before we scale up, a minute of math. An oscillator's state is a single angle, and every claim in this essay eventually reduces to how two angles interact.</p>
+
+<div style="margin: 1.2em 0; padding: 12px 18px; background: var(--bg-soft); border: 1px solid var(--panel-border); border-radius: 8px; font-size: 0.95em; color: var(--text-soft);">
+  If <em>phase</em>, <em>frequency</em>, or <em>coupling</em> are new words — or you'd just rather meet them with your ears first — take ten minutes with <a href="../../primers/sections/00-phase-and-sound.html">the phase &amp; sound primer</a>. It builds everything this chapter uses from nothing, audibly. This chapter's figures have sound too.
+</div>
 
 <h2>Two angles on a circle</h2>
 
@@ -73,7 +77,8 @@ posthog.init('phc_kRX9iHZstABjgFqEWJBMok2S3hW9R8QMHbNao4EsNz2g', {api_host: 'htt
 
 <figure id="fig-circle-math">
   <canvas id="canvas-circle" width="680" height="340"></canvas>
-  <figcaption>Drag either phase dot around the circle. The chord between them, the arc of Δθ, and the values of cos(Δθ) and sin(Δθ) update live. cos is how much they agree. sin is how much they push.</figcaption>
+  <div class="controls" id="circle-controls"></div>
+  <figcaption>Drag either phase dot around the circle. The chord between them, the arc of Δθ, and the values of cos(Δθ) and sin(Δθ) update live. cos is how much they agree. sin is how much they push. <em>Sound on: you hear one steady tone whose loudness is the agreement — aligned is loud, opposite is silence. (A mapping, so your ears can read cos(Δθ) directly.)</em></figcaption>
 </figure>
 
 <p>The chord is short when the phases agree, long when they fight. That chord length, squared, is <span class="eqn">2 − 2 cos(Δθ)</span>. Keep this in your back pocket — the phase energy of a coupled system will be built from exactly this.</p>
@@ -140,7 +145,7 @@ posthog.init('phc_kRX9iHZstABjgFqEWJBMok2S3hW9R8QMHbNao4EsNz2g', {api_host: 'htt
     <button id="ring-reset">Reset phases</button>
     <button id="ring-new-freqs">New natural frequencies</button>
   </div>
-  <figcaption>24 Kuramoto oscillators on a ring. Slide K. At low K they flash incoherently — noise. Middle K: waves of coherence travel around the ring. High K: the whole ring blinks in unison. <span id="ring-readout" class="readout">I_phase = 0.00</span></figcaption>
+  <figcaption>24 Kuramoto oscillators on a ring. Slide K. At low K they flash incoherently — noise. Middle K: waves of coherence travel around the ring. High K: the whole ring blinks in unison. <em>Sound on: eight of the oscillators, each a tone at its actual instantaneous frequency. At low K you hear a detuned, beating cluster — noise. Slide K up and listen to them pull into a single pitch: that is the sync transition, in your ears.</em> <span id="ring-readout" class="readout">I_phase = 0.00</span></figcaption>
 </figure>
 
 <p>Watch what happens as you slide <span class="var">K</span>:</p>
@@ -184,14 +189,14 @@ posthog.init('phc_kRX9iHZstABjgFqEWJBMok2S3hW9R8QMHbNao4EsNz2g', {api_host: 'htt
 <p>What we actually want is a system that finds coordination <em>without</em> collapsing to unison — that holds structure and order in tension. The next chapter names what such a system would be maximizing.</p>
 
 <div class="nav-links">
-  <a href="01-prelude.html" class="prev">Prelude</a>
-  <a href="03-coherence.html" class="next">Coherence capital</a>
+  <a href="../index.html" class="prev">Foundations</a>
+  <a href="02-capital.html" class="next">Coherence capital</a>
 </div>
 
 </div>
 
 <script type="module">
-import { setupHiDPICanvas, wireEquation, runWhenVisible, palette } from '../../js/common.js';
+import { setupHiDPICanvas, wireEquation, runWhenVisible, palette, makeSoundToggle, makeVoices } from '../../js/common.js';
 
 // ============================================================
 // Interactive equation: Kuramoto
@@ -259,6 +264,12 @@ wireEquation('eq-iphase', {
 (() => {
   const canvas = document.getElementById('canvas-circle');
   const ctx = setupHiDPICanvas(canvas, 680, 340);
+
+  // Sonification (a labeled mapping, per the caption): one tone whose
+  // loudness is the agreement (1+cos Δθ)/2 — phase itself is inaudible in
+  // a single steady tone, so we give cos(Δθ) to the ear directly.
+  const sound = makeSoundToggle(document.getElementById('circle-controls'), { label: 'hear the agreement' });
+  const voice = makeVoices(sound, 1, { freq: 220 });
 
   const cx = 180, cy = 170, r = 120;
   let thetaA = 0.4, thetaB = 1.8;
@@ -390,6 +401,8 @@ wireEquation('eq-iphase', {
       ctx.font = '14px "SF Mono", Menlo, monospace';
       ctx.fillText(val, rx + 180, ry + i * 28);
     });
+
+    voice.set(0, 220, (1 + Math.cos(dphi)) / 2);
   }
 
   runWhenVisible(canvas, draw);
@@ -407,6 +420,14 @@ wireEquation('eq-iphase', {
   const resetBtn = document.getElementById('ring-reset');
   const newFreqsBtn = document.getElementById('ring-new-freqs');
   const readout = document.getElementById('ring-readout');
+
+  // Sonification: 8 of the 24, one sine voice each, pitch driven by the
+  // oscillator's measured instantaneous frequency (EMA-smoothed θ̇). What
+  // you hear IS the sim: a detuned cluster at low K, one pitch when locked.
+  const sound = makeSoundToggle(kSlider.closest('.controls'), { label: 'hear the ring' });
+  const SON = [0, 3, 6, 9, 12, 15, 18, 21];
+  const voices = makeVoices(sound, SON.length, { freq: 240 });
+  const vel = new Float32Array(SON.length);
 
   const N = 24;
   let thetas = [];
@@ -438,6 +459,7 @@ wireEquation('eq-iphase', {
       const d = omegas[i] + K * (Math.sin(thetas[left] - thetas[i]) + Math.sin(thetas[right] - thetas[i]));
       newThetas[i] = thetas[i] + d * dt;
     }
+    SON.forEach((idx, k) => { vel[k] = 0.85 * vel[k] + 0.15 * (newThetas[idx] - thetas[idx]) / dt; });
     thetas = newThetas;
   }
 
@@ -508,6 +530,7 @@ wireEquation('eq-iphase', {
     // I_phase bar (bottom)
     const Iphase = compute_I_phase();
     readout.textContent = `I_phase = ${Iphase.toFixed(3)}`;
+    SON.forEach((idx, k) => voices.set(k, 170 + 90 * vel[k], 1));
 
     const barY = 380;
     const barX0 = 80;

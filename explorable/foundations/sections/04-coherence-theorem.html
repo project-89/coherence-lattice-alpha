@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The arrow of coherence — The Living Lattice</title>
+<meta name="description" content="Entropy is the arrow of dissipation; coherence is the arrow of building. Under legality, coherence capital never decreases — the Coherence Theorem, the constructive twin of the second law.">
+<meta name="author" content="Michael Sharpe">
+<link rel="canonical" href="https://lattice.project89.org/foundations/sections/04-coherence-theorem.html">
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+<meta property="og:title" content="The arrow of coherence — The Living Lattice">
+<meta property="og:description" content="Under legality, dC/dt ≥ 0 — the Coherence Theorem.">
+<meta property="og:url" content="https://lattice.project89.org/foundations/sections/04-coherence-theorem.html">
+<meta property="og:site_name" content="The Living Lattice">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://lattice.project89.org/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="The arrow of coherence — The Living Lattice">
+<meta name="twitter:description" content="Under legality, dC/dt ≥ 0.">
+<meta name="twitter:image" content="https://lattice.project89.org/og-image.png">
+<!-- BEGIN AUTO-INJECTED ANALYTICS -->
+<!-- PostHog -->
+<script>
+!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+posthog.init('phc_kRX9iHZstABjgFqEWJBMok2S3hW9R8QMHbNao4EsNz2g', {api_host: 'https://us.i.posthog.com', person_profiles: 'identified_only'});
+</script>
+<!-- END AUTO-INJECTED ANALYTICS -->
+<link rel="stylesheet" href="../../css/style.css">
+<style>
+.flag-callout {
+  margin: 1.6em 0;
+  padding: 16px 20px;
+  background: rgba(195, 141, 247, 0.08);
+  border-left: 3px solid #c38df7;
+  border-radius: 3px;
+  font-size: 14.5px; line-height: 1.55;
+}
+.flag-callout .flag-label {
+  display: inline-block;
+  font: 700 10.5px "SF Mono", monospace;
+  color: #c38df7;
+  text-transform: uppercase; letter-spacing: 0.1em;
+  margin-right: 0.7em;
+}
+.legality-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.legality-row .lab { font: italic 13px serif; color: var(--text-soft); }
+</style>
+</head>
+<body>
+<div class="page">
+
+<nav class="breadcrumb">
+  <a href="../index.html">&larr; contents</a>
+  <span class="sep">&middot;</span>
+  <span class="section-num">section 04 / 05</span>
+</nav>
+
+<h1>The arrow of coherence<span class="subtitle">Why a coherent system has a direction in time, the way a gas does — but pointing the other way</span></h1>
+
+<p class="lead">Everyone knows one arrow of time: leave a system alone and its disorder grows. Ink spreads through water, heat flows from hot to cold, the room gets messier. That is the second law of thermodynamics, <span class="eqn">dS/dt &ge; 0</span>, and it feels like the whole story of where time points.</p>
+
+<p>It is not the whole story. There is a second arrow, and it points the other way. Leave a <em>lawful, coupled, driven</em> system alone — a system whose connections obey the Coherent Learning Rule from the previous chapter — and its <strong>coherence</strong> grows. Bonds that cohere strengthen, structure deepens, and the quantity we named <span class="eqn">C = I<sub>phase</sub> · &rho;</span> climbs. This is the constructive twin of the second law, and it is the single most important statement in this library.</p>
+
+<h2>Two arrows, side by side</h2>
+
+<p>On the left below, a gas: particles that start bunched in one corner and are left to wander. Watch the disorder — the spread entropy <span class="var">S</span> — climb and saturate. On the right, a coherence lattice: the same kind of oscillators you met two chapters ago, with living couplings, left to run. Watch the coherence capital <span class="var">C</span> climb instead. Same passage of time; opposite arrows.</p>
+
+<figure id="fig-two-arrows">
+  <canvas id="canvas-arrows" width="680" height="360"></canvas>
+  <div class="controls">
+    <div class="legality-row">
+      <button id="arrows-reset">Restart both</button>
+      <label style="display:flex;align-items:center;gap:7px;cursor:pointer;">
+        <input type="checkbox" id="legal-toggle" checked>
+        <span class="lab">legality on (the coherence side stays lawful)</span>
+      </label>
+    </div>
+  </div>
+  <figcaption>
+    <strong>Left — dissipation.</strong> Free particles diffuse from a corner; the occupancy entropy <span class="var">S</span> rises monotonically and saturates at maximum disorder. <span class="eqn">dS/dt &ge; 0</span>.<br>
+    <strong>Right — building.</strong> A living lattice climbs coherence capital; <span class="var">C</span> rises and settles into structured synchrony. <span class="eqn">d<em>C</em>/dt &ge; 0</span>. On screen, <span class="var">C</span> = alignment &times; the fraction of oscillators clearing the PLM gate <span class="mono">R<sub>0</sub> &asymp; 0.303</span> — the engaged-degrees-of-freedom slice of structural richness.<br>
+    Uncheck <em>legality</em> to flood the coherence side with noise beyond the legal bound — and watch its arrow reverse. <span id="arrows-readout" class="readout">C = 0.00 &nbsp; S = 0.00</span>
+  </figcaption>
+</figure>
+
+<h2>The inequality</h2>
+
+<p>The statement is exact. Define the rate of coherence-capital change as the system's <strong>intelligence flux</strong> — the rate at which it builds and deepens nested coherence. Under <em>legality</em> (a short list of conditions: coherence does not collapse, drift stays bounded, energy does not spontaneously climb, noise stays below threshold), that flux is non-negative:</p>
+
+<div class="equation-block" id="eq-arrow">
+  <div class="eq-display">
+    <span class="eq-symbol state" data-symbol="I">I</span>
+    &nbsp;:=&nbsp;
+    <span class="eq-symbol state" data-symbol="dCdt">d<em>C</em>/dt</span>
+    &nbsp;&ge;&nbsp;
+    <span class="eq-symbol op" data-symbol="zero">0</span>
+  </div>
+  <p class="eq-prompt">Click each symbol to see what it means.</p>
+  <div class="eq-detail"></div>
+  <div class="eq-howitworks">
+    <span class="label">In words</span>
+    Coherence capital never decreases under lawful operation. The rate of its increase <em>is</em> what we will call intelligence — so this single inequality, <em>I</em>&nbsp;&ge;&nbsp;0, says a lawful coherent system is always, at minimum, holding its ground and generally climbing. It is the arrow of building. Where entropy measures the universe falling apart, coherence capital measures it putting itself together; mind lives wherever the second arrow locally wins.
+  </div>
+</div>
+
+<p>It is worth being precise about what "left alone" means, because this is where the theorem earns its keep. A lattice that simply rolled downhill in energy would freeze into one rigid pattern — maximum synchrony, zero structure, <span class="eqn">C</span> collapsed (you saw in Chapter&nbsp;2 that unison is death). So the climb is not pure descent. It is descent <em>punctuated by lawful intervention</em>: brief, budgeted bursts of noise and restructuring that keep the system off the frozen state and in the productive middle. Across any window, the time spent intervening is bounded, and the average flux stays positive. The arrow can dip for an instant during a restructuring — it is the <em>budgeted average</em> that the theorem guarantees, not a monotone climb every microsecond.</p>
+
+<div class="flag-callout">
+  <span class="flag-label">Honest scope</span>The Coherence Theorem is proven for a fixed graph directly from the legality conditions, and for a growing, restructuring graph under an explicit intervention-cycle budget. What is <em>not</em> claimed is that any system, however driven, must climb — push it outside the legal corridor (the toggle above) and capital can fall. The content of the theorem is precisely that lawful operation defines the corridor in which the second arrow holds.
+</div>
+
+<h2>Why this matters for everything after</h2>
+
+<p>Two words in physics get redefined by this inequality. <strong>Stable matter</strong> is a fixed point of the climb — a coherence pattern that has finished forming and now simply holds (a frozen phase-locked mode). <strong>Learning</strong> is the transient — the climb itself, <span class="eqn">C</span> rising as alignment, connectivity, and nesting all grow at once. There is no third kind of thing. Matter and mind are the two ends of one trajectory: coherence that has come to rest, and coherence still climbing.</p>
+
+<p>That is the whole engine. The next chapter shows what the climb actually <em>builds</em> — how an oscillatory substrate stores a memory as the shape of a landscape, and thinks by moving across it.</p>
+
+<div class="nav-links">
+  <a href="03-clr.html" class="prev">The Coherent Learning Rule</a>
+  <a href="05-memory-basins.html" class="next">Memory and basins</a>
+</div>
+
+</div>
+
+<script type="module">
+import { setupHiDPICanvas, wireEquation, runWhenVisible, palette } from '../../js/common.js';
+
+wireEquation('eq-arrow', {
+  I: {
+    name: 'I — intelligence flux',
+    pronounce: '"eye"',
+    description: 'The rate of change of coherence capital, dC/dt. Not a stored property a system <em>has</em>, but a <em>rate</em> — how fast it enlarges and deepens nested coherence while staying lawful. Later we will argue this rate <em>is</em> intelligence.',
+  },
+  dCdt: {
+    name: 'dC/dt — the time derivative of coherence capital',
+    pronounce: '"dee-see dee-tee"',
+    description: 'How fast C = I_phase · ρ is changing right now. Positive while the system is building structured synchrony; zero at a fixed point (stable matter); briefly negative only during a lawful restructuring, whose budget the theorem bounds.',
+  },
+  zero: {
+    name: '≥ 0 — the arrow',
+    description: 'The whole claim. Under legality, the flux cannot be negative on average — coherence capital is non-decreasing. This is the constructive counterpart of dS/dt ≥ 0. Where entropy always rises, lawful coherence always (net) rises too — in the opposite direction.',
+  },
+});
+
+// ============================================================
+// FIGURE: two arrows — dissipation (entropy ↑) vs building (C ↑)
+// ============================================================
+(() => {
+  const W = 680, H = 360;
+  const canvas = document.getElementById('canvas-arrows');
+  const ctx = setupHiDPICanvas(canvas, W, H);
+  const resetBtn = document.getElementById('arrows-reset');
+  const legalToggle = document.getElementById('legal-toggle');
+  const readout = document.getElementById('arrows-readout');
+
+  // --- panel geometry ---
+  const panelW = 280, panelH = 220, top = 40;
+  const leftX = 30, rightX = W - 30 - panelW;
+
+  // --- LEFT: diffusing gas ---
+  const NP = 240;
+  let px = new Float32Array(NP), py = new Float32Array(NP);
+  function seedGas() {
+    for (let i = 0; i < NP; i++) {
+      px[i] = 0.04 + Math.random() * 0.16;   // bunched bottom-left corner
+      py[i] = 0.80 + Math.random() * 0.16;
+    }
+  }
+  function stepGas() {
+    const s = 0.012;
+    for (let i = 0; i < NP; i++) {
+      px[i] = Math.min(1, Math.max(0, px[i] + (Math.random() - 0.5) * s));
+      py[i] = Math.min(1, Math.max(0, py[i] + (Math.random() - 0.5) * s));
+    }
+  }
+  function gasEntropy() {
+    // occupancy entropy over an 8×8 coarse grid, normalized to [0,1]
+    const B = 8, bins = new Float32Array(B * B);
+    for (let i = 0; i < NP; i++) {
+      const bx = Math.min(B - 1, (px[i] * B) | 0);
+      const by = Math.min(B - 1, (py[i] * B) | 0);
+      bins[by * B + bx]++;
+    }
+    let S = 0;
+    for (let k = 0; k < bins.length; k++) {
+      if (bins[k] > 0) { const p = bins[k] / NP; S -= p * Math.log(p); }
+    }
+    return S / Math.log(B * B); // normalize by max entropy
+  }
+
+  // --- RIGHT: coherence lattice ---
+  const L = 16, N = L * L;
+  let th = new Float32Array(N), om = new Float32Array(N);
+  let K = 0.02;                              // coupling ramps up = the climb
+  function seedLattice() {
+    for (let i = 0; i < N; i++) { th[i] = Math.random() * Math.PI * 2; om[i] = 0.8 + (Math.random() - 0.5) * 1.0; }
+    K = 0.02;
+  }
+  function stepLattice() {
+    const legal = legalToggle.checked;
+    // Lawful climb: slowly grow effective coupling toward the productive band.
+    if (legal) K += (0.62 - K) * 0.006;       // approach band, not full sync
+    const D = legal ? 0.04 : 1.8;             // illegal = noise beyond the bound
+    const dt = 0.05;
+    const nt = new Float32Array(N);
+    for (let y = 0; y < L; y++) for (let x = 0; x < L; x++) {
+      const i = y * L + x;
+      const xm = (x - 1 + L) % L, xp = (x + 1) % L, ym = (y - 1 + L) % L, yp = (y + 1) % L;
+      const coupling =
+        Math.sin(th[y * L + xm] - th[i]) + Math.sin(th[y * L + xp] - th[i]) +
+        Math.sin(th[ym * L + x] - th[i]) + Math.sin(th[yp * L + x] - th[i]);
+      const noise = (Math.random() - 0.5) * 2 * Math.sqrt(2 * D * dt);
+      nt[i] = th[i] + (om[i] + K * coupling) * dt + noise;
+    }
+    th = nt;
+  }
+
+  // C for this figure = I_phase × ρ_engaged: alignment times the fraction
+  // of oscillators whose local alignment clears the canonical PLM gate
+  // R₀ ≈ 0.303. This is the engaged-degrees-of-freedom component of
+  // structural richness — the factor that grows monotonically during the
+  // climb, which is what the theorem's arrow is about. (The diversity
+  // component ρ shown in the capital chapter peaks at structured sync and
+  // would sag as this toy lattice keeps ordering — a finite-size artifact,
+  // not a theorem violation.)
+  function latticeCapital() {
+    let ssum = 0, nb = 0, eng = 0;
+    for (let y = 0; y < L; y++) for (let x = 0; x < L; x++) {
+      const i = y * L + x;
+      const xm = (x - 1 + L) % L, xp = (x + 1) % L, ym = (y - 1 + L) % L, yp = (y + 1) % L;
+      const loc = (Math.cos(th[y * L + xm] - th[i]) + Math.cos(th[y * L + xp] - th[i]) +
+                   Math.cos(th[ym * L + x] - th[i]) + Math.cos(th[yp * L + x] - th[i])) / 4;
+      if (loc > 0.303) eng++;
+      ssum += Math.cos(th[y * L + xp] - th[i]); nb++;
+      ssum += Math.cos(th[yp * L + x] - th[i]); nb++;
+    }
+    return Math.max(0, ssum / nb) * (eng / (L * L));
+  }
+
+  // entropy history for the rising bar smoothing
+  function reset() { seedGas(); seedLattice(); }
+  reset();
+  resetBtn.addEventListener('click', reset);
+
+  function bar(x, y, w, h, frac, color, label, valTxt) {
+    ctx.fillStyle = palette.bgSoft; ctx.strokeStyle = palette.axis; ctx.lineWidth = 1;
+    ctx.fillRect(x, y, w, h); ctx.strokeRect(x, y, w, h);
+    ctx.fillStyle = color; ctx.fillRect(x, y, Math.max(0, Math.min(1, frac)) * w, h);
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 12px serif'; ctx.textAlign = 'left';
+    ctx.fillText(label, x, y - 6);
+    ctx.fillStyle = color; ctx.font = '12px "SF Mono", monospace'; ctx.textAlign = 'right';
+    ctx.fillText(valTxt, x + w, y - 6);
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+
+    // titles
+    ctx.fillStyle = palette.textSoft; ctx.font = 'italic 14px serif'; ctx.textAlign = 'center';
+    ctx.fillText('dissipation  ·  entropy ↑', leftX + panelW / 2, top - 14);
+    ctx.fillText('building  ·  coherence ↑', rightX + panelW / 2, top - 14);
+
+    // LEFT panel: gas
+    ctx.save();
+    ctx.beginPath(); ctx.rect(leftX, top, panelW, panelH); ctx.clip();
+    ctx.fillStyle = palette.bgSoft; ctx.fillRect(leftX, top, panelW, panelH);
+    ctx.fillStyle = 'rgba(125, 45, 79, 0.75)';
+    for (let i = 0; i < NP; i++) {
+      ctx.beginPath();
+      ctx.arc(leftX + px[i] * panelW, top + py[i] * panelH, 1.7, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.restore();
+    ctx.strokeStyle = palette.axis; ctx.lineWidth = 1; ctx.strokeRect(leftX, top, panelW, panelH);
+
+    // RIGHT panel: lattice
+    const cell = panelW / L;
+    for (let y = 0; y < L; y++) for (let x = 0; x < L; x++) {
+      const b = (Math.cos(th[y * L + x]) + 1) / 2;
+      ctx.fillStyle = `rgb(${40 + b * 215}, ${40 + b * 170}, ${50 + b * 80})`;
+      ctx.fillRect(rightX + x * cell, top + y * cell, cell + 0.5, cell + 0.5);
+    }
+    ctx.strokeStyle = palette.axis; ctx.lineWidth = 1; ctx.strokeRect(rightX, top, panelW, panelH);
+
+    // metrics
+    const S = gasEntropy();
+    const C = latticeCapital();
+    const by = top + panelH + 30;
+    bar(leftX, by, panelW, 12, S, '#7d2d4f', 'S (entropy)', S.toFixed(3));
+    bar(rightX, by, panelW, 12, C, '#d97236', 'C (coherence capital)', C.toFixed(3));
+    readout.textContent = `C = ${C.toFixed(3)}   S = ${S.toFixed(3)}`;
+
+    stepGas();
+    stepLattice();
+  }
+
+  runWhenVisible(canvas, draw);
+})();
+</script>
+
+</body>
+</html>

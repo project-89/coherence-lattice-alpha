@@ -7,12 +7,12 @@
 <!-- BEGIN AUTO-INJECTED META -->
 <meta name="description" content="C = I_phase · ρ. Neither a seizure nor silence — the universe's compromise between synchrony and richness.">
 <meta name="author" content="Michael Sharpe">
-<link rel="canonical" href="https://lattice.project89.org/alpha/sections/03-coherence.html">
+<link rel="canonical" href="https://lattice.project89.org/foundations/sections/02-capital.html">
 <link rel="icon" type="image/svg+xml" href="../../favicon.svg">
 <link rel="apple-touch-icon" href="../../apple-touch-icon.png">
 <meta property="og:title" content="Coherence capital — The Living Lattice">
 <meta property="og:description" content="C = I_phase · ρ. Neither a seizure nor silence — the universe's compromise between synchrony and richness.">
-<meta property="og:url" content="https://lattice.project89.org/alpha/sections/03-coherence.html">
+<meta property="og:url" content="https://lattice.project89.org/foundations/sections/02-capital.html">
 <meta property="og:site_name" content="The Living Lattice">
 <meta property="og:type" content="article">
 <meta property="og:image" content="https://lattice.project89.org/alpha/og-image.png">
@@ -37,7 +37,7 @@ posthog.init('phc_kRX9iHZstABjgFqEWJBMok2S3hW9R8QMHbNao4EsNz2g', {api_host: 'htt
 <nav class="breadcrumb">
   <a href="../index.html">&larr; contents</a>
   <span class="sep">·</span>
-  <span class="section-num">section 03 / 17</span>
+  <span class="section-num">section 02 / 05</span>
 </nav>
 
 <h1>Coherence capital<span class="subtitle">What a system would maximize if it cared about both sync and complexity</span></h1>
@@ -50,11 +50,11 @@ posthog.init('phc_kRX9iHZstABjgFqEWJBMok2S3hW9R8QMHbNao4EsNz2g', {api_host: 'htt
 
 <p>The network needs to be <strong>aligned enough</strong> to function as one thing. It also needs to be <strong>structured enough</strong> to hold more than one pattern at a time. Call these two requirements <span class="var">I<sub>phase</sub></span> and <span class="var">ρ</span>.</p>
 
-<p><span class="var">I<sub>phase</sub></span> we already have — the average alignment across all bonds, from Chapter 2. It answers: <em>are we in sync?</em></p>
+<p><span class="var">I<sub>phase</sub></span> we already have — the average alignment across all bonds, from Chapter 1. It answers: <em>are we in sync?</em></p>
 
 <p><span class="var">ρ</span> (Greek lowercase rho) is new. Call it <strong>structural richness</strong>. It answers: <em>how much is the network actually doing?</em> A network holding many distinct phase patterns simultaneously — where regions lock with each other in nontrivial ways — has high <span class="var">ρ</span>. A network in trivial unison has low <span class="var">ρ</span>, because a single pattern is the simplest pattern there is. A network in noise also has low <span class="var">ρ</span>, because noise is not <em>structure</em>, it is the absence of structure.</p>
 
-<p class="aside"><span class="label">A note on ρ</span>The full formula for structural richness, written out in the paper, involves four components: how many bonds are alive, their mean coupling, the spectral bandwidth of the network's connectivity, and the depth of its <em>nested phase-lock hierarchy</em> — what we'll get to in Chapter 6 when we meet phase-locked modes proper. In this chapter we use a simplified proxy that captures the essential trade-off with <span class="var">I<sub>phase</sub></span>. The full picture, and its connection to memory and geometry, is coming.</p>
+<p class="aside"><span class="label">A note on ρ</span>The full formula for structural richness, written out in the paper, involves four components: how many bonds are alive, their mean coupling, the spectral bandwidth of the network's connectivity, and the depth of its <em>nested phase-lock hierarchy</em> — what we'll get to in Chapter 5 when we meet phase-locked modes proper. In this chapter we use a simplified proxy that captures the essential trade-off with <span class="var">I<sub>phase</sub></span>. The full picture, and its connection to memory and geometry, is coming.</p>
 
 <h2>Their product</h2>
 
@@ -83,7 +83,7 @@ posthog.init('phc_kRX9iHZstABjgFqEWJBMok2S3hW9R8QMHbNao4EsNz2g', {api_host: 'htt
 <figure id="fig-three-regimes">
   <canvas id="canvas-three" width="680" height="380"></canvas>
   <figcaption>
-    <strong>Left:</strong> chaos. K is too small for sync to form. I<sub>phase</sub> near zero, ρ large, but their product is zero because nothing is actually coordinating.<br>
+    <strong>Left:</strong> chaos. K is too small for sync to form. I<sub>phase</sub> near zero, ρ large, but their product stays near zero — nothing is actually coordinating.<br>
     <strong>Middle:</strong> coordinated complexity. K is in the sweet spot. Islands of coherence have formed; distinct regions are locked, but they are distinct. I<sub>phase</sub> and ρ are both substantial. Their product peaks here.<br>
     <strong>Right:</strong> trivial unison. K is so high that every oscillator has given up its own pattern. I<sub>phase</sub> near 1, but ρ has collapsed to zero. The network is in sync, but there is nothing for it to be in sync <em>about</em>.
   </figcaption>
@@ -117,8 +117,8 @@ posthog.init('phc_kRX9iHZstABjgFqEWJBMok2S3hW9R8QMHbNao4EsNz2g', {api_host: 'htt
 <p>We have a name for this climb: <strong>coherence ascent</strong>. And the local rule that performs it, derived from nothing more than taking the time derivative of <span class="eqn">C</span> and asking each bond what it should do to help, is the <strong>Coherence Learning Rule</strong>. That is the next chapter. For now, hold onto this: every interesting physical system — crystal, embryo, brain, fugue — is, in a precise sense, trying to do this.</p>
 
 <div class="nav-links">
-  <a href="02-oscillators.html" class="prev">Oscillators on a graph</a>
-  <a href="04-clr.html" class="next">The Coherence Learning Rule</a>
+  <a href="01-oscillators.html" class="prev">Oscillators on a graph</a>
+  <a href="03-clr.html" class="next">The Coherence Learning Rule</a>
 </div>
 
 </div>
@@ -139,7 +139,7 @@ wireEquation('eq-capital', {
   Iphase: {
     name: 'I_phase — phase alignment',
     pronounce: '"eye phase"',
-    description: 'The average of cos(Δθ) across all bonds, from Chapter 2. Near 0 when phases are random, near 1 when everyone agrees. This is the sync factor. By itself it would reward trivial unison.',
+    description: 'The average of cos(Δθ) across all bonds, from Chapter 1. Near 0 when phases are random, near 1 when everyone agrees. This is the sync factor. By itself it would reward trivial unison.',
   },
   rho: {
     name: 'ρ — structural richness',
@@ -174,37 +174,19 @@ function computeMetrics(thetas, L, periodic = true) {
   const Iphase = s / n;
   const Iphat = (1 + Iphase) / 2;
 
-  // Local I_phase per 3×3 patch, then spatial std-dev → ρ
-  const ps = 3;
-  const locals = [];
-  for (let py = 0; py < L; py += ps) {
-    for (let px = 0; px < L; px += ps) {
-      let lsum = 0, lcount = 0;
-      for (let y = py; y < Math.min(py + ps, L); y++) {
-        for (let x = px; x < Math.min(px + ps, L); x++) {
-          const i = y * L + x;
-          if (x + 1 < Math.min(px + ps, L)) {
-            lsum += Math.cos(thetas[y * L + (x + 1)] - thetas[i]);
-            lcount++;
-          }
-          if (y + 1 < Math.min(py + ps, L)) {
-            lsum += Math.cos(thetas[(y + 1) * L + x] - thetas[i]);
-            lcount++;
-          }
-        }
-      }
-      if (lcount > 0) locals.push((1 + lsum / lcount) / 2);
-    }
-  }
-  const mean = locals.reduce((a, b) => a + b, 0) / locals.length;
-  const variance = locals.reduce((acc, x) => acc + (x - mean) ** 2, 0) / locals.length;
-  const stdev = Math.sqrt(variance);
-  // Normalize: theoretical max std of values in [0,1] is 0.5 (bimodal {0,1}).
-  // Scale so that value ~ 1 at realistic heterogeneity (~0.35 std).
-  const rho = Math.min(1, stdev / 0.35);
+  // ρ — structural-richness proxy: circular diversity of the phase field,
+  // 1 − |mean resultant|. Each factor of C must vanish at one dead end:
+  // in noise Iphase ≈ 0, in trivial unison ρ = 0 — so their product peaks
+  // only at structured synchrony, distinct locked regions at distinct
+  // phases. (Matches coherenceMetrics in js/common.js.)
+  let cs = 0, sn2 = 0;
+  const nAll = L * L;
+  for (let i = 0; i < nAll; i++) { cs += Math.cos(thetas[i]); sn2 += Math.sin(thetas[i]); }
+  const rho = 1 - Math.sqrt(cs * cs + sn2 * sn2) / nAll;
 
-  const C = Iphat * rho;
-  return { Iphase, Iphat, rho, C };
+  const Ipos = Math.max(0, Iphase);
+  const C = Ipos * rho;
+  return { Iphase, Iphat, Ipos, rho, C };
 }
 
 // ============================================================
@@ -218,9 +200,13 @@ function computeMetrics(thetas, L, periodic = true) {
   const L = 10;
   const N = L * L;
   const panels = [
-    { label: 'chaos',                  K: 0.05, thetas: new Float32Array(N), omegas: new Float32Array(N) },
+    { label: 'chaos',                  K: 0.02, thetas: new Float32Array(N), omegas: new Float32Array(N) },
     { label: 'coordinated complexity', K: 0.20, thetas: new Float32Array(N), omegas: new Float32Array(N) },
-    { label: 'trivial unison',         K: 3.00, thetas: new Float32Array(N), omegas: new Float32Array(N) },
+    // The unison panel starts near-aligned: a sudden quench to high K from
+    // random phases gets trapped in a wound stripe state (high diversity!)
+    // on the periodic lattice — the regime we want to show is the locked
+    // end state, which K=3 then holds live.
+    { label: 'trivial unison',         K: 3.00, thetas: new Float32Array(N), omegas: new Float32Array(N), alignedInit: true },
   ];
 
   // Wider frequency spread so the middle-K regime shows real heterogeneity
@@ -228,7 +214,10 @@ function computeMetrics(thetas, L, periodic = true) {
   const initOmegas = Array.from({ length: N }, () => 0.8 + (Math.random() - 0.5) * 1.2);
 
   panels.forEach(p => {
-    for (let i = 0; i < N; i++) { p.thetas[i] = initThetas[i]; p.omegas[i] = initOmegas[i]; }
+    for (let i = 0; i < N; i++) {
+      p.thetas[i] = p.alignedInit ? 1.0 + (Math.random() - 0.5) * 0.2 : initThetas[i];
+      p.omegas[i] = initOmegas[i];
+    }
   });
 
   function stepPanel(p) {
@@ -294,7 +283,7 @@ function computeMetrics(thetas, L, periodic = true) {
       ctx.font = '11px "SF Mono", monospace';
       ctx.textAlign = 'right';
       ctx.fillStyle = '#2a5f8f';
-      ctx.fillText(m.Iphat.toFixed(3), x0 + gridW, my);
+      ctx.fillText(m.Ipos.toFixed(3), x0 + gridW, my);
       ctx.fillStyle = '#7d2d4f';
       ctx.fillText(m.rho.toFixed(3), x0 + gridW, my + 28);
       ctx.fillStyle = '#d97236';
@@ -303,7 +292,7 @@ function computeMetrics(thetas, L, periodic = true) {
       // Bars
       const barW = gridW;
       const barH = 5;
-      [[m.Iphat, my + 5, '#2a5f8f', 1],
+      [[m.Ipos, my + 5, '#2a5f8f', 1],
        [m.rho, my + 33, '#7d2d4f', 1],
        [m.C, my + 61, '#d97236', 0.6]].forEach(([v, by, color, vmax]) => {
         ctx.fillStyle = palette.bgSoft;
@@ -412,7 +401,7 @@ function computeMetrics(thetas, L, periodic = true) {
     const bw = 130;
     const bh = 16;
     const barSet = [
-      ['I_phase', m.Iphat, 1, '#2a5f8f', y0 + 30],
+      ['I_phase', m.Ipos, 1, '#2a5f8f', y0 + 30],
       ['ρ', m.rho, 1, '#7d2d4f', y0 + 80],
       ['C', m.C, 0.6, '#d97236', y0 + 130],
     ];
@@ -466,7 +455,7 @@ function computeMetrics(thetas, L, periodic = true) {
     });
 
     // Current state dot
-    const dx = pX0 + m.Iphat * pW;
+    const dx = pX0 + m.Ipos * pW;
     const dy = pY0 + pH - m.rho * pH;
     ctx.fillStyle = '#d97236';
     ctx.beginPath();

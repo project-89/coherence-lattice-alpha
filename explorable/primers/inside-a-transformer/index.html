@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Inside a transformer — The Living Lattice</title>
+<meta name="description" content="A four-section module for people who have never opened a transformer: tokens as arrows, attention as a listening competition, the residual stream as a running sum, and the sphere the whole computation lives on.">
+<meta name="author" content="Michael Sharpe">
+<link rel="canonical" href="https://lattice.project89.org/primers/inside-a-transformer/">
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+<meta property="og:title" content="Inside a transformer — The Living Lattice">
+<meta property="og:description" content="Tokens, attention, the residual stream, and LayerNorm — every moving part draggable, no ML background required.">
+<meta property="og:url" content="https://lattice.project89.org/primers/inside-a-transformer/">
+<meta property="og:site_name" content="The Living Lattice">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://lattice.project89.org/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Inside a transformer — The Living Lattice">
+<meta name="twitter:description" content="A four-section module: the machinery of a transformer, draggable, assuming nothing.">
+<meta name="twitter:image" content="https://lattice.project89.org/og-image.png">
+<!-- BEGIN AUTO-INJECTED ANALYTICS -->
+<!-- PostHog -->
+<script>
+!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+posthog.init('phc_kRX9iHZstABjgFqEWJBMok2S3hW9R8QMHbNao4EsNz2g', {api_host: 'https://us.i.posthog.com', person_profiles: 'identified_only'});
+</script>
+<!-- END AUTO-INJECTED ANALYTICS -->
+<link rel="stylesheet" href="../../css/style.css">
+<style>
+nav.toc li { align-items: flex-start; }
+nav.toc .toc-item { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+nav.toc .toc-item > a { flex: 0 0 auto; font-weight: 500; }
+nav.toc .toc-sub { color: var(--text-faint); font-size: 0.9em; line-height: 1.45; }
+</style>
+</head>
+<body>
+<div class="page">
+
+<nav class="breadcrumb">
+  <a href="../index.html">&larr; primers</a>
+  <span class="sep">&middot;</span>
+  <span class="section-num">inside a transformer &middot; intermediate</span>
+</nav>
+
+<h1>Inside a transformer<span class="subtitle">For people who have never opened one — every moving part, draggable, in four short sections</span></h1>
+
+<p class="lead">Half of this library talks about transformers, and it uses vocabulary as if everyone grew up with it: <em>token</em>, <em>attention head</em>, <em>residual stream</em>, <em>LayerNorm</em>. Nobody grew up with it. This module builds the whole machine from nothing — one section per moving part, every part something you can drag, press, and in one case hear — because each engineering name turns out to be a simple physical picture. The only math assumed is <a href="../sections/01-rotations.html">the rotations primer</a>'s: arrows, and the dot product as agreement.</p>
+
+<p>By the end, the sentence "a transformer is a network of coupled oscillators" stops being a metaphor you take on faith and becomes a description you can check — which is exactly where the <a href="../../transformers/index.html">Transformers as Oscillators</a> essay begins.</p>
+
+<nav class="toc">
+  <ol>
+    <li><span class="toc-item"><a href="sections/01-tokens.html">Tokens and embeddings</a><span class="toc-sub">Every word becomes an arrow, direction becomes meaning. Drag a token, rank a neighborhood by agreement, and watch one word mean two things until context decides.</span></span></li>
+    <li><span class="toc-item"><a href="sections/02-attention.html">Attention: who listens to whom</a><span class="toc-sub">Q, K, V, and softmax as a listening competition you can drag and hear. Then: two heads specializing over the same sentence, and the causal mask — no listening forward.</span></span></li>
+    <li><span class="toc-item"><a href="sections/03-residual-stream.html">The residual stream</a><span class="toc-sub">The whiteboard that rides through the stack. Take a token's state apart layer by layer — it is literally a sum — and probe the board at any depth.</span></span></li>
+    <li><span class="toc-item"><a href="sections/04-sphere.html">LayerNorm and the sphere</a><span class="toc-sub">Reprojection keeps only direction; concentration of measure makes a high-dimensional sphere roomy. Payoff: you have met an oscillator network.</span></span></li>
+  </ol>
+</nav>
+
+<div class="nav-links">
+  <a href="../index.html" class="prev">Primers</a>
+  <a href="sections/01-tokens.html" class="next">Start: Tokens and embeddings</a>
+</div>
+
+</div>
+
+<script type="module">
+import '../../js/common.js';
+</script>
+
+</body>
+</html>

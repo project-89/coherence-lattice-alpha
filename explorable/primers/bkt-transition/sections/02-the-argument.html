@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The argument: energy versus entropy — The Living Lattice</title>
+<meta name="description" content="Free energy taught in plain words: a lone vortex costs πK·ln R, its freedom is worth 2·ln R, and the knife-edge where the two slopes cross is K = 2/π. Both logarithms measured live.">
+<meta name="author" content="Michael Sharpe">
+<link rel="canonical" href="https://lattice.project89.org/primers/bkt-transition/sections/02-the-argument.html">
+<link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
+<link rel="apple-touch-icon" href="../../../apple-touch-icon.png">
+<meta property="og:title" content="The argument: energy versus entropy — The Living Lattice">
+<meta property="og:description" content="Two logarithms fight; the wall is where their coefficients tie: K = 2/π.">
+<meta property="og:url" content="https://lattice.project89.org/primers/bkt-transition/sections/02-the-argument.html">
+<meta property="og:site_name" content="The Living Lattice">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://lattice.project89.org/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="The argument: energy versus entropy — The Living Lattice">
+<meta name="twitter:description" content="Free energy in plain words, both logarithms measured live, and the knife-edge at 2/π.">
+<meta name="twitter:image" content="https://lattice.project89.org/og-image.png">
+<!-- BEGIN AUTO-INJECTED ANALYTICS -->
+<!-- PostHog -->
+<script>
+!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+posthog.init('phc_kRX9iHZstABjgFqEWJBMok2S3hW9R8QMHbNao4EsNz2g', {api_host: 'https://us.i.posthog.com', person_profiles: 'identified_only'});
+</script>
+<!-- END AUTO-INJECTED ANALYTICS -->
+<link rel="stylesheet" href="../../../css/style.css">
+<style>
+.flag-callout {
+  margin: 1.6em 0; padding: 16px 20px;
+  background: rgba(195, 141, 247, 0.08);
+  border-left: 3px solid #c38df7; border-radius: 3px;
+  font-size: 14.5px; line-height: 1.55;
+}
+.flag-callout .flag-label {
+  display: inline-block; font: 700 10.5px "SF Mono", monospace;
+  color: #c38df7; text-transform: uppercase; letter-spacing: 0.1em; margin-right: 0.7em;
+}
+.flag-callout a { font-weight: 600; }
+</style>
+</head>
+<body>
+<div class="page">
+
+<nav class="breadcrumb">
+  <a href="../index.html">&larr; BKT transition</a>
+  <span class="sep">&middot;</span>
+  <span class="section-num">section 02 / 03 &middot; advanced</span>
+</nav>
+
+<h1>The argument<span class="subtitle">Energy versus entropy — two logarithms fight, and the wall is where they tie</span></h1>
+
+<p class="lead">You now know what a vortex is and that only annihilation can remove one. The question that decides everything: <em>will a warm lattice actually contain free vortices?</em> If yes, order is doomed — free whirlpools wander and scramble every long-distance agreement. If they can only exist as tight bound pairs, order survives. The answer turns out to be a competition between two quantities that both grow with the size of the system, both logarithmically — so the winner is decided purely by their <em>coefficients</em>. One coefficient is &pi;K. The other is the number 2. The wall is where they tie: <span class="mono">K&nbsp;=&nbsp;2/&pi;</span>. This section builds that argument with both logarithms measured, not asserted.</p>
+
+<h2>1. Free energy, in plain words</h2>
+
+<p>First, the accounting concept the argument runs on — stated plainly, because the essays use it constantly and no page has stopped to define it. <strong>Energy</strong> is what a configuration <em>costs</em>: here, misaligned neighbors (the chord from <a href="../../sections/00-phase-and-sound.html">primer 00</a> — bonds pay for disagreement). <strong>Entropy</strong> is how many <em>ways</em> a configuration can happen: a vortex pinned to one spot is one way; a vortex allowed anywhere in the box is millions of ways. <strong>Temperature</strong> is the exchange rate between the two — how much cost the ambient jiggling will happily pay to buy options. The ledger nature actually settles is their difference, the <strong>free energy</strong>:</p>
+
+<p style="text-align:center; font-family: 'Latin Modern Math', serif; font-style: italic; font-size: 1.15em;">F &nbsp;=&nbsp; E &nbsp;&minus;&nbsp; T&middot;S &nbsp;&nbsp;&nbsp;<span style="font-size:0.8em; color: var(--text-faint);">(cost minus options, at the going rate)</span></p>
+
+<p>A thing spontaneously appears when its <em>free</em> energy is negative — when the options it opens outweigh the cost of building it. Not because anything wants disorder; simply because there are so many more ways to be disordered than ordered that, past a price point, disorder is what you get by counting.</p>
+
+<h2>2. Both sides of the ledger grow as ln&nbsp;R — measure them</h2>
+
+<p>Here is the miracle that makes the transition sharp. <strong>The cost:</strong> a lone vortex torques the field all the way out — arrows at distance r from the core must still tilt by about 1/r, so the energy collected out to radius R grows as <span class="mono">&pi;K&middot;ln(R/a)</span> (a is the core size, the lattice spacing). Not a guess: the figure below builds a vortex, adds up real bond-by-bond misalignment cost ring by ring, and plots it against ln&nbsp;R — a straight line whose measured slope you can compare to &pi;K. <strong>The payoff:</strong> the entropy of placing that free vortex anywhere in a box of radius R counts (R/a)&sup2; sites, so <span class="mono">T&middot;S = 2T&middot;ln(R/a)</span> — the same logarithm, coefficient 2 (in the site's units, T&nbsp;=&nbsp;1). Two straight lines on a ln&nbsp;R axis. Whichever is steeper wins <em>at every scale at once</em>.</p>
+
+<figure id="fig-ledger">
+  <canvas id="canvas-ledger" width="680" height="420"></canvas>
+  <div class="controls" id="ledger-controls"><!-- slider via JS --></div>
+  <figcaption>The ledger, measured. Orange: the energy of one vortex summed bond-by-bond out to radius R (points), against ln&nbsp;R — with the predicted slope &pi;K drawn through them. Blue: the entropy payoff 2&middot;ln&nbsp;R. Slide K: the energy line tilts; the entropy line is fixed. Below <span class="mono">K = 2/&pi;</span> the payoff is steeper — free vortices are a bargain and proliferate. Above it the cost is steeper — free vortices are ruinous at any size, and only bound pairs (whose far fields cancel) are affordable. <span id="ledger-readout" class="readout">measuring&hellip;</span></figcaption>
+</figure>
+
+<h2>3. Watch the lattice make the same decision</h2>
+
+<p>The ledger is an argument about one ideal vortex. Below is a <em>live thermal lattice</em> making the decision for real: 28&times;28 coupled oscillators at temperature 1, each nudged by its neighbors (coupling K) and kicked by noise, with every vortex the field currently contains marked on top — orange cores winding +1, purple &minus;1. Slide the coupling and watch the population change regime: weak coupling, a gas of free whirlpools; strong coupling, a nearly combed lawn where vortices appear rarely, in tight pairs, and vanish again.</p>
+
+<figure id="fig-sim">
+  <canvas id="canvas-sim" width="680" height="440"></canvas>
+  <div class="controls" id="sim-controls">
+    <button id="sim-below">below the wall (K = 0.5)</button>
+    <button id="sim-above">above (K = 1.2)</button>
+    <button id="sim-rescatter">Re-scatter</button>
+  </div>
+  <figcaption>A live XY lattice at temperature 1. Markers are the vortices the field contains right now, found by measuring the winding of every little plaquette. Measured here: at K&nbsp;=&nbsp;0.5 the field carries a steady gas of order 150 vortices (a fifth of all sites); at K&nbsp;=&nbsp;1.2, a handful, paired and short-lived. <span id="sim-readout" class="readout">running&hellip;</span></figcaption>
+</figure>
+
+<div class="flag-callout">
+  <span class="flag-label">Honest dial</span>
+  One subtlety, stated plainly because it is the door to the next module. The ledger's K is the <em>stiffness the long waves actually feel</em>. The slider above sets the <em>bond-level</em> coupling — and in this simulation the vortex population thins out near dial &asymp; 0.9&ndash;1.1, not at 0.64. Both are right: tight bound pairs soften the medium, so the stiffness the argument runs on is <em>lower</em> than the dial. The site says exactly this in the &alpha; essay: bond couplings settle at K<sub>bulk</sub> = 16/&pi;&sup2;, which the long-wavelength physics feels as K<sub>eff</sub> = 2/&pi; — one number in two languages, related by <em>renormalization</em>: what survives when you squint. That is the subject of <a href="../../coarse-graining/">the coarse-graining module</a>. Also honestly: this lattice is small and warm — counts fluctuate, and the crossover is a shoulder here, not the sharp wall of the infinite system.
+</div>
+
+<div class="nav-links">
+  <a href="01-vortices.html" class="prev">Vortices</a>
+  <a href="03-the-wall.html" class="next">The wall: what unbinding destroys</a>
+</div>
+
+</div>
+
+<script type="module">
+import { setupHiDPICanvas, runWhenVisible, makeSlider, palette, K_BKT } from '../../../js/common.js';
+
+function wrap(a) { while (a > Math.PI) a -= 2*Math.PI; while (a < -Math.PI) a += 2*Math.PI; return a; }
+
+// ============================================================
+// FIG 1: the measured ledger — E(R) vs ln R, against 2·ln R
+// ============================================================
+(() => {
+  const canvas = document.getElementById('canvas-ledger');
+  const ctx = setupHiDPICanvas(canvas, 680, 420);
+  const readout = document.getElementById('ledger-readout');
+  let K = 0.64;
+
+  // Measure E1(R): unit-K vortex energy inside radius R (computed once).
+  const N = 141, c = (N - 1) / 2 + 0.5;
+  const RS = [3, 4.5, 7, 10, 15, 22, 32, 46, 65];
+  const E1 = (() => {
+    const th = new Float64Array(N*N);
+    for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) th[y*N+x] = Math.atan2(y - c, x - c);
+    return RS.map(R => {
+      let E = 0;
+      for (let y = 0; y < N-1; y++) for (let x = 0; x < N-1; x++) {
+        if (Math.hypot(x - c, y - c) > R) continue;
+        const i = y*N+x;
+        E += 1 - Math.cos(wrap(th[i+1]-th[i]));
+        E += 1 - Math.cos(wrap(th[i+N]-th[i]));
+      }
+      return E;
+    });
+  })();
+  // measured slope at K=1 (least squares over the scaling window, skip smallest R)
+  const slope1 = (() => {
+    const xs = RS.slice(2).map(r => Math.log(r)), ys = E1.slice(2);
+    const n = xs.length, mx = xs.reduce((a,b)=>a+b)/n, my = ys.reduce((a,b)=>a+b)/n;
+    let num = 0, den = 0;
+    for (let i = 0; i < n; i++) { num += (xs[i]-mx)*(ys[i]-my); den += (xs[i]-mx)*(xs[i]-mx); }
+    return num/den;
+  })();
+
+  makeSlider(document.getElementById('ledger-controls'), {
+    label: 'K (stiffness)', min: 0.2, max: 1.2, step: 0.005, value: 0.64,
+    onChange: v => { K = v; },
+  });
+
+  function draw() {
+    ctx.clearRect(0, 0, 680, 420);
+    const x0 = 70, y0 = 40, w = 560, h = 300;
+    const lnMin = Math.log(2.5), lnMax = Math.log(75);
+    const yMax = Math.max(2 * lnMax, 1.25 * Math.PI * lnMax) + 2;
+    const X = ln => x0 + (ln - lnMin) / (lnMax - lnMin) * w;
+    const Y = v => y0 + h - Math.max(0, v) / yMax * h;
+
+    ctx.strokeStyle = palette.axis; ctx.lineWidth = 1;
+    ctx.strokeRect(x0, y0, w, h);
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 12px serif'; ctx.textAlign = 'center';
+    ctx.fillText('ln R  (system size, logarithmic) →', x0 + w/2, y0 + h + 30);
+    ctx.save(); ctx.translate(x0 - 40, y0 + h/2); ctx.rotate(-Math.PI/2);
+    ctx.fillText('cost / payoff', 0, 0); ctx.restore();
+
+    // entropy payoff line 2·ln R (T=1)
+    ctx.strokeStyle = palette.blue; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(X(lnMin), Y(2*lnMin)); ctx.lineTo(X(lnMax), Y(2*lnMax)); ctx.stroke();
+    ctx.fillStyle = palette.blue; ctx.font = '12px "SF Mono", monospace'; ctx.textAlign = 'left';
+    ctx.fillText('payoff 2·ln R', X(lnMax) - 118, Y(2*lnMax) - 8);
+
+    // measured energy points at this K + predicted πK line
+    ctx.fillStyle = palette.orange;
+    RS.forEach((R, i) => {
+      ctx.beginPath(); ctx.arc(X(Math.log(R)), Y(K * E1[i]), 4, 0, Math.PI*2); ctx.fill();
+    });
+    ctx.strokeStyle = palette.orange; ctx.lineWidth = 1.4; ctx.setLineDash([4, 4]);
+    const b = K * (E1[4] - Math.PI * slope1/Math.PI * Math.log(RS[4]));
+    ctx.beginPath();
+    ctx.moveTo(X(lnMin), Y(K * slope1 * lnMin + b));
+    ctx.lineTo(X(lnMax), Y(K * slope1 * lnMax + b));
+    ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = palette.orange;
+    ctx.fillText('cost (measured, slope ≈ πK)', X(lnMin) + 8, Y(K * slope1 * lnMax + b) + (K > 0.63 ? -8 : 18));
+
+    const eSlope = K * slope1;
+    const verdict = Math.abs(K - K_BKT) < 0.012 ? 'THE WALL — slopes tie'
+      : eSlope > 2 ? 'cost wins at every scale — vortices only in bound pairs'
+      : 'payoff wins at every scale — free vortices proliferate';
+    ctx.fillStyle = palette.textSoft; ctx.font = 'italic 13px serif'; ctx.textAlign = 'left';
+    ctx.fillText(verdict, x0 + 10, y0 + 22);
+
+    readout.textContent = `measured slope/K = ${slope1.toFixed(3)} (π = 3.142) · at this K: cost slope ${eSlope.toFixed(2)} vs payoff 2 · tie at K = 2/π = ${K_BKT.toFixed(3)}`;
+  }
+  runWhenVisible(canvas, draw);
+})();
+
+// ============================================================
+// FIG 2: live thermal lattice with vortex markers
+// ============================================================
+(() => {
+  const canvas = document.getElementById('canvas-sim');
+  const ctx = setupHiDPICanvas(canvas, 680, 440);
+  const readout = document.getElementById('sim-readout');
+  const L = 28;
+  let th = new Float64Array(L*L);
+  let K = 0.5;
+  let slider;
+
+  function scatter() { for (let i = 0; i < L*L; i++) th[i] = Math.random()*2*Math.PI; }
+  scatter();
+
+  slider = makeSlider(document.getElementById('sim-controls'), {
+    label: 'K (bond coupling, the dial)', min: 0.2, max: 1.5, step: 0.01, value: 0.5,
+    onChange: v => { K = v; },
+  });
+  document.getElementById('sim-below').addEventListener('click', () => { K = 0.5; slider.value = 0.5; });
+  document.getElementById('sim-above').addEventListener('click', () => { K = 1.2; slider.value = 1.2; });
+  document.getElementById('sim-rescatter').addEventListener('click', scatter);
+
+  function gauss() {
+    const u = Math.max(Math.random(), 1e-12), v = Math.random();
+    return Math.sqrt(-2*Math.log(u)) * Math.cos(2*Math.PI*v);
+  }
+  function step() {
+    const dt = 0.04, noise = Math.sqrt(2*1.0*dt);
+    const nt = new Float64Array(L*L);
+    for (let y = 0; y < L; y++) for (let x = 0; x < L; x++) {
+      const i = y*L+x;
+      const xp=(x+1)%L, xm=(x+L-1)%L, yp=(y+1)%L, ym=(y+L-1)%L;
+      const d = K*(Math.sin(th[y*L+xp]-th[i])+Math.sin(th[y*L+xm]-th[i])+Math.sin(th[yp*L+x]-th[i])+Math.sin(th[ym*L+x]-th[i]));
+      nt[i] = th[i] + d*dt + noise*gauss();
+    }
+    th = nt;
+  }
+  function vortices() {
+    const out = [];
+    for (let y = 0; y < L; y++) for (let x = 0; x < L; x++) {
+      const xp=(x+1)%L, yp=(y+1)%L;
+      const a = th[y*L+x], b2 = th[y*L+xp], c2 = th[yp*L+xp], d2 = th[yp*L+x];
+      const w = wrap(b2-a)+wrap(c2-b2)+wrap(d2-c2)+wrap(a-d2);
+      if (Math.abs(w) > 3) out.push({ x: x + 0.5, y: y + 0.5, q: Math.sign(w) });
+    }
+    return out;
+  }
+
+  // smoothed vortex count for a steadier readout
+  let nvEMA = null;
+
+  function draw() {
+    for (let s = 0; s < 6; s++) step();
+    ctx.clearRect(0, 0, 680, 440);
+    const x0 = 160, y0 = 20, w = 380, cell = w / L;
+    for (let y = 0; y < L; y++) for (let x = 0; x < L; x++) {
+      const t = th[y*L+x];
+      const hue = ((wrap(t) + Math.PI) / (2*Math.PI)) * 360;
+      ctx.fillStyle = `hsla(${hue.toFixed(0)}, 34%, 40%, 0.5)`;
+      ctx.fillRect(x0 + x*cell, y0 + y*cell, cell + 0.5, cell + 0.5);
+    }
+    // arrows, coarse
+    ctx.strokeStyle = palette.text; ctx.lineWidth = 1.2;
+    for (let y = 1; y < L; y += 2) for (let x = 1; x < L; x += 2) {
+      const t = th[y*L+x];
+      const cx = x0 + (x+0.5)*cell, cy = y0 + (y+0.5)*cell, len = cell*0.75;
+      ctx.beginPath();
+      ctx.moveTo(cx - Math.cos(t)*len, cy - Math.sin(t)*len);
+      ctx.lineTo(cx + Math.cos(t)*len, cy + Math.sin(t)*len);
+      ctx.stroke();
+    }
+    const vs = vortices();
+    vs.forEach(v => {
+      ctx.fillStyle = v.q > 0 ? palette.orange : palette.purple;
+      ctx.beginPath(); ctx.arc(x0 + v.x*cell, y0 + v.y*cell, 4.5, 0, Math.PI*2); ctx.fill();
+      ctx.strokeStyle = palette.bg; ctx.lineWidth = 1.5; ctx.stroke();
+    });
+    ctx.strokeStyle = palette.axis; ctx.lineWidth = 1; ctx.strokeRect(x0, y0, w, w);
+
+    nvEMA = nvEMA === null ? vs.length : 0.95*nvEMA + 0.05*vs.length;
+    const regime = K < 0.75 ? 'a gas of free vortices' : K < 1.05 ? 'thinning out (the crossover)' : 'rare, bound, short-lived';
+    readout.textContent = `K = ${K.toFixed(2)} · vortices now: ${vs.length} (running mean ${nvEMA.toFixed(0)}) · ${regime}`;
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 12px serif'; ctx.textAlign = 'center';
+    ctx.fillText('orange +1 · purple −1 · found by measuring every plaquette’s winding', x0 + w/2, y0 + w + 22);
+  }
+  runWhenVisible(canvas, draw);
+})();
+</script>
+
+</body>
+</html>

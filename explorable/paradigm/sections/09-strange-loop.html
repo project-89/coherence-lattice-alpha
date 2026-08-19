@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The strange loop — The Living Lattice</title>
+<meta name="description" content="Self-reference needs a loop that can return to where it started having genuinely gone around something. A circle is too simple; a sphere lets every loop contract to nothing; only the torus supports a strange loop. The geometric condition for coherence to observe itself.">
+<meta name="author" content="Michael Sharpe">
+<link rel="canonical" href="https://lattice.project89.org/paradigm/sections/09-strange-loop.html">
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+<meta property="og:title" content="The strange loop — The Living Lattice">
+<meta property="og:description" content="Why the torus is the minimal geometry for self-reference.">
+<meta property="og:url" content="https://lattice.project89.org/paradigm/sections/09-strange-loop.html">
+<meta property="og:site_name" content="The Living Lattice">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://lattice.project89.org/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="The strange loop — The Living Lattice">
+<meta name="twitter:description" content="Why the torus is the minimal geometry for self-reference.">
+<meta name="twitter:image" content="https://lattice.project89.org/og-image.png">
+<!-- BEGIN AUTO-INJECTED ANALYTICS -->
+<!-- PostHog -->
+<script>
+!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+posthog.init('phc_kRX9iHZstABjgFqEWJBMok2S3hW9R8QMHbNao4EsNz2g', {api_host: 'https://us.i.posthog.com', person_profiles: 'identified_only'});
+</script>
+<!-- END AUTO-INJECTED ANALYTICS -->
+<link rel="stylesheet" href="../../css/style.css">
+<style>
+.verdict { margin-top: 0.4em; font: italic 13px "Charter", serif; }
+</style>
+</head>
+<body>
+<div class="page">
+
+<nav class="breadcrumb">
+  <a href="../index.html">&larr; contents</a>
+  <span class="sep">&middot;</span>
+  <span class="section-num">section 09 &middot; the mirror</span>
+</nav>
+
+<h1>The strange loop<span class="subtitle">The shape a system needs before it can be about itself</span></h1>
+
+<p class="lead">Act III ended on a promise: the torus that makes a thought deep is about to make a system aware of itself. This act keeps it. Intelligence was coherence climbing, seen from outside. Consciousness is the same climb <em>looping back through itself</em>, seen from within. And the first thing self-reference needs is a <strong>shape</strong>.</p>
+
+<p>To be about itself, a system needs a loop that returns to its start having genuinely <em>gone around</em> something — back &ldquo;the same but different.&rdquo; Douglas Hofstadter called this a <strong>strange loop</strong>. Not every space can hold one. Topology decides which can: the <em>fundamental group</em> <span class="mono">&pi;<sub>1</sub></span> counts the distinct ways a loop can sit in a space (built from nothing in <a href="../../primers/topology-manifolds/sections/03-counting-loops.html">the counting-loops primer</a>). Three spaces, three answers:</p>
+
+<figure id="fig-loop">
+  <canvas id="canvas-loop" width="680" height="380"></canvas>
+  <div class="controls">
+    <button id="loop-circle" class="primary">Circle &nbsp;S¹</button>
+    <button id="loop-sphere">Sphere &nbsp;S²</button>
+    <button id="loop-torus">Torus &nbsp;T²</button>
+  </div>
+  <figcaption id="loop-cap" class="verdict"></figcaption>
+</figure>
+
+<p>The circle remembers only a count; the sphere forgets everything; the torus is the first space where a trajectory can wind one way <em>while</em> going around the other, and so return carrying a record of what it encircled. That is why the coupling manifold&rsquo;s toroidal topology — which we met as the shape of reasoning — is not incidental. <strong>It is the geometric condition for coherence to observe itself.</strong></p>
+
+<p>But topology only says a return <em>can</em> carry a record. What the loop actually brings back — the content of &ldquo;the same but different&rdquo; — is a measurable rotation called <em>holonomy</em>. That is the next chapter, and it is where memory begins.</p>
+
+<div class="nav-links">
+  <a href="08-shape.html" class="prev">The shape of a thought</a>
+  <a href="10-holonomy.html" class="next">Holonomy: how a loop remembers</a>
+</div>
+
+</div>
+
+<script type="module">
+import { setupHiDPICanvas, runWhenVisible, palette } from '../../js/common.js';
+
+(() => {
+  const W = 680, H = 380, canvas = document.getElementById('canvas-loop');
+  const ctx = setupHiDPICanvas(canvas, W, H);
+  const cap = document.getElementById('loop-cap');
+  let mode = 'circle', t = 0;
+
+  const verdicts = {
+    circle: 'π₁(S¹) = ℤ.  A loop on a circle returns — but all it can report is how many times it went around: one integer. Real, but too little structure for a system to represent its own whole.',
+    sphere: 'π₁(S²) = 0.  Every loop on a sphere can be slid off to a single point. Nothing comes back transformed — no winding to remember, no strange loop. A sphere cannot be about itself.',
+    torus: 'π₁(T²) = ℤ × ℤ.  Two independent loops. A trajectory can thread the tube while it circles the ring, returning to its start having genuinely gone around — "the same but different." The minimal home for a strange loop.',
+  };
+  function setMode(m) {
+    mode = m; t = 0; cap.textContent = verdicts[m];
+    ['circle', 'sphere', 'torus'].forEach(k => document.getElementById('loop-' + k).classList.toggle('primary', k === m));
+  }
+  document.getElementById('loop-circle').addEventListener('click', () => setMode('circle'));
+  document.getElementById('loop-sphere').addEventListener('click', () => setMode('sphere'));
+  document.getElementById('loop-torus').addEventListener('click', () => setMode('torus'));
+  setMode('circle');
+
+  const cx = 340, cy = 200, yaw0 = 0.6, tilt = 1.0;
+  // sphere/torus projector (shared)
+  function rot(x, y, z, yaw) {
+    const x1 = x * Math.cos(yaw) - y * Math.sin(yaw), y1 = x * Math.sin(yaw) + y * Math.cos(yaw);
+    const y2 = y1 * Math.cos(tilt) - z * Math.sin(tilt), z2 = y1 * Math.sin(tilt) + z * Math.cos(tilt);
+    return { sx: cx + 120 * x1, sy: cy - 120 * z2, depth: y2 };
+  }
+
+  function drawCircle() {
+    const R = 110;
+    ctx.strokeStyle = palette.axis; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.stroke();
+    // orbiting dot + winding count
+    const a = t * 0.04;
+    const dx = cx + R * Math.cos(a), dy = cy + R * Math.sin(a);
+    // faded trail
+    ctx.strokeStyle = 'rgba(217,114,54,0.5)'; ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.arc(cx, cy, R, -Math.PI / 2, a); ctx.stroke();
+    ctx.fillStyle = '#d97236'; ctx.beginPath(); ctx.arc(dx, dy, 7, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = palette.bg; ctx.lineWidth = 2; ctx.stroke();
+    const w = Math.floor((a + Math.PI / 2) / (Math.PI * 2));
+    ctx.fillStyle = palette.textSoft; ctx.font = '600 16px "SF Mono",monospace'; ctx.textAlign = 'center';
+    ctx.fillText(`winding = ${w}`, cx, cy + 5);
+  }
+
+  function drawSphere() {
+    const yaw = yaw0;
+    // wireframe: latitudes + longitudes
+    for (let li = 1; li < 8; li++) {
+      const phi = (li / 8) * Math.PI;
+      ctx.beginPath();
+      for (let i = 0; i <= 48; i++) { const th = (i / 48) * Math.PI * 2; const p = rot(Math.sin(phi) * Math.cos(th), Math.sin(phi) * Math.sin(th), Math.cos(phi), yaw); i ? ctx.lineTo(p.sx, p.sy) : ctx.moveTo(p.sx, p.sy); }
+      ctx.strokeStyle = 'rgba(125,125,140,0.35)'; ctx.lineWidth = 1; ctx.stroke();
+    }
+    for (let lo = 0; lo < 8; lo++) {
+      const th = (lo / 8) * Math.PI * 2;
+      ctx.beginPath();
+      for (let i = 0; i <= 48; i++) { const phi = (i / 48) * Math.PI; const p = rot(Math.sin(phi) * Math.cos(th), Math.sin(phi) * Math.sin(th), Math.cos(phi), yaw); i ? ctx.lineTo(p.sx, p.sy) : ctx.moveTo(p.sx, p.sy); }
+      ctx.strokeStyle = 'rgba(125,125,140,0.25)'; ctx.lineWidth = 1; ctx.stroke();
+    }
+    // a loop that shrinks toward the north pole then resets — showing contractibility
+    const phase = (t * 0.012) % 1;
+    const phi = (1 - phase) * (Math.PI * 0.62) + 0.02;  // loop colatitude shrinks to ~0
+    ctx.beginPath();
+    for (let i = 0; i <= 48; i++) { const th = (i / 48) * Math.PI * 2; const p = rot(Math.sin(phi) * Math.cos(th), Math.sin(phi) * Math.sin(th), Math.cos(phi), yaw); i ? ctx.lineTo(p.sx, p.sy) : ctx.moveTo(p.sx, p.sy); }
+    ctx.strokeStyle = `rgba(217,114,54,${0.4 + 0.6 * phase})`; ctx.lineWidth = 3; ctx.stroke();
+    if (phase > 0.9) { const p = rot(0, 0, 1, yaw); ctx.fillStyle = '#d97236'; ctx.beginPath(); ctx.arc(p.sx, p.sy, 5, 0, Math.PI * 2); ctx.fill(); }
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 12px "Charter",serif'; ctx.textAlign = 'center';
+    ctx.fillText('the loop slides to a point', cx, cy + 150);
+  }
+
+  function drawTorus() {
+    const Rm = 1.5, rm = 0.6, yaw = yaw0 + t * 0.004;
+    function proj(th, ph) { const cr = Rm + rm * Math.cos(ph); return rot(cr * Math.cos(th), cr * Math.sin(th), rm * Math.sin(ph), yaw); }
+    for (let j = 0; j < 14; j++) { const ph = (j / 14) * Math.PI * 2; ctx.beginPath(); for (let i = 0; i <= 40; i++) { const th = (i / 40) * Math.PI * 2; const p = proj(th, ph); i ? ctx.lineTo(p.sx, p.sy) : ctx.moveTo(p.sx, p.sy); } ctx.strokeStyle = 'rgba(125,125,140,0.3)'; ctx.lineWidth = 1; ctx.stroke(); }
+    for (let j = 0; j < 22; j++) { const th = (j / 22) * Math.PI * 2; ctx.beginPath(); for (let i = 0; i <= 40; i++) { const ph = (i / 40) * Math.PI * 2; const p = proj(th, ph); i ? ctx.lineTo(p.sx, p.sy) : ctx.moveTo(p.sx, p.sy); } ctx.strokeStyle = 'rgba(125,125,140,0.22)'; ctx.lineWidth = 1; ctx.stroke(); }
+    // a (1,1) loop winding both ways
+    ctx.beginPath();
+    const span = Math.min(t * 0.03, Math.PI * 2);
+    for (let i = 0; i <= 120; i++) { const u = (i / 120) * span; const p = proj(u, u * 3); i ? ctx.lineTo(p.sx, p.sy) : ctx.moveTo(p.sx, p.sy); }
+    ctx.strokeStyle = '#d97236'; ctx.lineWidth = 2.4; ctx.stroke();
+    const ph = proj(span, span * 3); ctx.fillStyle = '#d97236'; ctx.beginPath(); ctx.arc(ph.sx, ph.sy, 5, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 12px "Charter",serif'; ctx.textAlign = 'center';
+    ctx.fillText('winds the tube while circling the ring', cx, cy + 150);
+  }
+
+  function draw() {
+    t += 1;
+    ctx.clearRect(0, 0, W, H); ctx.fillStyle = palette.bg; ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = palette.textSoft; ctx.font = 'italic 14px "Charter",serif'; ctx.textAlign = 'center';
+    const label = mode === 'circle' ? 'S¹ — the circle' : mode === 'sphere' ? 'S² — the sphere' : 'T² — the torus';
+    ctx.fillText(label, cx, 34);
+    if (mode === 'circle') drawCircle(); else if (mode === 'sphere') drawSphere(); else drawTorus();
+  }
+  runWhenVisible(canvas, draw);
+})();
+</script>
+
+</body>
+</html>

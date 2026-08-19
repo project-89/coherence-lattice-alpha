@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The harmonograph: phase as a drawing — The Living Lattice</title>
+<meta name="description" content="A digital harmonograph: frequency ratios draw the figures your ear calls consonant, detune sets the drawing turning, and coupling freezes it — phase locking made visible.">
+<meta name="author" content="Michael Sharpe">
+<link rel="canonical" href="https://lattice.project89.org/primers/sound-workshop/sections/01-harmonograph.html">
+<link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
+<link rel="apple-touch-icon" href="../../../apple-touch-icon.png">
+<meta property="og:title" content="The harmonograph: phase as a drawing — The Living Lattice">
+<meta property="og:description" content="Two oscillators hold one pen. Ratios draw consonance, detune makes the figure precess, and coupling freezes it: locking, visible.">
+<meta property="og:url" content="https://lattice.project89.org/primers/sound-workshop/sections/01-harmonograph.html">
+<meta property="og:site_name" content="The Living Lattice">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://lattice.project89.org/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="The harmonograph: phase as a drawing — The Living Lattice">
+<meta name="twitter:description" content="A digital harmonograph where two phases locking means the drawing holds still.">
+<meta name="twitter:image" content="https://lattice.project89.org/og-image.png">
+<!-- BEGIN AUTO-INJECTED ANALYTICS -->
+<!-- PostHog -->
+<script>
+!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+posthog.init('phc_kRX9iHZstABjgFqEWJBMok2S3hW9R8QMHbNao4EsNz2g', {api_host: 'https://us.i.posthog.com', person_profiles: 'identified_only'});
+</script>
+<!-- END AUTO-INJECTED ANALYTICS -->
+<link rel="stylesheet" href="../../../css/style.css">
+<style>
+.flag-callout {
+  margin: 1.6em 0; padding: 16px 20px;
+  background: rgba(195, 141, 247, 0.08);
+  border-left: 3px solid #c38df7; border-radius: 3px;
+  font-size: 14.5px; line-height: 1.55;
+}
+.flag-callout .flag-label {
+  display: inline-block; font: 700 10.5px "SF Mono", monospace;
+  color: #c38df7; text-transform: uppercase; letter-spacing: 0.1em; margin-right: 0.7em;
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<nav class="breadcrumb">
+  <a href="../index.html">&larr; sound workshop</a>
+  <span class="sep">&middot;</span>
+  <span class="section-num">workshop 01 / 04 &middot; beginner</span>
+</nav>
+
+<h1>The harmonograph: phase as a drawing<span class="subtitle">Two oscillators hold one pen — and every relationship you learned to hear becomes something you can see</span></h1>
+
+<p class="lead">In the 1870s a fashionable parlor amusement swept Britain: a table with two swinging pendulums, one moving a pen side to side, the other moving the paper up and down. Set them swinging, drop the pen, and out came figures of unreasonable beauty — nested loops, braids, spiraling ellipses. The machine was called a <strong>harmonograph</strong>, and the name is exact: it draws harmony. What those Victorian parlors were actually watching, without the vocabulary for it, was <em>phase</em>. This page rebuilds the instrument, and then adds the one modern ingredient the Victorians didn't have: coupling.</p>
+
+<p>The recipe is nothing more than <a href="../../sections/00-phase-and-sound.html">primer 00</a> twice over. One oscillator drives the pen's east&ndash;west position, another drives north&ndash;south. Each is a dot circling at its own frequency; the pen just reads out both heights at once. Everything you see below follows from the <em>relationship</em> between two circling dots.</p>
+
+<figure id="fig-harmo">
+  <canvas id="canvas-harmo" width="680" height="430"></canvas>
+  <div class="controls" id="harmo-controls">
+    <button id="ratio-11" class="primary">1 : 1</button>
+    <button id="ratio-12">1 : 2</button>
+    <button id="ratio-23">2 : 3</button>
+    <button id="ratio-34">3 : 4</button>
+    <button id="drop-pen">Drop the pen</button>
+    <div class="control">
+      <label>phase offset <span class="val" id="off-val">90&deg;</span></label>
+      <input type="range" id="off-slider" min="0" max="360" step="5" value="90">
+    </div>
+    <div class="control">
+      <label>detune <span class="val" id="det-val">1.5%</span></label>
+      <input type="range" id="det-slider" min="0" max="3" step="0.1" value="1.5">
+    </div>
+    <div class="control">
+      <label>damping <span class="val" id="damp-val">0.00</span></label>
+      <input type="range" id="damp-slider" min="0" max="0.25" step="0.01" value="0">
+    </div>
+    <div class="control">
+      <label>K (coupling) <span class="val" id="k-val">0.000</span></label>
+      <input type="range" id="k-slider" min="0" max="0.15" step="0.005" value="0">
+    </div>
+  </div>
+  <figcaption>The pen reads two oscillators at once: east&ndash;west from one, north&ndash;south from the other. <em>Sound on: each oscillator is a real tone at its actual instantaneous frequency &mdash; the drawing and the chord are the same object seen by eye and ear. While the figure slowly turns you hear the interval shimmer; when coupling locks it, the ratio becomes exact and the shimmer stops.</em> <span id="harmo-readout" class="readout">&mdash;</span></figcaption>
+</figure>
+
+<h2>Act one: the ratio is the shape — and the shape is a chord</h2>
+
+<p>Set the two frequencies to a simple ratio and the pen draws a closed figure. <strong>1&nbsp;:&nbsp;1</strong> gives an ellipse. <strong>1&nbsp;:&nbsp;2</strong> a figure-eight family. <strong>2&nbsp;:&nbsp;3</strong> and <strong>3&nbsp;:&nbsp;4</strong> give braids that weave two and three times before closing. (Set detune to zero to see them perfectly still.) These closed curves are called <strong>Lissajous figures</strong>, and the ratios that draw the cleanest ones are worth saying out loud: 1:1, 1:2, 2:3, 3:4.</p>
+
+<p>Now turn the sound on. Those same ratios, played as two tones, are <strong>unison, the octave, the perfect fifth, and the perfect fourth</strong> — the most consonant intervals in music, in every culture that has music. This is not a coincidence; it is the same fact wearing two costumes. A simple frequency ratio means the two oscillators revisit the same relationship after a short time — the pattern closes quickly, whether the pattern is a curve on paper or a waveform in your ear. Consonance <em>is</em> a short closed figure. The harmonograph is a picture of harmony, literally.</p>
+
+<h2>Act two: the offset turns the figure</h2>
+
+<p>With detune at zero, drag the <strong>phase offset</strong> slider. The frequencies haven't changed — only <em>where in its cycle</em> the second oscillator sits relative to the first. At 1:1, watch the figure open from a diagonal line (offset 0&deg;: the two heights agree everywhere) through fattening ellipses to a full circle at 90&deg;, then close back down to the opposite diagonal at 180&deg;. The phase relationship, which in primer 00 was an invisible angle between two dots, is here the entire <em>shape</em> of the drawing. Same frequencies, different relationship, different figure. Phase made geometry.</p>
+
+<h2>Act three: detune sets it drifting — coupling freezes it</h2>
+
+<p>Now raise the <strong>detune</strong> a little. The second oscillator runs a fraction of a percent fast, so the offset between the two is no longer a setting — it is a slow, steady drift, the same drift you <em>heard</em> as beating in primer 00. And since the offset is the figure's shape, the drawing comes alive: the ellipse opens, rounds into a circle, narrows to a line, and over again, forever. The figure <strong>precesses</strong>. What you are watching is a beat frequency, rendered as slow rotation instead of slow loudness.</p>
+
+<p>Then slide <span class="mono">K</span> up. This adds the one ingredient the Victorian machine lacked: the two oscillators can now <em>feel</em> each other — each nudged toward agreement by exactly the Kuramoto rule from primer 00. Below a threshold, the nudging only slows the drift: the figure still turns, lingering longer and longer in each shape (listen — the shimmer stretches out). Past the threshold, the drift <strong>stops</strong>. The two phases lock, the compromise becomes permanent, and the figure freezes mid-gesture and holds it. <strong>Locking is the drawing holding still.</strong> The readout tracks the drift rate; watch it hit zero. And note what your ear reports at that moment: the interval, slightly sour while drifting, snaps <em>exactly</em> into tune — coupling is a tuner.</p>
+
+<p>One more toy, because the original machines earned their fame with it: raise the <strong>damping</strong> and press <em>Drop the pen</em>. Real pendulums run down, so the real figures spiraled slowly inward as they drew — that inward journey through ever-smaller copies of the figure is the classic harmonograph engraving. Every parameter above still applies; the spiral just adds time's signature to the drawing.</p>
+
+<div class="flag-callout">
+  <span class="flag-label">What's real here</span>
+  The instrument is idealized: a real harmonograph is two (often four) damped pendulums with slightly bendy arms, and its figures are correspondingly richer. The physics shown — Lissajous figures from frequency ratios, precession from detune, spiral from damping — is the textbook core of the real machine. The <em>coupling</em>, though, is our addition: Victorian pendulums did not nudge each other by <span class="mono">K&nbsp;sin(&Delta;&theta;)</span>; that term is the Kuramoto rule this whole site is built on, grafted onto the instrument precisely so you can watch it act. The lock threshold you find with the slider is the same phase-locking transition measured throughout the essays &mdash; met first by ear in <a href="../../sections/00-phase-and-sound.html">primer 00</a>, and scaled up to whole networks in <a href="../../../foundations/sections/01-oscillators.html">Foundations&nbsp;1</a>.
+</div>
+
+<p>For the notation-curious (and only now that you've seen it): the pen position is <span class="mono">x = A&middot;e<sup>&minus;dt</sup>&middot;sin(&theta;<sub>x</sub>)</span>, <span class="mono">y = A&middot;e<sup>&minus;dt</sup>&middot;sin(&theta;<sub>y</sub>)</span>, with each phase advancing at its own rate plus the coupling nudge. Ratio, offset, detune, damping, coupling — five knobs, and you have now turned all five.</p>
+
+<div class="nav-links">
+  <a href="../index.html" class="prev">The sound workshop</a>
+  <a href="02-chladni.html" class="next">Chladni plates: sand finds the silence</a>
+</div>
+
+</div>
+
+<script type="module">
+import { setupHiDPICanvas, runWhenVisible, palette, makeSoundToggle, makeVoices } from '../../../js/common.js';
+
+(() => {
+  const canvas = document.getElementById('canvas-harmo');
+  const ctx = setupHiDPICanvas(canvas, 680, 430);
+  const readout = document.getElementById('harmo-readout');
+
+  const offSlider = document.getElementById('off-slider'), offVal = document.getElementById('off-val');
+  const detSlider = document.getElementById('det-slider'), detVal = document.getElementById('det-val');
+  const dampSlider = document.getElementById('damp-slider'), dampVal = document.getElementById('damp-val');
+  const kSlider = document.getElementById('k-slider'), kVal = document.getElementById('k-val');
+
+  const sound = makeSoundToggle(document.getElementById('harmo-controls'), { label: 'hear the interval' });
+  const voices = makeVoices(sound, 2, { freq: 165 });
+
+  const F0 = 0.5;                 // base visual frequency (cycles per time unit)
+  let p = 1, q = 1;               // frequency ratio p:q
+  let offset = Math.PI / 2;       // phase offset applied to theta_y
+  let detune = 0.015;             // fractional detune on the y oscillator
+  let damp = 0;                   // envelope decay rate
+  let K = 0;                      // coupling
+
+  let thx = 0, thy = offset, t = 0;
+  let vx = F0, vy = F0;           // smoothed measured frequencies (cyc/unit)
+  let psiDot = 0;                 // smoothed drift of the locking variable
+  let trace = [];
+  const CAP = 9000;
+
+  function resetPen(clear = true) {
+    thx = 0; thy = offset * p; t = 0;
+    if (clear) trace = [];
+  }
+  // NOTE on offset: the shape-controlling variable is ψ = q·θx − p·θy.
+  // Setting θy's initial value to (offset·p)… we simply apply offset as
+  // θy's start phase; for 1:1 that is the familiar Δθ. For other ratios it
+  // still selects a member of the Lissajous family, which is all the
+  // slider promises.
+
+  const presets = { 'ratio-11': [1, 1], 'ratio-12': [1, 2], 'ratio-23': [2, 3], 'ratio-34': [3, 4] };
+  Object.keys(presets).forEach(id => {
+    document.getElementById(id).addEventListener('click', () => {
+      [p, q] = presets[id];
+      Object.keys(presets).forEach(other => document.getElementById(other).classList.toggle('primary', other === id));
+      resetPen();
+    });
+  });
+  document.getElementById('drop-pen').addEventListener('click', () => resetPen());
+
+  offSlider.addEventListener('input', () => {
+    const nv = parseFloat(offSlider.value) * Math.PI / 180;
+    thy += (nv - offset); offset = nv;
+    offVal.textContent = offSlider.value + '°';
+    trace = [];
+  });
+  detSlider.addEventListener('input', () => {
+    detune = parseFloat(detSlider.value) / 100;
+    detVal.textContent = parseFloat(detSlider.value).toFixed(1) + '%';
+  });
+  dampSlider.addEventListener('input', () => {
+    damp = parseFloat(dampSlider.value);
+    dampVal.textContent = damp.toFixed(2);
+    resetPen();
+  });
+  kSlider.addEventListener('input', () => {
+    K = parseFloat(kSlider.value);
+    kVal.textContent = K.toFixed(3);
+  });
+
+  function step(dt) {
+    const wx = 2 * Math.PI * p * F0;
+    const wy = 2 * Math.PI * q * F0 * (1 + detune);
+    const psi = q * thx - p * thy;
+    const dthx = wx - K * Math.sin(psi);
+    const dthy = wy + K * Math.sin(psi);
+    thx += dthx * dt; thy += dthy * dt; t += dt;
+    vx = 0.95 * vx + 0.05 * (dthx / (2 * Math.PI));
+    vy = 0.95 * vy + 0.05 * (dthy / (2 * Math.PI));
+    psiDot = 0.97 * psiDot + 0.03 * (q * dthx - p * dthy);
+    const env = Math.exp(-damp * t);
+    if (env > 0.02) {
+      trace.push({ x: Math.sin(thx) * env, y: Math.sin(thy) * env });
+      if (trace.length > CAP) trace.shift();
+    }
+    return env;
+  }
+
+  function draw() {
+    let env = 1;
+    for (let s = 0; s < 10; s++) env = step(0.006);
+
+    ctx.clearRect(0, 0, 680, 430);
+    const cx = 340, cy = 205, S = 178;
+
+    // trace in 5 age buckets, oldest faintest
+    const n = trace.length;
+    const BUCKETS = 5;
+    for (let b = 0; b < BUCKETS; b++) {
+      const i0 = Math.floor((b / BUCKETS) * n), i1 = Math.floor(((b + 1) / BUCKETS) * n);
+      if (i1 - i0 < 2) continue;
+      const alpha = 0.10 + 0.75 * ((b + 1) / BUCKETS) * ((b + 1) / BUCKETS);
+      ctx.strokeStyle = `rgba(217, 114, 54, ${alpha})`;
+      ctx.lineWidth = 1.6;
+      ctx.beginPath();
+      for (let i = i0; i < i1; i++) {
+        const px = cx + trace[i].x * S, py = cy - trace[i].y * S;
+        i === i0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+      }
+      ctx.stroke();
+    }
+    // pen
+    if (n) {
+      const h = trace[n - 1];
+      ctx.fillStyle = '#f0b27a';
+      ctx.beginPath(); ctx.arc(cx + h.x * S, cy - h.y * S, 4, 0, Math.PI * 2); ctx.fill();
+    }
+
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 11px "Charter", serif'; ctx.textAlign = 'left';
+    ctx.fillText(`ratio ${p} : ${q}`, 16, 22);
+
+    // lock state: |psiDot| is rad per sim-time unit; ×3.6 converts to real
+    // seconds (0.06 sim-units per frame at ~60fps)
+    const drift = Math.abs(psiDot) * 3.6;
+    const resting = damp > 0 && Math.exp(-damp * t) <= 0.02;
+    let msg;
+    if (resting) msg = 'pen at rest — press Drop the pen';
+    else if (detune < 0.0005) msg = `still life — no detune, nothing to fight`;
+    else if (drift < 0.1) msg = `LOCKED — drift 0.00, the figure holds still`;
+    else msg = `precessing — drift ${drift.toFixed(2)} rad/s`;
+    readout.textContent = msg;
+    ctx.fillStyle = drift < 0.03 && detune >= 0.0005 && !resting ? palette.green : palette.textFaint;
+    ctx.font = '12px "SF Mono", monospace';
+    ctx.fillText(msg, 16, 414);
+
+    // literal audio: pitch = measured instantaneous frequency, scaled
+    voices.set(0, 165 * (vx / F0), 0.95);
+    voices.set(1, 165 * (vy / F0), 0.95);
+  }
+
+  runWhenVisible(canvas, draw);
+})();
+</script>
+
+</body>
+</html>

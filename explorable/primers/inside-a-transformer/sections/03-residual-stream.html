@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The residual stream — Inside a transformer — The Living Lattice</title>
+<meta name="description" content="Section 3 of the inside-a-transformer module: the residual stream as a whiteboard that rides through the machine — a running sum you can toggle, probe, and read at any depth.">
+<meta name="author" content="Michael Sharpe">
+<link rel="canonical" href="https://lattice.project89.org/primers/inside-a-transformer/sections/03-residual-stream.html">
+<link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
+<link rel="apple-touch-icon" href="../../../apple-touch-icon.png">
+<meta property="og:title" content="The residual stream — Inside a transformer — The Living Lattice">
+<meta property="og:description" content="Nothing is overwritten: a token's state as a running sum you can toggle layer by layer and probe at any depth.">
+<meta property="og:url" content="https://lattice.project89.org/primers/inside-a-transformer/sections/03-residual-stream.html">
+<meta property="og:site_name" content="The Living Lattice">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://lattice.project89.org/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="The residual stream — Inside a transformer — The Living Lattice">
+<meta name="twitter:description" content="The riding whiteboard: a running sum, toggleable and probeable.">
+<meta name="twitter:image" content="https://lattice.project89.org/og-image.png">
+<!-- BEGIN AUTO-INJECTED ANALYTICS -->
+<!-- PostHog -->
+<script>
+!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+posthog.init('phc_kRX9iHZstABjgFqEWJBMok2S3hW9R8QMHbNao4EsNz2g', {api_host: 'https://us.i.posthog.com', person_profiles: 'identified_only'});
+</script>
+<!-- END AUTO-INJECTED ANALYTICS -->
+<link rel="stylesheet" href="../../../css/style.css">
+<style>
+.layer-toggles { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; }
+.layer-toggles label { display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 0.92em; color: var(--text-soft); }
+</style>
+</head>
+<body>
+<div class="page">
+
+<nav class="breadcrumb">
+  <a href="../index.html">&larr; inside a transformer</a>
+  <span class="sep">&middot;</span>
+  <span class="section-num">section 03 / 04 &middot; intermediate</span>
+</nav>
+
+<h1>The residual stream<span class="subtitle">A whiteboard that rides through the machine — and why nothing is ever overwritten</span></h1>
+
+<p class="lead">You now know what a token is (an arrow) and how tokens influence each other (attention's listening competition). This section is about <em>where all of that happens</em> — the one design decision that makes a transformer's insides legible at all.</p>
+
+<h2>1. The riding whiteboard</h2>
+
+<p>A transformer is built as a stack of identical <strong>layers</strong> — a few dozen of them. Each token's arrow is written on a kind of <strong>whiteboard</strong> that rides through the whole stack, and every layer only <em>adds small nudges</em> to what is written there. Nothing is erased. Nothing is overwritten. The arrow that leaves layer 30 is the original meaning plus every adjustment every layer chose to make along the way.</p>
+
+<p>That riding whiteboard is the <strong>residual stream</strong>. When the essays call it "the shared field" or "the coupling medium," this is all they mean: the one persistent state that every part of the machine reads from and writes into, the way every voice in a room moves the same air.</p>
+
+<figure id="fig-stream">
+  <canvas id="canvas-stream" width="680" height="320"></canvas>
+  <figcaption>Three tokens ride left to right through the layers of the stack. The arrow inside each dot is that token's current meaning; at each layer, small writes nudge it — some from the token's own lane, some (the faint arcs) reaching over from <em>other</em> tokens' lanes. Those arcs are the attention you met last section. The lane itself is the residual stream: a running sum that carries everything forward.</figcaption>
+</figure>
+
+<h2>2. The state is a sum — take it apart</h2>
+
+<p>Because layers only ever add, a token's state at the top of the stack is literally a <strong>sum</strong>: the original embedding, plus layer 1's contribution, plus layer 2's, and so on. That is not a metaphor you are being sold — it is arithmetic you can perform. Below, one token's journey is laid out as its pieces, head to tail. Toggle any layer's contribution off and the final arrow recomputes: the whole state is nothing but its parts.</p>
+
+<p>The story in the numbers: the token is the word <span class="mono">it</span> — a pronoun, almost meaningless on its own — in a sentence about a cat. Watch what the layers add.</p>
+
+<figure id="fig-sum">
+  <canvas id="canvas-sum" width="680" height="380"></canvas>
+  <div class="controls layer-toggles" id="sum-controls">
+    <span style="font-size:0.9em; color: var(--text-faint);">contributions:</span>
+    <label><input type="checkbox" id="sum-l1" checked> L1 attention</label>
+    <label><input type="checkbox" id="sum-l2" checked> L2 MLP</label>
+    <label><input type="checkbox" id="sum-l3" checked> L3 attention</label>
+    <label><input type="checkbox" id="sum-l4" checked> L4 MLP</label>
+    <label><input type="checkbox" id="sum-l5" checked> L5 attention</label>
+  </div>
+  <figcaption>The faint gray arrow is the stored embedding of <span class="mono">it</span>; each colored segment is one layer's added contribution, drawn head to tail; the bold orange arrow is their sum — the state. Un-tick a layer and its segment vanishes from the chain, and the sum moves. Nothing is hidden anywhere else: <em>the state is the sum of what was written</em>. <span id="sum-readout" class="readout">state = —</span></figcaption>
+</figure>
+
+<h2>3. Read the board at any depth</h2>
+
+<p>One consequence deserves its own figure. Since the stream carries a plain running sum, <em>anyone can read it at any point</em> — you do not have to wait for the top of the stack. Slide the probe below through the layers and watch the same token's meaning sharpen: at depth 0 the board just says "it" — a pronoun, pointing nowhere in particular; each layer's write bends it further; by the top it reads, unambiguously, <span class="mono">cat</span>. Interpretability researchers do exactly this to real models — insert a probe at layer <span class="mono">k</span> and ask what the board says so far.</p>
+
+<figure id="fig-probe">
+  <canvas id="canvas-probe" width="680" height="360"></canvas>
+  <div class="controls">
+    <div class="control">
+      <label>probe depth (layer) <span class="val" id="probe-d-val">0</span></label>
+      <input type="range" id="probe-d-slider" min="0" max="5" step="1" value="0">
+    </div>
+  </div>
+  <figcaption>The same token, probed at increasing depth. The readout is what a probe at that layer would report: the nearest meaning-direction and how strongly the state agrees with it. Ambiguity at the bottom, commitment at the top — and every intermediate stage fully readable, because the stream never hides its working. <span id="probe-readout" class="readout">depth 0 — reads: —</span></figcaption>
+</figure>
+
+<p>The board, the writes, the running sum: that is the residual stream. One question remains — what keeps forty layers of enthusiastic addition from blowing the arrows up entirely? The answer puts the whole computation on a sphere, and hands this module over to the rest of the library.</p>
+
+<div class="nav-links">
+  <a href="02-attention.html" class="prev">Attention: who listens to whom</a>
+  <a href="04-sphere.html" class="next">LayerNorm and the sphere</a>
+</div>
+
+</div>
+
+<script type="module">
+import { setupHiDPICanvas, runWhenVisible, palette } from '../../../js/common.js';
+
+// ---- shared data for FIG 2 and FIG 3: one token's journey ----
+// the pronoun "it", resolving toward "cat" as the layers write
+const BASE = [0.05, 0.30];
+const CONTRIB = [
+  { label: 'L1 attention', v: [0.30, 0.05], colorKey: 'blue' },
+  { label: 'L2 MLP',       v: [0.10, 0.22], colorKey: 'green' },
+  { label: 'L3 attention', v: [0.25, 0.18], colorKey: 'blue' },
+  { label: 'L4 MLP',       v: [-0.05, 0.15], colorKey: 'green' },
+  { label: 'L5 attention', v: [0.20, 0.10], colorKey: 'blue' },
+];
+const PROBE_WORDS = [
+  ['cat',  0.66,  0.75], ['mat',  0.95, -0.20], ['the', -0.30,  0.90],
+  ['dog',  0.95,  0.28], ['sat',  0.30, -0.95],
+];
+function nearestWord(x, y) {
+  const L = Math.hypot(x, y) + 1e-9;
+  let best = null, bestDot = -2;
+  PROBE_WORDS.forEach(([w, wx, wy]) => {
+    const d = (x * wx + y * wy) / (L * (Math.hypot(wx, wy) + 1e-9));
+    if (d > bestDot) { bestDot = d; best = w; }
+  });
+  return { word: best, dot: bestDot };
+}
+
+// ============================================================
+// FIG 1: the residual stream — a riding whiteboard
+// ============================================================
+(() => {
+  const canvas = document.getElementById('canvas-stream');
+  const ctx = setupHiDPICanvas(canvas, 680, 320);
+
+  // colorKey (not a frozen color string) so the live theme palette applies
+  const LANES = [
+    { y: 70,  label: '“the”', colorKey: 'burgundy', a0: 2.2 },
+    { y: 155, label: '“cat”', colorKey: 'orange',   a0: 0.6 },
+    { y: 240, label: '“sat”', colorKey: 'blue',     a0: -1.1 },
+  ];
+  const NL = 6;                     // layer columns
+  const X0 = 130, X1 = 620;
+  const colX = (i) => X0 + (i / (NL - 1)) * (X1 - X0);
+  // deterministic per-(lane,layer) nudge table — smooth loops, no jitter
+  const NUDGE = LANES.map((_, l) => Array.from({ length: NL }, (_, i) =>
+    0.55 * Math.sin(l * 2.1 + i * 1.7) * Math.cos(l * 0.9 + i * 0.6)));
+  // attention arcs: [layerIdx, fromLane, toLane]
+  const ARCS = [[1, 1, 2], [1, 0, 2], [3, 2, 1], [4, 0, 1]];
+
+  let t = 0; // sweep position in [0, NL)
+
+  function stateAngle(l, upto) {
+    let a = LANES[l].a0;
+    for (let i = 0; i < NL; i++) {
+      if (i + 1 <= upto) a += NUDGE[l][i];
+      else if (i < upto) a += NUDGE[l][i] * (upto - i);
+    }
+    return a;
+  }
+
+  function draw() {
+    t += 0.012;
+    if (t > NL + 0.8) t = 0;
+    const sweep = Math.min(t, NL - 1);
+
+    ctx.clearRect(0, 0, 680, 320);
+
+    // layer columns
+    for (let i = 0; i < NL; i++) {
+      ctx.strokeStyle = palette.grid; ctx.lineWidth = 1;
+      ctx.setLineDash([3, 5]);
+      ctx.beginPath(); ctx.moveTo(colX(i), 30); ctx.lineTo(colX(i), 270); ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle = palette.textFaint; ctx.font = 'italic 10px serif'; ctx.textAlign = 'center';
+      ctx.fillText('layer ' + (i + 1), colX(i), 290);
+    }
+
+    // attention arcs (revealed as the sweep passes)
+    ARCS.forEach(([li, from, to]) => {
+      if (sweep < li - 0.5) return;
+      const x = colX(li);
+      ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--accent') || '#2a5f8f';
+      ctx.globalAlpha = 0.25;
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(x - 18, LANES[from].y);
+      ctx.quadraticCurveTo(x, (LANES[from].y + LANES[to].y) / 2, x, LANES[to].y);
+      ctx.stroke();
+      ctx.globalAlpha = 1;
+    });
+
+    // lanes + riding state
+    LANES.forEach((lane, l) => {
+      ctx.strokeStyle = palette.axis; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(X0 - 60, lane.y); ctx.lineTo(X1 + 20, lane.y); ctx.stroke();
+      ctx.fillStyle = palette.textSoft; ctx.font = 'italic 13px serif'; ctx.textAlign = 'right';
+      ctx.fillText(lane.label, X0 - 70, lane.y + 4);
+
+      const px = X0 + (sweep / (NL - 1)) * (X1 - X0);
+      const ang = stateAngle(l, sweep);
+      const laneColor = palette[lane.colorKey];
+      // whiteboard dot
+      ctx.fillStyle = palette.bgSoft;
+      ctx.strokeStyle = laneColor; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.arc(px, lane.y, 20, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+      // state arrow
+      ctx.strokeStyle = laneColor; ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      ctx.moveTo(px - Math.cos(ang) * 13, lane.y + Math.sin(ang) * 13);
+      ctx.lineTo(px + Math.cos(ang) * 13, lane.y - Math.sin(ang) * 13);
+      ctx.stroke();
+      ctx.fillStyle = laneColor;
+      ctx.beginPath(); ctx.arc(px + Math.cos(ang) * 13, lane.y - Math.sin(ang) * 13, 3.5, 0, Math.PI * 2); ctx.fill();
+    });
+
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 12px serif'; ctx.textAlign = 'left';
+    ctx.fillText('each lane = one token’s residual stream — a running sum riding through the stack', 130, 26);
+  }
+  runWhenVisible(canvas, draw);
+})();
+
+// ============================================================
+// FIG 2: the state is a sum — toggle the parts
+// ============================================================
+(() => {
+  const canvas = document.getElementById('canvas-sum');
+  const ctx = setupHiDPICanvas(canvas, 680, 380);
+  const readout = document.getElementById('sum-readout');
+  const boxes = [1, 2, 3, 4, 5].map(i => document.getElementById('sum-l' + i));
+  const cx = 210, cy = 300, s = 210;
+
+  function draw() {
+    ctx.clearRect(0, 0, 680, 380);
+
+    // reference word directions, faint
+    PROBE_WORDS.forEach(([w, x, y]) => {
+      ctx.strokeStyle = palette.grid; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + x * s * 0.55, cy - y * s * 0.55); ctx.stroke();
+      ctx.fillStyle = palette.textFaint; ctx.font = 'italic 10px serif'; ctx.textAlign = 'center';
+      ctx.fillText(w, cx + x * s * 0.62, cy - y * s * 0.62 + 3);
+    });
+
+    // head-to-tail chain: base then enabled contributions
+    let x = cx, y = cy;
+    // base
+    let nx = cx + BASE[0] * s, ny = cy - BASE[1] * s;
+    ctx.strokeStyle = palette.textFaint; ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(nx, ny); ctx.stroke();
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 10px serif'; ctx.textAlign = 'left';
+    ctx.fillText('“it” (stored)', nx + 6, ny + 4);
+    x = nx; y = ny;
+
+    let sx = BASE[0], sy = BASE[1];
+    CONTRIB.forEach((c, i) => {
+      if (!boxes[i].checked) return;
+      nx = x + c.v[0] * s; ny = y - c.v[1] * s;
+      ctx.strokeStyle = palette[c.colorKey]; ctx.lineWidth = 2.5;
+      ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(nx, ny); ctx.stroke();
+      // small arrowhead
+      const a = Math.atan2(y - ny, nx - x);
+      ctx.fillStyle = palette[c.colorKey];
+      ctx.beginPath();
+      ctx.moveTo(nx, ny);
+      ctx.lineTo(nx - Math.cos(a - 0.4) * 8, ny + Math.sin(a - 0.4) * 8);
+      ctx.lineTo(nx - Math.cos(a + 0.4) * 8, ny + Math.sin(a + 0.4) * 8);
+      ctx.fill();
+      x = nx; y = ny;
+      sx += c.v[0]; sy += c.v[1];
+    });
+
+    // the sum, bold from origin
+    ctx.strokeStyle = palette.orange; ctx.lineWidth = 4;
+    ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + sx * s, cy - sy * s); ctx.stroke();
+    ctx.fillStyle = palette.orange;
+    ctx.beginPath(); ctx.arc(cx + sx * s, cy - sy * s, 7, 0, Math.PI * 2); ctx.fill();
+
+    // panel
+    const near = nearestWord(sx, sy);
+    ctx.fillStyle = palette.textSoft; ctx.font = '13px "SF Mono", monospace'; ctx.textAlign = 'left';
+    ctx.fillText('state = stored', 470, 90);
+    let row = 0;
+    CONTRIB.forEach((c, i) => {
+      ctx.fillStyle = boxes[i].checked ? palette[c.colorKey] : palette.grid;
+      ctx.fillText((boxes[i].checked ? '      + ' : '      · ') + c.label, 470, 114 + row * 22);
+      row++;
+    });
+    ctx.fillStyle = palette.orange;
+    ctx.fillText(`= [${sx.toFixed(2)}, ${sy.toFixed(2)}]`, 470, 114 + row * 22 + 8);
+    ctx.fillStyle = palette.green; ctx.font = 'italic 12px serif';
+    ctx.fillText(`reads as: near “${near.word}” (${near.dot.toFixed(2)})`, 470, 114 + row * 22 + 34);
+
+    readout.textContent = `state = [${sx.toFixed(2)}, ${sy.toFixed(2)}] — reads as “${near.word}” (agreement ${near.dot.toFixed(2)})`;
+  }
+  runWhenVisible(canvas, draw);
+})();
+
+// ============================================================
+// FIG 3: probe the board at any depth
+// ============================================================
+(() => {
+  const canvas = document.getElementById('canvas-probe');
+  const ctx = setupHiDPICanvas(canvas, 680, 360);
+  const readout = document.getElementById('probe-readout');
+  const slider = document.getElementById('probe-d-slider');
+  const dval = document.getElementById('probe-d-val');
+  let depth = 0;
+  slider.addEventListener('input', () => { depth = parseInt(slider.value, 10); dval.textContent = depth; });
+
+  const cx = 230, cy = 190, s = 150;
+
+  function stateAt(d) {
+    let x = BASE[0], y = BASE[1];
+    for (let i = 0; i < d; i++) { x += CONTRIB[i].v[0]; y += CONTRIB[i].v[1]; }
+    return [x, y];
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, 680, 360);
+
+    // word directions
+    PROBE_WORDS.forEach(([w, x, y]) => {
+      ctx.strokeStyle = palette.grid; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + x * s * 0.8, cy - y * s * 0.8); ctx.stroke();
+      ctx.fillStyle = palette.textFaint; ctx.font = 'italic 11px serif'; ctx.textAlign = 'center';
+      ctx.fillText(w, cx + x * s * 0.9, cy - y * s * 0.9 + 4);
+    });
+
+    // ghost states at every depth (the journey)
+    for (let d = 0; d <= 5; d++) {
+      const [x, y] = stateAt(d);
+      ctx.fillStyle = palette.textFaint;
+      ctx.globalAlpha = d === depth ? 0 : 0.35;
+      ctx.beginPath(); ctx.arc(cx + x * s * 0.55, cy - y * s * 0.55, 3.5, 0, Math.PI * 2); ctx.fill();
+      ctx.globalAlpha = 1;
+    }
+
+    // current probed state
+    const [x, y] = stateAt(depth);
+    ctx.strokeStyle = palette.orange; ctx.lineWidth = 4;
+    ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + x * s * 0.55, cy - y * s * 0.55); ctx.stroke();
+    ctx.fillStyle = palette.orange;
+    ctx.beginPath(); ctx.arc(cx + x * s * 0.55, cy - y * s * 0.55, 8, 0, Math.PI * 2); ctx.fill();
+
+    const near = nearestWord(x, y);
+    ctx.fillStyle = palette.textSoft; ctx.font = '14px "SF Mono", monospace'; ctx.textAlign = 'left';
+    ctx.fillText(`probe @ layer ${depth}`, 480, 120);
+    ctx.fillStyle = near.dot > 0.9 ? palette.green : palette.textSoft;
+    ctx.fillText(`sees: "${near.word}"`, 480, 150);
+    ctx.fillText(`agreement ${near.dot.toFixed(2)}`, 480, 176);
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 12px serif';
+    ctx.fillText(depth === 0 ? 'just a pronoun so far' : depth < 3 ? 'beginning to lean' : depth < 5 ? 'committing' : 'resolved: it = the cat', 480, 208);
+
+    readout.textContent = `depth ${depth} — reads: “${near.word}” (agreement ${near.dot.toFixed(2)})`;
+  }
+  runWhenVisible(canvas, draw);
+})();
+</script>
+
+</body>
+</html>

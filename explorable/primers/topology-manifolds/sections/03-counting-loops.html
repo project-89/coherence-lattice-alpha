@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Counting loops: winding, π₁, and H₁ — The Living Lattice</title>
+<meta name="description" content="Draw your own winding number, wind loops on a flat torus with two live counters, carry a flag around a Möbius band — then the three names, reconciled. Section 3 of the topology &amp; manifolds module.">
+<meta name="author" content="Michael Sharpe">
+<link rel="canonical" href="https://lattice.project89.org/primers/topology-manifolds/sections/03-counting-loops.html">
+<link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
+<link rel="apple-touch-icon" href="../../../apple-touch-icon.png">
+<meta property="og:title" content="Counting loops: winding, π₁, and H₁ — The Living Lattice">
+<meta property="og:description" content="One counting idea with three names — drawn, wound on a flat torus, and carried around a Möbius band.">
+<meta property="og:url" content="https://lattice.project89.org/primers/topology-manifolds/sections/03-counting-loops.html">
+<meta property="og:site_name" content="The Living Lattice">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://lattice.project89.org/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Counting loops: winding, π₁, and H₁ — The Living Lattice">
+<meta name="twitter:description" content="Integers in a world of wiggles.">
+<meta name="twitter:image" content="https://lattice.project89.org/og-image.png">
+<!-- BEGIN AUTO-INJECTED ANALYTICS -->
+<!-- PostHog -->
+<script>
+!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+posthog.init('phc_kRX9iHZstABjgFqEWJBMok2S3hW9R8QMHbNao4EsNz2g', {api_host: 'https://us.i.posthog.com', person_profiles: 'identified_only'});
+</script>
+<!-- END AUTO-INJECTED ANALYTICS -->
+<link rel="stylesheet" href="../../../css/style.css">
+<style>
+.flag-callout {
+  margin: 1.6em 0; padding: 16px 20px;
+  background: rgba(195, 141, 247, 0.08);
+  border-left: 3px solid #c38df7; border-radius: 3px;
+  font-size: 14.5px; line-height: 1.55;
+}
+.flag-callout .flag-label {
+  display: inline-block; font: 700 10.5px "SF Mono", monospace;
+  color: #c38df7; text-transform: uppercase; letter-spacing: 0.1em; margin-right: 0.7em;
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<nav class="breadcrumb">
+  <a href="../index.html">&larr; topology &amp; manifolds</a>
+  <span class="sep">&middot;</span>
+  <span class="section-num">section 3 / 3</span>
+</nav>
+
+<h1>Counting loops: winding, &pi;&#8321;, and H&#8321;<span class="subtitle">Integers in a world of wiggles — the one counting idea behind three scary names</span></h1>
+
+<p class="lead">Section 1 ended with a loop of string stuck around a donut's tube. Stuck-ness, it turns out, comes in <em>amounts</em>: a loop can wrap once, twice, three times, or wrap the other way, and no amount of sliding turns one of these into another. So each loop carries an integer, and the integer is unbreakable. This section is about that integer — you will draw it, wind it on the torus the essays actually care about, and meet the one surprise loops have left. Then, and only then, the names.</p>
+
+<h2>1. Draw your own winding number</h2>
+
+<p>Each loop around a hole carries its <strong>winding number</strong> — how many net turns it makes around the hole. Wiggle the loop, deform it, let it tremble: the count doesn't budge, because it can only change by tearing. This is why the essays keep calling winding numbers <em>robust</em>: they are integers in a world of wiggles.</p>
+
+<figure id="fig-winding">
+  <canvas id="canvas-winding" width="680" height="380"></canvas>
+  <div class="controls" id="winding-controls">
+    <button id="winding-clear">Clear</button>
+  </div>
+  <figcaption>Press and drag to draw a path around (or not around) the hole. The counter tracks how much of a full turn your pen has wound. End the drag back at the green starting dot to close the loop — a closed loop's winding is always a whole number, and wiggles along the way never change it. <span id="winding-readout" class="readout">draw a loop&hellip;</span></figcaption>
+</figure>
+
+<h2>2. Two independent counters: winding the torus</h2>
+
+<p>On a torus there are <em>two</em> ways to be stuck: around the tube, and around the ring. Each has its own counter, and they are independent — a single loop can wind both at once. The cleanest place to feel this is the <strong>flat torus</strong>: a square where walking off the right edge brings you in on the left, and off the top brings you in at the bottom (old video games were flat tori). Any loop you draw on this square lives on a torus, and its two counters are just <em>how many times you crossed each pair of edges, net</em>.</p>
+
+<figure id="fig-torusdraw">
+  <canvas id="canvas-torusdraw" width="680" height="400"></canvas>
+  <div class="controls" id="torusdraw-controls">
+    <button id="torusdraw-clear">Clear</button>
+  </div>
+  <figcaption>The square is a torus: leave one edge, re-enter opposite. Draw a loop and close it at the green dot; the two counters track your net wraps. Straight across: (1,&nbsp;0). Straight up: (0,&nbsp;1). The diagonal — through the corner-wrap — is the famous (1,&nbsp;1) loop: <em>one</em> loop, winding <em>both</em> ways at once. This pair of integers is exactly the bookkeeping <a href="../../../paradigm/sections/08-shape.html">the shape-of-a-thought chapter</a> reads off a transformer's trajectory. <span id="torusdraw-readout" class="readout">draw on the square&hellip;</span></figcaption>
+</figure>
+
+<h2>3. What a loop can carry: the M&ouml;bius surprise</h2>
+
+<p>Counting wraps is not the only thing a closed journey can tell you. Some spaces change what you <em>are</em> when you go around. Take a strip of paper, give it a half twist, tape the ends: a M&ouml;bius band. Carry a little flag around it — never flipping it yourself, just sliding it along — and when it comes home, it is <strong>mirrored</strong>. The journey did that. No journey on a sphere or a torus can do it; one lap of the M&ouml;bius band always does. It is a taste of a bigger theme this site cares about deeply: <em>a loop can come back changed, and the change is a property of the space</em> — the same move that returns as holonomy in <a href="../../gauge-holonomy/">the gauge &amp; holonomy primer</a>, where the change is a rotation rather than a mirror flip.</p>
+
+<figure id="fig-mobius">
+  <canvas id="canvas-mobius" width="680" height="360"></canvas>
+  <div class="controls" id="mobius-controls">
+    <button id="mobius-walk" class="primary">Walk the flag around</button>
+    <button id="mobius-reset">Reset</button>
+  </div>
+  <figcaption>A M&ouml;bius band, and a flag that slides along its center line without ever being flipped. The ghost flag marks home. One full lap and the traveler returns mirrored — left and right exchanged by the space itself. <span id="mobius-readout" class="readout">press walk</span></figcaption>
+</figure>
+
+<h2>4. Now the names</h2>
+
+<p>You have now done everything the notation talks about. The three names are <strong>one idea at three levels of bookkeeping</strong>:</p>
+
+<ul style="margin: 0.4em 0 1em 0; color: var(--text-soft);">
+  <li><strong>Winding number</strong> — one loop's count: how many times <em>this</em> loop wraps <em>this</em> hole. (Figure 1. On the torus, a pair of counts — figure 2.)</li>
+  <li><strong>Fundamental group, written &pi;&#8321;</strong> — the whole catalog: the complete list of essentially-different ways any loop can sit in the space, with a rule for combining them. For the sphere the catalog is empty (&pi;&#8321; = 0: every loop shrinks). For the torus it is exactly your two counters (&pi;&#8321; = &#8484; &times; &#8484;) — you generated the catalog yourself in figure 2.</li>
+  <li><strong>First homology, written H&#8321;</strong> — the same catalog, coarsened for practical measurement: it keeps the counting and forgets some fine distinctions, which is what makes it computable from data. When an essay checks &ldquo;H&#8321; &ne; 0&rdquo;, it is asking the machine version of the string question: <em>does this space have a loop that can't shrink?</em></li>
+</ul>
+
+<p>So when you read &ldquo;&pi;&#8321;(T&sup2;) = &#8484; &times; &#8484;&rdquo; in <a href="../../../paradigm/sections/09-strange-loop.html">the strange-loop chapter</a>, it now says something you have drawn with your own hand: <em>on a torus there are two independent ways to be stuck, each counted by an integer.</em> That is all the notation means.</p>
+
+<div class="flag-callout">
+  <span class="flag-label">What's real here</span>
+  Cartoons, all of it — built so the counting lands in your hands. On the site the counting is run as measurement: <a href="../../../paradigm/sections/08-shape.html">the shape chapter</a> reads winding pairs off real trajectories, and <a href="../../../paradigm/sections/11-criteria.html">the four-criteria chapter</a> uses the H&#8321; &ne; 0 test — this page's string question, run as an algorithm on real data. The M&ouml;bius band is the one figure here the essays' tori do <em>not</em> have (tori don't mirror-flip anything); it is included because &ldquo;the loop comes back changed&rdquo; is the door to holonomy, memory, and the consciousness chapters.
+</div>
+
+<h2>Where this goes</h2>
+
+<p>You now hold the three ideas twelve chapters of this site quietly lean on. The direct payoffs: <a href="../../../paradigm/sections/08-shape.html">&sect;08 — the shape of a thought</a> (the manifold is a torus and reasoning winds it), <a href="../../../paradigm/sections/09-strange-loop.html">&sect;09 — the strange loop</a> (which spaces can hold a loop that comes back changed), <a href="../../../paradigm/sections/11-criteria.html">&sect;11 — the four criteria</a> (H&#8321; as a consciousness test you can run), and <a href="../../../paradigm/sections/13-scale-ladder.html">&sect;13 — one law, every scale</a> (why only the coarse shape, not the fine detail, needs to repeat across scales).</p>
+
+<div class="nav-links">
+  <a href="02-manifolds.html" class="prev">Manifolds: flat up close</a>
+  <a href="../../inside-a-transformer/" class="next">Next: Inside a transformer</a>
+</div>
+
+</div>
+
+<script type="module">
+import { setupHiDPICanvas, runWhenVisible, palette } from '../../../js/common.js';
+
+// ============================================================
+// FIG A: draw your own winding number
+// ============================================================
+(() => {
+  const W = 680, H = 380, canvas = document.getElementById('canvas-winding');
+  const ctx = setupHiDPICanvas(canvas, W, H);
+  const readout = document.getElementById('winding-readout');
+  const hx = 340, hy = 185, hr = 30;
+
+  let path = [];
+  let drawing = false;
+  let total = 0;        // accumulated angle around the hole, radians
+  let prevAng = 0;
+  let closed = false;
+  let closedW = 0;
+
+  function toXY(e) {
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / (rect.width * (window.devicePixelRatio || 1));
+    const scaleY = canvas.height / (rect.height * (window.devicePixelRatio || 1));
+    const cx = (e.touches ? e.touches[0].clientX : e.clientX);
+    const cy = (e.touches ? e.touches[0].clientY : e.clientY);
+    return { x: (cx - rect.left) * scaleX, y: (cy - rect.top) * scaleY };
+  }
+  function wrap(a) { while (a > Math.PI) a -= Math.PI * 2; while (a < -Math.PI) a += Math.PI * 2; return a; }
+
+  function down(e) {
+    const p = toXY(e);
+    if (Math.hypot(p.x - hx, p.y - hy) < hr + 4) return; // can't start inside the hole
+    drawing = true; closed = false;
+    path = [p];
+    total = 0;
+    prevAng = Math.atan2(p.y - hy, p.x - hx);
+    e.preventDefault();
+  }
+  function move(e) {
+    if (!drawing) return;
+    const p = toXY(e);
+    const last = path[path.length - 1];
+    if (Math.hypot(p.x - last.x, p.y - last.y) < 3) return;
+    path.push(p);
+    if (Math.hypot(p.x - hx, p.y - hy) > hr) {   // the pen doesn't count inside the hole
+      const a = Math.atan2(p.y - hy, p.x - hx);
+      total += wrap(a - prevAng);
+      prevAng = a;
+    }
+    e.preventDefault();
+  }
+  function up() {
+    if (!drawing) return;
+    drawing = false;
+    if (path.length > 10 && Math.hypot(path[path.length - 1].x - path[0].x, path[path.length - 1].y - path[0].y) < 26) {
+      closed = true;
+      closedW = Math.round(total / (Math.PI * 2));
+      path.push(path[0]);
+    }
+  }
+  canvas.addEventListener('mousedown', down);
+  window.addEventListener('mousemove', move);
+  window.addEventListener('mouseup', up);
+  canvas.addEventListener('touchstart', down, { passive: false });
+  canvas.addEventListener('touchmove', move, { passive: false });
+  canvas.addEventListener('touchend', up);
+  document.getElementById('winding-clear').addEventListener('click', () => { path = []; total = 0; closed = false; readout.textContent = 'draw a loop…'; });
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H); ctx.fillStyle = palette.bg; ctx.fillRect(0, 0, W, H);
+
+    // the hole
+    ctx.fillStyle = palette.bondFaint;
+    ctx.beginPath(); ctx.arc(hx, hy, hr, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = palette.axisBold; ctx.lineWidth = 1.5; ctx.stroke();
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 12px "Charter", serif'; ctx.textAlign = 'center';
+    ctx.fillText('the hole', hx, hy + hr + 18);
+
+    // the path
+    if (path.length > 1) {
+      ctx.strokeStyle = palette.orange; ctx.lineWidth = 2.4; ctx.lineJoin = 'round';
+      ctx.beginPath();
+      path.forEach((p, i) => { i ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y); });
+      ctx.stroke();
+    }
+    if (path.length) {
+      ctx.fillStyle = palette.green;
+      ctx.beginPath(); ctx.arc(path[0].x, path[0].y, 6, 0, Math.PI * 2); ctx.fill();
+      const tip = path[path.length - 1];
+      ctx.fillStyle = palette.orange;
+      ctx.beginPath(); ctx.arc(tip.x, tip.y, 5, 0, Math.PI * 2); ctx.fill();
+    }
+
+    if (!path.length) {
+      ctx.fillStyle = palette.textFaint; ctx.font = 'italic 13px "Charter", serif';
+      ctx.fillText('press and drag — loop around the hole, or don’t', hx, 60);
+    }
+
+    const turns = total / (Math.PI * 2);
+    if (closed) {
+      readout.textContent = `closed loop — winding number = ${closedW}`;
+    } else if (path.length) {
+      readout.textContent = `wound so far: ${turns.toFixed(2)} turns (close the loop at the green dot)`;
+    }
+  }
+  runWhenVisible(canvas, draw);
+})();
+
+// ============================================================
+// FIG B: the flat torus — two live counters
+// ============================================================
+(() => {
+  const W = 680, H = 400, canvas = document.getElementById('canvas-torusdraw');
+  const ctx = setupHiDPICanvas(canvas, W, H);
+  const readout = document.getElementById('torusdraw-readout');
+  const BX = 190, BY = 40, BW = 300, BH = 300;   // the square
+
+  // We track the pen in UNWRAPPED coordinates (ux, uy can run past the box);
+  // the display draws modulo the box. Net wraps = displacement / box size.
+  let segs = [];        // array of polylines in unwrapped coords
+  let drawing = false, ux = 0, uy = 0, sx = 0, sy = 0; // current & start (unwrapped)
+  let closed = false, cw = [0, 0];
+
+  function toXY(e) {
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / (rect.width * (window.devicePixelRatio || 1));
+    const scaleY = canvas.height / (rect.height * (window.devicePixelRatio || 1));
+    const cx = (e.touches ? e.touches[0].clientX : e.clientX);
+    const cy = (e.touches ? e.touches[0].clientY : e.clientY);
+    return { x: (cx - rect.left) * scaleX, y: (cy - rect.top) * scaleY };
+  }
+  const inBox = p => p.x > BX && p.x < BX + BW && p.y > BY && p.y < BY + BH;
+  const mod = (v, m) => ((v % m) + m) % m;
+
+  // The pen follows mouse DELTAS, not absolute position: once the pen has
+  // wrapped an edge, the mouse and the pen's wrapped position part ways —
+  // deltas keep the drag seamless across any number of wraps.
+  let lastM = null;
+
+  function down(e) {
+    const p = toXY(e);
+    if (!inBox(p)) return;
+    drawing = true; closed = false;
+    lastM = p;
+    ux = p.x - BX; uy = p.y - BY; sx = ux; sy = uy;
+    segs = [[{ x: ux, y: uy }]];
+    e.preventDefault();
+  }
+  function move(e) {
+    if (!drawing) return;
+    const p = toXY(e);
+    const dx = p.x - lastM.x, dy = p.y - lastM.y;
+    if (Math.hypot(dx, dy) < 2) return;
+    if (Math.hypot(dx, dy) > 80) { lastM = p; return; } // ignore re-entry jumps
+    lastM = p;
+    ux += dx; uy += dy;
+    const cur = segs[segs.length - 1];
+    const prev = cur[cur.length - 1];
+    // if the wrapped position jumped an edge, start a new display segment
+    const wrappedJump = Math.floor(prev.x / BW) !== Math.floor(ux / BW) || Math.floor(prev.y / BH) !== Math.floor(uy / BH);
+    cur.push({ x: ux, y: uy });
+    if (wrappedJump) segs.push([{ x: ux, y: uy }]);
+    e.preventDefault();
+  }
+  function up() {
+    if (!drawing) return;
+    drawing = false;
+    // close if near the start point IN THE WRAPPED METRIC
+    const ddx = mod(ux - sx + BW / 2, BW) - BW / 2;
+    const ddy = mod(uy - sy + BH / 2, BH) - BH / 2;
+    if (Math.hypot(ddx, ddy) < 24 && Math.hypot(ux - sx, uy - sy) + Math.hypot(ddx, ddy) > 40) {
+      closed = true;
+      cw = [Math.round((ux - sx - ddx) / BW), Math.round(-(uy - sy - ddy) / BH)];
+    }
+  }
+  canvas.addEventListener('mousedown', down);
+  window.addEventListener('mousemove', move);
+  window.addEventListener('mouseup', up);
+  canvas.addEventListener('touchstart', down, { passive: false });
+  canvas.addEventListener('touchmove', move, { passive: false });
+  canvas.addEventListener('touchend', up);
+  document.getElementById('torusdraw-clear').addEventListener('click', () => { segs = []; closed = false; readout.textContent = 'draw on the square…'; });
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H); ctx.fillStyle = palette.bg; ctx.fillRect(0, 0, W, H);
+
+    // the square + identification marks
+    ctx.fillStyle = palette.bgSoft; ctx.fillRect(BX, BY, BW, BH);
+    ctx.strokeStyle = palette.axisBold; ctx.lineWidth = 1.6; ctx.strokeRect(BX, BY, BW, BH);
+    ctx.fillStyle = palette.textFaint; ctx.font = '13px "SF Mono", monospace'; ctx.textAlign = 'center';
+    // edge arrows: left/right single chevrons, top/bottom double
+    ctx.fillText('›', BX - 12, BY + BH / 2 + 4); ctx.fillText('›', BX + BW + 12, BY + BH / 2 + 4);
+    ctx.fillText('»', BX + BW / 2, BY - 8); ctx.fillText('»', BX + BW / 2, BY + BH + 16);
+    ctx.font = 'italic 12px "Charter", serif';
+    ctx.fillText('leave right, re-enter left · leave top, re-enter bottom', BX + BW / 2, BY + BH + 40);
+
+    // the path (wrapped)
+    ctx.strokeStyle = palette.orange; ctx.lineWidth = 2.4; ctx.lineJoin = 'round';
+    segs.forEach(seg => {
+      if (seg.length < 2) return;
+      ctx.beginPath();
+      seg.forEach((p, i) => {
+        const x = BX + mod(p.x, BW), y = BY + mod(p.y, BH);
+        i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+      });
+      ctx.stroke();
+    });
+    if (segs.length && segs[0].length) {
+      ctx.fillStyle = palette.green;
+      ctx.beginPath(); ctx.arc(BX + mod(sx, BW), BY + mod(sy, BH), 6, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = palette.orange;
+      ctx.beginPath(); ctx.arc(BX + mod(ux, BW), BY + mod(uy, BH), 5, 0, Math.PI * 2); ctx.fill();
+    } else {
+      ctx.fillStyle = palette.textFaint; ctx.font = 'italic 13px "Charter", serif';
+      ctx.fillText('press and drag — try walking straight off an edge', BX + BW / 2, BY + 30);
+    }
+
+    // live counters
+    const wa = (ux - sx) / BW, wt = -(uy - sy) / BH;
+    ctx.fillStyle = palette.textSoft; ctx.font = '13px "SF Mono", monospace'; ctx.textAlign = 'left';
+    ctx.fillText('around:', 520, 120);
+    ctx.fillText('through:', 520, 170);
+    ctx.fillStyle = palette.blue; ctx.font = '600 20px "SF Mono", monospace';
+    ctx.fillText(segs.length ? (closed ? String(cw[0]) : wa.toFixed(2)) : '—', 610, 120);
+    ctx.fillStyle = palette.burgundy;
+    ctx.fillText(segs.length ? (closed ? String(cw[1]) : wt.toFixed(2)) : '—', 610, 170);
+
+    if (closed) readout.textContent = `closed loop — (around, through) = (${cw[0]}, ${cw[1]})`;
+    else if (segs.length) readout.textContent = `winding so far: (${wa.toFixed(2)}, ${wt.toFixed(2)}) — close at the green dot`;
+  }
+  runWhenVisible(canvas, draw);
+})();
+
+// ============================================================
+// FIG C: the Möbius flag
+// ============================================================
+(() => {
+  const W = 680, H = 360, canvas = document.getElementById('canvas-mobius');
+  const ctx = setupHiDPICanvas(canvas, W, H);
+  const readout = document.getElementById('mobius-readout');
+  let tf = 0, walking = false, t = 0, laps = 0;
+
+  document.getElementById('mobius-walk').addEventListener('click', () => { walking = true; });
+  document.getElementById('mobius-reset').addEventListener('click', () => { walking = false; tf = 0; laps = 0; readout.textContent = 'press walk'; });
+
+  const tilt = 0.95, cx = 340, cy = 175, scale = 105;
+  function project(x, y, z, yaw) {
+    const x1 = x * Math.cos(yaw) - y * Math.sin(yaw), y1 = x * Math.sin(yaw) + y * Math.cos(yaw);
+    const y2 = y1 * Math.cos(tilt) - z * Math.sin(tilt), z2 = y1 * Math.sin(tilt) + z * Math.cos(tilt);
+    return { sx: cx + scale * x1, sy: cy - scale * z2, depth: y2 };
+  }
+  // Möbius band: center circle radius 1.15, half-width 0.4, half-twist
+  function mob(u, s) {
+    const d = [Math.cos(u / 2) * Math.cos(u), Math.cos(u / 2) * Math.sin(u), Math.sin(u / 2)];
+    const c = [1.15 * Math.cos(u), 1.15 * Math.sin(u), 0];
+    return [c[0] + s * d[0], c[1] + s * d[1], c[2] + s * d[2]];
+  }
+  // local frame at parameter u: along-band tangent (numeric) and across-band d
+  function frame(u) {
+    const e = 0.001;
+    const p1 = mob(u - e, 0), p2 = mob(u + e, 0);
+    let tx = [p2[0] - p1[0], p2[1] - p1[1], p2[2] - p1[2]];
+    const tn = Math.hypot(tx[0], tx[1], tx[2]); tx = tx.map(v => v / tn);
+    const d = [Math.cos(u / 2) * Math.cos(u), Math.cos(u / 2) * Math.sin(u), Math.sin(u / 2)];
+    return { T: tx, D: d };
+  }
+  // the flag: an "F" drawn as strokes in local (along, across) coords
+  const FSTROKES = [
+    [[0, 0], [0, 0.34]],          // pole
+    [[0, 0.34], [0.2, 0.34]],     // top bar
+    [[0, 0.19], [0.14, 0.19]],    // middle bar
+  ];
+  function drawFlag(u, yaw, color, alpha) {
+    const { T, D } = frame(u);
+    const base = mob(u, 0);
+    ctx.strokeStyle = color; ctx.globalAlpha = alpha; ctx.lineWidth = 3;
+    FSTROKES.forEach(([a, b]) => {
+      const pa = project(base[0] + a[0] * T[0] + a[1] * D[0], base[1] + a[0] * T[1] + a[1] * D[1], base[2] + a[0] * T[2] + a[1] * D[2], yaw);
+      const pb = project(base[0] + b[0] * T[0] + b[1] * D[0], base[1] + b[0] * T[1] + b[1] * D[1], base[2] + b[0] * T[2] + b[1] * D[2], yaw);
+      ctx.beginPath(); ctx.moveTo(pa.sx, pa.sy); ctx.lineTo(pb.sx, pb.sy); ctx.stroke();
+    });
+    ctx.globalAlpha = 1;
+  }
+
+  function draw() {
+    t += 1;
+    const yaw = 0.4 + t * 0.0016;
+    if (walking) {
+      tf += 0.012;
+      if (tf >= Math.PI * 2) { tf = Math.PI * 2; walking = false; laps = 1; }
+    }
+    ctx.clearRect(0, 0, W, H); ctx.fillStyle = palette.bg; ctx.fillRect(0, 0, W, H);
+
+    // band wireframe
+    for (let j = -3; j <= 3; j++) {
+      const s = (j / 3) * 0.4;
+      ctx.beginPath();
+      for (let i = 0; i <= 120; i++) {
+        const u = (i / 120) * Math.PI * 2;
+        const p = mob(u, s); const q = project(p[0], p[1], p[2], yaw);
+        i ? ctx.lineTo(q.sx, q.sy) : ctx.moveTo(q.sx, q.sy);
+      }
+      ctx.strokeStyle = j === 0 ? 'rgba(125,125,140,0.5)' : 'rgba(125,125,140,0.25)';
+      ctx.lineWidth = j === 0 ? 1.4 : 1; ctx.stroke();
+    }
+    for (let i = 0; i < 28; i++) {
+      const u = (i / 28) * Math.PI * 2;
+      const p1 = mob(u, -0.4), p2 = mob(u, 0.4);
+      const q1 = project(p1[0], p1[1], p1[2], yaw), q2 = project(p2[0], p2[1], p2[2], yaw);
+      ctx.strokeStyle = 'rgba(125,125,140,0.2)'; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(q1.sx, q1.sy); ctx.lineTo(q2.sx, q2.sy); ctx.stroke();
+    }
+
+    // home ghost flag at u=0, and the traveler at tf
+    drawFlag(0, yaw, palette.blue, 0.4);
+    drawFlag(tf, yaw, palette.orange, 1);
+
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 12px "Charter", serif'; ctx.textAlign = 'center';
+    ctx.fillText('ghost = home position · orange = the traveler', 340, 338);
+
+    if (laps === 1 && !walking) {
+      readout.textContent = 'returned MIRRORED — one lap exchanged left and right; the space did it';
+    } else if (walking) {
+      readout.textContent = `walking… ${(tf / (Math.PI * 2) * 100).toFixed(0)}% of the lap`;
+    }
+  }
+  runWhenVisible(canvas, draw);
+})();
+</script>
+
+</body>
+</html>

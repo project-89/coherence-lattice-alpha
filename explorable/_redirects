@@ -3,3 +3,15 @@
 
 # Old chapter URLs (shared before 2026-04-17) → new /alpha/ paths
 /sections/*              /alpha/sections/:splat         301
+
+# α's oscillators/capital/CLR chapters moved into the shared Foundations essay
+/alpha/sections/02-oscillators.html   /foundations/sections/01-oscillators.html   301
+/alpha/sections/03-coherence.html     /foundations/sections/02-capital.html       301
+/alpha/sections/04-clr.html           /foundations/sections/03-clr.html           301
+
+# 2026-08-13: five primers grew into multi-section modules (folders)
+/primers/sections/02-topology-manifolds.html   /primers/topology-manifolds/      301
+/primers/sections/03-inside-a-transformer.html /primers/inside-a-transformer/    301
+/primers/sections/04-gauge-holonomy.html       /primers/gauge-holonomy/          301
+/primers/sections/05-graphs-spectra.html       /primers/graphs-spectra/          301
+/primers/sections/08-lohe-hypersphere.html     /primers/lohe-hypersphere/        301

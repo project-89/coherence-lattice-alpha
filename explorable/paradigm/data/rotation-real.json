@@ -1,0 +1,497 @@
+{
+ "provenance": {
+  "source_bundle": "papers/publication/platonic_rotation",
+  "encoder_A": "gemini-embedding-001 (768d, L2-normalized)",
+  "encoder_B": "openai-text-embedding-3-large (3072d, L2-normalized)",
+  "corpus": "first 12 texts of each of 3 domain blocks (astronomy, molecular_biology, cryptography; 36 texts) from embeddings/corpus.jsonl \u2014 3 well-separated domains chosen because their 2-D shadow preserves the most structure (top-2 PCs ~20% of variance vs ~11% for all 10 domains)",
+  "derivation": "per-encoder: L2-normalize, mean-center the 36-text subset, SVD, top-2 principal components as 2-D coordinates, scaled to unit RMS radius",
+  "axis_convention": "no axis flip needed",
+  "explained_variance_top2": {
+   "A": 0.1937,
+   "B": 0.1978
+  },
+  "best_rotation_deg": 0.0,
+  "match_at_best_pct": 99.1,
+  "match_at_zero_pct": 99.1,
+  "full_D_reference": "the full-dimensional measurement (D=128 chart, Procrustes+Lohe) reaches 99.3% held-out paired top-1 (bundle README/paper); the on-page match is the 2-D projection's number, not that measurement"
+ },
+ "domains": [
+  "astronomy",
+  "molecular_biology",
+  "cryptography"
+ ],
+ "items": [
+  {
+   "idx": 0,
+   "domain": "astronomy",
+   "label": "The universe's expansion, discovered\u2026"
+  },
+  {
+   "idx": 1,
+   "domain": "astronomy",
+   "label": "Distant exoplanets orbiting other\u2026"
+  },
+  {
+   "idx": 2,
+   "domain": "astronomy",
+   "label": "Supermassive black holes reside at\u2026"
+  },
+  {
+   "idx": 3,
+   "domain": "astronomy",
+   "label": "The Andromeda Galaxy, our closest\u2026"
+  },
+  {
+   "idx": 4,
+   "domain": "astronomy",
+   "label": "Nebulae are vast interstellar clouds\u2026"
+  },
+  {
+   "idx": 5,
+   "domain": "astronomy",
+   "label": "Red giant stars represent a late\u2026"
+  },
+  {
+   "idx": 6,
+   "domain": "astronomy",
+   "label": "Neutron stars are incredibly dense\u2026"
+  },
+  {
+   "idx": 7,
+   "domain": "astronomy",
+   "label": "The Hubble Space Telescope has\u2026"
+  },
+  {
+   "idx": 8,
+   "domain": "astronomy",
+   "label": "Jupiter, the largest planet in our\u2026"
+  },
+  {
+   "idx": 9,
+   "domain": "astronomy",
+   "label": "Saturn is famous for its magnificent\u2026"
+  },
+  {
+   "idx": 10,
+   "domain": "astronomy",
+   "label": "The Kuiper Belt, beyond Neptune, is a\u2026"
+  },
+  {
+   "idx": 11,
+   "domain": "astronomy",
+   "label": "Dark matter and dark energy are\u2026"
+  },
+  {
+   "idx": 800,
+   "domain": "molecular_biology",
+   "label": "The central dogma of molecular\u2026"
+  },
+  {
+   "idx": 801,
+   "domain": "molecular_biology",
+   "label": "Non-coding RNA molecules, like\u2026"
+  },
+  {
+   "idx": 802,
+   "domain": "molecular_biology",
+   "label": "Epigenetic modifications, such as DNA\u2026"
+  },
+  {
+   "idx": 803,
+   "domain": "molecular_biology",
+   "label": "Computer networks fundamentally\u2026"
+  },
+  {
+   "idx": 804,
+   "domain": "molecular_biology",
+   "label": "A Local Area Network (LAN) connects\u2026"
+  },
+  {
+   "idx": 805,
+   "domain": "molecular_biology",
+   "label": "Wide Area Networks (WANs) span vast\u2026"
+  },
+  {
+   "idx": 806,
+   "domain": "molecular_biology",
+   "label": "Routers are essential networking\u2026"
+  },
+  {
+   "idx": 807,
+   "domain": "molecular_biology",
+   "label": "Switches connect devices within a\u2026"
+  },
+  {
+   "idx": 808,
+   "domain": "molecular_biology",
+   "label": "The Internet is a global network of\u2026"
+  },
+  {
+   "idx": 809,
+   "domain": "molecular_biology",
+   "label": "IP addresses uniquely identify\u2026"
+  },
+  {
+   "idx": 810,
+   "domain": "molecular_biology",
+   "label": "TCP/IP is a foundational suite of\u2026"
+  },
+  {
+   "idx": 811,
+   "domain": "molecular_biology",
+   "label": "Ethernet is a widely used networking\u2026"
+  },
+  {
+   "idx": 1000,
+   "domain": "cryptography",
+   "label": "Diffie-Hellman key exchange is\u2026"
+  },
+  {
+   "idx": 1001,
+   "domain": "cryptography",
+   "label": "Ciphertext-only attack scenarios\u2026"
+  },
+  {
+   "idx": 1002,
+   "domain": "cryptography",
+   "label": "Known-plaintext attacks provide\u2026"
+  },
+  {
+   "idx": 1003,
+   "domain": "cryptography",
+   "label": "Chosen-plaintext attacks allow\u2026"
+  },
+  {
+   "idx": 1004,
+   "domain": "cryptography",
+   "label": "Machine learning empowers computers\u2026"
+  },
+  {
+   "idx": 1005,
+   "domain": "cryptography",
+   "label": "Supervised learning models are\u2026"
+  },
+  {
+   "idx": 1006,
+   "domain": "cryptography",
+   "label": "Unsupervised learning algorithms\u2026"
+  },
+  {
+   "idx": 1007,
+   "domain": "cryptography",
+   "label": "Reinforcement learning involves\u2026"
+  },
+  {
+   "idx": 1008,
+   "domain": "cryptography",
+   "label": "Neural networks, inspired by the\u2026"
+  },
+  {
+   "idx": 1009,
+   "domain": "cryptography",
+   "label": "Support Vector Machines (SVMs) are\u2026"
+  },
+  {
+   "idx": 1010,
+   "domain": "cryptography",
+   "label": "Decision trees model decisions and\u2026"
+  },
+  {
+   "idx": 1011,
+   "domain": "cryptography",
+   "label": "Regression analysis in machine\u2026"
+  }
+ ],
+ "A": [
+  [
+   -0.9844,
+   0.0908
+  ],
+  [
+   -0.6521,
+   -0.0361
+  ],
+  [
+   -1.1586,
+   0.0366
+  ],
+  [
+   -1.1706,
+   0.1691
+  ],
+  [
+   -1.1573,
+   0.2088
+  ],
+  [
+   -1.0467,
+   0.044
+  ],
+  [
+   -1.051,
+   0.0327
+  ],
+  [
+   -0.93,
+   0.1616
+  ],
+  [
+   -1.0003,
+   0.2246
+  ],
+  [
+   -0.9234,
+   0.318
+  ],
+  [
+   -0.884,
+   0.2695
+  ],
+  [
+   -0.9976,
+   -0.0281
+  ],
+  [
+   0.1205,
+   -0.2397
+  ],
+  [
+   0.0554,
+   -0.4278
+  ],
+  [
+   0.2371,
+   -0.5673
+  ],
+  [
+   0.7256,
+   0.891
+  ],
+  [
+   0.8045,
+   1.0705
+  ],
+  [
+   0.311,
+   1.0852
+  ],
+  [
+   0.8717,
+   1.0626
+  ],
+  [
+   0.9428,
+   0.9743
+  ],
+  [
+   0.2382,
+   0.9621
+  ],
+  [
+   0.8733,
+   0.8504
+  ],
+  [
+   0.752,
+   0.7669
+  ],
+  [
+   0.6294,
+   0.9418
+  ],
+  [
+   0.3964,
+   -0.1569
+  ],
+  [
+   0.4183,
+   -0.7719
+  ],
+  [
+   0.5558,
+   -0.9505
+  ],
+  [
+   0.6281,
+   -1.0156
+  ],
+  [
+   0.6317,
+   -0.74
+  ],
+  [
+   0.4816,
+   -0.8839
+  ],
+  [
+   0.4724,
+   -0.8849
+  ],
+  [
+   0.4097,
+   -0.7057
+  ],
+  [
+   0.3384,
+   -0.2794
+  ],
+  [
+   0.3199,
+   -0.815
+  ],
+  [
+   0.259,
+   -0.7605
+  ],
+  [
+   0.4832,
+   -0.8973
+  ]
+ ],
+ "B": [
+  [
+   -1.0374,
+   0.1189
+  ],
+  [
+   -0.7239,
+   -0.1204
+  ],
+  [
+   -1.1486,
+   -0.0212
+  ],
+  [
+   -0.9259,
+   0.0125
+  ],
+  [
+   -0.9384,
+   0.3709
+  ],
+  [
+   -1.0017,
+   0.0529
+  ],
+  [
+   -0.9405,
+   0.2176
+  ],
+  [
+   -0.9126,
+   0.1801
+  ],
+  [
+   -1.2077,
+   0.1129
+  ],
+  [
+   -1.1166,
+   0.157
+  ],
+  [
+   -1.0144,
+   0.1349
+  ],
+  [
+   -0.8523,
+   0.0607
+  ],
+  [
+   0.0135,
+   -0.2402
+  ],
+  [
+   0.1102,
+   -0.331
+  ],
+  [
+   0.044,
+   -0.3972
+  ],
+  [
+   0.7343,
+   1.0338
+  ],
+  [
+   0.6827,
+   1.027
+  ],
+  [
+   0.3766,
+   1.0674
+  ],
+  [
+   0.7898,
+   0.9546
+  ],
+  [
+   0.8423,
+   0.7405
+  ],
+  [
+   0.3149,
+   1.1089
+  ],
+  [
+   0.8478,
+   0.8562
+  ],
+  [
+   0.7408,
+   0.8353
+  ],
+  [
+   0.6985,
+   1.1367
+  ],
+  [
+   0.3815,
+   -0.2145
+  ],
+  [
+   0.5529,
+   -0.702
+  ],
+  [
+   0.4926,
+   -0.7135
+  ],
+  [
+   0.5932,
+   -0.7499
+  ],
+  [
+   0.5601,
+   -0.7827
+  ],
+  [
+   0.6128,
+   -1.0437
+  ],
+  [
+   0.4219,
+   -0.9722
+  ],
+  [
+   0.3448,
+   -0.6521
+  ],
+  [
+   0.3615,
+   -0.2347
+  ],
+  [
+   0.348,
+   -0.9671
+  ],
+  [
+   0.458,
+   -0.9269
+  ],
+  [
+   0.4973,
+   -1.1092
+  ]
+ ]
+}

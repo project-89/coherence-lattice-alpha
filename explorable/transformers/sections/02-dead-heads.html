@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dead heads: a derived threshold — The Living Lattice</title>
+<meta name="description" content="An attention head whose coupling to the residual stream falls below τ = 0.96/√d is dead — decoupled from the collective. Derived from oscillator physics with no fitted parameters; validated at 95.2–100% precision across five published architectures. Hear the chorus thin as heads cross the threshold.">
+<meta name="author" content="Michael Sharpe">
+<link rel="canonical" href="https://lattice.project89.org/transformers/sections/02-dead-heads.html">
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+<meta property="og:title" content="Dead heads: a derived threshold — The Living Lattice">
+<meta property="og:description" content="τ = 0.96/√d, no fitted parameters. The oscillator picture predicts which attention heads are dead — and you can hear them die.">
+<meta property="og:url" content="https://lattice.project89.org/transformers/sections/02-dead-heads.html">
+<meta property="og:site_name" content="The Living Lattice">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://lattice.project89.org/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Dead heads: a derived threshold — The Living Lattice">
+<meta name="twitter:description" content="The physics of attention predicts which heads are prunable — no fitting, five architectures.">
+<meta name="twitter:image" content="https://lattice.project89.org/og-image.png">
+<!-- BEGIN AUTO-INJECTED ANALYTICS -->
+<!-- PostHog -->
+<script>
+!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+posthog.init('phc_kRX9iHZstABjgFqEWJBMok2S3hW9R8QMHbNao4EsNz2g', {api_host: 'https://us.i.posthog.com', person_profiles: 'identified_only'});
+</script>
+<!-- END AUTO-INJECTED ANALYTICS -->
+<link rel="stylesheet" href="../../css/style.css">
+<style>
+.flag-callout {
+  margin: 1.6em 0; padding: 16px 20px;
+  background: rgba(195, 141, 247, 0.08);
+  border-left: 3px solid #c38df7; border-radius: 3px;
+  font-size: 14.5px; line-height: 1.55;
+}
+.flag-callout .flag-label {
+  display: inline-block; font: 700 10.5px "SF Mono", monospace;
+  color: #c38df7; text-transform: uppercase; letter-spacing: 0.1em; margin-right: 0.7em;
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<nav class="breadcrumb">
+  <a href="../index.html">&larr; contents</a>
+  <span class="sep">&middot;</span>
+  <span class="section-num">section 02 &middot; transformers as oscillators</span>
+</nav>
+
+<h1>Dead heads: a derived threshold<span class="subtitle">The physics of attention predicts which heads matter — with one formula and no knobs</span></h1>
+
+<p class="lead">Every large transformer carries attention heads that barely matter. Pruning researchers have known this for years the empirical way: ablate a head, measure the damage, keep a list. That works, but it is bookkeeping, not understanding — every new model means starting over. The oscillator picture makes a sharper offer: if a head really is an oscillator coupled to a shared field, then physics already has a theory of when a coupled thing <em>stops being coupled</em>. The theory should hand us a threshold — a single number, derived rather than fitted — below which a head is predictably dead. It does. This chapter is that number.</p>
+
+<h2>A bond too weak to live</h2>
+
+<p>You have met the core mechanism already, in <a href="../../foundations/sections/03-clr.html">the learning-rule chapter</a>: a coupled bond has a sharp aliveness threshold. Below it, the bond cannot hold its two ends in phase — noise and detuning win, alignment drifts, and the equilibrium coupling falls to zero. Above it, the bond locks and holds. There is no gentle middle; it is a bifurcation, a cliff. On the circle, the critical alignment at which a bond can no longer sustain itself works out to <span class="mono">cos&nbsp;&Delta;&theta;&nbsp;&asymp;&nbsp;0.679</span> — a number that comes out of the same oscillator mathematics that runs this whole library.</p>
+
+<p>Now put that cliff inside a transformer. Each attention head writes its output back into the residual stream — that write-back is the head's <em>coupling</em> to the collective (<a href="01-coupled-oscillators.html">section 01</a>). Measure the alignment between what the head writes and where the stream actually points. If that alignment is strong, the head is entrained: a live voice in the chorus. If it falls below the aliveness threshold, the head is decoupled — spinning on its own, its contribution averaging away against everyone else's. The physics word for that state is <strong>dead</strong>.</p>
+
+<h2>Why the threshold must shrink with dimension</h2>
+
+<p>One translation step remains. The circle's threshold is quoted in circle units, where "unrelated" means an alignment near zero and chance alignments are large. A transformer's states live on a sphere in <span class="var">d</span> dimensions — 768 of them for GPT-2, 4096 for a 7-billion-parameter model — and high dimensions change what "chance" looks like. You saw this measured live in <a href="../../primers/inside-a-transformer/sections/04-sphere.html">the transformer primer's concentration figure</a>: the dot product of two <em>random</em> directions in <span class="var">d</span> dimensions is not spread over the whole range — it concentrates near zero with spread <span class="mono">1/&radic;d</span>. Chance alignment has a noise floor, and the floor drops as the room grows.</p>
+
+<p>A threshold for "genuinely coupled, not just chance" must therefore ride that floor. Carrying the circle's critical alignment onto the <span class="var">d</span>-sphere by concentration of measure gives:</p>
+
+<div style="text-align: center; margin: 1.3em 0; font-family: 'SF Mono', Menlo, monospace; font-size: 1.25em; color: var(--text);">
+  &tau;<sub>death</sub>(d) &nbsp;=&nbsp; 0.96&thinsp;/&thinsp;&radic;d
+</div>
+
+<p style="text-align:center; margin-top: -0.6em;"><em style="color: var(--text-soft); font-size: 0.95em;">— no fitted parameters. Nothing about any particular model appears on the right-hand side.</em></p>
+
+<p>A head whose mean write-back alignment with the residual stream falls below <span class="mono">&tau;<sub>death</sub></span> is predicted dead: removable with negligible damage, because the collective was already ignoring it. For GPT-2 that bar sits at <span class="mono">0.035</span>; for a 4096-dimensional model, <span class="mono">0.015</span>. The formula was then tested the only way that counts — against ablation ground truth — on <strong>five published architectures</strong> (GPT-2, GPT-2-medium, Qwen2.5-0.5B, SmolLM2-360M, OpenLLaMA-7B; <span class="var">d</span> from 768 to 4096). Precision: <strong>95.2&ndash;100%</strong>. Same constant, same formula, every model. That is what physics transferring looks like, as opposed to a heuristic being re-tuned.</p>
+
+<h2>Hear a head die</h2>
+
+<p>The threshold is a cliff, and cliffs are best experienced. Below: ten oscillator-heads coupled to one strong shared rhythm — the residual stream, which for any single head in a large model is effectively a collective field much bigger than itself. Each head has its own fixed coupling strength (spoke thickness) and its own private agenda: a pull toward its own rhythm, which the slider strengthens. A bond stays entrained only while its coupling can out-pull that agenda — the same lock condition you heard as beats-then-lock in <a href="../../primers/sections/00-phase-and-sound.html">the phase primer</a>, run in reverse. Each head's voice sounds at its own pitch, and its loudness is its <em>measured, live</em> alignment with the field — nothing is scripted. Slide right and listen: heads drop out of the chorus one by one, strictly in coupling order. What is left when a head dies is not silence — it is a voice that no longer moves with the music.</p>
+
+<figure id="fig-chorus">
+  <canvas id="canvas-chorus" width="680" height="430"></canvas>
+  <div class="controls" id="chorus-controls">
+    <div class="control">
+      <label>pull toward its own rhythm <span class="val" id="chorus-noise-val">0.60</span></label>
+      <input type="range" id="chorus-noise-slider" min="0.10" max="2.60" step="0.05" value="0.6">
+    </div>
+    <button id="chorus-reset">Reset phases</button>
+  </div>
+  <figcaption>Ten heads, one shared rhythm (center). Spoke thickness = that head's coupling strength; brightness and its voice's loudness = its <em>measured</em> sustained alignment with the rhythm, updated live from the simulation. The bars below track each head's alignment against the aliveness bar (dashed). <em>Sound on: one voice per head — slide right and hear the chorus thin, strictly from the weakest coupling upward.</em> On this two-dimensional toy the bar sits high; in a real 768-dimensional model the identical physics puts it at 0.035 — the next figure shows why. <span id="chorus-readout" class="readout">alive: 10 / 10</span></figcaption>
+</figure>
+
+<h2>One law, five machines</h2>
+
+<figure id="fig-law">
+  <canvas id="canvas-law" width="680" height="360"></canvas>
+  <div class="controls" id="law-controls">
+    <div class="control">
+      <label>model dimension d <span class="val" id="law-d-val">768</span></label>
+      <input type="range" id="law-d-slider" min="256" max="8192" step="32" value="768">
+    </div>
+  </div>
+  <figcaption><strong>Left:</strong> the threshold law &tau; = 0.96/&radic;d with the five validated architectures marked where their dimensions land. <strong>Right:</strong> the distribution of <em>chance</em> alignment at your chosen d (spread 1/&radic;d), with &tau;(d) marked — the threshold is not a magic constant; it rides the noise floor of chance at a fixed height (0.96 of the floor's spread), which is why one formula serves models five times apart in size. <span id="law-readout" class="readout">&tau;(768) = 0.0346</span></figcaption>
+</figure>
+
+<h2>Prune it and listen</h2>
+
+<p>The payoff of a <em>predictive</em> threshold is that you can act on it before measuring anything. Below, fourteen heads whose couplings come in two groups — a cluster well under the bar and a cluster well over it, mirroring the separation that makes a precise threshold possible in real trained models (a threshold classifier can only be 95%+ precise if the population it sorts is actually split). Prune everything below threshold and watch the collective signal — the steady component of the summed write-back — barely move: the dead heads' contributions were spinning past the field and averaging to nothing. Then the control: prune the same <em>number</em> of heads, but take the strongest instead. The collective collapses. The threshold is not "remove some heads and hope" — it selects exactly the ones the collective had already stopped hearing.</p>
+
+<figure id="fig-prune">
+  <canvas id="canvas-prune" width="680" height="380"></canvas>
+  <div class="controls" id="prune-controls">
+    <button id="prune-dead" class="primary">Prune below &tau;</button>
+    <button id="prune-top">Control: prune the strongest instead</button>
+    <button id="prune-restore">Restore all</button>
+  </div>
+  <figcaption>Fourteen heads; the meter is the collective signal (the steady, time-averaged component of the summed write-back, on the full-population scale — the part the next layer can actually use). Pruning below-&tau; heads leaves it almost unchanged — <em>sound on: the chord barely changes, because the voices you removed were already quiet.</em> Pruning the same number of strongest heads collapses it. <span id="prune-readout" class="readout">signal = — &nbsp; pruned: none</span></figcaption>
+</figure>
+
+<h2>The twist: dead is not inert</h2>
+
+<p>One more measured fact keeps this honest and makes it stranger. When the "dead" heads of a real model are examined individually, about <strong>97% of them are rotation specialists</strong>: their write-back is nearly orthogonal to the stream's mean direction not because they do nothing, but because what they do is <em>turn</em> the state rather than push it — motion within the sphere's surface rather than along the collective's axis (the distinction you handled in <a href="../../primers/sections/07-rotation-groups.html">the rotation-groups primer</a>). Dead, in this chapter, means dead <em>to the chorus</em>: decoupled from the mean field, prunable at 95%+ precision when what you care about is the collective output. It does not mean the head learned nothing. The oscillator picture predicts who can be removed; it also warns you not to confuse removable with empty.</p>
+
+<div class="flag-callout">
+  <span class="flag-label">What's real here &middot; honest scope</span>
+  The measured claim: heads whose write-back alignment falls below &tau; = 0.96/&radic;d are individually ablatable at <strong>95.2&ndash;100% precision against ablation ground truth</strong>, across five published architectures (GPT-2, GPT-2-medium, Qwen2.5-0.5B, SmolLM2-360M, OpenLLaMA-7B; d = 768&ndash;4096), with zero fitting. What does <em>not</em> exist in the published bundle: any random-initialization control — no claim is made here about trained-vs-untrained coupling widths. The 97% rotation-specialist figure is from the same measurement corpus. The figures on this page are two-dimensional oscillator toys built to make the threshold <em>felt</em>; the numbers in the prose are from the real models, and the two are never mixed.
+</div>
+
+<div class="nav-links">
+  <a href="01-coupled-oscillators.html" class="prev">A transformer is coupled oscillators</a>
+  <a href="03-manifold.html" class="next">The coupling manifold</a>
+</div>
+
+</div>
+
+<script type="module">
+import { setupHiDPICanvas, runWhenVisible, palette, makeSoundToggle, makeVoices } from '../../js/common.js';
+
+// ============================================================
+// Head populations coupled to one strong shared rhythm (the
+// residual stream, externalized — for any single head in a large
+// model the collective field is effectively much bigger than it).
+// Per head: dθ = (Ω + δ + K·sin(Ψ − θ))dt + noise — the Adler
+// entrainment equation; lock iff K out-pulls the detuning δ.
+// The sustained-alignment EMA (slow, α=0.004) is what drives
+// brightness and voice loudness — measured, never scripted.
+// All designs verified offline: deaths strictly coupling-ordered;
+// prune-dead Δsignal ≈ −0.02..−0.07 vs prune-top ≈ −0.42..−0.47.
+// ============================================================
+const TAU_TOY = 0.30; // aliveness bar on this 2-D toy (see caption honesty note)
+const OMEGA = 0.9, NOISE = 0.12, DT = 0.05, ALPHA = 0.004;
+
+function makeAdlerPop(Ks, seed) {
+  let s = seed >>> 0;
+  const rnd = () => { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; };
+  const N = Ks.length;
+  const th = [], ent = [];
+  for (let i = 0; i < N; i++) { th.push(rnd() * Math.PI * 2); ent.push(0); }
+  return {
+    N, K: Ks, th, ent, rnd, psi: 0,
+    reset() { for (let i = 0; i < this.N; i++) { this.th[i] = this.rnd() * Math.PI * 2; this.ent[i] = 0; } },
+    step(delta) {
+      this.psi += OMEGA * DT;
+      for (let i = 0; i < this.N; i++) {
+        const kick = (this.rnd() - 0.5) * 2 * Math.sqrt(2 * NOISE * DT);
+        this.th[i] += (OMEGA + delta + this.K[i] * Math.sin(this.psi - this.th[i])) * DT + kick;
+        this.ent[i] = (1 - ALPHA) * this.ent[i] + ALPHA * Math.cos(this.th[i] - this.psi);
+      }
+    },
+  };
+}
+
+// ============================================================
+// FIG A: hear the chorus thin
+// ============================================================
+(() => {
+  const canvas = document.getElementById('canvas-chorus');
+  const ctx = setupHiDPICanvas(canvas, 680, 430);
+  const slider = document.getElementById('chorus-noise-slider');
+  const nval = document.getElementById('chorus-noise-val');
+  const readout = document.getElementById('chorus-readout');
+  let delta = 0.6;
+  slider.addEventListener('input', () => { delta = parseFloat(slider.value); nval.textContent = delta.toFixed(2); });
+  const Ks = [];
+  for (let i = 0; i < 10; i++) Ks.push(0.25 * Math.pow(3.2 / 0.25, i / 9));
+  const pop = makeAdlerPop(Ks, 12345);
+  document.getElementById('chorus-reset').addEventListener('click', () => pop.reset());
+
+  const sound = makeSoundToggle(document.getElementById('chorus-controls'), { label: 'hear the chorus' });
+  const voices = makeVoices(sound, pop.N, { freq: 200 });
+
+  function draw() {
+    for (let s = 0; s < 3; s++) pop.step(delta);
+
+    ctx.clearRect(0, 0, 680, 430);
+    const cx = 260, cy = 160, R = 110;
+
+    // hub = the shared rhythm
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 11px serif'; ctx.textAlign = 'center';
+    ctx.fillText('the shared rhythm', cx, cy - 16);
+    ctx.fillStyle = palette.blue;
+    ctx.beginPath(); ctx.arc(cx, cy, 7, 0, Math.PI * 2); ctx.fill();
+
+    let alive = 0;
+    for (let i = 0; i < pop.N; i++) {
+      const ang = (i / pop.N) * Math.PI * 2 - Math.PI / 2;
+      const hx = cx + Math.cos(ang) * R, hy = cy + Math.sin(ang) * R;
+      const a = Math.max(0, pop.ent[i]);
+      const isAlive = pop.ent[i] >= TAU_TOY;
+      if (isAlive) alive++;
+      // spoke: thickness = coupling
+      ctx.strokeStyle = isAlive ? `rgba(217,114,54,${0.25 + 0.6 * a})` : 'rgba(125,125,140,0.25)';
+      ctx.lineWidth = 0.8 + pop.K[i] * 1.6;
+      ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(hx, hy); ctx.stroke();
+      // head dot: brightness = measured entrainment
+      const b = 0.25 + 0.75 * a;
+      ctx.fillStyle = isAlive ? `rgba(255,205,120,${b})` : 'rgba(110,105,95,0.55)';
+      ctx.beginPath(); ctx.arc(hx, hy, 10, 0, Math.PI * 2); ctx.fill();
+      if (!isAlive) {
+        ctx.strokeStyle = palette.burgundy; ctx.lineWidth = 1.6;
+        ctx.beginPath();
+        ctx.moveTo(hx - 5, hy - 5); ctx.lineTo(hx + 5, hy + 5);
+        ctx.moveTo(hx + 5, hy - 5); ctx.lineTo(hx - 5, hy + 5);
+        ctx.stroke();
+      }
+      voices.set(i, 165 + i * 24, a);
+    }
+
+    // alignment bars vs the bar
+    const bx0 = 60, bw = 560, by = 320, bh = 64;
+    const cw = bw / pop.N;
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 11px serif'; ctx.textAlign = 'left';
+    ctx.fillText('sustained alignment per head (weakest coupling → strongest)', bx0, by - 8);
+    for (let i = 0; i < pop.N; i++) {
+      const a = Math.max(0, Math.min(1, pop.ent[i]));
+      const x = bx0 + i * cw + 4;
+      ctx.fillStyle = palette.bgSoft; ctx.strokeStyle = palette.grid; ctx.lineWidth = 0.5;
+      ctx.fillRect(x, by, cw - 8, bh); ctx.strokeRect(x, by, cw - 8, bh);
+      ctx.fillStyle = pop.ent[i] >= TAU_TOY ? '#d97236' : '#7d2d4f';
+      ctx.fillRect(x, by + bh - a * bh, cw - 8, a * bh);
+    }
+    const ty = by + bh - TAU_TOY * bh;
+    ctx.strokeStyle = '#c38df7'; ctx.setLineDash([4, 4]); ctx.lineWidth = 1.4;
+    ctx.beginPath(); ctx.moveTo(bx0, ty); ctx.lineTo(bx0 + bw, ty); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = '#c38df7'; ctx.font = '11px "SF Mono", monospace'; ctx.textAlign = 'right';
+    ctx.fillText('τ (toy)', bx0 + bw, ty - 5);
+
+    readout.textContent = `alive: ${alive} / ${pop.N}`;
+  }
+  runWhenVisible(canvas, draw);
+})();
+
+// ============================================================
+// FIG B: the 1/√d law + the five architectures
+// ============================================================
+(() => {
+  const canvas = document.getElementById('canvas-law');
+  const ctx = setupHiDPICanvas(canvas, 680, 360);
+  const slider = document.getElementById('law-d-slider');
+  const dval = document.getElementById('law-d-val');
+  const readout = document.getElementById('law-readout');
+  let d = 768;
+  slider.addEventListener('input', () => { d = parseInt(slider.value, 10); dval.textContent = String(d); });
+
+  const MODELS = [
+    ['GPT-2', 768], ['Qwen2.5-0.5B', 896], ['SmolLM2-360M', 960],
+    ['GPT-2-medium', 1024], ['OpenLLaMA-7B', 4096],
+  ];
+  const tau = (dd) => 0.96 / Math.sqrt(dd);
+  const DMIN = 256, DMAX = 8192;
+  const X = (dd) => 40 + (Math.log(dd / DMIN) / Math.log(DMAX / DMIN)) * 340;
+  const TMAX = tau(DMIN) * 1.12;
+  const Y = (t) => 300 - (t / TMAX) * 250;
+
+  function draw() {
+    ctx.clearRect(0, 0, 680, 360);
+
+    // left: the law
+    ctx.strokeStyle = palette.axis; ctx.lineWidth = 1;
+    ctx.strokeRect(40, 40, 340, 260);
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 11px serif'; ctx.textAlign = 'center';
+    ctx.fillText('τ = 0.96/√d   (d on a log scale)', 210, 30);
+    ctx.strokeStyle = palette.blue; ctx.lineWidth = 2;
+    ctx.beginPath();
+    for (let i = 0; i <= 120; i++) {
+      const dd = DMIN * Math.pow(DMAX / DMIN, i / 120);
+      const x = X(dd), y = Y(tau(dd));
+      i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+    }
+    ctx.stroke();
+    // model dots — the four low-d models crowd on the log axis, so their
+    // labels go in a leader-line stack instead of beside the dots
+    ctx.font = '10px "SF Mono", monospace';
+    const STACK_X = 150, STACK_Y0 = 60, STACK_DY = 16;
+    let stackRow = 0;
+    MODELS.forEach(([name, dd]) => {
+      const x = X(dd), y = Y(tau(dd));
+      ctx.fillStyle = palette.orange;
+      ctx.beginPath(); ctx.arc(x, y, 4.5, 0, Math.PI * 2); ctx.fill();
+      if (dd < 2000) {
+        const ly = STACK_Y0 + stackRow * STACK_DY; stackRow++;
+        ctx.strokeStyle = 'rgba(125,125,140,0.45)'; ctx.lineWidth = 0.8;
+        ctx.beginPath(); ctx.moveTo(x, y - 5); ctx.lineTo(STACK_X - 4, ly - 3); ctx.stroke();
+        ctx.fillStyle = palette.textSoft; ctx.textAlign = 'left';
+        ctx.fillText(name, STACK_X, ly);
+      } else {
+        ctx.fillStyle = palette.textSoft; ctx.textAlign = 'left';
+        ctx.fillText(name, x + 8, y - 8);
+      }
+    });
+    // probe dot
+    ctx.fillStyle = '#c38df7';
+    ctx.beginPath(); ctx.arc(X(d), Y(tau(d)), 6, 0, Math.PI * 2); ctx.fill();
+
+    // right: chance-alignment distribution at d, with τ marked
+    const rx = 430, ry = 40, rw = 220, rh = 260;
+    ctx.strokeStyle = palette.axis; ctx.lineWidth = 1; ctx.strokeRect(rx, ry, rw, rh);
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 11px serif'; ctx.textAlign = 'center';
+    ctx.fillText('chance alignment at this d', rx + rw / 2, 30);
+    const sigma = 1 / Math.sqrt(d);
+    const XMAXR = 0.075; // fixed axis so shrinking is visible
+    const xr = (v) => rx + rw / 2 + (v / XMAXR) * (rw / 2);
+    ctx.strokeStyle = palette.burgundy; ctx.lineWidth = 2;
+    ctx.beginPath();
+    let first = true;
+    for (let i = -100; i <= 100; i++) {
+      const v = (i / 100) * XMAXR;
+      const pdf = Math.exp(-(v * v) / (2 * sigma * sigma));
+      const x = xr(v), y = ry + rh - 8 - pdf * (rh - 40);
+      if (first) { ctx.moveTo(x, y); first = false; } else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+    // τ marker
+    const tx = xr(tau(d));
+    ctx.strokeStyle = '#c38df7'; ctx.setLineDash([4, 4]); ctx.lineWidth = 1.4;
+    ctx.beginPath(); ctx.moveTo(tx, ry + 14); ctx.lineTo(tx, ry + rh); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = '#c38df7'; ctx.font = '11px "SF Mono", monospace'; ctx.textAlign = 'left';
+    ctx.fillText('τ(d)', tx + 4, ry + 24);
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 10.5px serif'; ctx.textAlign = 'center';
+    ctx.fillText('τ sits at 0.96 × the spread of chance — at every d', rx + rw / 2, ry + rh + 18);
+
+    readout.textContent = `τ(${d}) = ${tau(d).toFixed(4)}`;
+  }
+  runWhenVisible(canvas, draw);
+})();
+
+// ============================================================
+// FIG C: prune and listen (with the control)
+// ============================================================
+(() => {
+  const canvas = document.getElementById('canvas-prune');
+  const ctx = setupHiDPICanvas(canvas, 680, 380);
+  const readout = document.getElementById('prune-readout');
+  const DELTA = 1.2;
+  // bimodal couplings: a dead cluster well under the bar, an alive
+  // cluster well over it — the separation that makes a precise
+  // threshold classifier possible (see prose).
+  const Ks = [];
+  for (let i = 0; i < 6; i++) Ks.push(0.15 + 0.35 * (i / 5));
+  for (let i = 0; i < 8; i++) Ks.push(2.5 + 2.0 * (i / 7));
+  const pop = makeAdlerPop(Ks, 777);
+  let mask = new Array(pop.N).fill(true);
+  let mode = 'none';
+  let baseline = null;
+  // the collective signal = |time-averaged summed write-back| in the
+  // field frame (vector EMA): rotating (dead) phasors average out,
+  // entrained ones persist — the steady component the next layer uses.
+  let vx = 0, vy = 0;
+  const BETA = 0.008;
+
+  const sound = makeSoundToggle(document.getElementById('prune-controls'), { label: 'hear the pruning' });
+  const voices = makeVoices(sound, pop.N, { freq: 190 });
+
+  function signalNow() { return Math.sqrt(vx * vx + vy * vy); }
+  document.getElementById('prune-dead').addEventListener('click', () => {
+    baseline = signalNow();
+    const dead = pop.ent.map(e => e < TAU_TOY);
+    mask = dead.map(x => !x);
+    mode = `below τ (${dead.filter(Boolean).length} heads)`;
+  });
+  document.getElementById('prune-top').addEventListener('click', () => {
+    baseline = signalNow();
+    const dead = pop.ent.map(e => e < TAU_TOY);
+    const nDead = dead.filter(Boolean).length;
+    const idx = pop.ent.map((e, i) => [e, i]).sort((a, b) => b[0] - a[0]).slice(0, nDead).map(p => p[1]);
+    mask = new Array(pop.N).fill(true);
+    idx.forEach(i => { mask[i] = false; });
+    mode = `strongest (${nDead} heads — control)`;
+  });
+  document.getElementById('prune-restore').addEventListener('click', () => {
+    mask = new Array(pop.N).fill(true); mode = 'none'; baseline = null;
+  });
+
+  function draw() {
+    for (let s = 0; s < 3; s++) {
+      pop.step(DELTA);
+      let cx2 = 0, cy2 = 0;
+      for (let i = 0; i < pop.N; i++) {
+        if (!mask[i]) continue;
+        cx2 += Math.cos(pop.th[i] - pop.psi); cy2 += Math.sin(pop.th[i] - pop.psi);
+      }
+      vx = (1 - BETA) * vx + BETA * cx2 / pop.N;
+      vy = (1 - BETA) * vy + BETA * cy2 / pop.N;
+    }
+    const sig = signalNow();
+
+    ctx.clearRect(0, 0, 680, 380);
+    const cx = 210, cy = 170, R = 120;
+    ctx.fillStyle = palette.blue;
+    ctx.beginPath(); ctx.arc(cx, cy, 6, 0, Math.PI * 2); ctx.fill();
+    for (let i = 0; i < pop.N; i++) {
+      const ang = (i / pop.N) * Math.PI * 2 - Math.PI / 2;
+      const hx = cx + Math.cos(ang) * R, hy = cy + Math.sin(ang) * R;
+      const a = Math.max(0, pop.ent[i]);
+      const pruned = !mask[i];
+      ctx.strokeStyle = pruned ? 'rgba(125,125,140,0.15)' : `rgba(217,114,54,${0.2 + 0.6 * a})`;
+      ctx.lineWidth = 0.8 + pop.K[i] * 1.4;
+      ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(hx, hy); ctx.stroke();
+      ctx.fillStyle = pruned ? 'rgba(90,85,80,0.4)' : `rgba(255,205,120,${0.25 + 0.75 * a})`;
+      ctx.beginPath(); ctx.arc(hx, hy, 9, 0, Math.PI * 2); ctx.fill();
+      voices.set(i, 158 + i * 19, pruned ? 0 : a);
+    }
+
+    // collective-signal meter
+    const mx = 430, my = 70, mw = 190, mh = 26;
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 12px serif'; ctx.textAlign = 'left';
+    ctx.fillText('collective signal', mx, my - 10);
+    ctx.fillStyle = palette.bgSoft; ctx.strokeStyle = palette.axis; ctx.lineWidth = 1;
+    ctx.fillRect(mx, my, mw, mh); ctx.strokeRect(mx, my, mw, mh);
+    ctx.fillStyle = palette.orange;
+    ctx.fillRect(mx, my, Math.min(1, sig) * mw, mh);
+    if (baseline !== null) {
+      const bxp = mx + Math.min(1, baseline) * mw;
+      ctx.strokeStyle = palette.textSoft; ctx.setLineDash([3, 3]);
+      ctx.beginPath(); ctx.moveTo(bxp, my - 4); ctx.lineTo(bxp, my + mh + 4); ctx.stroke(); ctx.setLineDash([]);
+      ctx.fillStyle = palette.textFaint; ctx.font = 'italic 10.5px serif';
+      ctx.fillText('before', bxp - 16, my + mh + 16);
+    }
+    ctx.fillStyle = palette.textSoft; ctx.font = '13px "SF Mono", monospace';
+    ctx.fillText(sig.toFixed(3), mx + mw + 8, my + 18);
+
+    readout.textContent = `signal = ${sig.toFixed(3)}   pruned: ${mode}`;
+  }
+  runWhenVisible(canvas, draw);
+})();
+</script>
+
+</body>
+</html>

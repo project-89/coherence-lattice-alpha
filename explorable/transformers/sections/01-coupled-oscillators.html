@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A transformer is coupled oscillators — The Living Lattice</title>
+<meta name="description" content="The identity, term by term: LayerNorm is reprojection onto the sphere, attention's write-back is the Kuramoto coupling term, softmax(QK) is the coupling topology, the residual stream is the shared field — and the trained weights are a coupling field frozen at the end of training.">
+<meta name="author" content="Michael Sharpe">
+<link rel="canonical" href="https://lattice.project89.org/transformers/sections/01-coupled-oscillators.html">
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+<meta property="og:title" content="A transformer is coupled oscillators — The Living Lattice">
+<meta property="og:description" content="The identity, term by term — and a live attention pattern drawn as the oscillator network it is.">
+<meta property="og:url" content="https://lattice.project89.org/transformers/sections/01-coupled-oscillators.html">
+<meta property="og:site_name" content="The Living Lattice">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://lattice.project89.org/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="A transformer is coupled oscillators — The Living Lattice">
+<meta name="twitter:description" content="The identity, term by term — and attention drawn as the oscillator network it is.">
+<meta name="twitter:image" content="https://lattice.project89.org/og-image.png">
+<!-- BEGIN AUTO-INJECTED ANALYTICS -->
+<!-- PostHog -->
+<script>
+!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+posthog.init('phc_kRX9iHZstABjgFqEWJBMok2S3hW9R8QMHbNao4EsNz2g', {api_host: 'https://us.i.posthog.com', person_profiles: 'identified_only'});
+</script>
+<!-- END AUTO-INJECTED ANALYTICS -->
+<link rel="stylesheet" href="../../css/style.css">
+<style>
+.flag-callout {
+  margin: 1.6em 0; padding: 16px 20px;
+  background: rgba(195, 141, 247, 0.08);
+  border-left: 3px solid #c38df7; border-radius: 3px;
+  font-size: 14.5px; line-height: 1.55;
+}
+.flag-callout .flag-label {
+  display: inline-block; font: 700 10.5px "SF Mono", monospace;
+  color: #c38df7; text-transform: uppercase; letter-spacing: 0.1em; margin-right: 0.7em;
+}
+table.identity {
+  width: 100%; border-collapse: collapse; margin: 1.4em 0;
+  font-size: 0.95em; line-height: 1.5;
+}
+table.identity th {
+  text-align: left; font: 600 11px "SF Mono", monospace; text-transform: uppercase;
+  letter-spacing: 0.1em; color: var(--text-faint); padding: 6px 10px;
+  border-bottom: 1px solid var(--panel-border);
+}
+table.identity td {
+  padding: 7px 10px; border-bottom: 1px solid var(--panel-border);
+  vertical-align: top;
+}
+table.identity td:first-child { font-family: "SF Mono", monospace; font-size: 0.92em; color: var(--text); white-space: nowrap; }
+table.identity td:last-child { color: var(--text-soft); }
+table.identity tr.deep td { border-bottom: none; }
+table.identity tr.deep td { color: var(--text); font-weight: 500; }
+</style>
+</head>
+<body>
+<div class="page">
+
+<nav class="breadcrumb">
+  <a href="../index.html">&larr; contents</a>
+  <span class="sep">&middot;</span>
+  <span class="section-num">section 01 &middot; transformers as oscillators</span>
+</nav>
+
+<h1>A transformer is coupled oscillators<span class="subtitle">The identity, term by term — not an analogy, a change of notation</span></h1>
+
+<p class="lead">This essay's claim sounds like a metaphor and is not one. A transformer — the architecture behind every large language model — is, piece for piece, a network of coupled oscillators: the same mathematical object as the fireflies, rings, and lattices that open this library. This chapter earns that sentence the slow way, one term at a time, and ends with the picture the rest of the essay measures: a small attention pattern drawn <em>as</em> the oscillator network it is, where you can watch — and hear — the coupling pull the tokens into clusters.</p>
+
+<p>Two on-ramps, if you want them: the oscillator side is built from nothing in <a href="../../primers/sections/00-phase-and-sound.html">the phase primer</a> and <a href="../../foundations/sections/01-oscillators.html">Foundations 1</a>; the transformer side — what an attention head, the residual stream, and LayerNorm even are — is built from nothing in <a href="../../primers/inside-a-transformer/">the transformer module of the curriculum</a>. This chapter assumes only those.</p>
+
+<h2>One breath of Kuramoto</h2>
+
+<p>The whole oscillator story in one breath: an oscillator is a phase — a direction on a circle. Couple many of them — let each be nudged toward the ones it listens to — and there is a sharp transition: below a critical coupling they drift independently; above it they lock into shared rhythm, and the interesting regime is the structured middle, clusters locked within themselves but distinct from each other. Who listens to whom, and how strongly, is the <strong>coupling topology</strong> — and everything the network does is downstream of it.</p>
+
+<p>Hold that, and now walk through a transformer layer.</p>
+
+<h2>The walk</h2>
+
+<p><strong>LayerNorm puts every token on a sphere.</strong> After normalization, a token's hidden state has (approximately) unit length: what survives is its <em>direction</em>. A direction on a circle is a phase; a direction on a high-dimensional sphere is a phase with more room. So the state of token <span class="mono">i</span> is, honestly and not poetically, a generalized phase <span class="mono">x<sub>i</sub></span> — a point on <span class="mono">S<sup>d&minus;1</sup></span>. The transformer update — <span class="mono">x &rarr; Norm(x + attention + mlp)</span> — is a discrete-time dynamical system on that sphere: perturb, reproject, perturb, reproject. (Why two-dimensional intuition survives the trip to <span class="mono">d = 4096</span>: concentration of measure — random directions are almost always almost orthogonal — which you can watch happen in <a href="../../primers/inside-a-transformer/sections/04-sphere.html">the curriculum's sphere section</a>.)</p>
+
+<p><strong>Attention's write-back is the coupling term.</strong> What does a head <em>do</em>? For each token <span class="mono">i</span> it computes</p>
+
+<div class="equation-block" id="eq-writeback">
+  <div class="eq-display">
+    <span class="eq-symbol state" data-symbol="signal">signal(i)</span>
+    &nbsp;=&nbsp;
+    <span class="eq-symbol op" data-symbol="sum">&sum;<sub>j</sub></span>
+    <span class="eq-symbol op" data-symbol="aij">a(i,j)</span>
+    &nbsp;&middot;&nbsp;
+    <span class="eq-symbol param" data-symbol="V">V(x<sub>j</sub>)</span>
+  </div>
+  <p class="eq-prompt">Click any coloured symbol to see what it does.</p>
+  <div class="eq-detail"></div>
+  <div class="eq-howitworks">
+    <span class="label">In words</span>
+    Each token's update is a weighted pull toward content carried from the other tokens. That is not <em>like</em> a coupling term; it <em>is</em> one — the same shape as the Kuramoto nudge every oscillator on this site obeys: move toward a weighted combination of the ones you listen to.
+  </div>
+</div>
+
+<p><strong>Softmax(QK) is the coupling topology, chosen fresh every layer.</strong> The weights <span class="mono">a(i,j)</span> come from agreements: token <span class="mono">i</span>'s listening direction <span class="mono">Q</span> against token <span class="mono">j</span>'s broadcast direction <span class="mono">K</span> — a dot product, the site's one measure of agreement — pushed through softmax, the competition that makes the weights a budget. In oscillator language: the network rewires <em>who couples to whom, and how strongly, per token, per layer</em>. A lattice has a fixed wiring diagram; a transformer redraws its wiring at every step, from the current phases themselves. (You met exactly this move in the curriculum's Lohe module as <a href="../../primers/lohe-hypersphere/sections/02-effective-coupling.html">effective coupling</a>.)</p>
+
+<p><strong>The residual stream is the medium.</strong> Every head reads from and writes into one shared vector per token, accumulating layer after layer — the field through which all coupling flows, the whiteboard nothing erases. <strong>Heads are the inter-oscillator couplings</strong> — transport between positions; <strong>MLP channels are intra-oscillator modes</strong> — each position's private internal dynamics between coupling events. And the <strong>KV cache</strong> — the store that grows as a model reads — is the recorded phase configuration of every oscillator that has fired: the past, kept as geometry.</p>
+
+<p><strong>The trained weights are a frozen coupling field.</strong> This is the deepest row, so take it slowly. In the living lattices of the Foundations essays, the coupling field <span class="mono">K</span> is alive — it changes by a learning rule, strengthening the bonds that cohere. In a transformer, that epoch is <em>training</em>: gradient descent sculpting the coupling field, playing the role the Coherent Learning Rule plays on the lattice. Then training stops, and the field freezes.</p>
+
+<p>So: <strong>a transformer is a living lattice with <span class="mono">dK/dt = 0</span>. Training was its life. Inference is its afterlife</strong> — the frozen couplings resonating in response to input. Everything this essay measures in the chapters ahead is the geometry that life left behind.</p>
+
+<h2>The identity, in one table</h2>
+
+<table class="identity">
+  <tr><th>transformer</th><th>oscillator network</th></tr>
+  <tr><td>Q (query)</td><td>listening direction — what am I resonating with?</td></tr>
+  <tr><td>K (key)</td><td>broadcast direction — what am I advertising?</td></tr>
+  <tr><td>V (value)</td><td>content carried through the coupling</td></tr>
+  <tr><td>softmax(QK)</td><td>dynamic coupling topology, chosen per token per layer</td></tr>
+  <tr><td>residual stream</td><td>the coupling medium — the shared field</td></tr>
+  <tr><td>attention heads</td><td>inter-oscillator couplings (transport between positions)</td></tr>
+  <tr><td>MLP channels</td><td>intra-oscillator modes (internal dynamics of one position)</td></tr>
+  <tr><td>RoPE</td><td>a gauge connection along the sequence — position as holonomy (chapter&nbsp;05)</td></tr>
+  <tr><td>KV cache</td><td>the recorded phase configuration of every oscillator that fired</td></tr>
+  <tr class="deep"><td>trained weights</td><td>a coupling field K, frozen at the end of training</td></tr>
+</table>
+
+<h2>See it — and hear it</h2>
+
+<p>Below is a small attention pattern drawn the way this essay says you should draw it: <em>as an oscillator network</em>. Nine tokens sit on a ring, each a firefly with a phase (the tick is its phase; the glow is its flash). The chords between them are the attention weights, computed live from the tokens' current agreements pushed through softmax — thicker chord, stronger mutual listening. The tokens drift gently on their own; press <strong>Apply attention layer</strong> to run one layer's coupling pull, and watch clusters condense where attention binds. Then play with the sharpness: flatten the softmax to zero and every token listens to every other equally — the structure melts into one global blob. Sharpen it and the wiring gets choosier, binding only the already-similar — and <em>more</em> distinct clusters survive. The coupling topology decides what the network becomes.</p>
+
+<figure id="fig-osc-net">
+  <canvas id="canvas-oscnet" width="680" height="430"></canvas>
+  <div class="controls" id="oscnet-controls">
+    <div class="control">
+      <label>softmax sharpness <span class="val" id="beta-val">3.0</span></label>
+      <input type="range" id="beta-slider" min="0" max="8" step="0.1" value="3">
+    </div>
+    <button id="step-layer" class="primary">Apply attention layer</button>
+    <button id="reset-net">Reset phases</button>
+  </div>
+  <figcaption>An attention pattern as the oscillator network it is. Chord thickness = softmax coupling weight, recomputed live from the tokens&rsquo; current agreements. Each press of <em>Apply attention layer</em> runs one layer&rsquo;s coupling pull — the write-back sum above, acting once. <em>Sound on: each token is a voice at its actual instantaneous frequency, so a layer step audibly pulls the chorus into clusters — you are hearing the coupling topology do its work.</em> <span id="oscnet-readout" class="readout">layer = 0</span></figcaption>
+</figure>
+
+<p>And to close the loop with the diagrams you have seen elsewhere: the figure below draws <em>the same nine tokens with the same live weights</em> two ways at once — as an attention diagram (a sentence with listening arcs) and as the oscillator ring. Click any token to highlight its couplings in both. There is nothing to translate; the two drawings are one object.</p>
+
+<figure id="fig-two-ways">
+  <canvas id="canvas-twoways" width="680" height="360"></canvas>
+  <figcaption>Same tokens, same weights, two drawings. <strong>Top:</strong> the familiar attention-arc diagram. <strong>Bottom:</strong> the oscillator ring. Click a token in either drawing to follow its couplings across both. The claim of this essay is that the bottom drawing is the one physics can do something with. <span id="twoways-readout" class="readout">listener: &ldquo;sat&rdquo;</span></figcaption>
+</figure>
+
+<div class="flag-callout">
+  <span class="flag-label">What's real here &middot; claim tiers</span>
+  The identity table is structural — read the architecture's equations side by side with Kuramoto's and the terms correspond one for one. The closing frame (&ldquo;training was its life, inference is its afterlife&rdquo;) is a <em>design frame</em>: load-bearing for how this program reasons, not itself a measurement. The measured results live in the chapters ahead: the derived dead-head threshold &tau; = 0.96/&radic;d at 95&ndash;100% precision across five published architectures (chapter&nbsp;02), the d<sub>eff</sub> = 2&ndash;19 coupling manifold and the rank-2 lossless projection (chapters&nbsp;03&ndash;04), and the fiber-bundle account of what compresses and what resists (chapter&nbsp;05). The figures on this page are a deliberate miniature: phases live on a circle rather than <span class="mono">S<sup>d&minus;1</sup></span>, and the coupling weights come from the tokens&rsquo; current agreement rather than learned Q/K projections of content — the structure is faithful, the scale and the learned parts are not pretended.
+</div>
+
+<div class="nav-links">
+  <a href="../index.html" class="prev">Transformers as Oscillators</a>
+  <a href="02-dead-heads.html" class="next">Dead heads: a derived threshold</a>
+</div>
+
+</div>
+
+<script type="module">
+import { setupHiDPICanvas, wireEquation, runWhenVisible, palette, makeSoundToggle, makeVoices } from '../../js/common.js';
+
+wireEquation('eq-writeback', {
+  signal: {
+    name: 'signal(i) — what the head writes back into token i',
+    description: 'The update token i receives from this attention head: a weighted combination of content gathered from the other tokens, added into i’s residual stream. In oscillator language: the total coupling nudge arriving at oscillator i this step.',
+  },
+  sum: {
+    name: 'Σⱼ — over every token j in the context',
+    description: 'The pull on token i sums over all the tokens it can see. Which of them matter is not fixed wiring — it is decided by the weights, fresh at every layer.',
+  },
+  aij: {
+    name: 'a(i,j) — the coupling weight, from softmax(Q·K)',
+    description: 'How hard token i listens to token j: the agreement of i’s listening direction Q with j’s broadcast direction K — a dot product — pushed through softmax so the weights compete and sum to one. This is the dynamic coupling topology.',
+  },
+  V: {
+    name: 'V(xⱼ) — the content carried through the coupling',
+    description: 'What actually travels along the bond: a learned projection of token j’s state. In the oscillator picture, the signal transported from oscillator j to oscillator i through their coupling.',
+  },
+});
+
+// ============================================================
+// Shared state: 9 tokens as phase oscillators; softmax coupling
+// from current agreements; weak continuous dynamics + strong
+// discrete "layer" kicks.
+// ============================================================
+const N = 9;
+const WORDS = ['the', 'cat', 'sat', 'on', 'the', 'mat', 'and', 'then', 'slept'];
+let th = [], om = [];
+let beta = 3.0;
+let layerCount = 0;
+let listener = 2; // "sat"
+
+function resetPhases() {
+  th = Array.from({ length: N }, () => Math.random() * Math.PI * 2);
+  om = Array.from({ length: N }, () => 0.9 + (Math.random() - 0.5) * 0.44);
+  layerCount = 0;
+}
+resetPhases();
+
+// softmax coupling weights from current phase agreements
+function weights() {
+  const a = [];
+  for (let i = 0; i < N; i++) {
+    const row = new Array(N).fill(0);
+    let zsum = 0;
+    for (let j = 0; j < N; j++) {
+      if (j === i) continue;
+      const z = Math.exp(beta * Math.cos(th[j] - th[i]));
+      row[j] = z; zsum += z;
+    }
+    for (let j = 0; j < N; j++) row[j] /= zsum;
+    a.push(row);
+  }
+  return a;
+}
+
+function orderParam() {
+  let cs = 0, sn = 0;
+  for (let i = 0; i < N; i++) { cs += Math.cos(th[i]); sn += Math.sin(th[i]); }
+  return Math.sqrt(cs * cs + sn * sn) / N;
+}
+
+function clusterCount() {
+  const s = th.map(t => ((t % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2)).sort((a, b) => a - b);
+  let gaps = 0;
+  for (let i = 0; i < N; i++) {
+    const next = i + 1 < N ? s[i + 1] : s[0] + Math.PI * 2;
+    if (next - s[i] > 0.7) gaps++;
+  }
+  return Math.max(1, gaps);
+}
+
+function stepLayer() {
+  const a = weights();
+  const eps = 0.9;
+  const nt = th.slice();
+  for (let i = 0; i < N; i++) {
+    let pull = 0;
+    for (let j = 0; j < N; j++) if (j !== i) pull += a[i][j] * Math.sin(th[j] - th[i]);
+    nt[i] = th[i] + eps * pull;
+  }
+  th = nt;
+  layerCount++;
+}
+
+// weak continuous background dynamics (the medium resonating)
+function drift(dt) {
+  const a = weights();
+  const Kc = 0.18;
+  const nt = th.slice();
+  const v = [];
+  for (let i = 0; i < N; i++) {
+    let pull = 0;
+    for (let j = 0; j < N; j++) if (j !== i) pull += a[i][j] * Math.sin(th[j] - th[i]);
+    const d = om[i] + Kc * pull;
+    v.push(d);
+    nt[i] = th[i] + d * dt;
+  }
+  th = nt;
+  return v;
+}
+
+// ============================================================
+// FIG A: the oscillator-network view
+// ============================================================
+(() => {
+  const canvas = document.getElementById('canvas-oscnet');
+  const ctx = setupHiDPICanvas(canvas, 680, 430);
+  const betaSlider = document.getElementById('beta-slider');
+  const betaVal = document.getElementById('beta-val');
+  const readout = document.getElementById('oscnet-readout');
+
+  betaSlider.addEventListener('input', () => { beta = parseFloat(betaSlider.value); betaVal.textContent = beta.toFixed(1); });
+  document.getElementById('step-layer').addEventListener('click', stepLayer);
+  document.getElementById('reset-net').addEventListener('click', resetPhases);
+
+  const sound = makeSoundToggle(document.getElementById('oscnet-controls'), { label: 'hear the layer' });
+  const voices = makeVoices(sound, N, { freq: 220 });
+  const vel = new Float32Array(N).fill(0.9);
+
+  function draw() {
+    const v = drift(0.033);
+    for (let i = 0; i < N; i++) vel[i] = 0.88 * vel[i] + 0.12 * v[i];
+
+    ctx.clearRect(0, 0, 680, 430);
+    const cx = 340, cy = 195, R = 140, dotR = 16;
+    const pos = i => {
+      const ang = (i / N) * Math.PI * 2 - Math.PI / 2;
+      return [cx + Math.cos(ang) * R, cy + Math.sin(ang) * R];
+    };
+
+    // coupling chords (mutual strength), thickest on top
+    const a = weights();
+    for (let i = 0; i < N; i++) for (let j = i + 1; j < N; j++) {
+      const w = (a[i][j] + a[j][i]) / 2;
+      if (w < 0.05) continue;
+      const [x1, y1] = pos(i), [x2, y2] = pos(j);
+      ctx.strokeStyle = `rgba(217, 114, 54, ${Math.min(0.85, w * 3.2)})`;
+      ctx.lineWidth = 0.5 + w * 16;
+      ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+    }
+
+    // fireflies with phase ticks
+    for (let i = 0; i < N; i++) {
+      const [x, y] = pos(i);
+      const b = (Math.cos(th[i]) + 1) / 2;
+      const glowR = dotR + b * 9;
+      const grad = ctx.createRadialGradient(x, y, dotR * 0.6, x, y, glowR);
+      grad.addColorStop(0, `rgba(255, 210, 120, ${b * 0.8})`);
+      grad.addColorStop(1, 'rgba(255, 210, 120, 0)');
+      ctx.fillStyle = grad;
+      ctx.beginPath(); ctx.arc(x, y, glowR, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = `rgb(${40 + b * 215}, ${40 + b * 160}, ${50 + b * 80})`;
+      ctx.beginPath(); ctx.arc(x, y, dotR, 0, Math.PI * 2); ctx.fill();
+      // phase tick
+      ctx.strokeStyle = palette.bg; ctx.lineWidth = 2.4;
+      ctx.beginPath(); ctx.moveTo(x, y);
+      ctx.lineTo(x + Math.cos(th[i]) * (dotR - 3), y - Math.sin(th[i]) * (dotR - 3)); ctx.stroke();
+      ctx.fillStyle = palette.textFaint; ctx.font = 'italic 11px serif'; ctx.textAlign = 'center';
+      const [lx, ly] = pos(i);
+      const ang = (i / N) * Math.PI * 2 - Math.PI / 2;
+      ctx.fillText(WORDS[i], lx + Math.cos(ang) * (dotR + 16), ly + Math.sin(ang) * (dotR + 16) + 4);
+    }
+
+    const Rp = orderParam(), C = clusterCount();
+    readout.textContent = `layer = ${layerCount}   R = ${Rp.toFixed(2)}   clusters = ${C}`;
+
+    for (let i = 0; i < N; i++) voices.set(i, 170 + 90 * vel[i], 1);
+  }
+  runWhenVisible(canvas, draw);
+})();
+
+// ============================================================
+// FIG B: same weights, two drawings
+// ============================================================
+(() => {
+  const canvas = document.getElementById('canvas-twoways');
+  const ctx = setupHiDPICanvas(canvas, 680, 360);
+  const readout = document.getElementById('twoways-readout');
+
+  const lineY = 120, lineX0 = 90, lineX1 = 590;
+  const ringCx = 340, ringCy = 268, ringR = 62;
+  const linePos = i => [lineX0 + (i / (N - 1)) * (lineX1 - lineX0), lineY];
+  const ringPos = i => {
+    const ang = (i / N) * Math.PI * 2 - Math.PI / 2;
+    return [ringCx + Math.cos(ang) * ringR, ringCy + Math.sin(ang) * ringR];
+  };
+
+  canvas.addEventListener('mousedown', e => {
+    const rect = canvas.getBoundingClientRect();
+    const mx = (e.clientX - rect.left) * (680 / rect.width);
+    const my = (e.clientY - rect.top) * (360 / rect.height);
+    let best = -1, bd = 1e9;
+    for (let i = 0; i < N; i++) {
+      for (const [x, y] of [linePos(i), ringPos(i)]) {
+        const d = Math.hypot(mx - x, my - y);
+        if (d < bd) { bd = d; best = i; }
+      }
+    }
+    if (bd < 30) { listener = best; readout.textContent = `listener: “${WORDS[listener]}”`; }
+  });
+
+  function draw() {
+    ctx.clearRect(0, 0, 680, 360);
+    const a = weights();
+
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 12px serif'; ctx.textAlign = 'left';
+    ctx.fillText('as an attention diagram', 90, 34);
+    ctx.fillText('as an oscillator network', 90, 218);
+
+    // top: sentence + arcs from listener
+    ctx.strokeStyle = palette.grid; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(lineX0 - 20, lineY); ctx.lineTo(lineX1 + 20, lineY); ctx.stroke();
+    const [Lx] = linePos(listener);
+    for (let j = 0; j < N; j++) {
+      if (j === listener) continue;
+      const w = a[listener][j];
+      if (w < 0.03) continue;
+      const [x2] = linePos(j);
+      const mid = (Lx + x2) / 2, span = Math.abs(x2 - Lx);
+      ctx.strokeStyle = `rgba(42, 95, 143, ${Math.min(0.95, 0.25 + w * 2.6)})`;
+      ctx.lineWidth = 0.5 + w * 14;
+      ctx.beginPath();
+      ctx.moveTo(Lx, lineY - 6);
+      ctx.quadraticCurveTo(mid, lineY - 24 - span * 0.28, x2, lineY - 6);
+      ctx.stroke();
+    }
+    for (let i = 0; i < N; i++) {
+      const [x, y] = linePos(i);
+      ctx.fillStyle = i === listener ? palette.blue : palette.orange;
+      ctx.beginPath(); ctx.arc(x, y, i === listener ? 8 : 6, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = palette.textFaint; ctx.font = 'italic 11px serif'; ctx.textAlign = 'center';
+      ctx.fillText(WORDS[i], x, y + 22);
+    }
+
+    // bottom: ring with the same listener's couplings highlighted
+    ctx.strokeStyle = palette.grid; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.arc(ringCx, ringCy, ringR, 0, Math.PI * 2); ctx.stroke();
+    for (let j = 0; j < N; j++) {
+      if (j === listener) continue;
+      const w = a[listener][j];
+      if (w < 0.03) continue;
+      const [x1, y1] = ringPos(listener), [x2, y2] = ringPos(j);
+      ctx.strokeStyle = `rgba(42, 95, 143, ${Math.min(0.95, 0.25 + w * 2.6)})`;
+      ctx.lineWidth = 0.5 + w * 14;
+      ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+    }
+    for (let i = 0; i < N; i++) {
+      const [x, y] = ringPos(i);
+      ctx.fillStyle = i === listener ? palette.blue : palette.orange;
+      ctx.beginPath(); ctx.arc(x, y, i === listener ? 8 : 6, 0, Math.PI * 2); ctx.fill();
+      const ang = (i / N) * Math.PI * 2 - Math.PI / 2;
+      ctx.fillStyle = palette.textFaint; ctx.font = 'italic 11px serif'; ctx.textAlign = 'center';
+      ctx.fillText(WORDS[i], x + Math.cos(ang) * 22, y + Math.sin(ang) * 22 + 4);
+    }
+  }
+  runWhenVisible(canvas, draw);
+})();
+</script>
+
+</body>
+</html>

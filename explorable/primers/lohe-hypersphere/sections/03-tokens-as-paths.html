@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tokens as paths: where you end up is meaning — The Living Lattice</title>
+<meta name="description" content="Section 3 of the Lohe module: a token's journey through a transformer as a path on the hypersphere — with live path statistics, two nearby tokens parting ways at a watershed, and the handoff to the essays.">
+<meta name="author" content="Michael Sharpe">
+<link rel="canonical" href="https://lattice.project89.org/primers/lohe-hypersphere/sections/03-tokens-as-paths.html">
+<link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
+<link rel="apple-touch-icon" href="../../../apple-touch-icon.png">
+<meta property="og:title" content="Tokens as paths: where you end up is meaning — The Living Lattice">
+<meta property="og:description" content="A token bending through its context, path statistics live, and two nearby tokens diverging to different destinations.">
+<meta property="og:url" content="https://lattice.project89.org/primers/lohe-hypersphere/sections/03-tokens-as-paths.html">
+<meta property="og:site_name" content="The Living Lattice">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://lattice.project89.org/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Tokens as paths: where you end up is meaning — The Living Lattice">
+<meta name="twitter:description" content="Where you end up is meaning; the path is computation.">
+<meta name="twitter:image" content="https://lattice.project89.org/og-image.png">
+<!-- BEGIN AUTO-INJECTED ANALYTICS -->
+<!-- PostHog -->
+<script>
+!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+posthog.init('phc_kRX9iHZstABjgFqEWJBMok2S3hW9R8QMHbNao4EsNz2g', {api_host: 'https://us.i.posthog.com', person_profiles: 'identified_only'});
+</script>
+<!-- END AUTO-INJECTED ANALYTICS -->
+<link rel="stylesheet" href="../../../css/style.css">
+<style>
+.flag-callout {
+  margin: 1.6em 0; padding: 16px 20px;
+  background: rgba(195, 141, 247, 0.08);
+  border-left: 3px solid #c38df7; border-radius: 3px;
+  font-size: 14.5px; line-height: 1.55;
+}
+.flag-callout .flag-label {
+  display: inline-block; font: 700 10.5px "SF Mono", monospace;
+  color: #c38df7; text-transform: uppercase; letter-spacing: 0.1em; margin-right: 0.7em;
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<nav class="breadcrumb">
+  <a href="../index.html">&larr; lohe module</a>
+  <span class="sep">&middot;</span>
+  <span class="section-num">lohe 03 / 03 &middot; advanced</span>
+</nav>
+
+<h1>Tokens as paths<span class="subtitle">Section 3 of the Lohe module — the payoff: where you end up is meaning, and the path is computation</span></h1>
+
+<p class="lead">Now the whole curriculum cashes out. From <a href="../../inside-a-transformer/">the transformer primer</a>: after LayerNorm, a token's hidden state is (approximately) a unit vector — a point on a hypersphere. Each layer does two things: attention pulls the token's vector toward the vectors of the tokens it listens to — <em>structurally the Lohe coupling term from <a href="01-sphere-dynamics.html">section 1</a>, with the agreement-chosen wiring from <a href="02-effective-coupling.html">section 2</a></em> — and the MLP stirs it internally; then LayerNorm re-projects to the sphere. Nudge, re-project. Nudge, re-project. A few dozen times.</p>
+
+<p>So a token passing through a transformer traces a <strong>path on the sphere</strong> — a short trajectory, bent at every step by where its context sits. Where the path ends up is the meaning the model settled on; the bending along the way is the computation.</p>
+
+<h2>1. One token, bending</h2>
+
+<figure id="fig-token">
+  <canvas id="canvas-token" width="680" height="420"></canvas>
+  <div class="controls" id="token-controls">
+    <button id="token-prompt" class="primary">A new prompt arrives</button>
+  </div>
+  <figcaption>The orange dot is one token; the faint dots are its context (held still here, so the path stays legible). The token moves by agreement-weighted coupling to the context and leaves a trail — its path on the sphere. Press <em>A new prompt arrives</em>: the context re-seeds, and the same token's path bends toward the new mass. The readout tracks the path's statistics: how far the token has <em>traveled</em> versus how far it has <em>gotten</em> — a decisive path goes nearly straight (ratio near 1); a deliberating one wanders first. <span id="token-readout" class="readout">traveled — · net — · wander ×—</span></figcaption>
+</figure>
+
+<h2>2. Two nearby tokens, parting ways</h2>
+
+<p>Here is the part that makes paths worth caring about. Meaning-space is not flat ground — it has <strong>watersheds</strong>. Two tokens can start almost on top of each other, feel the same context, follow the same rule — and end up in different places, because they started on opposite sides of a divide. A drop of rain an inch to the left of a ridge line reaches a different ocean.</p>
+
+<p>Below, two tokens begin a couple of degrees apart, straddling the watershed between two context clusters. Watch them separate: slowly at first (the divide is a place of indecision — pulls nearly balanced), then decisively, each to its own basin. "Nearby words, different meanings, different destinations" stops being a metaphor and becomes a picture.</p>
+
+<figure id="fig-pair">
+  <canvas id="canvas-pair" width="680" height="440"></canvas>
+  <div class="controls" id="pair-controls">
+    <button id="pair-new" class="primary">New pair, new watershed</button>
+  </div>
+  <figcaption>Two tokens (orange and blue) seeded a few degrees apart across the watershed between two context clusters, each moving by the same agreement-weighted rule. The readout tracks the angle between them: it starts small and grows as each token commits to its own basin. Divergence is slowest right at the start — near the divide, the pulls nearly cancel, and small differences take time to become different destinies. <span id="pair-readout" class="readout">separation: start — · now —</span></figcaption>
+</figure>
+
+<h2>3. Where this becomes the research</h2>
+
+<p>This module is the doorway to the most technical material on the site. The <a href="../../../transformers/index.html">Transformers as Oscillators</a> essay takes the identification seriously — attention's write-back as the coupling term, term by term — and measures its consequences on real models. <a href="../../../paradigm/sections/08-shape.html">The Physics of Mind &sect;08</a> finds that the paths real tokens trace do not wander the whole hypersphere: they live on a surface of a few dimensions inside it. And <a href="../../../paradigm/sections/15-rotation.html">&sect;15</a> shows that two models trained separately lay their meaning out on that surface the same way, one rotation apart (<a href="../../sections/07-rotation-groups.html">primer 07</a> builds the rotation-group language for that). If you climbed the curriculum from primer 00 to here, you have every concept those chapters use.</p>
+
+<div class="flag-callout">
+  <span class="flag-label">What's real here</span>
+  The simulations on this page are <em>illustrative</em> Lohe dynamics on the ordinary 3-dimensional sphere — chosen because you can see it. They are not a transformer, and the watershed pair is deliberately seeded astride a divide so you can watch the parting (real prompts do not come with such courtesies). The identification of attention's write-back with Lohe-type coupling is a claim the <a href="../../../transformers/index.html">Transformers essay</a> argues and measures on real models; the numbers live there, not here. And one honest caveat about dimension: real models live on spheres of hundreds to thousands of dimensions, where two random directions are almost always nearly perpendicular (concentration of measure) — which is precisely what makes the high-dimensional versions of these dynamics tractable at all.
+</div>
+
+<div class="nav-links">
+  <a href="02-effective-coupling.html" class="prev">Effective coupling</a>
+  <a href="../../living-k/" class="next">Living K: the coupling field as the dynamical object</a>
+</div>
+
+</div>
+
+<script type="module">
+import { setupHiDPICanvas, runWhenVisible, palette } from '../../../js/common.js';
+
+// --- shared helpers (same conventions as sections 01/02) ---
+function dot(a, b) { return a[0] * b[0] + a[1] * b[1] + a[2] * b[2]; }
+function norm3(v) {
+  const n = Math.sqrt(dot(v, v)) + 1e-12;
+  v[0] /= n; v[1] /= n; v[2] /= n; return v;
+}
+function gauss() {
+  let u = 0, w = 0;
+  while (u === 0) u = Math.random();
+  while (w === 0) w = Math.random();
+  return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * w);
+}
+function randUnit() {
+  let v;
+  do { v = [gauss(), gauss(), gauss()]; } while (Math.sqrt(dot(v, v)) < 1e-6);
+  return norm3(v);
+}
+function arc(a, b) { return Math.acos(Math.max(-1, Math.min(1, dot(a, b)))); }
+function makeProjector(tilt) {
+  let yaw = 0;
+  return {
+    tick(d) { yaw += d; },
+    project(v, cx, cy, scale) {
+      const x1 = v[0] * Math.cos(yaw) - v[1] * Math.sin(yaw);
+      const y1 = v[0] * Math.sin(yaw) + v[1] * Math.cos(yaw);
+      const z1 = v[2];
+      const y2 = y1 * Math.cos(tilt) - z1 * Math.sin(tilt);
+      const z2 = y1 * Math.sin(tilt) + z1 * Math.cos(tilt);
+      return { sx: cx + scale * x1, sy: cy - scale * z2, depth: y2 };
+    },
+  };
+}
+function drawWireSphere(ctx, proj, cx, cy, scale) {
+  ctx.lineWidth = 1;
+  const SEG = 44;
+  for (let li = 1; li < 5; li++) {
+    const phi = (li / 5) * Math.PI - Math.PI / 2;
+    ctx.beginPath();
+    for (let s = 0; s <= SEG; s++) {
+      const th = (s / SEG) * Math.PI * 2;
+      const p = proj.project([Math.cos(phi) * Math.cos(th), Math.cos(phi) * Math.sin(th), Math.sin(phi)], cx, cy, scale);
+      s ? ctx.lineTo(p.sx, p.sy) : ctx.moveTo(p.sx, p.sy);
+    }
+    ctx.strokeStyle = 'rgba(125,125,140,0.22)';
+    ctx.stroke();
+  }
+  for (let mi = 0; mi < 8; mi++) {
+    const th0 = (mi / 8) * Math.PI * 2;
+    ctx.beginPath();
+    for (let s = 0; s <= SEG; s++) {
+      const phi = (s / SEG) * Math.PI * 2;
+      const p = proj.project([Math.cos(phi) * Math.cos(th0), Math.cos(phi) * Math.sin(th0), Math.sin(phi)], cx, cy, scale);
+      s ? ctx.lineTo(p.sx, p.sy) : ctx.moveTo(p.sx, p.sy);
+    }
+    ctx.strokeStyle = 'rgba(125,125,140,0.16)';
+    ctx.stroke();
+  }
+}
+function depthAlpha(d) { return 0.25 + 0.65 * Math.max(0, Math.min(1, (d + 1) / 2)); }
+
+// agreement-weighted (softmax) pull of a static context on a token
+function contextStep(token, context, beta, K, eta) {
+  let Z = 0;
+  const w = new Array(context.length).fill(0);
+  for (let j = 0; j < context.length; j++) {
+    w[j] = Math.exp(beta * dot(token, context[j]));
+    Z += w[j];
+  }
+  const pull = [0, 0, 0];
+  for (let j = 0; j < context.length; j++) {
+    const kij = K * (w[j] / Z);
+    const d = dot(token, context[j]);
+    pull[0] += kij * (context[j][0] - d * token[0]);
+    pull[1] += kij * (context[j][1] - d * token[1]);
+    pull[2] += kij * (context[j][2] - d * token[2]);
+  }
+  return norm3([token[0] + eta * pull[0], token[1] + eta * pull[1], token[2] + eta * pull[2]]);
+}
+
+function drawTrail(ctx, proj, trail, cx, cy, scale, r, g, b) {
+  for (let i = 1; i < trail.length; i++) {
+    const a = proj.project(trail[i - 1], cx, cy, scale);
+    const p = proj.project(trail[i], cx, cy, scale);
+    const age = i / trail.length;
+    ctx.strokeStyle = `rgba(${r},${g},${b},${(0.3 + 0.55 * age) * depthAlpha((a.depth + p.depth) / 2)})`;
+    ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(a.sx, a.sy); ctx.lineTo(p.sx, p.sy); ctx.stroke();
+  }
+}
+
+// ============================================================
+// FIG A: one token's path, context held still + path statistics
+// ============================================================
+(() => {
+  const canvas = document.getElementById('canvas-token');
+  const ctx = setupHiDPICanvas(canvas, 680, 420);
+  const readout = document.getElementById('token-readout');
+  const proj = makeProjector(0.5);
+
+  const NC = 24;
+  let context = [];
+  let token = randUnit();
+  let trail = [];
+  let pathLen = 0;
+
+  function seedContext() {
+    context = [];
+    for (let c = 0; c < 2; c++) {
+      const center = randUnit();
+      for (let m = 0; m < NC / 2; m++) {
+        context.push(norm3([
+          center[0] + gauss() * 0.22,
+          center[1] + gauss() * 0.22,
+          center[2] + gauss() * 0.22,
+        ]));
+      }
+    }
+  }
+  seedContext();
+  trail = [token.slice()];
+
+  document.getElementById('token-prompt').addEventListener('click', () => {
+    seedContext();
+    trail = [token.slice()];
+    pathLen = 0;
+    // the token keeps its state: same token, new context — the path bends
+    // instead of restarting.
+  });
+
+  function stepToken() {
+    const next = contextStep(token, context, 3.0, 1.4, 0.03);
+    // append only on real movement (a rolling buffer would erase the path
+    // once the token settles — the settled state is exactly when you want
+    // to SEE the path).
+    const last = trail[trail.length - 1];
+    const moved = Math.abs(next[0] - last[0]) + Math.abs(next[1] - last[1]) + Math.abs(next[2] - last[2]);
+    if (moved > 0.004) {
+      pathLen += arc(last, next);
+      trail.push(next.slice());
+      if (trail.length > 2000) trail.shift();
+    }
+    token = next;
+  }
+
+  function draw() {
+    proj.tick(0.0028);
+    stepToken();
+
+    ctx.clearRect(0, 0, 680, 420);
+    const cx = 340, cy = 200, scale = 155;
+    drawWireSphere(ctx, proj, cx, cy, scale);
+
+    for (const v of context) {
+      const p = proj.project(v, cx, cy, scale);
+      ctx.globalAlpha = depthAlpha(p.depth) * 0.55;
+      ctx.fillStyle = palette.blue;
+      ctx.beginPath(); ctx.arc(p.sx, p.sy, 3.5, 0, Math.PI * 2); ctx.fill();
+      ctx.globalAlpha = 1;
+    }
+
+    drawTrail(ctx, proj, trail, cx, cy, scale, 217, 114, 54);
+
+    const tp = proj.project(token, cx, cy, scale);
+    ctx.fillStyle = palette.orange;
+    ctx.beginPath(); ctx.arc(tp.sx, tp.sy, 7, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = palette.bg; ctx.lineWidth = 2; ctx.stroke();
+
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 11px serif'; ctx.textAlign = 'left';
+    ctx.fillText('faint dots = the context (held still)', 16, 396);
+    ctx.fillText('orange = one token, leaving its path', 16, 412);
+
+    // path statistics: traveled vs net displacement
+    const net = trail.length > 1 ? arc(trail[0], token) : 0;
+    const ratio = net > 0.02 ? pathLen / net : 1;
+    ctx.textAlign = 'right';
+    ctx.font = '12px "SF Mono", monospace'; ctx.fillStyle = palette.textSoft;
+    ctx.fillText(`traveled ${pathLen.toFixed(2)} rad`, 664, 380);
+    ctx.fillText(`net      ${net.toFixed(2)} rad`, 664, 396);
+    ctx.fillText(`wander   ×${ratio.toFixed(1)}`, 664, 412);
+
+    readout.textContent = `traveled ${pathLen.toFixed(2)} rad · net ${net.toFixed(2)} rad · wander ×${ratio.toFixed(1)}`;
+  }
+  runWhenVisible(canvas, draw);
+})();
+
+// ============================================================
+// FIG B: two nearby tokens straddling a watershed
+// ============================================================
+(() => {
+  const canvas = document.getElementById('canvas-pair');
+  const ctx = setupHiDPICanvas(canvas, 680, 440);
+  const readout = document.getElementById('pair-readout');
+  const proj = makeProjector(0.5);
+
+  let context = [], c1 = null, c2 = null;
+  let tokA = null, tokB = null, trailA = [], trailB = [];
+  let sepStart = 0;
+
+  function trySeed() {
+    // two clusters, well separated: re-draw centers until at least 70° apart
+    do { c1 = randUnit(); c2 = randUnit(); } while (dot(c1, c2) > 0.35);
+    context = [];
+    for (const center of [c1, c2]) {
+      for (let m = 0; m < 12; m++) {
+        context.push(norm3([
+          center[0] + gauss() * 0.2,
+          center[1] + gauss() * 0.2,
+          center[2] + gauss() * 0.2,
+        ]));
+      }
+    }
+    // The watershed must be computed from the clusters as ACTUALLY seeded
+    // (their scattered centroids), not the ideal centers — otherwise the
+    // midpoint can land inside one basin and both tokens fall together.
+    const m1 = [0, 0, 0], m2 = [0, 0, 0];
+    for (let m = 0; m < 12; m++) {
+      m1[0] += context[m][0]; m1[1] += context[m][1]; m1[2] += context[m][2];
+      m2[0] += context[12 + m][0]; m2[1] += context[12 + m][1]; m2[2] += context[12 + m][2];
+    }
+    norm3(m1); norm3(m2);
+    const mid = norm3([m1[0] + m2[0], m1[1] + m2[1], m1[2] + m2[2]]);
+    const d12 = [m1[0] - m2[0], m1[1] - m2[1], m1[2] - m2[2]];
+    const proj12 = dot(d12, mid);
+    const tang = norm3([d12[0] - proj12 * mid[0], d12[1] - proj12 * mid[1], d12[2] - proj12 * mid[2]]);
+    const DELTA = 0.035; // ≈ 2 degrees
+    tokA = norm3([mid[0] + DELTA * tang[0], mid[1] + DELTA * tang[1], mid[2] + DELTA * tang[2]]);
+    tokB = norm3([mid[0] - DELTA * tang[0], mid[1] - DELTA * tang[1], mid[2] - DELTA * tang[2]]);
+  }
+  function seedAll() {
+    // The page promises a pair astride a genuine divide (see the honesty
+    // note): verify silently that this seed's divide actually divides —
+    // run both tokens ahead and accept only if they part ways.
+    for (let attempt = 0; attempt < 25; attempt++) {
+      trySeed();
+      let a = tokA.slice(), b = tokB.slice();
+      for (let t = 0; t < 700; t++) {
+        a = contextStep(a, context, 3.0, 1.4, 0.03);
+        b = contextStep(b, context, 3.0, 1.4, 0.03);
+      }
+      if (arc(a, b) > 0.5) break; // > ~29°: the watershed is real
+    }
+    trailA = [tokA.slice()]; trailB = [tokB.slice()];
+    sepStart = arc(tokA, tokB);
+  }
+  seedAll();
+
+  document.getElementById('pair-new').addEventListener('click', seedAll);
+
+  function draw() {
+    proj.tick(0.0028);
+    const nextA = contextStep(tokA, context, 3.0, 1.4, 0.03);
+    const nextB = contextStep(tokB, context, 3.0, 1.4, 0.03);
+    if (arc(nextA, trailA[trailA.length - 1]) > 0.004) { trailA.push(nextA.slice()); if (trailA.length > 2000) trailA.shift(); }
+    if (arc(nextB, trailB[trailB.length - 1]) > 0.004) { trailB.push(nextB.slice()); if (trailB.length > 2000) trailB.shift(); }
+    tokA = nextA; tokB = nextB;
+
+    ctx.clearRect(0, 0, 680, 440);
+    const cx = 340, cy = 205, scale = 160;
+    drawWireSphere(ctx, proj, cx, cy, scale);
+
+    for (const v of context) {
+      const p = proj.project(v, cx, cy, scale);
+      ctx.globalAlpha = depthAlpha(p.depth) * 0.5;
+      ctx.fillStyle = palette.textFaint;
+      ctx.beginPath(); ctx.arc(p.sx, p.sy, 3, 0, Math.PI * 2); ctx.fill();
+      ctx.globalAlpha = 1;
+    }
+
+    drawTrail(ctx, proj, trailA, cx, cy, scale, 217, 114, 54);
+    drawTrail(ctx, proj, trailB, cx, cy, scale, 42, 95, 143);
+
+    [[tokA, palette.orange], [tokB, palette.blue]].forEach(([t, color]) => {
+      const p = proj.project(t, cx, cy, scale);
+      ctx.fillStyle = color;
+      ctx.beginPath(); ctx.arc(p.sx, p.sy, 6.5, 0, Math.PI * 2); ctx.fill();
+      ctx.strokeStyle = palette.bg; ctx.lineWidth = 2; ctx.stroke();
+    });
+
+    const sep = arc(tokA, tokB);
+    ctx.fillStyle = palette.textSoft; ctx.font = '12px "SF Mono", monospace'; ctx.textAlign = 'right';
+    ctx.fillText(`separation: start ${(sepStart * 180 / Math.PI).toFixed(1)}°`, 664, 400);
+    ctx.fillText(`now ${(sep * 180 / Math.PI).toFixed(1)}°`, 664, 416);
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 11px serif'; ctx.textAlign = 'left';
+    ctx.fillText('same rule, same context — different sides of the divide', 16, 416);
+
+    readout.textContent = `separation: start ${(sepStart * 180 / Math.PI).toFixed(1)}° · now ${(sep * 180 / Math.PI).toFixed(1)}°`;
+  }
+  runWhenVisible(canvas, draw);
+})();
+</script>
+
+</body>
+</html>

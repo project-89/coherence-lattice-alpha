@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The rule in motion — The Living Lattice</title>
+<meta name="description" content="The Coherent Learning Rule as a phase portrait: the dead zone, the basin around K*, bond birth, bond death, and bistability — click anywhere and watch a bond live out its fate.">
+<meta name="author" content="Michael Sharpe">
+<link rel="canonical" href="https://lattice.project89.org/primers/living-k/sections/02-the-rule.html">
+<link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
+<link rel="apple-touch-icon" href="../../../apple-touch-icon.png">
+<meta property="og:title" content="The rule in motion — The Living Lattice">
+<meta property="og:description" content="Bond birth, bond death, and bistability — the learning rule drawn as a flow you can seed with a click.">
+<meta property="og:url" content="https://lattice.project89.org/primers/living-k/sections/02-the-rule.html">
+<meta property="og:site_name" content="The Living Lattice">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://lattice.project89.org/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="The rule in motion — The Living Lattice">
+<meta name="twitter:description" content="The CLR as a clickable phase portrait.">
+<meta name="twitter:image" content="https://lattice.project89.org/og-image.png">
+<!-- BEGIN AUTO-INJECTED ANALYTICS -->
+<!-- PostHog -->
+<script>
+!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+posthog.init('phc_kRX9iHZstABjgFqEWJBMok2S3hW9R8QMHbNao4EsNz2g', {api_host: 'https://us.i.posthog.com', person_profiles: 'identified_only'});
+</script>
+<!-- END AUTO-INJECTED ANALYTICS -->
+<link rel="stylesheet" href="../../../css/style.css">
+</head>
+<body>
+<div class="page">
+
+<nav class="breadcrumb">
+  <a href="../index.html">&larr; living K module</a>
+  <span class="sep">&middot;</span>
+  <span class="section-num">living K 02 / 03 &middot; advanced</span>
+</nav>
+
+<h1>The rule in motion<span class="subtitle">The learning rule as a landscape of fates — birth, death, and the memory in between</span></h1>
+
+<p class="lead">In <a href="../../../foundations/sections/03-clr.html">the learning-rule chapter</a> you met K's equation of motion as a formula: <span class="mono">K̇ = &eta;[R&#8320;(K)cos(&Delta;&theta;) &minus; 2K/r]</span> — grow when you see more alignment than your coupling predicts, shrink when you see less. A formula tells you the rule. It does not show you the <em>fates</em>. For that, physicists draw a <strong>phase portrait</strong>: take everything a single bond can be — its phase gap &Delta;&theta;, its coupling K — as a plane, and at every point draw an arrow showing where the rule pushes next. The fates appear as the shapes of the flow: where arrows converge, a destiny; where they part, a decision.</p>
+
+<h2>1. A bond's whole life, on one plane</h2>
+
+<p>Below is that portrait for one pair of oscillators with a frequency gap you control. Two things move at once — the phases (horizontally: the gap drifts unless the coupling is strong enough to hold it) and the coupling (vertically: the learning rule). <strong>Click anywhere</strong> to seed a bond at that condition and watch it live out its fate. Read the furniture first:</p>
+
+<ul style="margin: 0.4em 0 1em 0; color: var(--text-soft); line-height: 1.6;">
+  <li><strong>The shaded band</strong> is the dead zone — alignments below the threshold cos(&Delta;&theta;) = 4/r from the learning-rule chapter. While a bond is passing through it, its coupling can only shrink.</li>
+  <li><strong>The green curve</strong> is where the learning rule rests (K̇ = 0): the equilibrium K* for each alignment — the same curve as the bifurcation figure in foundations, now embedded in the flow that visits it.</li>
+  <li><strong>The blue curve</strong> is where the drift rests (&Delta;&theta;&#775; = 0): couplings strong enough to hold the phase gap still against the frequency gap.</li>
+  <li><strong>The dot</strong> where they cross is the locked state — alive at K*, holding a fixed small angle. The flow spirals into it from a whole basin of starting conditions, and to K = 0 from everywhere else.</li>
+</ul>
+
+<figure id="fig-portrait">
+  <canvas id="canvas-portrait" width="680" height="430"></canvas>
+  <div class="controls" id="portrait-controls">
+    <div class="control">
+      <label>frequency gap <span class="val" id="pp-gap-val">1.20</span></label>
+      <input type="range" id="pp-gap-slider" min="0" max="2.5" step="0.05" value="1.2">
+    </div>
+    <button id="pp-warm">Warm start (K = 1.5)</button>
+    <button id="pp-cold">Cold start (K &asymp; 0)</button>
+    <button id="pp-clear">Clear trails</button>
+  </div>
+  <figcaption>The (&Delta;&theta;, K) plane for one bond, r = 5.9. Arrows show the flow; click to seed a trajectory. At gap 1.2, try the two buttons: the <em>warm</em> start falls into the locked point — the same K* &asymp; 1.9 our offline runs land on — while the <em>cold</em> start drifts through the dead zone, decaying each pass, and dies. Same rule, same gap, two fates: <strong>bistability</strong>, the property foundations &sect;03 named as where memory lives. Push the gap past &asymp; 2.5 and even warm starts can't hold. <span id="pp-readout" class="readout">click to seed a bond</span></figcaption>
+</figure>
+
+<p>One honest subtlety the portrait makes visible. From a strictly cold start — K genuinely near zero — an isolated pair almost never bootstraps, at any gap: with no grip, the phase gap drifts through alignment and misalignment alike, and what little coupling grows in the friendly half of each lap is crushed in the hostile half. Yet foundations promised that lattices <em>do</em> light up from nothing. Both are true, and the difference is the network: in a lattice, a bond's endpoints are held nearly still by their <em>other</em> neighbors, so alignment lingers long enough for the rule to catch. Bootstrap is a collective act. Hold that thought — it is exactly why the healing in the next section works.</p>
+
+<h2>2. Sixty bonds at once: the field goes binary</h2>
+
+<p>Now stop watching one bond and release the whole population. Sixty oscillators on a ring, every bond starting at the same middling coupling, every bond running the same rule on nothing but its own endpoints. The histogram shows the coupling field sculpting itself: within a minute the middle empties out, and every bond has committed — dead at zero, or alive up near its own K*. This is the <strong>binary K-field</strong> foundations &sect;03 predicted: a sharp dead-or-alive decision on every bond, produced by purely local dynamics. The network has decided which of its connections are worth keeping, and the shape of that decision <em>is</em> its learned structure.</p>
+
+<figure id="fig-population">
+  <canvas id="canvas-population" width="680" height="360"></canvas>
+  <div class="controls" id="pop-controls">
+    <button id="pop-reset" class="primary">Restart</button>
+    <button id="pop-freqs">New natural frequencies</button>
+  </div>
+  <figcaption>A ring of 60 oscillators, all bonds starting at K = 0.6, all running the rule. Left: the ring, fireflies-style. Right: the live histogram of the sixty couplings. Watch the single middle pile split into two — a pile at zero (bonds whose endpoints could not hold alignment) and a pile near K* &asymp; 2 (bonds that locked). In our verification run the split was total: 34 alive, 26 dead, <em>zero</em> bonds left in between. Give it half a minute. <span id="pop-readout" class="readout">alive — · dead —</span></figcaption>
+</figure>
+
+<div class="nav-links">
+  <a href="01-quenched.html" class="prev">The quenched approximation</a>
+  <a href="03-repair.html" class="next">Repair: the flagship demonstration</a>
+</div>
+
+</div>
+
+<script type="module">
+import { setupHiDPICanvas, runWhenVisible, palette, R0 } from '../../../js/common.js';
+
+const r = 5.9;
+
+// K* for a given alignment c (0 if below threshold)
+function Kstar(c) {
+  if (c <= 4 / r) return 0;
+  let lo = 0.05, hi = 6;
+  for (let i = 0; i < 60; i++) {
+    const m = (lo + hi) / 2;
+    (R0(m) * c - 2 * m / r > 0) ? lo = m : hi = m;
+  }
+  return lo;
+}
+
+// ============================================================
+// FIG A: the (Δθ, K) phase portrait
+// ============================================================
+(() => {
+  const W = 680, H = 430;
+  const canvas = document.getElementById('canvas-portrait');
+  const ctx = setupHiDPICanvas(canvas, W, H);
+  const gapSlider = document.getElementById('pp-gap-slider');
+  const gapVal = document.getElementById('pp-gap-val');
+  const readout = document.getElementById('pp-readout');
+
+  let gap = 1.2;
+  const eta = 0.8, dt = 0.01;
+  const px0 = 60, py0 = 30, pw = W - 100, ph = H - 90;
+  const Kmax = 3;
+
+  const X = (dth) => px0 + (dth / (2 * Math.PI)) * pw;
+  const Y = (K) => py0 + ph - (K / Kmax) * ph;
+
+  let trails = []; // {dth, K, trail: [[dth,K],...], dead, locked}
+
+  function seed(dth, K) {
+    trails.push({ dth, K, trail: [[dth, K]], done: '' });
+    if (trails.length > 6) trails.shift();
+  }
+  gapSlider.addEventListener('input', () => { gap = parseFloat(gapSlider.value); gapVal.textContent = gap.toFixed(2); });
+  document.getElementById('pp-warm').addEventListener('click', () => seed(0.4, 1.5));
+  document.getElementById('pp-cold').addEventListener('click', () => seed(0.4, 0.06));
+  document.getElementById('pp-clear').addEventListener('click', () => { trails = []; readout.textContent = 'click to seed a bond'; });
+
+  canvas.addEventListener('mousedown', (e) => {
+    const rect = canvas.getBoundingClientRect();
+    const mx = (e.clientX - rect.left) * (680 / rect.width);
+    const my = (e.clientY - rect.top) * (430 / rect.height);
+    if (mx < px0 || mx > px0 + pw || my < py0 || my > py0 + ph) return;
+    const dth = ((mx - px0) / pw) * 2 * Math.PI;
+    const K = (1 - (my - py0) / ph) * Kmax;
+    seed(dth, K);
+  });
+
+  function flow(dth, K) {
+    return [gap - 2 * K * Math.sin(dth), eta * (R0(K) * Math.cos(dth) - 2 * K / r)];
+  }
+
+  function draw() {
+    // advance trails (never stop integrating — the label is only a label,
+    // and a locked bond must be allowed to finish climbing to K*)
+    for (const tr of trails) {
+      for (let s = 0; s < 24; s++) {
+        const [dd, dK] = flow(tr.dth, tr.K);
+        tr.dth += dd * dt; tr.K = Math.max(0, tr.K + dK * dt);
+        if (tr.dth > 2 * Math.PI) tr.dth -= 2 * Math.PI;
+        if (tr.dth < 0) tr.dth += 2 * Math.PI;
+      }
+      tr.trail.push([tr.dth, tr.K]);
+      if (tr.trail.length > 600) tr.trail.shift();
+      const [dd, dKdt] = flow(tr.dth, tr.K);
+      if (tr.K < 0.02 && tr.trail.length > 80) tr.done = 'dead';
+      else if (Math.abs(dd) < 0.02 && Math.abs(dKdt) < 0.004 && tr.K > 0.3) tr.done = 'locked';
+      else tr.done = '';
+    }
+    const last = trails[trails.length - 1];
+    if (last) {
+      readout.textContent = last.done === 'locked'
+        ? `LOCKED — alive at K = ${last.K.toFixed(2)}`
+        : last.done === 'dead' ? 'dead — K decayed to 0'
+        : `K = ${last.K.toFixed(2)}, drifting…`;
+    }
+
+    ctx.clearRect(0, 0, W, H);
+
+    // dead zone shading: cos(Δθ) < 4/r
+    const a0 = Math.acos(4 / r);
+    ctx.fillStyle = 'rgba(125, 45, 79, 0.10)';
+    ctx.fillRect(X(a0), py0, X(2 * Math.PI - a0) - X(a0), ph);
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 11px serif'; ctx.textAlign = 'center';
+    ctx.fillText('the dead zone — cos(Δθ) < 4/r: coupling can only shrink', X(Math.PI), py0 + 16);
+
+    // axes
+    ctx.strokeStyle = palette.axis; ctx.lineWidth = 1;
+    ctx.strokeRect(px0, py0, pw, ph);
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 11px serif';
+    ctx.textAlign = 'center';
+    [['aligned', 0.06], ['opposed', Math.PI], ['aligned', 2 * Math.PI - 0.06]].forEach(([lab, v]) => ctx.fillText(lab, X(v), py0 + ph + 16));
+    ctx.fillText('Δθ — the phase gap →', px0 + pw / 2, py0 + ph + 32);
+    ctx.save();
+    ctx.translate(px0 - 34, py0 + ph / 2); ctx.rotate(-Math.PI / 2);
+    ctx.fillText('K — the coupling →', 0, 0);
+    ctx.restore();
+    ctx.textAlign = 'right';
+    [0, 1, 2, 3].forEach(k => ctx.fillText(k.toFixed(0), px0 - 6, Y(k) + 4));
+
+    // flow arrows
+    for (let ix = 0; ix < 22; ix++) for (let iy = 0; iy < 12; iy++) {
+      const dth = ((ix + 0.5) / 22) * 2 * Math.PI;
+      const K = ((iy + 0.5) / 12) * Kmax;
+      const [dd, dK] = flow(dth, K);
+      const mag = Math.hypot(dd / (2 * Math.PI) * pw, dK / Kmax * ph);
+      const sc = 9 / (mag + 1e-9);
+      const x = X(dth), y = Y(K);
+      const ux = (dd / (2 * Math.PI)) * pw * sc, uy = -(dK / Kmax) * ph * sc;
+      ctx.strokeStyle = `rgba(125,125,140,${0.25 + 0.5 * Math.min(1, mag / 60)})`;
+      ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(x - ux / 2, y - uy / 2); ctx.lineTo(x + ux / 2, y + uy / 2); ctx.stroke();
+      ctx.fillStyle = ctx.strokeStyle;
+      ctx.beginPath(); ctx.arc(x + ux / 2, y + uy / 2, 1.6, 0, Math.PI * 2); ctx.fill();
+    }
+
+    // K-nullcline (green): K*(cos Δθ) — and the ΔθṪ-nullcline (blue)
+    ctx.strokeStyle = palette.green; ctx.lineWidth = 2;
+    ctx.beginPath();
+    let pen = false;
+    for (let i = 0; i <= 300; i++) {
+      const dth = (i / 300) * 2 * Math.PI;
+      const ks = Kstar(Math.cos(dth));
+      if (ks > 0.01 && ks < Kmax) { const x = X(dth), y = Y(ks); pen ? ctx.lineTo(x, y) : ctx.moveTo(x, y); pen = true; }
+      else pen = false;
+    }
+    ctx.stroke();
+    ctx.strokeStyle = palette.blue; ctx.lineWidth = 2;
+    ctx.beginPath(); pen = false;
+    for (let i = 1; i < 300; i++) {
+      const dth = (i / 300) * 2 * Math.PI;
+      const s = Math.sin(dth);
+      if (s > 0.03) {
+        const K = gap / (2 * s);
+        if (K < Kmax) { const x = X(dth), y = Y(K); pen ? ctx.lineTo(x, y) : ctx.moveTo(x, y); pen = true; }
+        else pen = false;
+      } else pen = false;
+    }
+    ctx.stroke();
+
+    // locked fixed point: solve gap − 2 K*(cosΔθ) sinΔθ = 0 on (0, a0)
+    let fp = null;
+    let prev = gap - 2 * Kstar(Math.cos(0.001)) * Math.sin(0.001);
+    for (let i = 2; i < 200; i++) {
+      const dth = (i / 200) * a0;
+      const val = gap - 2 * Kstar(Math.cos(dth)) * Math.sin(dth);
+      if (prev > 0 !== val > 0) { fp = dth; break; }
+      prev = val;
+    }
+    if (fp !== null) {
+      const ks = Kstar(Math.cos(fp));
+      ctx.fillStyle = palette.orange;
+      ctx.beginPath(); ctx.arc(X(fp), Y(ks), 5.5, 0, Math.PI * 2); ctx.fill();
+      ctx.strokeStyle = palette.bg; ctx.lineWidth = 1.5; ctx.stroke();
+      ctx.fillStyle = palette.textFaint; ctx.font = 'italic 11px serif'; ctx.textAlign = 'left';
+      ctx.fillText('locked — alive', X(fp) + 10, Y(ks) - 6);
+    }
+
+    // trails
+    const cols = [palette.orange, palette.blue, palette.burgundy, palette.purple, palette.green, palette.text];
+    trails.forEach((tr, k) => {
+      ctx.strokeStyle = cols[k % cols.length]; ctx.lineWidth = 1.8;
+      ctx.beginPath();
+      let started = false;
+      for (let i = 1; i < tr.trail.length; i++) {
+        const [d0] = tr.trail[i - 1], [d1, k1] = tr.trail[i];
+        if (Math.abs(d1 - d0) > Math.PI) { started = false; continue; } // wrap break
+        const x = X(d1), y = Y(k1);
+        if (!started) { ctx.moveTo(X(d0), Y(tr.trail[i - 1][1])); started = true; }
+        ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+      const [dl, kl] = tr.trail[tr.trail.length - 1];
+      ctx.fillStyle = ctx.strokeStyle;
+      ctx.beginPath(); ctx.arc(X(dl), Y(kl), 4, 0, Math.PI * 2); ctx.fill();
+    });
+  }
+
+  runWhenVisible(canvas, draw);
+})();
+
+// ============================================================
+// FIG B: population — the binary K-field
+// ============================================================
+(() => {
+  const W = 680, H = 360;
+  const canvas = document.getElementById('canvas-population');
+  const ctx = setupHiDPICanvas(canvas, W, H);
+  const readout = document.getElementById('pop-readout');
+
+  const N = 60, dt = 0.05, eta = 0.6;
+  let om, th, Ks;
+  function newFreqs() { om = Array.from({ length: N }, () => 0.8 + (Math.random() - 0.5) * 1.6); }
+  function reset() { th = Array.from({ length: N }, () => Math.random() * Math.PI * 2); Ks = Array.from({ length: N }, () => 0.6); }
+  newFreqs(); reset();
+
+  document.getElementById('pop-reset').addEventListener('click', reset);
+  document.getElementById('pop-freqs').addEventListener('click', () => { newFreqs(); reset(); });
+
+  function step() {
+    const acc = new Float64Array(N);
+    for (let i = 0; i < N; i++) {
+      const j = (i + 1) % N;
+      const s = Math.sin(th[j] - th[i]);
+      acc[i] += Ks[i] * s; acc[j] -= Ks[i] * s;
+      const c = Math.cos(th[j] - th[i]);
+      Ks[i] = Math.max(0, Ks[i] + eta * (R0(Ks[i]) * c - 2 * Ks[i] / r) * dt);
+    }
+    for (let i = 0; i < N; i++) th[i] += (om[i] + acc[i]) * dt;
+  }
+
+  function draw() {
+    for (let s = 0; s < 8; s++) step();
+
+    ctx.clearRect(0, 0, W, H);
+    // ring
+    const cx = 160, cy = 165, R = 110;
+    ctx.strokeStyle = palette.grid; ctx.lineWidth = 1;
+    for (let i = 0; i < N; i++) {
+      const a = (i / N) * Math.PI * 2 - Math.PI / 2, b = ((i + 1) / N) * Math.PI * 2 - Math.PI / 2;
+      ctx.strokeStyle = `rgba(217,114,54,${Math.min(1, Ks[i] / 2.2) * 0.85 + 0.05})`;
+      ctx.lineWidth = 0.6 + Math.min(1, Ks[i] / 2.2) * 3;
+      ctx.beginPath();
+      ctx.moveTo(cx + Math.cos(a) * R, cy + Math.sin(a) * R);
+      ctx.lineTo(cx + Math.cos(b) * R, cy + Math.sin(b) * R);
+      ctx.stroke();
+    }
+    for (let i = 0; i < N; i++) {
+      const a = (i / N) * Math.PI * 2 - Math.PI / 2;
+      const br = (Math.cos(th[i]) + 1) / 2;
+      ctx.fillStyle = `rgb(${40 + br * 215}, ${40 + br * 170}, ${50 + br * 80})`;
+      ctx.beginPath(); ctx.arc(cx + Math.cos(a) * R, cy + Math.sin(a) * R, 5, 0, Math.PI * 2); ctx.fill();
+    }
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 12px serif'; ctx.textAlign = 'center';
+    ctx.fillText('the ring — bond brightness = its K', cx, cy + R + 30);
+
+    // histogram
+    const hx = 340, hy = 40, hw = 300, hh = 240;
+    const bins = new Array(20).fill(0);
+    for (const k of Ks) bins[Math.min(19, Math.floor(k / 3 * 20))]++;
+    ctx.strokeStyle = palette.axis; ctx.lineWidth = 1;
+    ctx.strokeRect(hx, hy, hw, hh);
+    const bmax = Math.max(...bins, 8);
+    bins.forEach((b, i) => {
+      const bw = hw / 20;
+      const bh = (b / bmax) * (hh - 10);
+      ctx.fillStyle = i < 2 ? 'rgba(125,45,79,0.8)' : 'rgba(217,114,54,0.8)';
+      ctx.fillRect(hx + i * bw + 1, hy + hh - bh, bw - 2, bh);
+    });
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 11px serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('0', hx, hy + hh + 14);
+    ctx.fillText('K = 3', hx + hw, hy + hh + 14);
+    ctx.fillText('the coupling field, as a histogram — watch the middle empty out', hx + hw / 2, hy - 10);
+
+    const dead = Ks.filter(k => k < 0.15).length;
+    const alive = Ks.filter(k => k > 0.8);
+    const mid = N - dead - alive.length;
+    readout.textContent = `alive ${alive.length} (mean K ${alive.length ? (alive.reduce((a, b) => a + b, 0) / alive.length).toFixed(2) : '—'}) · dead ${dead} · in between ${mid}`;
+  }
+
+  runWhenVisible(canvas, draw);
+})();
+</script>
+
+</body>
+</html>

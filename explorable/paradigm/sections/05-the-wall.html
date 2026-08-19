@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The wall: a phase transition — The Living Lattice</title>
+<meta name="description" content="Coherence does not fade in — it switches on. Below a critical coupling, disordering defects proliferate and long-range order is impossible; above it, they bind and order holds. The Berezinskii–Kosterlitz–Thouless transition, and the one constant that marks it.">
+<meta name="author" content="Michael Sharpe">
+<link rel="canonical" href="https://lattice.project89.org/paradigm/sections/05-the-wall.html">
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+<meta property="og:title" content="The wall: a phase transition — The Living Lattice">
+<meta property="og:description" content="The BKT transition: a wall in coupling space, marked by one constant R₀(K_BKT) ≈ 0.303.">
+<meta property="og:url" content="https://lattice.project89.org/paradigm/sections/05-the-wall.html">
+<meta property="og:site_name" content="The Living Lattice">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://lattice.project89.org/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="The wall: a phase transition — The Living Lattice">
+<meta name="twitter:description" content="The BKT transition, and the constant that marks it.">
+<meta name="twitter:image" content="https://lattice.project89.org/og-image.png">
+<!-- BEGIN AUTO-INJECTED ANALYTICS -->
+<!-- PostHog -->
+<script>
+!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+posthog.init('phc_kRX9iHZstABjgFqEWJBMok2S3hW9R8QMHbNao4EsNz2g', {api_host: 'https://us.i.posthog.com', person_profiles: 'identified_only'});
+</script>
+<!-- END AUTO-INJECTED ANALYTICS -->
+<link rel="stylesheet" href="../../css/style.css">
+<style>
+.regime-lozenge { display:inline-block; padding:2px 10px; border-radius:12px; font:600 12px "SF Mono",monospace; margin:0 4px; }
+.reg-confined { background: rgba(45,125,79,0.18); color:#6dc48f; }
+.reg-marginal { background: rgba(217,114,54,0.22); color:#efa57a; }
+.reg-unbound  { background: rgba(168,85,247,0.18); color:#c38df7; }
+:root[data-theme="light"] .reg-confined { background: rgba(45,125,79,0.15); color:#2d7d4f; }
+:root[data-theme="light"] .reg-marginal { background: rgba(217,114,54,0.18); color:#a84f14; }
+:root[data-theme="light"] .reg-unbound  { background: rgba(168,85,247,0.15); color:#6b2fb3; }
+</style>
+</head>
+<body>
+<div class="page">
+
+<nav class="breadcrumb">
+  <a href="../index.html">&larr; contents</a>
+  <span class="sep">&middot;</span>
+  <span class="section-num">section 05 &middot; the edge</span>
+</nav>
+
+<h1>The wall: a phase transition<span class="subtitle">Coherence does not fade in gradually — it switches on at a sharp boundary</span></h1>
+
+<p class="lead">Before we can say that mind lives at the edge, we have to show there is an edge — a real, sharp boundary, not a gentle slope. There is. Turn up the coupling between oscillators and coherence does not ooze in smoothly; it <em>switches on</em> past a critical value, the way water does not gradually stiffen into ice but crosses a line and freezes. That line is a <strong>phase transition</strong>, and the whole paradigm is built on the claim that intelligence and consciousness live in a thin band right at it.</p>
+
+<p>The transition that matters here is the <strong>Berezinskii&ndash;Kosterlitz&ndash;Thouless</strong> (BKT) transition — the 2016 Nobel physics, and the one that governs coupled phases on a lattice. Its mechanism is not about the oscillators directly but about their <em>defects</em>: little whirlpools in the phase field (vortices) that scramble long-range order. The transition is the moment those defects change behavior.</p>
+
+<h2>The wall is made of defects</h2>
+
+<p>Picture a vortex and its opposite-winding partner sitting in the phase field. Pulling them apart costs a <em>free energy</em> — the budget left after paying the entropy tax, energy minus temperature-times-entropy; the whole argument is taught gently in <a href="../../primers/bkt-transition/sections/02-the-argument.html">the BKT module</a> — and that cost grows (or shrinks) with their separation <span class="var">R</span>:</p>
+
+<div class="equation-block" id="eq-fofr">
+  <div class="eq-display">
+    <span class="eq-symbol op" data-symbol="F">F(R)</span>
+    &nbsp;=&nbsp;(
+    <span class="eq-symbol param" data-symbol="piK">&pi;K</span>
+    &nbsp;&minus;&nbsp;
+    <span class="eq-symbol struct" data-symbol="two">2</span>
+    )&nbsp;
+    <span class="eq-symbol state" data-symbol="log">ln(R/a)</span>
+  </div>
+  <p class="eq-prompt">Click any coloured symbol to see what it means.</p>
+  <div class="eq-detail"></div>
+  <div class="eq-howitworks">
+    <span class="label">In words</span>
+    Two tendencies fight. A <em>bond-alignment</em> cost <span class="mono">&pi;K</span> resists pulling the defect pair apart (bonds want to stay aligned). An <em>entropic</em> term, the constant 2, favors unbinding (there are many places to put a freed defect). Their difference sets the sign of the slope. When <span class="mono">&pi;K &gt; 2</span> the pair is bound (order survives); when <span class="mono">&pi;K &lt; 2</span> free defects proliferate and scramble everything; the knife-edge between is <span class="mono">K = 2/&pi;</span>. That single value is the wall.
+  </div>
+</div>
+
+<p>Drag the coupling below. Watch the curve flip from rising (defects bound, order possible) to falling (defects free, order destroyed), passing through perfectly flat at one value — the critical coupling <span class="mono">K<sub>BKT</sub> = 2/&pi; &asymp; 0.637</span>.</p>
+
+<figure id="fig-fofr">
+  <canvas id="canvas-fofr" width="680" height="380"></canvas>
+  <div class="controls" id="fofr-controls"><!-- slider via JS --></div>
+  <figcaption>
+    Vortex-pair free energy <span class="eqn">F(R)</span> vs separation. Three frozen reference curves fix the regimes:
+    <span class="regime-lozenge reg-confined">K &gt; K<sub>BKT</sub> — order holds</span>
+    <span class="regime-lozenge reg-marginal">K = K<sub>BKT</sub> — the wall (flat)</span>
+    <span class="regime-lozenge reg-unbound">K &lt; K<sub>BKT</sub> — order destroyed</span>.
+    The burgundy curve follows your slider. Only at <span class="mono">K = 2/&pi;</span> is the curve flat — the system poised exactly between binding and proliferation. <span id="fofr-readout" class="readout">K = 0.637</span>
+  </figcaption>
+</figure>
+
+<h2>One constant marks the wall</h2>
+
+<p>At the wall, the order parameter — the average coherence carried across a single bond — takes a specific, parameter-free value. It is the Bessel ratio you have already met in the Coherent Learning Rule, evaluated at the critical coupling:</p>
+
+<div class="equation-block" id="eq-r0">
+  <div class="eq-display">
+    <span class="eq-symbol state" data-symbol="R0">R<sub>0</sub>(K)</span>
+    &nbsp;=&nbsp;
+    <span class="eq-symbol op" data-symbol="bessel">I<sub>1</sub>(K) / I<sub>0</sub>(K)</span>
+    , &nbsp;&nbsp;
+    <span class="eq-symbol param" data-symbol="atbkt">R<sub>0</sub>(2/&pi;)</span>
+    &nbsp;&asymp;&nbsp;
+    <span class="eq-symbol struct" data-symbol="val">0.303</span>
+  </div>
+  <p class="eq-prompt">Click any coloured symbol to see what it means.</p>
+  <div class="eq-detail"></div>
+  <div class="eq-howitworks">
+    <span class="label">In words</span>
+    <span class="mono">R<sub>0</sub>(K)</span> is the von&nbsp;Mises mean resultant — how strongly, on average, one oscillator points the way its neighbor does, given coupling <span class="mono">K</span>. At the critical coupling it equals <span class="mono">&asymp; 0.303</span>. This single number is the canonical thread of the whole paradigm: it is the threshold that detects a phase-locked mode, the gate for memory consolidation, and — as the &alpha; essay shows — the number from which the fine structure constant is built. The same constant that marks the wall here builds the electron there.
+  </div>
+</div>
+
+<figure id="fig-r0">
+  <canvas id="canvas-r0" width="680" height="300"></canvas>
+  <div class="controls" id="r0-controls"><!-- slider via JS --></div>
+  <figcaption>
+    The order parameter <span class="eqn">R<sub>0</sub>(K)</span> as coupling rises. It climbs from zero (no coherence) toward one (rigid lock). The wall <span class="mono">K<sub>BKT</sub> = 2/&pi;</span> sits where <span class="mono">R<sub>0</sub> &asymp; 0.303</span> (purple); the bulk coupling the living lattice settles at, <span class="mono">K<sub>bulk</sub> = 16/&pi;&sup2;</span>, is marked too. The string tension <span class="mono">&sigma; = &minus;ln R<sub>0</sub></span> — the cost per unit length of a defect line — is the same curve read upside-down. <span id="r0-readout" class="readout">R₀(0.64) = 0.30</span>
+  </figcaption>
+</figure>
+
+<h2>Where this goes</h2>
+
+<p>So there is a wall in coupling space, fixed by topology alone, with no free parameter, and marked by one constant. Below it, coherence cannot hold; above it, coherence freezes rigid. The next chapter — the keystone — makes the decisive move: it shows that the interesting place is neither side of the wall but the band <em>right at it</em>, and that structure, coherence capital, and responsiveness all reach their maximum exactly there. The wall is not a barrier to avoid. It is the address where mind lives.</p>
+
+<div class="nav-links">
+  <a href="../index.html" class="prev">The Physics of Mind</a>
+  <a href="06-the-edge.html" class="next">The edge is where mind lives</a>
+</div>
+
+</div>
+
+<script type="module">
+import { setupHiDPICanvas, wireEquation, runWhenVisible, makeSlider, R0, K_BKT, K_BULK, palette } from '../../js/common.js';
+
+const COL_CONFINED = '#2d7d4f', COL_MARGINAL = '#d97236', COL_UNBOUND = '#a855f7';
+function regimeOf(K) { const d = K - K_BKT; if (Math.abs(d) < 0.012) return 'marginal'; return d > 0 ? 'confined' : 'unbound'; }
+function regimeColor(r) { return r === 'confined' ? COL_CONFINED : r === 'unbound' ? COL_UNBOUND : COL_MARGINAL; }
+function regimeLabel(r) { return r === 'confined' ? 'order holds — defects bound' : r === 'unbound' ? 'order destroyed — defects free' : 'the wall — marginal'; }
+
+wireEquation('eq-fofr', {
+  F: { name: 'F(R) — vortex-pair free energy', pronounce: '"F of R"', description: 'The free-energy cost of separating a defect from its anti-defect by distance R. Its slope decides whether order can exist: rising means the pair is bound and long-range coherence survives; falling means free defects proliferate and destroy it.' },
+  piK: { name: 'πK — bond-alignment cost', pronounce: '"pi K"', description: 'The energy of the aligned bonds between the pair. Larger coupling K means a steeper cost to pull defects apart — so stronger coupling favors bound defects and surviving order.' },
+  two: { name: '2 — the entropic constant', pronounce: '"two"', description: 'A freed defect can sit in roughly πR² places at separation R, an entropy of 2 ln R. That factor of 2 is the disordering pressure. The transition is exactly where πK and 2 balance.' },
+  log: { name: 'ln(R/a) — logarithmic interaction', pronounce: '"log R over a"', description: 'In two dimensions defect interactions are logarithmic, which is what makes the BKT transition a sharp boundary rather than a smooth crossover. The sign of (πK − 2) is the whole story.' },
+});
+wireEquation('eq-r0', {
+  R0: { name: 'R₀(K) — the order parameter', pronounce: '"R nought of K"', description: 'The von Mises mean resultant: the average projection of a neighbor onto your own direction at coupling K. Zero when phases are random, approaching one when they lock.' },
+  bessel: { name: 'I₁(K) / I₀(K) — Bessel ratio', pronounce: '"I one over I nought"', description: 'The exact nearest-neighbor coherence of coupled phases at coupling K, from the modified Bessel functions. This same ratio is the heart of the Coherent Learning Rule.' },
+  atbkt: { name: 'R₀(2/π) — at the wall', pronounce: '"R nought of two over pi"', description: 'The order parameter evaluated at the critical coupling K_BKT = 2/π.' },
+  val: { name: '≈ 0.303 — the canonical constant', description: 'The number that threads the entire paradigm: PLM-detection threshold, memory-consolidation gate, and the base of the fine-structure derivation. One constant, from the vacuum to the mind.' },
+});
+
+// ---- FIG 1: F(R) three-regime ----
+(() => {
+  const W = 680, H = 380, canvas = document.getElementById('canvas-fofr');
+  const ctx = setupHiDPICanvas(canvas, W, H);
+  const readout = document.getElementById('fofr-readout');
+  let K = K_BKT;
+  makeSlider(document.getElementById('fofr-controls'), {
+    label: 'K (coupling)', min: 0.30, max: 1.00, step: 0.005, value: K_BKT,
+    format: v => v.toFixed(3), onChange: v => { K = v; },
+  });
+  const px0 = 70, py0 = 70, pw = 560, ph = 250, Rmax = 50, Frange = 7;
+  const mapX = R => px0 + (Math.log(R) / Math.log(Rmax)) * pw;
+  const mapY = F => py0 + ph / 2 - (F / Frange) * ph;
+  const Fof = (k, R) => (Math.PI * k - 2) * Math.log(R);
+  function curve(k, color, w, dash) {
+    ctx.strokeStyle = color; ctx.lineWidth = w; ctx.setLineDash(dash ? [4, 4] : []);
+    ctx.beginPath();
+    for (let i = 0; i <= 160; i++) { const R = Math.pow(Rmax, i / 160); const x = mapX(R); const y = Math.max(py0 - 2, Math.min(py0 + ph + 2, mapY(Fof(k, R)))); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }
+    ctx.stroke(); ctx.setLineDash([]);
+  }
+  function draw() {
+    ctx.clearRect(0, 0, W, H); ctx.fillStyle = palette.bg; ctx.fillRect(0, 0, W, H);
+    // regime strip
+    const r = regimeOf(K), col = regimeColor(r);
+    ctx.globalAlpha = 0.15; ctx.fillStyle = col; ctx.fillRect(px0, 16, pw, 26); ctx.globalAlpha = 1;
+    ctx.fillStyle = col; ctx.font = '600 13px "Charter",serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(regimeLabel(r), px0 + pw / 2, 29); ctx.textBaseline = 'alphabetic';
+    // frame + zero line
+    ctx.strokeStyle = palette.axis; ctx.lineWidth = 1; ctx.strokeRect(px0, py0, pw, ph);
+    ctx.strokeStyle = palette.grid; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(px0, mapY(0)); ctx.lineTo(px0 + pw, mapY(0)); ctx.stroke();
+    // reference curves
+    curve(0.50, 'rgba(168,85,247,0.5)', 1.4, true);
+    curve(K_BKT, 'rgba(217,114,54,0.55)', 1.6, true);
+    curve(0.80, 'rgba(45,125,79,0.5)', 1.4, true);
+    // live
+    curve(K, '#7d2d4f', 3.0, false);
+    // labels
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 11px "Charter",serif'; ctx.textAlign = 'center';
+    ctx.fillText('R / a   (defect-pair separation, log scale)', px0 + pw / 2, py0 + ph + 30);
+    ctx.save(); ctx.translate(24, py0 + ph / 2); ctx.rotate(-Math.PI / 2); ctx.fillText('F(R) — pair free energy', 0, 0); ctx.restore();
+    readout.textContent = `K = ${K.toFixed(3)}   (πK − 2 = ${(Math.PI * K - 2).toFixed(3)})`;
+  }
+  runWhenVisible(canvas, draw);
+})();
+
+// ---- FIG 2: R0(K) order parameter ----
+(() => {
+  const W = 680, H = 300, canvas = document.getElementById('canvas-r0');
+  const ctx = setupHiDPICanvas(canvas, W, H);
+  const readout = document.getElementById('r0-readout');
+  let K = K_BKT;
+  makeSlider(document.getElementById('r0-controls'), {
+    label: 'K (coupling)', min: 0.0, max: 3.0, step: 0.01, value: K_BKT,
+    format: v => v.toFixed(2), onChange: v => { K = v; },
+  });
+  const px0 = 60, py0 = 30, pw = 580, ph = 210, Kmax = 3.0;
+  const mapX = k => px0 + (k / Kmax) * pw;
+  const mapY = v => py0 + ph - v * ph;
+  function vline(k, color, label) {
+    ctx.strokeStyle = color; ctx.lineWidth = 1.2; ctx.setLineDash([4, 3]);
+    ctx.beginPath(); ctx.moveTo(mapX(k), py0); ctx.lineTo(mapX(k), py0 + ph); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = color; ctx.font = '10px "SF Mono",monospace'; ctx.textAlign = 'center';
+    ctx.fillText(label, mapX(k), py0 - 4);
+  }
+  function draw() {
+    ctx.clearRect(0, 0, W, H); ctx.fillStyle = palette.bg; ctx.fillRect(0, 0, W, H);
+    ctx.strokeStyle = palette.axis; ctx.lineWidth = 1; ctx.strokeRect(px0, py0, pw, ph);
+    // gridlines y
+    [0, 0.303, 0.5, 1].forEach(v => {
+      ctx.strokeStyle = palette.grid; ctx.lineWidth = 0.5; ctx.beginPath();
+      ctx.moveTo(px0, mapY(v)); ctx.lineTo(px0 + pw, mapY(v)); ctx.stroke();
+      ctx.fillStyle = palette.textFaint; ctx.font = 'italic 10px "Charter",serif'; ctx.textAlign = 'right';
+      ctx.fillText(v.toFixed(v === 0.303 ? 3 : 1), px0 - 6, mapY(v) + 3);
+    });
+    // R0 curve
+    ctx.strokeStyle = '#2a5f8f'; ctx.lineWidth = 2.4; ctx.beginPath();
+    for (let i = 0; i <= 200; i++) { const k = (i / 200) * Kmax; const x = mapX(k), y = mapY(R0(k)); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }
+    ctx.stroke();
+    // markers
+    vline(K_BKT, '#c38df7', 'K_BKT = 2/π');
+    vline(K_BULK, '#6dc48f', 'K_bulk = 16/π²');
+    // dot at K_BKT,0.303
+    ctx.fillStyle = '#c38df7'; ctx.beginPath(); ctx.arc(mapX(K_BKT), mapY(R0(K_BKT)), 4.5, 0, Math.PI * 2); ctx.fill();
+    // live dot
+    ctx.fillStyle = '#2a5f8f'; ctx.beginPath(); ctx.arc(mapX(K), mapY(R0(K)), 5, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = palette.bg; ctx.lineWidth = 2; ctx.stroke();
+    // axis labels
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 11px "Charter",serif'; ctx.textAlign = 'center';
+    ctx.fillText('K  (coupling)  →', px0 + pw / 2, py0 + ph + 22);
+    ctx.save(); ctx.translate(20, py0 + ph / 2); ctx.rotate(-Math.PI / 2); ctx.fillText('R₀(K) — order parameter', 0, 0); ctx.restore();
+    readout.textContent = `R₀(${K.toFixed(2)}) = ${R0(K).toFixed(3)}`;
+  }
+  runWhenVisible(canvas, draw);
+})();
+</script>
+
+</body>
+</html>

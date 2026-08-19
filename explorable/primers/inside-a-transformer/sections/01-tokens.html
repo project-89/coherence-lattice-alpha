@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tokens and embeddings — Inside a transformer — The Living Lattice</title>
+<meta name="description" content="Section 1 of the inside-a-transformer module: a token is an arrow in meaning space. Drag arrows, rank neighborhoods by dot product, and watch one word mean two things.">
+<meta name="author" content="Michael Sharpe">
+<link rel="canonical" href="https://lattice.project89.org/primers/inside-a-transformer/sections/01-tokens.html">
+<link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
+<link rel="apple-touch-icon" href="../../../apple-touch-icon.png">
+<meta property="og:title" content="Tokens and embeddings — Inside a transformer — The Living Lattice">
+<meta property="og:description" content="A token is an arrow in meaning space: drag it, rank its neighborhood, and watch context bend it.">
+<meta property="og:url" content="https://lattice.project89.org/primers/inside-a-transformer/sections/01-tokens.html">
+<meta property="og:site_name" content="The Living Lattice">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://lattice.project89.org/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Tokens and embeddings — Inside a transformer — The Living Lattice">
+<meta name="twitter:description" content="A token is an arrow in meaning space — draggable, rankable, bendable by context.">
+<meta name="twitter:image" content="https://lattice.project89.org/og-image.png">
+<!-- BEGIN AUTO-INJECTED ANALYTICS -->
+<!-- PostHog -->
+<script>
+!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+posthog.init('phc_kRX9iHZstABjgFqEWJBMok2S3hW9R8QMHbNao4EsNz2g', {api_host: 'https://us.i.posthog.com', person_profiles: 'identified_only'});
+</script>
+<!-- END AUTO-INJECTED ANALYTICS -->
+<link rel="stylesheet" href="../../../css/style.css">
+</head>
+<body>
+<div class="page">
+
+<nav class="breadcrumb">
+  <a href="../index.html">&larr; inside a transformer</a>
+  <span class="sep">&middot;</span>
+  <span class="section-num">section 01 / 04 &middot; intermediate</span>
+</nav>
+
+<h1>Tokens and embeddings<span class="subtitle">The first move a transformer makes: every word becomes an arrow, and direction becomes meaning</span></h1>
+
+<p class="lead">Half of this library talks about transformers — the machinery inside systems like the one you may be reading about right now — and it leans on vocabulary nobody grew up with. This module builds all of it from nothing, one section per idea, because each idea is a simple physical picture wearing an engineering name. If you have taken <a href="../../sections/01-rotations.html">the rotations primer</a>, you already own the only math involved: arrows, and the dot product as a measure of agreement. This first section is about the raw material everything else acts on: the <strong>token</strong>.</p>
+
+<h2>1. A token is an arrow in meaning space</h2>
+
+<p>A transformer reads text in pieces called <strong>tokens</strong> — roughly, words. The first thing it does with a token is look up its meaning as a <strong>list of numbers</strong>. A list of numbers is an arrow: two numbers give an arrow on this page, three an arrow in the room, and a real model uses hundreds or thousands — an arrow in a space you cannot picture but can reason about exactly the same way. The space is organized so that <em>direction is meaning</em>: words that mean similar things point similar ways, and the dot product — the agreement measure from the rotations primer — tells you how related two meanings are.</p>
+
+<figure id="fig-token">
+  <canvas id="canvas-token" width="680" height="340"></canvas>
+  <figcaption>Drag the arrowhead anywhere. The readout shows the two numbers that <em>are</em> the arrow, and which word's direction it currently agrees with most. A real model does exactly this with thousands of numbers per token instead of two. <span id="token-readout" class="readout">arrow = —</span></figcaption>
+</figure>
+
+<h2>2. Neighborhoods: meaning comes in clusters</h2>
+
+<p>The lookup table that assigns each word its arrow is called the <strong>embedding</strong>, and it is not arbitrary — it is learned, and what it learns is <em>geography</em>. Words that behave alike in text end up living near each other: a warm district, a cold district, a night-sky district. Once meaning is geography, "what does this word mean?" gets a mechanical answer: look at what its arrow points along with. Below is a toy embedding with three districts. Drag the probe arrow around and watch the neighborhood ranking reorder itself — this ranking, by dot product, is the primitive that everything smarter is built from.</p>
+
+<figure id="fig-hood">
+  <canvas id="canvas-hood" width="680" height="380"></canvas>
+  <figcaption>Twelve words, three districts, one draggable probe (orange). The panel ranks every word by its agreement with the probe, live. Point into the cold district and watch <span class="mono">ice</span>, <span class="mono">snow</span>, <span class="mono">winter</span> rise together — clusters move as clusters, which is exactly what makes direction usable as meaning. <span id="hood-readout" class="readout">top = —</span></figcaption>
+</figure>
+
+<h2>3. One word, many contexts</h2>
+
+<p>There is a problem, and it is the problem the rest of the transformer exists to solve. Words do not have one meaning. <em>Cool</em> is a temperature in one sentence and a compliment in another — but the embedding table has exactly one arrow per token. The stored arrow for an ambiguous word sits <strong>between its meanings</strong>, committed to neither.</p>
+
+<p>What resolves it is <em>context</em>: the other words in the sentence pull the token's working copy toward the meaning that fits. Press the two context buttons below and watch the stored arrow bend.</p>
+
+<figure id="fig-context">
+  <canvas id="canvas-context" width="680" height="360"></canvas>
+  <div class="controls" id="context-controls">
+    <button id="ctx-a" class="primary">&ldquo;a cool evening in January&rdquo;</button>
+    <button id="ctx-b">&ldquo;that trick was so cool&rdquo;</button>
+    <button id="ctx-reset">Reset</button>
+  </div>
+  <figcaption>The stored embedding for <span class="mono">cool</span> (dashed) sits between its two meanings. Each context pulls the working copy (orange) toward a different district, and the nearest-neighbor readout flips. The machinery that does this pulling in a real model is <strong>attention</strong> — the next section. <span id="ctx-readout" class="readout">context = none</span></figcaption>
+</figure>
+
+<p>Hold onto both pictures from this section: meaning is a direction, and context is a force that moves it. The next section opens the machine that applies the force.</p>
+
+<div class="nav-links">
+  <a href="../index.html" class="prev">Inside a transformer</a>
+  <a href="02-attention.html" class="next">Attention: who listens to whom</a>
+</div>
+
+</div>
+
+<script type="module">
+import { setupHiDPICanvas, runWhenVisible, palette } from '../../../js/common.js';
+
+function canvasPos(canvas, W, e) {
+  const rect = canvas.getBoundingClientRect();
+  const t = e.touches ? e.touches[0] : e;
+  return [(t.clientX - rect.left) * (W / rect.width), (t.clientY - rect.top) * (W / rect.width)];
+}
+
+// Word constellation shared with the rotations primer (continuity on purpose)
+const WORDS = [
+  ['sun',   0.00,  1.00], ['day',   0.87,  0.50], ['warm',  0.71, -0.71],
+  ['fire',  0.00, -0.95], ['cold', -0.81, -0.59], ['night', -0.95, 0.31],
+  ['moon', -0.31,  0.31],
+];
+
+// ============================================================
+// FIG 1: a token is an arrow of numbers
+// ============================================================
+(() => {
+  const canvas = document.getElementById('canvas-token');
+  const ctx = setupHiDPICanvas(canvas, 680, 340);
+  const readout = document.getElementById('token-readout');
+  const cx = 240, cy = 170, s = 120;
+  let ax = 0.55, ay = 0.65;
+  let dragging = false;
+
+  function onDown(e) { dragging = true; onMove(e); e.preventDefault(); }
+  function onMove(e) {
+    if (!dragging) return;
+    const [mx, my] = canvasPos(canvas, 680, e);
+    ax = (mx - cx) / s; ay = (cy - my) / s;
+    const L = Math.hypot(ax, ay);
+    if (L > 1.35) { ax = ax / L * 1.35; ay = ay / L * 1.35; }
+    e.preventDefault();
+  }
+  function onUp() { dragging = false; }
+  canvas.addEventListener('mousedown', onDown);
+  window.addEventListener('mousemove', onMove);
+  window.addEventListener('mouseup', onUp);
+  canvas.addEventListener('touchstart', onDown, { passive: false });
+  window.addEventListener('touchmove', onMove, { passive: false });
+  window.addEventListener('touchend', onUp);
+
+  function draw() {
+    ctx.clearRect(0, 0, 680, 340);
+
+    // word directions, faint
+    WORDS.forEach(([w, x, y]) => {
+      ctx.strokeStyle = palette.grid; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + x * s, cy - y * s); ctx.stroke();
+      ctx.fillStyle = palette.textFaint; ctx.font = 'italic 11px serif'; ctx.textAlign = 'center';
+      ctx.fillText(w, cx + x * s * 1.13, cy - y * s * 1.13 + 4);
+    });
+
+    // best-agreement word
+    const L = Math.hypot(ax, ay) + 1e-9;
+    let best = 0, bestDot = -2;
+    WORDS.forEach(([w, x, y], i) => {
+      const wn = Math.hypot(x, y) + 1e-9;
+      const d = (ax * x + ay * y) / (L * wn);
+      if (d > bestDot) { bestDot = d; best = i; }
+    });
+    const [bw, bx, by] = WORDS[best];
+    ctx.strokeStyle = palette.green; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + bx * s, cy - by * s); ctx.stroke();
+
+    // the token arrow
+    ctx.strokeStyle = palette.orange; ctx.lineWidth = 3.5;
+    ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + ax * s, cy - ay * s); ctx.stroke();
+    ctx.fillStyle = palette.orange;
+    ctx.beginPath(); ctx.arc(cx + ax * s, cy - ay * s, 8, 0, Math.PI * 2); ctx.fill();
+
+    // the numbers ARE the arrow
+    ctx.fillStyle = palette.textSoft; ctx.font = '15px "SF Mono", monospace'; ctx.textAlign = 'left';
+    ctx.fillText('this token =', 470, 120);
+    ctx.fillStyle = palette.orange;
+    ctx.fillText(`[ ${ax.toFixed(2)},`, 490, 148);
+    ctx.fillText(`  ${ay.toFixed(2)} ]`, 490, 172);
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 12px serif';
+    ctx.fillText('two numbers here;', 470, 205);
+    ctx.fillText('thousands in a real model', 470, 222);
+    ctx.fillStyle = palette.green; ctx.font = '13px "SF Mono", monospace';
+    ctx.fillText(`closest: "${bw}" (${bestDot.toFixed(2)})`, 470, 252);
+
+    readout.textContent = `arrow = [${ax.toFixed(2)}, ${ay.toFixed(2)}] — closest in meaning: “${bw}” (agreement ${bestDot.toFixed(2)})`;
+  }
+  runWhenVisible(canvas, draw);
+})();
+
+// ============================================================
+// FIG 2: the neighborhood playground — ranking by dot product
+// ============================================================
+(() => {
+  const canvas = document.getElementById('canvas-hood');
+  const ctx = setupHiDPICanvas(canvas, 680, 380);
+  const readout = document.getElementById('hood-readout');
+  const cx = 220, cy = 195, s = 140;
+
+  // three districts: warm (upper right), cold (lower left), night sky (upper left)
+  const HOOD = [
+    ['summer', 0.92,  0.34, 'warm'], ['sun',    0.72,  0.66, 'warm'],
+    ['warm',   0.99,  0.05, 'warm'], ['fire',   0.86, -0.20, 'warm'],
+    ['ice',   -0.87, -0.46, 'cold'], ['snow',  -0.70, -0.68, 'cold'],
+    ['winter', -0.97, -0.22, 'cold'], ['frost', -0.55, -0.82, 'cold'],
+    ['moon',  -0.60,  0.78, 'sky'],  ['star',  -0.30,  0.94, 'sky'],
+    ['night', -0.80,  0.58, 'sky'],  ['dusk',  -0.06,  0.99, 'sky'],
+  ];
+  const DIST_COLOR = { warm: 'orange', cold: 'blue', sky: 'purple' };
+
+  let px = 0.5, py = -0.4;
+  let dragging = false;
+  function onDown(e) { dragging = true; onMove(e); e.preventDefault(); }
+  function onMove(e) {
+    if (!dragging) return;
+    const [mx, my] = canvasPos(canvas, 680, e);
+    px = (mx - cx) / s; py = (cy - my) / s;
+    const L = Math.hypot(px, py);
+    if (L > 1.2) { px = px / L * 1.2; py = py / L * 1.2; }
+    e.preventDefault();
+  }
+  function onUp() { dragging = false; }
+  canvas.addEventListener('mousedown', onDown);
+  window.addEventListener('mousemove', onMove);
+  window.addEventListener('mouseup', onUp);
+  canvas.addEventListener('touchstart', onDown, { passive: false });
+  window.addEventListener('touchmove', onMove, { passive: false });
+  window.addEventListener('touchend', onUp);
+
+  function draw() {
+    ctx.clearRect(0, 0, 680, 380);
+
+    ctx.strokeStyle = palette.grid; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.arc(cx, cy, s, 0, Math.PI * 2); ctx.stroke();
+
+    const L = Math.hypot(px, py) + 1e-9;
+    const ranked = HOOD.map(([w, x, y, d]) => {
+      const wn = Math.hypot(x, y) + 1e-9;
+      return { w, x, y, d, dot: (px * x + py * y) / (L * wn) };
+    }).sort((a, b) => b.dot - a.dot);
+
+    // words as dots
+    HOOD.forEach(([w, x, y, d]) => {
+      ctx.fillStyle = palette[DIST_COLOR[d]];
+      ctx.beginPath(); ctx.arc(cx + x * s, cy - y * s, 5, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = palette.textFaint; ctx.font = 'italic 11px serif'; ctx.textAlign = 'center';
+      ctx.fillText(w, cx + x * s, cy - y * s - 9);
+    });
+
+    // probe arrow
+    ctx.strokeStyle = palette.orange; ctx.lineWidth = 3.5;
+    ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + px * s, cy - py * s); ctx.stroke();
+    ctx.fillStyle = palette.orange;
+    ctx.beginPath(); ctx.arc(cx + px * s, cy - py * s, 8, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 11px serif'; ctx.textAlign = 'center';
+    ctx.fillText('probe (drag)', cx + px * s, cy - py * s + 22);
+
+    // ranking panel
+    ctx.fillStyle = palette.textSoft; ctx.font = 'italic 13px serif'; ctx.textAlign = 'left';
+    ctx.fillText('neighborhood, ranked by agreement:', 420, 60);
+    ranked.slice(0, 8).forEach((r, i) => {
+      const y = 90 + i * 30;
+      ctx.fillStyle = palette[DIST_COLOR[r.d]];
+      ctx.font = '13px "SF Mono", monospace';
+      ctx.fillText(`${r.w.padEnd(7)} ${r.dot >= 0 ? '+' : ''}${r.dot.toFixed(2)}`, 420, y);
+      const bw = Math.max(0, r.dot) * 110;
+      ctx.globalAlpha = 0.55;
+      ctx.fillRect(560, y - 10, bw, 11);
+      ctx.globalAlpha = 1;
+    });
+
+    readout.textContent = `top = ${ranked[0].w}, ${ranked[1].w}, ${ranked[2].w} — the ${ranked[0].d === 'sky' ? 'night-sky' : ranked[0].d} district`;
+  }
+  runWhenVisible(canvas, draw);
+})();
+
+// ============================================================
+// FIG 3: one word, many contexts
+// ============================================================
+(() => {
+  const canvas = document.getElementById('canvas-context');
+  const ctx = setupHiDPICanvas(canvas, 680, 360);
+  const readout = document.getElementById('ctx-readout');
+  const cx = 340, cy = 190, s = 130;
+
+  // two mini-districts on opposite sides, and "cool" stored between them
+  const SCENE = [
+    ['ice',    -0.93,  0.25, 'blue'], ['winter', -0.85, -0.35, 'blue'], ['chill', -0.99, -0.05, 'blue'],
+    ['great',   0.90,  0.32, 'green'], ['nice',   0.97, -0.12, 'green'], ['fun',    0.84, -0.44, 'green'],
+  ];
+  const STORED = [0.0, 0.95];           // "cool", committed to neither side
+  const TARGET_A = [-0.90, 0.05];       // temperature reading
+  const TARGET_B = [0.92, 0.02];        // praise reading
+  let wx = STORED[0], wy = STORED[1];
+  let tx = STORED[0], ty = STORED[1];
+  let mode = 'none';
+
+  const btnA = document.getElementById('ctx-a');
+  const btnB = document.getElementById('ctx-b');
+  const btnR = document.getElementById('ctx-reset');
+  function setPrimary(b) { [btnA, btnB].forEach(x => x.classList.remove('primary')); if (b) b.classList.add('primary'); }
+  btnA.addEventListener('click', () => { tx = TARGET_A[0]; ty = TARGET_A[1]; mode = 'temperature'; setPrimary(btnA); });
+  btnB.addEventListener('click', () => { tx = TARGET_B[0]; ty = TARGET_B[1]; mode = 'praise'; setPrimary(btnB); });
+  btnR.addEventListener('click', () => { tx = STORED[0]; ty = STORED[1]; mode = 'none'; setPrimary(null); });
+
+  function draw() {
+    // ease the working copy toward its target
+    wx += (tx - wx) * 0.06; wy += (ty - wy) * 0.06;
+
+    ctx.clearRect(0, 0, 680, 360);
+    ctx.strokeStyle = palette.grid; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.arc(cx, cy, s, 0, Math.PI * 2); ctx.stroke();
+
+    SCENE.forEach(([w, x, y, c]) => {
+      ctx.fillStyle = palette[c];
+      ctx.beginPath(); ctx.arc(cx + x * s, cy - y * s, 5, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = palette.textFaint; ctx.font = 'italic 11px serif'; ctx.textAlign = 'center';
+      ctx.fillText(w, cx + x * s, cy - y * s - 9);
+    });
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 11px serif'; ctx.textAlign = 'center';
+    ctx.fillText('the temperature district', cx - s * 0.75, cy + s * 0.62);
+    ctx.fillText('the praise district', cx + s * 0.75, cy + s * 0.62);
+
+    // stored embedding, dashed
+    ctx.strokeStyle = palette.textFaint; ctx.lineWidth = 2; ctx.setLineDash([5, 5]);
+    ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + STORED[0] * s, cy - STORED[1] * s); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 11px serif';
+    ctx.fillText('stored “cool”', cx + STORED[0] * s, cy - STORED[1] * s - 12);
+
+    // working copy
+    ctx.strokeStyle = palette.orange; ctx.lineWidth = 3.5;
+    ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + wx * s, cy - wy * s); ctx.stroke();
+    ctx.fillStyle = palette.orange;
+    ctx.beginPath(); ctx.arc(cx + wx * s, cy - wy * s, 8, 0, Math.PI * 2); ctx.fill();
+
+    // nearest scene word to the working copy
+    const L = Math.hypot(wx, wy) + 1e-9;
+    let best = null, bestDot = -2;
+    SCENE.forEach(([w, x, y]) => {
+      const d = (wx * x + wy * y) / (L * (Math.hypot(x, y) + 1e-9));
+      if (d > bestDot) { bestDot = d; best = w; }
+    });
+    ctx.fillStyle = palette.textSoft; ctx.font = '13px "SF Mono", monospace'; ctx.textAlign = 'left';
+    ctx.fillText(`context: ${mode}`, 24, 40);
+    ctx.fillText(`reads as: near "${best}"`, 24, 64);
+
+    readout.textContent = `context = ${mode} — “cool” currently reads as: near “${best}” (${bestDot.toFixed(2)})`;
+  }
+  runWhenVisible(canvas, draw);
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rotation groups: from a turntable to 768 dimensions — The Living Lattice</title>
+<meta name="description" content="An intermediate primer on rotation groups: why order never matters in 2D, why it suddenly does in 3D, and why a rotation in 768 dimensions is just a stack of independent turntables.">
+<meta name="author" content="Michael Sharpe">
+<link rel="canonical" href="https://lattice.project89.org/primers/sections/07-rotation-groups.html">
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+<meta property="og:title" content="Rotation groups: from a turntable to 768 dimensions — The Living Lattice">
+<meta property="og:description" content="Two moves, two orders, two different worlds: feel why 3D rotations refuse to commute, and why 768 dimensions are just independent turntables.">
+<meta property="og:url" content="https://lattice.project89.org/primers/sections/07-rotation-groups.html">
+<meta property="og:site_name" content="The Living Lattice">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://lattice.project89.org/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Rotation groups: from a turntable to 768 dimensions — The Living Lattice">
+<meta name="twitter:description" content="An intermediate primer on rotation groups, from the turntable to SO(768).">
+<meta name="twitter:image" content="https://lattice.project89.org/og-image.png">
+<!-- BEGIN AUTO-INJECTED ANALYTICS -->
+<!-- PostHog -->
+<script>
+!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+posthog.init('phc_kRX9iHZstABjgFqEWJBMok2S3hW9R8QMHbNao4EsNz2g', {api_host: 'https://us.i.posthog.com', person_profiles: 'identified_only'});
+</script>
+<!-- END AUTO-INJECTED ANALYTICS -->
+<link rel="stylesheet" href="../../css/style.css">
+<style>
+.flag-callout {
+  margin: 1.6em 0; padding: 16px 20px;
+  background: rgba(195, 141, 247, 0.08);
+  border-left: 3px solid #c38df7; border-radius: 3px;
+  font-size: 14.5px; line-height: 1.55;
+}
+.flag-callout .flag-label {
+  display: inline-block; font: 700 10.5px "SF Mono", monospace;
+  color: #c38df7; text-transform: uppercase; letter-spacing: 0.1em; margin-right: 0.7em;
+}
+.btn-group { display: inline-flex; gap: 6px; align-items: center; margin-right: 14px; }
+.btn-group .grp-label { font: italic 12px "Charter", serif; color: var(--text-faint); margin-right: 2px; }
+</style>
+</head>
+<body>
+<div class="page">
+
+<nav class="breadcrumb">
+  <a href="../index.html">&larr; primers</a>
+  <span class="sep">&middot;</span>
+  <span class="section-num">primer 07 &middot; intermediate</span>
+</nav>
+
+<h1>Rotation groups: from a turntable to 768 dimensions<span class="subtitle">Why order suddenly matters in three dimensions — and why 768 of them are less scary than they sound</span></h1>
+
+<p class="lead">In <a href="01-rotations.html">the rotations primer</a> you turned one constellation by one angle and learned the essential thing: rotation moves everything and changes nothing. This page is the bridge from that single turntable to the machinery the essays actually use — the rotation <em>groups</em> <span class="mono">SO(2)</span>, <span class="mono">SO(3)</span>, <span class="mono">SO(D)</span>. Two surprises live on that bridge. First: in three dimensions, the <em>order</em> in which you do two turns changes where you end up — a fact you can feel in your hands in the figure below, and the deepest single fact about rotations. Second: a rotation in 768 dimensions, which sounds unthinkable, is just a stack of ordinary turntables spinning independently. This primer assumes only <a href="00-phase-and-sound.html">primer 00</a> and <a href="01-rotations.html">primer 01</a>.</p>
+
+<h2>1. On a flat page, order never matters</h2>
+
+<p>In two dimensions a rotation is one number: the angle. Turn the constellation by 40&deg;, then by 70&deg; — or by 70&deg; first, then 40&deg;. Either way you have turned it by 110&deg;, full stop. Angles just add, and addition doesn't care about order. Watch both orders run at once: the two panels take visibly different <em>routes</em> — mid-flight they disagree — and land in exactly the same place.</p>
+
+<figure id="fig-commute">
+  <canvas id="canvas-commute" width="680" height="330"></canvas>
+  <div class="controls" id="commute-controls">
+    <button id="commute-run" class="primary">Run both orders</button>
+    <button id="commute-reset">Reset</button>
+  </div>
+  <figcaption>Left: 40&deg; then 70&deg;. Right: 70&deg; then 40&deg;. The intermediate states differ; the final states are identical, every time. In 2D, rotations <em>commute</em> — order never matters. <span id="commute-readout" class="readout">both at 0&deg;</span></figcaption>
+</figure>
+
+<h2>2. In three dimensions, order changes the answer</h2>
+
+<p>Now pick up a die — or use the two below. Two moves only: <strong>roll it forward</strong> a quarter turn, and <strong>spin it to the right</strong> a quarter turn. Do <em>roll then spin</em> on cube A. Do <em>spin then roll</em> on cube B. Same two moves, nothing skipped, nothing extra — and the cubes end up facing <strong>different ways</strong>. Not slightly different: measurably, unmistakably different. Click it through yourself; this is the kind of fact hands believe before heads do.</p>
+
+<figure id="fig-cube">
+  <canvas id="canvas-cube" width="680" height="360"></canvas>
+  <div class="controls" id="cube-controls">
+    <span class="btn-group"><span class="grp-label">cube A:</span>
+      <button id="a-roll">roll &#8964; 90&deg;</button>
+      <button id="a-spin">spin &#8635; 90&deg;</button>
+    </span>
+    <span class="btn-group"><span class="grp-label">cube B:</span>
+      <button id="b-roll">roll &#8964; 90&deg;</button>
+      <button id="b-spin">spin &#8635; 90&deg;</button>
+    </span>
+    <button id="cube-demo" class="primary">Do it for me</button>
+    <button id="cube-reset">Reset</button>
+  </div>
+  <figcaption>Try: A roll&rarr;spin, B spin&rarr;roll. The colored dots mark three faces (orange = front, blue = right, green = top at the start). The readout measures the single rotation separating the two cubes. Two 90&deg; moves in opposite orders leave the cubes <span class="mono">120&deg;</span> apart — order is not a detail, it is a third of a full turn. <span id="cube-readout" class="readout">cubes agree</span></figcaption>
+</figure>
+
+<p>Why does the page behave and the die refuse? In 2D, both turns happen on the <em>same</em> turntable — one shared plane, so the angles pool. In 3D, "roll" and "spin" turn <em>different, overlapping</em> planes: each move tilts the stage the other was about to perform on. Whichever you do second acts on an already-moved object. Keep that reason in your pocket; it pays off twice below.</p>
+
+<h2>3. The club of turns: what "group" means, and the names</h2>
+
+<p>Collect <em>all</em> the rigid turns of an object — every way to rotate it without bending or mirror-flipping it. That collection has three homely properties. Do one turn, then another: the combined effect is itself some single turn (you could have gone there directly). Every turn can be undone by another turn. And "leave it alone" counts as a turn — the do-nothing turn. A collection of moves with those three properties is what mathematicians call a <strong>group</strong>. That's the whole word: <em>the club of all the ways to turn something, closed under doing-one-then-another.</em></p>
+
+<p>The names you meet in the essays are just this club at different sizes. <span class="mono">SO(2)</span>: all rotations of the flat page — one angle each, order irrelevant. <span class="mono">SO(3)</span>: all rotations of ordinary space — where you just watched order start to matter. <span class="mono">SO(D)</span>: the same club in D dimensions. (The letters, once each: <em>O</em> for <em>orthogonal</em> — distances preserved, the primer-01 promise; <em>S</em> for <em>special</em> — no mirror flips allowed.) Nothing new happens to the <em>idea</em> as D grows. What changes is only how much room the club has.</p>
+
+<h2>4. A rotation in D dimensions: a stack of turntables</h2>
+
+<p>So what could it possibly mean to "rotate" in 768 dimensions? Here is the fact that takes the mysticism out: <strong>every rotation in D dimensions is a stack of ordinary 2D plane rotations, each in its own plane, all spinning independently.</strong> Pair up directions — dimensions 1&amp;2 form one plane, 3&amp;4 another, and so on — and give each pair its own private turntable with its own private angle. A rotation in <span class="mono">SO(768)</span> is at most 384 turntables, each doing exactly what primer 01 taught. (This is not just a picture — it is literally how RoPE, the transformer's positional rotation, is built: one little turntable per pair of channels.)</p>
+
+<p>Below: <em>one</em> cloud of twelve points in <em>four</em> dimensions, seen through two flat windows. The left window shows dimensions 1&amp;2, where the points form a star; the right shows dimensions 3&amp;4, where the <em>same points</em> form a spiral. Each slider spins one plane. Watch the other window while you slide: it cannot feel it.</p>
+
+<figure id="fig-planes">
+  <canvas id="canvas-planes" width="680" height="340"></canvas>
+  <div class="controls" id="planes-controls">
+    <div class="control">
+      <label>turntable 1 &mdash; plane of dims 1&amp;2 <span class="val" id="p12-val">0&deg;</span></label>
+      <input type="range" id="p12-slider" min="0" max="360" step="1" value="0">
+    </div>
+    <div class="control">
+      <label>turntable 2 &mdash; plane of dims 3&amp;4 <span class="val" id="p34-val">0&deg;</span></label>
+      <input type="range" id="p34-slider" min="0" max="360" step="1" value="0">
+    </div>
+  </div>
+  <figcaption>Twelve points, four coordinates each — one object, two windows. Each turntable spins its own plane and leaves the other untouched. Note the quiet punchline: these two turntables <em>commute</em> — slide in either order, same result — because they share no directions. The 3D surprise above came from turns whose planes <em>overlap</em>. Disjoint planes: peace. Shared directions: order matters.</figcaption>
+</figure>
+
+<h2>5. Where you now stand</h2>
+
+<p>Everything the essays do with rotations is assembled from what you just handled. After LayerNorm, a transformer's tokens live on the unit sphere <span class="mono">S<sup>D&minus;1</sup></span> (<a href="../inside-a-transformer/">the transformer primer</a>) — and the moves that respect that sphere are exactly the club <span class="mono">SO(D)</span>. The Platonic-rotation result (<a href="../../paradigm/sections/15-rotation.html">The Physics of Mind &sect;15</a>) is the claim that two independently trained models' meaning-clouds differ by <em>one single element</em> of that club — one stack of turntable angles — and finding it aligns them. And when the essays speak of dynamics <em>on</em> the sphere — tokens tracing paths, oscillators whose "phase" is a whole direction rather than one angle — that is the next rung of this ladder: <a href="../lohe-hypersphere/">Lohe dynamics on the unit hypersphere</a>, the advanced primer, where the Kuramoto story of primer 00 and the rotation story of this page become one story.</p>
+
+<div class="flag-callout">
+  <span class="flag-label">What's real here</span>
+  The cubes and the four-dimensional windows are cartoons built to make three true theorems feel obvious: 2D rotations commute, 3D rotations don't (the 120&deg; readout is computed from the actual rotation matrices, not staged), and every D-dimensional rotation decomposes into independent plane rotations. The real, measured uses of <span class="mono">SO(D)</span> on this site are elsewhere: the one-rotation alignment of two embedders at 99.3% held-out top-1 (<a href="../../paradigm/sections/15-rotation.html">&sect;15</a>), and RoPE's per-plane turntables inside every transformer the compression essays measure (<a href="../../transformers/index.html">Transformers as Oscillators</a>).
+</div>
+
+<div class="nav-links">
+  <a href="06-von-mises.html" class="prev">The von Mises circle</a>
+  <a href="../lohe-hypersphere/" class="next">Lohe dynamics on the unit hypersphere</a>
+</div>
+
+</div>
+
+<script type="module">
+import { setupHiDPICanvas, runWhenVisible, palette } from '../../js/common.js';
+
+const STARS = [
+  [0.00, 1.00], [0.87, 0.50], [0.71, -0.71], [0.00, -0.95],
+  [-0.81, -0.59], [-0.95, 0.31], [-0.31, 0.31],
+];
+
+// ============================================================
+// FIG A: 2D rotations commute — two orders, same landing
+// ============================================================
+(() => {
+  const canvas = document.getElementById('canvas-commute');
+  const ctx = setupHiDPICanvas(canvas, 680, 330);
+  const runBtn = document.getElementById('commute-run');
+  const resetBtn = document.getElementById('commute-reset');
+  const readout = document.getElementById('commute-readout');
+
+  // each panel: current angle (deg) + queue of remaining increments.
+  // A hold between the two legs makes the mid-flight disagreement visible
+  // (at a shared constant rate the totals would match at every instant).
+  const panels = [
+    { cx: 180, ang: 0, queue: [], hold: 0, plan: [40, 70], label: '40° then 70°' },
+    { cx: 500, ang: 0, queue: [], hold: 0, plan: [70, 40], label: '70° then 40°' },
+  ];
+  let ran = false;
+
+  runBtn.addEventListener('click', () => {
+    panels.forEach(p => { p.ang = 0; p.queue = p.plan.slice(); p.hold = 0; });
+    ran = true;
+  });
+  resetBtn.addEventListener('click', () => {
+    panels.forEach(p => { p.ang = 0; p.queue = []; p.hold = 0; });
+    ran = false;
+  });
+
+  let lastT = 0;
+  function draw() {
+    // advance animations on the wall clock (frame rates vary wildly)
+    const now = performance.now() / 1000;
+    const dt = lastT ? Math.min(0.05, now - lastT) : 0.016;
+    lastT = now;
+    panels.forEach(p => {
+      if (p.hold > 0) { p.hold -= dt; return; }
+      if (p.queue.length) {
+        const step = Math.min(95 * dt, p.queue[0]);
+        p.ang += step; p.queue[0] -= step;
+        if (p.queue[0] <= 1e-9) { p.queue.shift(); if (p.queue.length) p.hold = 0.9; }
+      }
+    });
+
+    ctx.clearRect(0, 0, 680, 330);
+    const cy = 150, s = 82;
+    panels.forEach(p => {
+      const a = p.ang * Math.PI / 180;
+      // ghost of the start
+      ctx.strokeStyle = palette.grid; ctx.lineWidth = 1;
+      ctx.beginPath();
+      STARS.forEach((q, i) => {
+        const x = p.cx + q[0] * s, y = cy - q[1] * s;
+        i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+      });
+      ctx.closePath(); ctx.stroke();
+      // rotated constellation
+      const pts = STARS.map(q => [q[0] * Math.cos(a) - q[1] * Math.sin(a), q[0] * Math.sin(a) + q[1] * Math.cos(a)]);
+      ctx.strokeStyle = palette.orange; ctx.lineWidth = 2;
+      ctx.beginPath();
+      pts.forEach((q, i) => {
+        const x = p.cx + q[0] * s, y = cy - q[1] * s;
+        i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+      });
+      ctx.closePath(); ctx.stroke();
+      pts.forEach(q => {
+        ctx.fillStyle = palette.orange;
+        ctx.beginPath(); ctx.arc(p.cx + q[0] * s, cy - q[1] * s, 4, 0, Math.PI * 2); ctx.fill();
+      });
+      // marker star (first point) emphasized so identity of points is visible
+      ctx.fillStyle = palette.blue;
+      ctx.beginPath(); ctx.arc(p.cx + pts[0][0] * s, cy - pts[0][1] * s, 6, 0, Math.PI * 2); ctx.fill();
+
+      ctx.fillStyle = palette.textFaint; ctx.font = 'italic 13px serif'; ctx.textAlign = 'center';
+      ctx.fillText(p.label, p.cx, 288);
+      ctx.font = '13px "SF Mono", monospace';
+      ctx.fillStyle = palette.textSoft;
+      ctx.fillText(p.ang.toFixed(0) + '°', p.cx, 310);
+    });
+
+    const busy = panels.some(p => p.queue.length || p.hold > 0);
+    if (!ran) readout.textContent = 'both at 0°';
+    else if (busy) readout.textContent = `running — left ${panels[0].ang.toFixed(0)}° · right ${panels[1].ang.toFixed(0)}° — disagreeing mid-flight…`;
+    else readout.textContent = `left ${panels[0].ang.toFixed(0)}° · right ${panels[1].ang.toFixed(0)}° — identical`;
+  }
+  runWhenVisible(canvas, draw);
+})();
+
+// ============================================================
+// FIG B: 3D rotations do NOT commute — the two cubes
+// ============================================================
+(() => {
+  const canvas = document.getElementById('canvas-cube');
+  const ctx = setupHiDPICanvas(canvas, 680, 360);
+  const readout = document.getElementById('cube-readout');
+
+  // --- tiny 3x3 matrix kit (column-major thinking, arrays of rows) ---
+  const I3 = () => [[1, 0, 0], [0, 1, 0], [0, 0, 1]];
+  function matMul(A, B) {
+    const C = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
+    for (let i = 0; i < 3; i++) for (let j = 0; j < 3; j++)
+      for (let k = 0; k < 3; k++) C[i][j] += A[i][k] * B[k][j];
+    return C;
+  }
+  function matVec(A, v) {
+    return [
+      A[0][0] * v[0] + A[0][1] * v[1] + A[0][2] * v[2],
+      A[1][0] * v[0] + A[1][1] * v[1] + A[1][2] * v[2],
+      A[2][0] * v[0] + A[2][1] * v[1] + A[2][2] * v[2],
+    ];
+  }
+  function rotAxis(axis, deg) {
+    const a = deg * Math.PI / 180, c = Math.cos(a), sn = Math.sin(a);
+    if (axis === 'x') return [[1, 0, 0], [0, c, -sn], [0, sn, c]];
+    if (axis === 'z') return [[c, -sn, 0], [sn, c, 0], [0, 0, 1]];
+    return [[c, 0, sn], [0, 1, 0], [-sn, 0, c]];
+  }
+  const transpose = A => [[A[0][0], A[1][0], A[2][0]], [A[0][1], A[1][1], A[2][1]], [A[0][2], A[1][2], A[2][2]]];
+
+  // fixed pleasant viewing rotation applied after the cube's own orientation
+  const VIEW = matMul(rotAxis('x', -22), rotAxis('y', 30));
+
+  const cubes = [
+    { cx: 190, M: I3(), queue: [], moved: false, name: 'cube A' },
+    { cx: 490, M: I3(), queue: [], moved: false, name: 'cube B' },
+  ];
+
+  // moves: roll forward = about x, spin right = about z (world axes)
+  function enqueue(cube, axis) { cube.queue.push({ axis, remaining: 90 }); cube.moved = true; }
+
+  document.getElementById('a-roll').addEventListener('click', () => enqueue(cubes[0], 'x'));
+  document.getElementById('a-spin').addEventListener('click', () => enqueue(cubes[0], 'z'));
+  document.getElementById('b-roll').addEventListener('click', () => enqueue(cubes[1], 'x'));
+  document.getElementById('b-spin').addEventListener('click', () => enqueue(cubes[1], 'z'));
+  document.getElementById('cube-demo').addEventListener('click', () => {
+    cubes.forEach(c => { c.M = I3(); c.queue = []; c.moved = false; });
+    enqueue(cubes[0], 'x'); enqueue(cubes[0], 'z');   // A: roll then spin
+    enqueue(cubes[1], 'z'); enqueue(cubes[1], 'x');   // B: spin then roll
+  });
+  document.getElementById('cube-reset').addEventListener('click', () => {
+    cubes.forEach(c => { c.M = I3(); c.queue = []; c.moved = false; });
+  });
+
+  const CORNERS = [];
+  for (const x of [-1, 1]) for (const y of [-1, 1]) for (const z of [-1, 1]) CORNERS.push([x, y, z]);
+  const EDGES = [];
+  for (let i = 0; i < 8; i++) for (let j = i + 1; j < 8; j++) {
+    let d = 0;
+    for (let k = 0; k < 3; k++) d += Math.abs(CORNERS[i][k] - CORNERS[j][k]);
+    if (d === 2) EDGES.push([i, j]);
+  }
+  // marked faces: center of +z (front, orange), +x (right, blue), +y (top, green)
+  const FACES = [
+    { n: [0, 0, 1], color: () => palette.orange, label: 'front' },
+    { n: [1, 0, 0], color: () => palette.blue, label: 'right' },
+    { n: [0, 1, 0], color: () => palette.green, label: 'top' },
+  ];
+
+  let lastT = 0;
+  function draw() {
+    const now = performance.now() / 1000;
+    const dt = lastT ? Math.min(0.05, now - lastT) : 0.016;
+    lastT = now;
+    cubes.forEach(c => {
+      if (c.queue.length) {
+        const q = c.queue[0];
+        const step = Math.min(130 * dt, q.remaining);
+        c.M = matMul(rotAxis(q.axis, step), c.M);
+        q.remaining -= step;
+        if (q.remaining <= 1e-9) c.queue.shift();
+      }
+    });
+
+    ctx.clearRect(0, 0, 680, 360);
+    const cy = 165;
+
+    cubes.forEach(c => {
+      const world = CORNERS.map(v => matVec(VIEW, matVec(c.M, v)));
+      const scale = 62;
+      const P = world.map(v => ({ x: c.cx + v[0] * scale, y: cy - v[1] * scale, depth: v[2] }));
+      EDGES.forEach(([i, j]) => {
+        const d = (P[i].depth + P[j].depth) / 2;
+        const t = (d + 1.8) / 3.6;
+        ctx.strokeStyle = palette.axis;
+        ctx.globalAlpha = 0.25 + 0.6 * Math.max(0, Math.min(1, t));
+        ctx.lineWidth = 1.4;
+        ctx.beginPath(); ctx.moveTo(P[i].x, P[i].y); ctx.lineTo(P[j].x, P[j].y); ctx.stroke();
+      });
+      ctx.globalAlpha = 1;
+      FACES.forEach(f => {
+        const v = matVec(VIEW, matVec(c.M, f.n));
+        const front = v[2] > 0;
+        ctx.fillStyle = f.color();
+        ctx.globalAlpha = front ? 1 : 0.22;
+        ctx.beginPath();
+        ctx.arc(c.cx + v[0] * 62, cy - v[1] * 62, 7, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.globalAlpha = 1;
+      });
+      ctx.fillStyle = palette.textFaint; ctx.font = 'italic 13px serif'; ctx.textAlign = 'center';
+      ctx.fillText(c.name, c.cx, 320);
+    });
+
+    // legend
+    ctx.font = 'italic 11px serif'; ctx.textAlign = 'left';
+    const lx = 596, ly = 40;
+    FACES.forEach((f, i) => {
+      ctx.fillStyle = f.color();
+      ctx.beginPath(); ctx.arc(lx, ly + i * 18, 4.5, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = palette.textFaint;
+      ctx.fillText(f.label, lx + 10, ly + i * 18 + 3.5);
+    });
+
+    // relative rotation readout
+    const busy = cubes.some(c => c.queue.length);
+    if (!cubes[0].moved && !cubes[1].moved) {
+      readout.textContent = 'cubes agree';
+    } else if (busy) {
+      readout.textContent = 'turning…';
+    } else {
+      const R = matMul(transpose(cubes[0].M), cubes[1].M);
+      const tr = R[0][0] + R[1][1] + R[2][2];
+      const ang = Math.acos(Math.max(-1, Math.min(1, (tr - 1) / 2))) * 180 / Math.PI;
+      readout.textContent = ang < 1
+        ? 'cubes agree — same moves, same order'
+        : `the cubes differ by a ${ang.toFixed(0)}° rotation`;
+    }
+  }
+  runWhenVisible(canvas, draw);
+})();
+
+// ============================================================
+// FIG C: a 4D rotation = two independent turntables
+// ============================================================
+(() => {
+  const canvas = document.getElementById('canvas-planes');
+  const ctx = setupHiDPICanvas(canvas, 680, 340);
+  const s12 = document.getElementById('p12-slider');
+  const s34 = document.getElementById('p34-slider');
+  const v12 = document.getElementById('p12-val');
+  const v34 = document.getElementById('p34-val');
+  let a12 = 0, a34 = 0;
+  s12.addEventListener('input', () => { a12 = parseFloat(s12.value) * Math.PI / 180; v12.textContent = s12.value + '°'; });
+  s34.addEventListener('input', () => { a34 = parseFloat(s34.value) * Math.PI / 180; v34.textContent = s34.value + '°'; });
+
+  // 12 points in 4D: star in dims 1&2, spiral in dims 3&4
+  const N = 12;
+  const PTS = [];
+  for (let i = 0; i < N; i++) {
+    const th = i * 5 * 2 * Math.PI / N;            // {12/5} star in plane 1-2
+    const r = 0.22 + 0.065 * i, ph = i * 0.9;      // spiral in plane 3-4
+    PTS.push([Math.cos(th), Math.sin(th), r * Math.cos(ph), r * Math.sin(ph)]);
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, 680, 340);
+    const rot = PTS.map(p => {
+      const c1 = Math.cos(a12), s1 = Math.sin(a12), c2 = Math.cos(a34), s2 = Math.sin(a34);
+      return [
+        p[0] * c1 - p[1] * s1, p[0] * s1 + p[1] * c1,
+        p[2] * c2 - p[3] * s2, p[2] * s2 + p[3] * c2,
+      ];
+    });
+
+    const windows = [
+      { x0: 70, dims: [0, 1], label: 'window 1 — dims 1 & 2', scl: 105 },
+      { x0: 380, dims: [2, 3], label: 'window 2 — dims 3 & 4', scl: 130 },
+    ];
+    windows.forEach(w => {
+      const cx = w.x0 + 115, cy = 150;
+      ctx.strokeStyle = palette.axis; ctx.lineWidth = 1;
+      ctx.strokeRect(w.x0, 30, 230, 240);
+      ctx.strokeStyle = palette.grid;
+      ctx.beginPath();
+      rot.forEach((p, i) => {
+        const x = cx + p[w.dims[0]] * w.scl, y = cy - p[w.dims[1]] * w.scl;
+        i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+      });
+      ctx.stroke();
+      rot.forEach((p, i) => {
+        ctx.fillStyle = i === 0 ? palette.blue : palette.orange;
+        ctx.beginPath();
+        ctx.arc(cx + p[w.dims[0]] * w.scl, cy - p[w.dims[1]] * w.scl, i === 0 ? 5.5 : 4, 0, Math.PI * 2);
+        ctx.fill();
+      });
+      ctx.fillStyle = palette.textFaint; ctx.font = 'italic 12px serif'; ctx.textAlign = 'center';
+      ctx.fillText(w.label, w.x0 + 115, 292);
+    });
+
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 11.5px serif'; ctx.textAlign = 'center';
+    ctx.fillText('the same twelve points — one cloud, four coordinates each; the blue dot is point #1 in both windows', 340, 318);
+  }
+  runWhenVisible(canvas, draw);
+})();
+</script>
+
+</body>
+</html>

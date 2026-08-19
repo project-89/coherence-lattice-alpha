@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Topology: the shape that survives stretching — The Living Lattice</title>
+<meta name="description" content="Clay rules, the loop-of-string argument, a donut you can stretch into a mug yourself, and a hole-counting game. Section 1 of the topology &amp; manifolds module.">
+<meta name="author" content="Michael Sharpe">
+<link rel="canonical" href="https://lattice.project89.org/primers/topology-manifolds/sections/01-topology.html">
+<link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
+<link rel="apple-touch-icon" href="../../../apple-touch-icon.png">
+<meta property="og:title" content="Topology: the shape that survives stretching — The Living Lattice">
+<meta property="og:description" content="The loop-of-string argument, a mug-to-donut morph you drive yourself, and a hole-counting game.">
+<meta property="og:url" content="https://lattice.project89.org/primers/topology-manifolds/sections/01-topology.html">
+<meta property="og:site_name" content="The Living Lattice">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://lattice.project89.org/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Topology: the shape that survives stretching — The Living Lattice">
+<meta name="twitter:description" content="Stretch, don't tear: what survives is the shape itself.">
+<meta name="twitter:image" content="https://lattice.project89.org/og-image.png">
+<!-- BEGIN AUTO-INJECTED ANALYTICS -->
+<!-- PostHog -->
+<script>
+!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+posthog.init('phc_kRX9iHZstABjgFqEWJBMok2S3hW9R8QMHbNao4EsNz2g', {api_host: 'https://us.i.posthog.com', person_profiles: 'identified_only'});
+</script>
+<!-- END AUTO-INJECTED ANALYTICS -->
+<link rel="stylesheet" href="../../../css/style.css">
+<style>
+.flag-callout {
+  margin: 1.6em 0; padding: 16px 20px;
+  background: rgba(195, 141, 247, 0.08);
+  border-left: 3px solid #c38df7; border-radius: 3px;
+  font-size: 14.5px; line-height: 1.55;
+}
+.flag-callout .flag-label {
+  display: inline-block; font: 700 10.5px "SF Mono", monospace;
+  color: #c38df7; text-transform: uppercase; letter-spacing: 0.1em; margin-right: 0.7em;
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<nav class="breadcrumb">
+  <a href="../index.html">&larr; topology &amp; manifolds</a>
+  <span class="sep">&middot;</span>
+  <span class="section-num">section 1 / 3</span>
+</nav>
+
+<h1>Topology: the shape that survives stretching<span class="subtitle">Clay rules, one unbreakable argument, and the number that names every shape</span></h1>
+
+<p class="lead">Take a ball of soft clay. You may squeeze it, stretch it, dent it, roll it — anything, as long as you never tear it and never poke a hole through it. Everything you can reach this way counts, to a topologist, as <em>the same shape</em>. A cube, a pear, a pancake: all one thing. <strong>Topology is the study of what survives that kind of abuse.</strong> Size doesn't survive. Angles don't survive. Curvature doesn't survive. Almost nothing survives — and the few things that do are therefore very special: they are properties of the shape itself, not of any particular pose it happens to be in.</p>
+
+<h2>1. The loop-of-string argument</h2>
+
+<p>The most famous survivor is a hole. You cannot stretch a ball into a donut without tearing, and you cannot stretch a donut into a ball without sealing the hole shut. Here is the argument, and it needs no algebra: <strong>ask what a loop of string can do.</strong> Lay a loop anywhere on the surface of a ball. Whatever you do, you can always slide it along the surface, shrinking as it goes, until it collapses to a single point. Nothing stops it. Now thread a loop around the tube of a donut. Slide it however you like — it can travel all the way around the ring, it can wobble — but it can <em>never</em> shrink to a point, because the tube is always in the way. To free the loop you would have to cut it or tear the surface. No amount of smooth stretching changes which of these two situations you are in. That yes-or-no fact — <em>can every loop shrink, or is some loop stuck?</em> — is a property of the space itself.</p>
+
+<figure id="fig-loops">
+  <canvas id="canvas-loops" width="680" height="360"></canvas>
+  <div class="controls" id="loops-controls">
+    <button id="loops-shrink" class="primary">Try to shrink both loops</button>
+    <button id="loops-reset">Reset</button>
+  </div>
+  <figcaption>The same experiment on both surfaces. On the sphere the loop slides smoothly away to a point — nothing remembers it was there. On the torus the loop around the tube can slide and wobble forever, but the hole keeps it from ever shrinking. That difference cannot be stretched away: it is topology.</figcaption>
+</figure>
+
+<h2>2. The joke that is actually a theorem</h2>
+
+<p>&ldquo;A topologist is someone who can't tell a coffee mug from a donut.&rdquo; The joke is a theorem, and you can perform it. A mug has exactly one hole — the one through the handle. The bowl you drink from is <em>not</em> a hole: it's a dent, and by clay rules dents are free. So fatten the donut's ring on one side, press a hollow into the fat part, and you have a mug — no tearing, no gluing, at no point did the hole through the handle ever close or a new one open. Drive it yourself:</p>
+
+<figure id="fig-morph">
+  <canvas id="canvas-morph" width="680" height="360"></canvas>
+  <div class="controls" id="morph-controls">
+    <div class="control">
+      <label>clay <span class="val" id="morph-val">donut</span></label>
+      <input type="range" id="morph-slider" min="0" max="1" step="0.01" value="0">
+    </div>
+  </div>
+  <figcaption>Slide the clay from donut to mug. One side of the ring fattens into the body; a dent deepens into the bowl. The orange loop of string threads the handle the entire time — it never shrinks, never escapes, never changes its count. The bowl never traps any loop at all. One hole at the start, one hole at the end: the same shape, wearing two poses.</figcaption>
+</figure>
+
+<h2>3. The name tag: count the holes</h2>
+
+<p>For closed clay shapes, the hole count is not just <em>a</em> label — it is essentially <em>the</em> label. Two blobs of clay can be stretched into each other exactly when their hole counts match (topologists call the count the <strong>genus</strong>, but "number of holes" is the whole content). Sphere: zero. Donut and mug: one. Eyeglasses frame: two. Pretzel: three. Everything else about the blob — lumpy or smooth, giant or tiny, elegant or hideous — is pose, not shape. Which means you can classify shapes the way topology does, right now, by playing:</p>
+
+<figure id="fig-holes">
+  <canvas id="canvas-holes" width="680" height="340"></canvas>
+  <div class="controls" id="holes-controls">
+    <button id="holes-0">0 holes</button>
+    <button id="holes-1">1 hole</button>
+    <button id="holes-2">2 holes</button>
+    <button id="holes-3">3 holes</button>
+    <button id="holes-next">Next blob</button>
+  </div>
+  <figcaption>A pancake of clay, squashed into some awkward pose. How many holes go all the way through? Answer, get the verdict, get another blob. Notice what you are ignoring to answer: all the wiggle, all the size, all the lopsidedness — everything except the count. That act of ignoring is topology. <span id="holes-readout" class="readout">blob 1 — how many holes?</span></figcaption>
+</figure>
+
+<div class="flag-callout">
+  <span class="flag-label">What's real here</span>
+  These figures are cartoons, built so the ideas land in your hands — the mug morph in particular is one honest path through shape-space, not the only one. On the site itself the topology is <em>measured</em>, not assumed: <a href="../../../transformers/sections/03-manifold.html">the coupling-manifold chapter</a> measures the surface a transformer's computation lives on, and <a href="../../../paradigm/sections/08-shape.html">the shape chapter</a> finds it has holes — which is why this module exists.
+</div>
+
+<p>Next: the word for spaces that look flat up close no matter how they curve as a whole — the single most-used unexplained word on this site.</p>
+
+<div class="nav-links">
+  <a href="../index.html" class="prev">Topology &amp; manifolds</a>
+  <a href="02-manifolds.html" class="next">Manifolds: flat up close</a>
+</div>
+
+</div>
+
+<script type="module">
+import { setupHiDPICanvas, runWhenVisible, palette } from '../../../js/common.js';
+
+// ============================================================
+// FIG A: shrink a loop — sphere vs torus, side by side
+// ============================================================
+(() => {
+  const W = 680, H = 360, canvas = document.getElementById('canvas-loops');
+  const ctx = setupHiDPICanvas(canvas, W, H);
+  const tilt = 1.05;
+
+  function makeProj(cx, cy, scale, yaw) {
+    return (x, y, z) => {
+      const x1 = x * Math.cos(yaw) - y * Math.sin(yaw), y1 = x * Math.sin(yaw) + y * Math.cos(yaw);
+      const y2 = y1 * Math.cos(tilt) - z * Math.sin(tilt), z2 = y1 * Math.sin(tilt) + z * Math.cos(tilt);
+      return { sx: cx + scale * x1, sy: cy - scale * z2, depth: y2 };
+    };
+  }
+
+  // shrink animation state: u goes 0 → 1 when running
+  let u = 0, running = false, t = 0;
+  document.getElementById('loops-shrink').addEventListener('click', () => { running = true; });
+  document.getElementById('loops-reset').addEventListener('click', () => { running = false; u = 0; });
+
+  function drawSphere(yaw) {
+    const P = makeProj(178, 168, 92, yaw);
+    for (let li = 1; li < 7; li++) {
+      const phi = (li / 7) * Math.PI;
+      ctx.beginPath();
+      for (let i = 0; i <= 40; i++) { const th = (i / 40) * Math.PI * 2; const p = P(Math.sin(phi) * Math.cos(th), Math.sin(phi) * Math.sin(th), Math.cos(phi)); i ? ctx.lineTo(p.sx, p.sy) : ctx.moveTo(p.sx, p.sy); }
+      ctx.strokeStyle = 'rgba(125,125,140,0.32)'; ctx.lineWidth = 1; ctx.stroke();
+    }
+    for (let lo = 0; lo < 7; lo++) {
+      const th = (lo / 7) * Math.PI * 2;
+      ctx.beginPath();
+      for (let i = 0; i <= 40; i++) { const phi = (i / 40) * Math.PI; const p = P(Math.sin(phi) * Math.cos(th), Math.sin(phi) * Math.sin(th), Math.cos(phi)); i ? ctx.lineTo(p.sx, p.sy) : ctx.moveTo(p.sx, p.sy); }
+      ctx.strokeStyle = 'rgba(125,125,140,0.22)'; ctx.lineWidth = 1; ctx.stroke();
+    }
+    // the loop: a latitude circle sliding toward the pole as u → 1
+    const colat = (1 - u) * 1.35 + 0.04; // from wide latitude to nearly the pole
+    ctx.beginPath();
+    for (let i = 0; i <= 48; i++) { const th = (i / 48) * Math.PI * 2; const p = P(Math.sin(colat) * Math.cos(th), Math.sin(colat) * Math.sin(th), Math.cos(colat)); i ? ctx.lineTo(p.sx, p.sy) : ctx.moveTo(p.sx, p.sy); }
+    ctx.strokeStyle = palette.orange; ctx.lineWidth = 3; ctx.stroke();
+    if (u > 0.97) {
+      const p = P(0, 0, 1);
+      ctx.fillStyle = palette.orange; ctx.beginPath(); ctx.arc(p.sx, p.sy, 4.5, 0, Math.PI * 2); ctx.fill();
+    }
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 12px "Charter", serif'; ctx.textAlign = 'center';
+    ctx.fillText(u > 0.97 ? 'gone — shrunk to a point' : 'sphere: the loop can always slide away', 178, 320);
+  }
+
+  function drawTorus(yaw) {
+    const P = makeProj(505, 175, 66, yaw);
+    const Rm = 1.55, rm = 0.62;
+    const tor = (th, ph) => { const cr = Rm + rm * Math.cos(ph); return P(cr * Math.cos(th), cr * Math.sin(th), rm * Math.sin(ph)); };
+    for (let j = 0; j < 12; j++) { const ph = (j / 12) * Math.PI * 2; ctx.beginPath(); for (let i = 0; i <= 40; i++) { const th = (i / 40) * Math.PI * 2; const p = tor(th, ph); i ? ctx.lineTo(p.sx, p.sy) : ctx.moveTo(p.sx, p.sy); } ctx.strokeStyle = 'rgba(125,125,140,0.28)'; ctx.lineWidth = 1; ctx.stroke(); }
+    for (let j = 0; j < 20; j++) { const th = (j / 20) * Math.PI * 2; ctx.beginPath(); for (let i = 0; i <= 40; i++) { const ph = (i / 40) * Math.PI * 2; const p = tor(th, ph); i ? ctx.lineTo(p.sx, p.sy) : ctx.moveTo(p.sx, p.sy); } ctx.strokeStyle = 'rgba(125,125,140,0.2)'; ctx.lineWidth = 1; ctx.stroke(); }
+    // the loop: a circle around the tube. Under "shrink" it slides along the
+    // ring and pulses smaller — but its size is pinned by the tube: clamp at 1.
+    const slide = u * Math.PI * 1.5;
+    const pulse = running || u > 0 ? Math.max(1, 1.18 - 0.5 * Math.sin(u * Math.PI)) : 1; // tries to dip below 1, cannot
+    ctx.beginPath();
+    for (let i = 0; i <= 48; i++) {
+      const ph = (i / 48) * Math.PI * 2;
+      const cr = Rm + rm * pulse * Math.cos(ph);
+      const p = P(cr * Math.cos(slide), cr * Math.sin(slide), rm * pulse * Math.sin(ph));
+      i ? ctx.lineTo(p.sx, p.sy) : ctx.moveTo(p.sx, p.sy);
+    }
+    ctx.strokeStyle = palette.orange; ctx.lineWidth = 3; ctx.stroke();
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 12px "Charter", serif'; ctx.textAlign = 'center';
+    ctx.fillText(u > 0.97 ? 'still here — the hole is in the way' : 'torus: this loop can slide, never shrink', 505, 320);
+  }
+
+  function draw() {
+    t += 1;
+    if (running && u < 1) { u = Math.min(1, u + 0.008); }
+    ctx.clearRect(0, 0, W, H); ctx.fillStyle = palette.bg; ctx.fillRect(0, 0, W, H);
+    const yaw = 0.55 + t * 0.0022;
+    drawSphere(yaw);
+    drawTorus(yaw);
+  }
+  runWhenVisible(canvas, draw);
+})();
+
+// ============================================================
+// FIG B: mug ↔ donut morph
+// ============================================================
+(() => {
+  const W = 680, H = 360, canvas = document.getElementById('canvas-morph');
+  const ctx = setupHiDPICanvas(canvas, W, H);
+  const slider = document.getElementById('morph-slider');
+  const mval = document.getElementById('morph-val');
+  let u = 0, t = 0;
+  slider.addEventListener('input', () => {
+    u = parseFloat(slider.value);
+    mval.textContent = u < 0.15 ? 'donut' : u > 0.85 ? 'mug' : 'clay in motion';
+  });
+
+  const tilt = 1.02;
+  function project(x, y, z, yaw) {
+    const cx = 340, cy = 178, scale = 88;
+    const x1 = x * Math.cos(yaw) - y * Math.sin(yaw), y1 = x * Math.sin(yaw) + y * Math.cos(yaw);
+    const y2 = y1 * Math.cos(tilt) - z * Math.sin(tilt), z2 = y1 * Math.sin(tilt) + z * Math.cos(tilt);
+    return { sx: cx + scale * x1, sy: cy - scale * z2, depth: y2 };
+  }
+
+  // The mug is a lopsided torus: tube radius fattens on the "cup" side
+  // (theta near PI) and a dent is pressed into the fat side's top. The
+  // handle side (theta near 0) keeps the thin tube. The hole through the
+  // handle is the torus's hole, untouched for every u.
+  function smooth(x) { return x <= 0 ? 0 : x >= 1 ? 1 : x * x * (3 - 2 * x); }
+  function surf(th, ph, u) {
+    const R = 1.28;
+    // cup zone: bump of fatness centered at th = PI
+    const dth = Math.atan2(Math.sin(th - Math.PI), Math.cos(th - Math.PI)); // signed dist from PI
+    const cup = smooth(1 - Math.abs(dth) / 2.1);
+    const fat = 1 + u * 2.35 * cup;
+    let r = 0.34 * fat;
+    // the dent: press the top of the cup zone inward (a bowl, not a hole)
+    const topness = smooth((Math.sin(ph) - 0.15) / 0.85);        // ph near "up"
+    const dent = u * cup * topness * 0.72;
+    r *= (1 - dent);
+    // squash the cup a little vertically for mug-ness
+    const zscale = 1 + u * cup * 0.55;
+    const cr = R + r * Math.cos(ph);
+    return [cr * Math.cos(th), cr * Math.sin(th), r * Math.sin(ph) * zscale];
+  }
+
+  function draw() {
+    t += 1;
+    const yaw = 0.6 + t * 0.0022;
+    ctx.clearRect(0, 0, W, H); ctx.fillStyle = palette.bg; ctx.fillRect(0, 0, W, H);
+
+    // wireframe: rings of constant theta and constant phi
+    for (let j = 0; j < 24; j++) {
+      const th = (j / 24) * Math.PI * 2;
+      ctx.beginPath();
+      for (let i = 0; i <= 36; i++) {
+        const ph = (i / 36) * Math.PI * 2;
+        const s = surf(th, ph, u); const p = project(s[0], s[1], s[2], yaw);
+        i ? ctx.lineTo(p.sx, p.sy) : ctx.moveTo(p.sx, p.sy);
+      }
+      ctx.strokeStyle = 'rgba(125,125,140,0.3)'; ctx.lineWidth = 1; ctx.stroke();
+    }
+    for (let j = 0; j < 14; j++) {
+      const ph = (j / 14) * Math.PI * 2;
+      ctx.beginPath();
+      for (let i = 0; i <= 64; i++) {
+        const th = (i / 64) * Math.PI * 2;
+        const s = surf(th, ph, u); const p = project(s[0], s[1], s[2], yaw);
+        i ? ctx.lineTo(p.sx, p.sy) : ctx.moveTo(p.sx, p.sy);
+      }
+      ctx.strokeStyle = 'rgba(125,125,140,0.22)'; ctx.lineWidth = 1; ctx.stroke();
+    }
+
+    // the invariant: a loop of string through the hole (a phi-circle on the
+    // thin/handle side, th = 0), present at every u
+    ctx.beginPath();
+    for (let i = 0; i <= 48; i++) {
+      const ph = (i / 48) * Math.PI * 2;
+      const s = surf(0, ph, u); const p = project(s[0] * 1.02, s[1] * 1.02, s[2] * 1.02, yaw);
+      i ? ctx.lineTo(p.sx, p.sy) : ctx.moveTo(p.sx, p.sy);
+    }
+    ctx.strokeStyle = palette.orange; ctx.lineWidth = 3; ctx.stroke();
+
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 12px "Charter", serif'; ctx.textAlign = 'center';
+    const label = u < 0.15 ? 'a donut, with a loop of string through its hole'
+      : u > 0.85 ? 'a mug — same hole, same string, bowl is only a dent'
+      : 'no tearing, no gluing — the string never has to move';
+    ctx.fillText(label, 340, 340);
+  }
+  runWhenVisible(canvas, draw);
+})();
+
+// ============================================================
+// FIG C: count-the-holes game
+// ============================================================
+(() => {
+  const W = 680, H = 340, canvas = document.getElementById('canvas-holes');
+  const ctx = setupHiDPICanvas(canvas, W, H);
+  const readout = document.getElementById('holes-readout');
+
+  // deterministic per-round pseudo-random (no Date/Math.random needed for layout)
+  function mulberry(seed) {
+    let a = seed >>> 0;
+    return () => {
+      a |= 0; a = (a + 0x6D2B79F5) | 0;
+      let x = Math.imul(a ^ (a >>> 15), 1 | a);
+      x = (x + Math.imul(x ^ (x >>> 7), 61 | x)) ^ x;
+      return ((x ^ (x >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+
+  // rounds: hole counts chosen to force real counting
+  const ROUNDS = [
+    { holes: 1, seed: 11 }, { holes: 0, seed: 23 }, { holes: 2, seed: 37 },
+    { holes: 1, seed: 51 }, { holes: 3, seed: 67 }, { holes: 2, seed: 83 },
+    { holes: 0, seed: 95 }, { holes: 3, seed: 107 },
+  ];
+  let round = 0, score = 0, answered = false, feedback = '';
+
+  function blobPath(cx, cy, baseR, wobble, rnd, nPts = 26) {
+    // radial-noise closed blob
+    const amps = [0.5 + rnd(), 0.5 + rnd(), 0.4 + rnd()].map(a => a * wobble);
+    const phs = [rnd() * 6.28, rnd() * 6.28, rnd() * 6.28];
+    const pts = [];
+    for (let i = 0; i < nPts; i++) {
+      const a = (i / nPts) * Math.PI * 2;
+      const r = baseR * (1 + amps[0] * Math.sin(2 * a + phs[0]) + amps[1] * Math.sin(3 * a + phs[1]) + amps[2] * Math.sin(5 * a + phs[2]));
+      pts.push([cx + r * Math.cos(a), cy + r * Math.sin(a)]);
+    }
+    return pts;
+  }
+  function tracePath(pts) {
+    ctx.moveTo(pts[0][0], pts[0][1]);
+    for (let i = 1; i <= pts.length; i++) {
+      const p = pts[i % pts.length], q = pts[(i - 1) % pts.length];
+      const mx = (p[0] + q[0]) / 2, my = (p[1] + q[1]) / 2;
+      ctx.quadraticCurveTo(q[0], q[1], mx, my);
+    }
+  }
+
+  function currentShapes() {
+    const { holes, seed } = ROUNDS[round % ROUNDS.length];
+    const rnd = mulberry(seed);
+    const outer = blobPath(340, 160, 120 + rnd() * 20, 0.14, rnd);
+    // hole centers spaced on an inner arc so they never merge
+    const holePts = [];
+    const arc0 = rnd() * 6.28;
+    for (let h = 0; h < holes; h++) {
+      const a = arc0 + (h / Math.max(1, holes)) * Math.PI * 2;
+      const d = 45 + rnd() * 22;
+      const hx = 340 + d * Math.cos(a), hy = 160 + d * 0.62 * Math.sin(a);
+      holePts.push(blobPath(hx, hy, 20 + rnd() * 12, 0.18, rnd, 18));
+    }
+    return { outer, holePts, holes };
+  }
+
+  function answer(n) {
+    if (answered) return;
+    const truth = ROUNDS[round % ROUNDS.length].holes;
+    answered = true;
+    if (n === truth) {
+      score++;
+      feedback = `yes — ${truth} hole${truth === 1 ? '' : 's'}. Stretch it all you like; the count is the shape.`;
+    } else {
+      feedback = `it has ${truth} — count the ways all the way through, ignore every dent and wiggle.`;
+    }
+    readout.textContent = `${feedback}   score ${score}/${Math.min(round + 1, ROUNDS.length)}`;
+  }
+  [0, 1, 2, 3].forEach(n => document.getElementById('holes-' + n).addEventListener('click', () => answer(n)));
+  document.getElementById('holes-next').addEventListener('click', () => {
+    round++; answered = false; feedback = '';
+    readout.textContent = `blob ${round % ROUNDS.length + 1} — how many holes?`;
+  });
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H); ctx.fillStyle = palette.bg; ctx.fillRect(0, 0, W, H);
+    const { outer, holePts } = currentShapes();
+    ctx.beginPath();
+    tracePath(outer);
+    holePts.forEach(hp => tracePath(hp));
+    ctx.fillStyle = 'rgba(217, 165, 100, 0.32)';
+    ctx.fill('evenodd');
+    ctx.strokeStyle = palette.axisBold; ctx.lineWidth = 2;
+    ctx.beginPath(); tracePath(outer); ctx.stroke();
+    holePts.forEach(hp => { ctx.beginPath(); tracePath(hp); ctx.stroke(); });
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 12px "Charter", serif'; ctx.textAlign = 'center';
+    ctx.fillText('a pancake of clay — holes go all the way through', 340, 322);
+  }
+  runWhenVisible(canvas, draw);
+})();
+</script>
+
+</body>
+</html>

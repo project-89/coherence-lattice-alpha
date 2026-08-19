@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The quenched approximation — The Living Lattice</title>
+<meta name="description" content="Run the same oscillator network twice — once with its coupling field frozen, once alive under the learning rule — and watch the two futures part ways. Why every fixed-K picture has an expiry date.">
+<meta name="author" content="Michael Sharpe">
+<link rel="canonical" href="https://lattice.project89.org/primers/living-k/sections/01-quenched.html">
+<link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
+<link rel="apple-touch-icon" href="../../../apple-touch-icon.png">
+<meta property="og:title" content="The quenched approximation — The Living Lattice">
+<meta property="og:description" content="A frozen wiring diagram is a snapshot of a living thing. Watch how long the snapshot stays honest.">
+<meta property="og:url" content="https://lattice.project89.org/primers/living-k/sections/01-quenched.html">
+<meta property="og:site_name" content="The Living Lattice">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://lattice.project89.org/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="The quenched approximation — The Living Lattice">
+<meta name="twitter:description" content="Frozen vs living wiring: the same network, two futures.">
+<meta name="twitter:image" content="https://lattice.project89.org/og-image.png">
+<!-- BEGIN AUTO-INJECTED ANALYTICS -->
+<!-- PostHog -->
+<script>
+!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+posthog.init('phc_kRX9iHZstABjgFqEWJBMok2S3hW9R8QMHbNao4EsNz2g', {api_host: 'https://us.i.posthog.com', person_profiles: 'identified_only'});
+</script>
+<!-- END AUTO-INJECTED ANALYTICS -->
+<link rel="stylesheet" href="../../../css/style.css">
+</head>
+<body>
+<div class="page">
+
+<nav class="breadcrumb">
+  <a href="../index.html">&larr; living K module</a>
+  <span class="sep">&middot;</span>
+  <span class="section-num">living K 01 / 03 &middot; advanced</span>
+</nav>
+
+<h1>The quenched approximation<span class="subtitle">How long a frozen picture of a living network stays honest</span></h1>
+
+<p class="lead">Almost every figure on this site holds the coupling K still while you watch the phases move. That is not because K <em>is</em> still. It is a modeling choice with a name — physicists call a system with frozen-in structure <strong>quenched</strong>, after the metallurgist's trick of plunging hot steel into water so its structure locks before it can rearrange. The opposite regime, where the structure keeps negotiating with the dynamics, is called <strong>annealed</strong> — and what this site means by a <em>living</em> coupling field is the annealed case with a specific law attached. The quenched picture is not wrong. It is <em>temporarily right</em>. This section is about the temporarily.</p>
+
+<h2>1. One network, two futures</h2>
+
+<p>The experiment below is the cleanest way to feel it. One lattice of sixty-four oscillators, random natural frequencies, every bond starting at the same modest coupling. We run it <em>twice, side by side, from the identical state</em>: on the left, the coupling field is frozen at its snapshot — the quenched twin; on the right, every bond runs the learning rule from <a href="../../../foundations/sections/03-clr.html">the learning-rule chapter</a> — the living twin. For a while the two are indistinguishable: the wiring has not yet moved enough to matter. Then the living network starts doing what living networks do — strengthening the bonds that happen to cohere, abandoning the ones that fight — and its phase field slides away from its frozen twin's. The curve underneath tracks the divergence between the two.</p>
+
+<p>The knob is the learning rate η — how fast K responds to what the phases are doing. Turn it down and the divergence comes later and gentler: the frozen picture stays honest longer. Turn it up and the two futures part almost immediately. That is the entire content of the quenched approximation, stated as a timescale: <strong>a fixed-K analysis is valid for as long as K hasn't had time to move.</strong> In our verification runs, the time for the twins to visibly part roughly halved as η went from 0.3 to 1.2 — and the eventual gap grew from a whisper (0.22) to a chasm (1.64, on a scale where 2 means fully opposite).</p>
+
+<figure id="fig-twins">
+  <canvas id="canvas-twins" width="680" height="430"></canvas>
+  <div class="controls" id="twins-controls">
+    <div class="control">
+      <label>&eta; (learning rate) <span class="val" id="tw-eta-val">0.60</span></label>
+      <input type="range" id="tw-eta-slider" min="0.1" max="1.5" step="0.05" value="0.6">
+    </div>
+    <button id="tw-freeze">Freeze the living one too</button>
+    <button id="tw-reset" class="primary">Restart both</button>
+  </div>
+  <figcaption>The same 8&times;8 lattice run twice from one state: <strong>left frozen (quenched)</strong>, <strong>right living</strong> — identical natural frequencies, identical start, the only difference is whether K may move. The curve is the divergence between their phase fields (0 = identical, 2 = opposite). The second readout tracks how far the living wiring has drifted from the shared snapshot. Press <em>Freeze the living one too</em> mid-run: the wiring-drift meter pins instantly — and the divergence <em>keeps growing anyway</em>. <span id="tw-readout" class="readout">divergence = 0.00</span></figcaption>
+</figure>
+
+<p>Notice what the freeze button teaches — and it is sharper than you might expect. The two twins are perfectly deterministic and share every random draw, so nothing here is noise. Press freeze and the wiring-drift meter pins at whatever it has reached; the wirings will never differ by one unit more. Yet the divergence between the phase fields <em>keeps climbing</em> (in our verification run, from 0.80 to 1.02 after the freeze). The lesson: what separates the two futures is not the <em>motion</em> of K but the accumulated <em>difference</em> in K — and freezing makes that difference permanent, not harmless. Two static networks with different wirings are simply two different machines. The quenched approximation is exact only while the difference is still negligible; after that, no amount of holding still gives you back the network you froze too late to be.</p>
+
+<h2>2. Why the site cares</h2>
+
+<p>This module's discipline is quoted, in some phrasing, all over this site's working record: <em>K is dynamical; every fixed-K computation is a quenched approximation and must be labeled as one.</em> Now you can see what goes wrong when the label is forgotten. Any conclusion drawn from a frozen wiring diagram — which bonds matter, where the bottlenecks are, what the network will do next — inherits the snapshot's expiry date. The conclusion can outlive its truth.</p>
+
+<p>The distinction is not academic on this site's home turf. In <a href="../../lohe-hypersphere/sections/02-effective-coupling.html">the Lohe module's quench experiment</a> you may have already felt the behavioral half of this story: a frozen wiring <em>remembers</em> (it hauls its old arrangement back), a living wiring <em>senses</em> (it organizes whatever is actually there). This section adds the quantitative half: how fast the two regimes part ways, and what sets the clock — the learning rate, the ratio of wiring-time to dynamics-time. When the essays analyze a trained transformer as a frozen coupling field — <a href="../../../transformers/sections/01-coupled-oscillators.html">a living lattice with dK/dt = 0</a> — that is a quenched reading too, and an honest one: training ended, the wiring genuinely stopped. The approximation is exact precisely because the life is over.</p>
+
+<div class="nav-links">
+  <a href="../index.html" class="prev">Living K module</a>
+  <a href="02-the-rule.html" class="next">The rule in motion</a>
+</div>
+
+</div>
+
+<script type="module">
+import { setupHiDPICanvas, runWhenVisible, palette, R0 } from '../../../js/common.js';
+
+(() => {
+  const W = 680, H = 430;
+  const canvas = document.getElementById('canvas-twins');
+  const ctx = setupHiDPICanvas(canvas, W, H);
+  const etaSlider = document.getElementById('tw-eta-slider');
+  const etaVal = document.getElementById('tw-eta-val');
+  const readout = document.getElementById('tw-readout');
+
+  const L = 8, N = 64, r = 5.9, dt = 0.05;
+  let eta = 0.6;
+  let liveFrozen = false;
+
+  // deterministic RNG so both twins share every draw at reset
+  let seed = 12345;
+  function rnd() { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; }
+
+  const bonds = [];
+  for (let y = 0; y < L; y++) for (let x = 0; x < L; x++) {
+    const i = y * L + x;
+    bonds.push([i, y * L + (x + 1) % L]);
+    bonds.push([i, ((y + 1) % L) * L + x]);
+  }
+
+  let om, thF, thL, KF, KL, K0, hist, t;
+  function reset() {
+    seed = (Math.floor(Math.random() * 1e9) >>> 0) || 12345;
+    om = Array.from({ length: N }, () => 0.8 + (rnd() - 0.5) * 1.2);
+    const th0 = Array.from({ length: N }, () => rnd() * Math.PI * 2);
+    thF = th0.slice(); thL = th0.slice();
+    KF = bonds.map(() => 0.5); KL = bonds.map(() => 0.5); K0 = 0.5;
+    hist = []; t = 0; liveFrozen = false;
+  }
+  reset();
+
+  etaSlider.addEventListener('input', () => { eta = parseFloat(etaSlider.value); etaVal.textContent = eta.toFixed(2); });
+  document.getElementById('tw-reset').addEventListener('click', reset);
+  document.getElementById('tw-freeze').addEventListener('click', () => { liveFrozen = true; });
+
+  function stepOne(th, Ks, learn) {
+    const acc = new Float64Array(N);
+    for (let b = 0; b < bonds.length; b++) {
+      const i = bonds[b][0], j = bonds[b][1];
+      const s = Math.sin(th[j] - th[i]);
+      acc[i] += Ks[b] * s; acc[j] -= Ks[b] * s;
+      if (learn) {
+        const c = Math.cos(th[j] - th[i]);
+        Ks[b] = Math.max(0, Ks[b] + eta * (R0(Ks[b]) * c - 2 * Ks[b] / r) * dt);
+      }
+    }
+    for (let i = 0; i < N; i++) th[i] += (om[i] + acc[i]) * dt;
+  }
+
+  function divergence() {
+    let d = 0;
+    for (let i = 0; i < N; i++) d += 1 - Math.cos(thL[i] - thF[i]);
+    return d / N;
+  }
+  function wiringDrift() {
+    let d = 0;
+    for (let b = 0; b < bonds.length; b++) d += Math.abs(KL[b] - K0);
+    return d / bonds.length;
+  }
+
+  function drawGrid(x0, y0, th, cell) {
+    for (let y = 0; y < L; y++) for (let x = 0; x < L; x++) {
+      const b = (Math.cos(th[y * L + x]) + 1) / 2;
+      ctx.fillStyle = `rgb(${40 + b * 215}, ${40 + b * 170}, ${50 + b * 80})`;
+      ctx.fillRect(x0 + x * cell, y0 + y * cell, cell + 0.5, cell + 0.5);
+    }
+    ctx.strokeStyle = palette.axis; ctx.lineWidth = 1;
+    ctx.strokeRect(x0, y0, L * cell, L * cell);
+  }
+
+  function draw() {
+    for (let s = 0; s < 3; s++) {
+      stepOne(thF, KF, false);
+      stepOne(thL, KL, !liveFrozen);
+      t += dt;
+    }
+    const d = divergence();
+    hist.push(d); if (hist.length > 340) hist.shift();
+
+    ctx.clearRect(0, 0, W, H);
+    const cell = 21, gw = L * cell, top = 34;
+    const lx = 90, rx = W - 90 - gw;
+
+    ctx.fillStyle = palette.textSoft; ctx.font = 'italic 13px serif'; ctx.textAlign = 'center';
+    ctx.fillText('frozen (quenched)', lx + gw / 2, top - 10);
+    ctx.fillText(liveFrozen ? 'living — now frozen too' : 'living', rx + gw / 2, top - 10);
+    drawGrid(lx, top, thF, cell);
+    drawGrid(rx, top, thL, cell);
+
+    // divergence trace
+    const px0 = 90, pw = W - 180, py0 = top + gw + 26, ph = 120;
+    ctx.strokeStyle = palette.axis; ctx.lineWidth = 1;
+    ctx.strokeRect(px0, py0, pw, ph);
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 11px serif'; ctx.textAlign = 'left';
+    ctx.fillText('divergence between the twins (0 = identical, 2 = opposite)', px0, py0 - 6);
+    ctx.strokeStyle = palette.orange; ctx.lineWidth = 2;
+    ctx.beginPath();
+    for (let i = 0; i < hist.length; i++) {
+      const x = px0 + (i / 339) * pw;
+      const y = py0 + ph - Math.min(1, hist[i] / 2) * ph;
+      i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+    }
+    ctx.stroke();
+
+    readout.textContent = `divergence = ${d.toFixed(2)}   ·   wiring drift = ${wiringDrift().toFixed(2)}${liveFrozen ? '   ·   both frozen' : ''}`;
+  }
+
+  runWhenVisible(canvas, draw);
+})();
+</script>
+
+</body>
+</html>

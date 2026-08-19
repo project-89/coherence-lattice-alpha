@@ -297,7 +297,7 @@ export function setupHiDPICanvas(canvas, w, h) {
 // and C (coherence capital, their product).
 
 export function coherenceMetrics(thetas, L) {
-  // Global alignment
+  // Global alignment: mean neighbor cos, in [-1, 1]
   let s = 0, nb = 0;
   for (let y = 0; y < L; y++) {
     for (let x = 0; x < L; x++) {
@@ -309,34 +309,21 @@ export function coherenceMetrics(thetas, L) {
   const Iphase = nb ? s / nb : 0;
   const Iphat = (1 + Iphase) / 2;
 
-  // Local alignment per 3×3 patch, then spatial std-dev → ρ
-  const ps = 3;
-  const locals = [];
-  for (let py = 0; py < L; py += ps) {
-    for (let px = 0; px < L; px += ps) {
-      let ls = 0, lc = 0;
-      for (let y = py; y < Math.min(py + ps, L); y++) {
-        for (let x = px; x < Math.min(px + ps, L); x++) {
-          const i = y * L + x;
-          if (x + 1 < Math.min(px + ps, L)) {
-            ls += Math.cos(thetas[y * L + (x + 1)] - thetas[i]);
-            lc++;
-          }
-          if (y + 1 < Math.min(py + ps, L)) {
-            ls += Math.cos(thetas[(y + 1) * L + x] - thetas[i]);
-            lc++;
-          }
-        }
-      }
-      if (lc > 0) locals.push((1 + ls / lc) / 2);
-    }
-  }
-  const mean = locals.reduce((a, b) => a + b, 0) / locals.length;
-  const variance = locals.reduce((acc, x) => acc + (x - mean) ** 2, 0) / locals.length;
-  const rho = Math.min(1, Math.sqrt(variance) / 0.35);
+  // ρ — structural-richness proxy: circular diversity of the phase field,
+  // 1 − |mean resultant|. Both factors of C must vanish at a dead end:
+  // in noise Iphase ≈ 0 (no alignment), in trivial unison ρ = 0 (nothing
+  // left to be in sync about). The product C peaks only at structured
+  // synchrony — distinct locked regions at distinct phases — which is the
+  // theory's definition of capital. (The old patch-variance ρ vanished in
+  // noise too, so C mislabeled chaos and sagged to ~0 after full sync.)
+  let cs = 0, sn = 0;
+  const n = L * L;
+  for (let i = 0; i < n; i++) { cs += Math.cos(thetas[i]); sn += Math.sin(thetas[i]); }
+  const rho = 1 - Math.sqrt(cs * cs + sn * sn) / n;
 
-  const C = Iphat * rho;
-  return { Iphat, rho, C };
+  const Ipos = Math.max(0, Iphase);
+  const C = Ipos * rho;
+  return { Iphase, Iphat, Ipos, rho, C };
 }
 
 // --- Compact coherence-capital strip renderer ---
@@ -346,7 +333,7 @@ export function coherenceMetrics(thetas, L) {
 // metrics and a rolling history array.
 
 export function drawMetricsStrip(ctx, x, y, w, h, metrics, history) {
-  const { Iphat, rho, C } = metrics;
+  const { Ipos, rho, C } = metrics;
 
   // Panel background
   ctx.fillStyle = '#fdfaf3';
@@ -362,9 +349,9 @@ export function drawMetricsStrip(ctx, x, y, w, h, metrics, history) {
   const barH = 10;
   const gap = 18;
   const entries = [
-    ['I_phase', Iphat, 1, '#2a5f8f'],
-    ['ρ',       rho,   1, '#7d2d4f'],
-    ['C',       C,     0.5, '#d97236'],
+    ['I_phase', Ipos, 1, '#2a5f8f'],
+    ['ρ',       rho,  1, '#7d2d4f'],
+    ['C',       C,    0.5, '#d97236'],
   ];
   entries.forEach(([label, val, vmax, color], i) => {
     const by = barsY + i * gap;
@@ -526,4 +513,88 @@ export function wireEquation(blockId, symbolData) {
       if (prompt) prompt.style.display = 'none';
     });
   });
+}
+
+// --- WebAudio sonification ---
+//
+// The subject of these essays is coupled oscillators, so sonification can
+// be literal: a voice per oscillator, pitch from its instantaneous
+// frequency, and what you hear (beats, a detuned cluster pulling into one
+// pitch) is the real signal mix. Where a figure uses a mapping instead
+// (e.g. loudness = agreement), its caption must say so.
+//
+// One shared AudioContext (created on first user gesture — browsers block
+// audio before that), one low master gain; each figure gets its own
+// toggle + sub-gain so sound never stacks across figures.
+
+let _actx = null;
+let _masterGain = null;
+
+export function audioContext() {
+  if (!_actx) {
+    _actx = new (window.AudioContext || window.webkitAudioContext)();
+    _masterGain = _actx.createGain();
+    _masterGain.gain.value = 0.14;
+    _masterGain.connect(_actx.destination);
+  }
+  if (_actx.state === 'suspended') _actx.resume();
+  return _actx;
+}
+
+// A per-figure sound toggle. Appends a button to `container`, off by
+// default. Returns { on, gain, onChange(fn) }; `gain` exists after the
+// first enable.
+export function makeSoundToggle(container, { label = 'sound' } = {}) {
+  const btn = document.createElement('button');
+  btn.className = 'sound-toggle';
+  btn.textContent = '\u{1F507} ' + label;
+  btn.setAttribute('aria-pressed', 'false');
+  const state = { on: false, gain: null, _subs: [] };
+  btn.addEventListener('click', () => {
+    state.on = !state.on;
+    btn.textContent = (state.on ? '\u{1F50A} ' : '\u{1F507} ') + label;
+    btn.setAttribute('aria-pressed', String(state.on));
+    const ctx = audioContext();
+    if (!state.gain) {
+      state.gain = ctx.createGain();
+      state.gain.gain.value = 0;
+      state.gain.connect(_masterGain);
+    }
+    state.gain.gain.setTargetAtTime(state.on ? 1 : 0, ctx.currentTime, 0.06);
+    state._subs.forEach(f => f(state.on));
+  });
+  container.appendChild(btn);
+  state.onChange = f => state._subs.push(f);
+  return state;
+}
+
+// n sine voices under a sound toggle. Built lazily on first enable (the
+// AudioContext needs a user gesture to exist). `.set(i, freq, amp)` is
+// safe to call every animation frame, sound on or off; amp is per-voice
+// in [0,1] and is divided by n so a full chorus sums to unit level.
+export function makeVoices(sound, n, { freq = 220 } = {}) {
+  let voices = null;
+  function build() {
+    const ctx = audioContext();
+    voices = Array.from({ length: n }, () => {
+      const osc = ctx.createOscillator();
+      const g = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = freq;
+      g.gain.value = 0;
+      osc.connect(g);
+      g.connect(sound.gain);
+      osc.start();
+      return { osc, g };
+    });
+  }
+  sound.onChange(on => { if (on && !voices) build(); });
+  return {
+    set(i, f, a) {
+      if (!voices || !sound.on) return;
+      const t = _actx.currentTime;
+      if (f > 0) voices[i].osc.frequency.setTargetAtTime(f, t, 0.04);
+      voices[i].g.gain.setTargetAtTime(Math.max(0, a) / n, t, 0.04);
+    },
+  };
 }

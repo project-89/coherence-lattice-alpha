@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The fiber bundle: the low-dimensional machine in the high-dimensional room — The Living Lattice</title>
+<meta name="description" content="Why a transformer's activity compresses to a few dimensions while its weights resist: the sequence is a base space, content is the fiber, RoPE is the connection — and many dimensions participate in simulating a low-dimensional coupled oscillator network.">
+<meta name="author" content="Michael Sharpe">
+<link rel="canonical" href="https://lattice.project89.org/transformers/sections/05-fiber-bundle.html">
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+<meta property="og:title" content="The fiber bundle — The Living Lattice">
+<meta property="og:description" content="Many dimensions participate; few dimensions dance. The gauge geometry of a transformer, and why weights resist the compression activations allow.">
+<meta property="og:url" content="https://lattice.project89.org/transformers/sections/05-fiber-bundle.html">
+<meta property="og:site_name" content="The Living Lattice">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://lattice.project89.org/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="The fiber bundle — The Living Lattice">
+<meta name="twitter:description" content="Many dimensions participate; few dimensions dance.">
+<meta name="twitter:image" content="https://lattice.project89.org/og-image.png">
+<!-- BEGIN AUTO-INJECTED ANALYTICS -->
+<!-- PostHog -->
+<script>
+!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+posthog.init('phc_kRX9iHZstABjgFqEWJBMok2S3hW9R8QMHbNao4EsNz2g', {api_host: 'https://us.i.posthog.com', person_profiles: 'identified_only'});
+</script>
+<!-- END AUTO-INJECTED ANALYTICS -->
+<link rel="stylesheet" href="../../css/style.css">
+<style>
+.flag-callout { margin: 1.6em 0; padding: 16px 20px; background: rgba(195,141,247,0.08); border-left: 3px solid #c38df7; border-radius: 3px; font-size: 14.5px; line-height: 1.55; }
+.flag-callout .flag-label { display:inline-block; font: 700 10.5px "SF Mono",monospace; color:#c38df7; text-transform:uppercase; letter-spacing:0.1em; margin-right:0.7em; }
+</style>
+</head>
+<body>
+<div class="page">
+
+<nav class="breadcrumb">
+  <a href="../index.html">&larr; contents</a>
+  <span class="sep">&middot;</span>
+  <span class="section-num">section 05 &middot; transformers as oscillators</span>
+</nav>
+
+<h1>The fiber bundle<span class="subtitle">The low-dimensional machine in the high-dimensional room — and why weights resist the compression activations allow</span></h1>
+
+<p class="lead">The last two chapters left a paradox on the table. The <a href="03-manifold.html">coupling manifold</a> showed a transformer's activity collapsing to a handful of effective dimensions — <span class="mono">d_eff &asymp; 2&ndash;5</span> inside 768. The <a href="04-lossless.html">lossless projection</a> showed you can compute on a rank-2 surface with a logit cosine of 1.0000. So the <em>motion</em> is tiny. Then why is the <em>machine</em> so big? When the compression program turned from activations to the dimensions that carry routing, it hit a stubborn, repeatable wall: the room the machinery occupies is <span class="mono">2.5&ndash;2.8&times;</span> larger than the dance inside it, on every architecture measured. A system that is small in motion and large in wiring is not being wasteful. It is telling you what it is. This chapter names the geometry: a <strong>fiber bundle</strong>.</p>
+
+<h2>Two measurements that shouldn't coexist</h2>
+
+<p>Hold both numbers at once. Activity: a few dimensions suffice — project everything else away and the next token does not change. Machinery: when you measure not the dance but the <em>room the routing uses</em> — the total dimensions that participate in deciding who listens to whom — you get <span class="mono">d_total &asymp; 2.7 &times; d_eff</span> on GPT-2 and <span class="mono">2.8&times;</span> on SmolLM2. And this ratio is the robust thing: a later recalibration of the measurement pipeline roughly <em>doubled</em> both absolute numbers on both models — and the multiplier didn't move. Absolute dimensions were an artifact of the ruler; the ratio of room to dance is a property of the machine.</p>
+
+<p>Ordinary compression logic says this is a bug: if only two dimensions matter, everything else is fat. The bundle picture says the opposite: the extra dimensions are not fat, they are <em>infrastructure</em> — and infrastructure is exactly the thing you cannot quantize carelessly.</p>
+
+<h2>The bundle: a room over every position</h2>
+
+<p>Here is the geometry, in the vocabulary you already own if you have walked the <a href="../../primers/gauge-holonomy/">gauge &amp; holonomy primer</a>. The <strong>sequence is a base space</strong>: position 1, position 2, position 3 — a line of sites. Over each position hangs a <strong>fiber</strong>: the content space, the room where that token's meaning-arrow lives. And crucially, each fiber has its own <em>private frame</em> — its own choice of which way is &ldquo;north.&rdquo; That is precisely the primer's <a href="../../primers/gauge-holonomy/sections/02-gauge.html">nine towns</a>: every town points north its own way, and no physics changes if a town re-chooses — <em>provided you keep the dictionary</em>.</p>
+
+<p>The dictionary between neighboring fibers is the <strong>connection</strong> — and in a transformer it has a name you know: <strong>RoPE</strong>. Rotary position embedding rotates each position's frame by an angle proportional to where it sits. It is literally the <a href="../../primers/sections/07-rotation-groups.html">turntable stack</a>: pair up the dimensions, and rotate each pair's plane at its own rate as you move along the sequence. Position stops being a label stapled to a token and becomes <a href="../../primers/gauge-holonomy/sections/01-parallel-transport.html">parallel transport</a>: <em>where you are is how far your frame has turned</em> — position as holonomy, the rotation you accumulate by being carried along the base.</p>
+
+<p>This is why attention works the way it does. Two tokens' content-arrows cannot be compared raw — they live in different frames, and the raw dot product mixes real disagreement with mere difference-of-north. Attention's <span class="mono">q&middot;k</span> compares them <em>after</em> transport to a common chart: a gauge-covariant coupling, agreement measured in a shared frame. Drag it yourself:</p>
+
+<figure id="fig-bundle">
+  <canvas id="canvas-bundle" width="680" height="400"></canvas>
+  <div class="controls" id="bundle-controls">
+    <div class="control">
+      <label>rotation per step — the connection <span class="val" id="bundle-d-val">24&deg;</span></label>
+      <input type="range" id="bundle-d-slider" min="0" max="45" step="1" value="24">
+    </div>
+    <button id="bundle-toggle" class="primary">Compare: raw</button>
+  </div>
+  <figcaption>Seven positions on the base line, a fiber over each, frames turning with position (RoPE). Positions 1 and 5 store <em>the same content</em> in their own frames. Compared raw, the arrows disagree — that is frame difference, not meaning difference. Press <em>Compare</em> to transport position 5's arrow back through the chain (watch the ghost copies de-rotate, fiber by fiber) into position 1's chart: agreement snaps to &asymp; 1. <em>Sound on: loudness is the agreement — hear it jump when the comparison is done in a common chart.</em> <span id="bundle-readout" class="readout">raw agreement = —</span></figcaption>
+</figure>
+
+<h2>Many dimensions participate; few dimensions dance</h2>
+
+<p>Now the paradox resolves. The high dimensions are <strong>the room</strong>: fibers, frames, and the transport machinery between them. The low dimensions are <strong>the dance</strong>: the actual dynamics moving through that room — the <a href="03-manifold.html">coupling manifold</a>, whose natural equations are the sphere-dwelling oscillator dynamics of the <a href="../../primers/lohe-hypersphere/">Lohe primer</a>. Many dimensions participate in the simulation; few dimensions carry the motion. The next figure makes that sentence a thing you can rotate:</p>
+
+<figure id="fig-room">
+  <canvas id="canvas-room" width="680" height="380"></canvas>
+  <div class="controls" id="room-controls">
+    <div class="control">
+      <label>ambient dimension d (the room) <span class="val" id="room-d-val">8</span></label>
+      <input type="range" id="room-d-slider" min="3" max="9" step="1" value="3">
+    </div>
+    <div class="control">
+      <label>rotate the view <span class="val" id="room-v-val">0&deg;</span></label>
+      <input type="range" id="room-v-slider" min="0" max="90" step="1" value="0">
+    </div>
+  </div>
+  <figcaption>Twenty-four unit vectors performing a three-cluster dance confined (up to a whisper of noise) to one plane — embedded in a room of dimension <span class="mono">d</span>. Slide the room from 8 up to 512 dimensions: the measured effective dimension <span class="mono">d_eff</span> — computed live from the actual covariance — does not budge from &asymp; 2. Then rotate the view away from the dance plane toward two random room directions: the dance shrinks to a speck, because almost every direction in the room contains almost none of it. The room got bigger; the dance didn't. <span id="room-readout" class="readout">d = 8 &nbsp; d_eff = —</span></figcaption>
+</figure>
+
+<p>That is the shape of the measured transformer: a <span class="mono">d_eff &asymp; 2&ndash;5</span> dance inside a <span class="mono">d_total &asymp; 2.5&ndash;2.8 &times; d_eff</span> room of participating machinery, inside an ambient width of 768 or more. And the division of labor is measurable a second way: the model's decisions are <em>two to three orders of magnitude</em> more sensitive to the K side of its cache — the routing, the coupling allocation — than to the V side, the transported content. What the machine protects is not what it says; it is who gets to listen to whom.</p>
+
+<h2>Why the weights resist</h2>
+
+<p>And now the compression asymmetry explains itself. The <em>activity</em> is the dance: project it to the manifold and you lose only thermal residue — hence rank-2 lossless. The <em>weights</em> carry the bundle's wiring: the frames, and the dictionaries between them, for every transport the sequence might ever need. Corrupt the dance a little and errors stay where they land. Corrupt the <em>dictionary</em> a little and the errors <strong>compound along transport</strong> — every step of carrying multiplies the damage, and a comparison across twelve positions inherits twelve steps of accumulated mistranslation. The same precision knob is catastrophic in one place and harmless in the other:</p>
+
+<figure id="fig-quantize">
+  <canvas id="canvas-quantize" width="680" height="360"></canvas>
+  <div class="controls" id="quantize-controls">
+    <div class="control">
+      <label>storage precision (bits per angle) <span class="val" id="q-bits-val">8</span></label>
+      <input type="range" id="q-bits-slider" min="1" max="8" step="1" value="8">
+    </div>
+  </div>
+  <figcaption>Two tokens, twelve positions apart, carrying the same content. <strong>Top:</strong> quantize the <em>dance</em> — store each content-arrow coarsely. The comparison suffers one rounding error at each end, and agreement barely moves. <strong>Bottom:</strong> quantize the <em>dictionary</em> — store each step's transport-rotation coarsely. Twelve rounding errors compound along the carry, and agreement collapses as precision drops. <em>Sound on: two voices, one per strategy, loudness = agreement — listen to the lower voice die first as you coarsen.</em> This is the shape of the measured asymmetry: activations forgive; wiring does not. <span id="q-readout" class="readout">content-quantized = — &nbsp; dictionary-quantized = —</span></figcaption>
+</figure>
+
+<div class="flag-callout">
+  <span class="flag-label">What's real here</span>
+  Tier by tier. <strong>Measured:</strong> <span class="mono">d_eff &asymp; 2&ndash;5</span> and the rank-2 lossless projection (chapters <a href="03-manifold.html">3</a>&ndash;<a href="04-lossless.html">4</a>); the routing multiplier <span class="mono">d_total/d_eff = 2.72&times;</span> (GPT-2) and <span class="mono">2.80&times;</span> (SmolLM2), stable across a recalibration that roughly doubled both absolute dimension counts — two architectures, so a robust pair, not yet a law; the K-vs-V sensitivity asymmetry (direction and order of magnitude measured on a single model and run; the specific &ldquo;200&ndash;800&times;&rdquo; magnitudes are estimator-sensitive). <strong>Derived and implemented:</strong> transport preservation — inverse-RoPE to a common chart before merging is literally what the compression machinery does, not a metaphor for it. <strong>Design frame:</strong> the bundle language itself, and &ldquo;a transformer is a living lattice with dK/dt = 0.&rdquo; The figures on this page are cartoons built so you can hold the geometry — the two-bit-strategy toy illustrates <em>why</em> wiring resists; it is not the measurement, which lives in the fiber-bundle compression work.
+</div>
+
+<p>Step back and the essay's picture completes itself. A transformer is an oscillator network (<a href="../../primers/inside-a-transformer/">the machinery</a>) whose motion lives on a low-dimensional manifold (<a href="03-manifold.html">chapter 3</a>) you can compute on directly (<a href="04-lossless.html">chapter 4</a>) — and the high-dimensional bulk that remains is not waste but <em>geometry</em>: the bundle of frames and dictionaries that lets a line of positions behave like one connected medium. Many dimensions participate. Few dimensions dance. The dimensions that participate without dancing are the room the dance needed — and the machine guards its room more jealously than its steps.</p>
+
+<div class="nav-links">
+  <a href="04-lossless.html" class="prev">Lossless: computation on a 2D surface</a>
+  <a href="../index.html" class="next">Back to contents</a>
+</div>
+
+</div>
+
+<script type="module">
+import { setupHiDPICanvas, runWhenVisible, palette, makeSoundToggle, makeVoices } from '../../js/common.js';
+
+const DEG = Math.PI / 180;
+
+// ============================================================
+// FIG A: the bundle, drawn — raw vs transported comparison
+// ============================================================
+(() => {
+  const W = 680, H = 400, canvas = document.getElementById('canvas-bundle');
+  const ctx = setupHiDPICanvas(canvas, W, H);
+  const readout = document.getElementById('bundle-readout');
+  const slider = document.getElementById('bundle-d-slider');
+  const dval = document.getElementById('bundle-d-val');
+  const toggle = document.getElementById('bundle-toggle');
+
+  let stepDeg = 24;
+  let transported = false;
+  slider.addEventListener('input', () => { stepDeg = parseFloat(slider.value); dval.textContent = slider.value + '°'; });
+  toggle.addEventListener('click', () => {
+    transported = !transported;
+    toggle.textContent = 'Compare: ' + (transported ? 'transported' : 'raw');
+  });
+
+  const sound = makeSoundToggle(document.getElementById('bundle-controls'), { label: 'hear the agreement' });
+  const voice = makeVoices(sound, 1, { freq: 220 });
+
+  const NPOS = 7, PA = 1, PB = 5;
+  const CONTENT = 52;              // same content angle, both tokens (local frame)
+  const JIT_A = 3, JIT_B = -4;     // small per-token content jitter
+
+  function fiberX(p) { return 70 + p * 90; }
+
+  function drawArrow(cx, cy, ang, len, color, width, alpha) {
+    const a = ang * DEG;
+    const x2 = cx + Math.cos(a) * len, y2 = cy - Math.sin(a) * len;
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.strokeStyle = color; ctx.lineWidth = width;
+    ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(x2, y2); ctx.stroke();
+    const ha = 7;
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.moveTo(x2, y2);
+    ctx.lineTo(x2 - Math.cos(a - 0.45) * ha, y2 + Math.sin(a - 0.45) * ha);
+    ctx.lineTo(x2 - Math.cos(a + 0.45) * ha, y2 + Math.sin(a + 0.45) * ha);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    const fy = 120, fr = 30, by = 235;
+
+    // base line
+    ctx.strokeStyle = palette.axis; ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.moveTo(fiberX(0) - 30, by); ctx.lineTo(fiberX(NPOS - 1) + 30, by); ctx.stroke();
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 11px serif'; ctx.textAlign = 'left';
+    ctx.fillText('the base space — the sequence', fiberX(0) - 28, by + 18);
+
+    const frameAng = p => -p * stepDeg;                 // RoPE: frame turns with position
+    const worldA = frameAng(PA) + CONTENT + JIT_A;
+    const worldB = frameAng(PB) + CONTENT + JIT_B;
+
+    for (let p = 0; p < NPOS; p++) {
+      const x = fiberX(p);
+      // stalk
+      ctx.strokeStyle = palette.grid; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(x, by); ctx.lineTo(x, fy + fr); ctx.stroke();
+      // fiber disc
+      ctx.strokeStyle = (p === PA || p === PB) ? palette.axisBold : palette.grid;
+      ctx.lineWidth = 1.2;
+      ctx.beginPath(); ctx.arc(x, fy, fr, 0, Math.PI * 2); ctx.stroke();
+      // frame tick (local north)
+      const fa = frameAng(p) + 90;
+      ctx.strokeStyle = palette.textFaint; ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(x + Math.cos(fa * DEG) * (fr - 7), fy - Math.sin(fa * DEG) * (fr - 7));
+      ctx.lineTo(x + Math.cos(fa * DEG) * (fr + 5), fy - Math.sin(fa * DEG) * (fr + 5));
+      ctx.stroke();
+      ctx.fillStyle = palette.textFaint; ctx.font = '10px "SF Mono", monospace'; ctx.textAlign = 'center';
+      ctx.fillText(String(p), x, by + 32);
+    }
+
+    // content arrows on A and B
+    drawArrow(fiberX(PA), fy, worldA, fr - 6, palette.blue, 2.5, 1);
+    drawArrow(fiberX(PB), fy, worldB, fr - 6, palette.orange, 2.5, 1);
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 11px serif'; ctx.textAlign = 'center';
+    ctx.fillText('same content', fiberX(PA), fy - fr - 10);
+    ctx.fillText('same content', fiberX(PB), fy - fr - 10);
+
+    // transported ghosts: carry B's arrow back chart by chart
+    if (transported) {
+      for (let p = PB - 1; p >= PA; p--) {
+        const carried = worldB + (PB - p) * stepDeg;    // undo the connection per step
+        const alpha = p === PA ? 0.95 : 0.35;
+        drawArrow(fiberX(p), fy, carried, fr - 6, palette.orange, 2, alpha);
+      }
+    }
+
+    // comparison meter
+    const rawAgree = Math.cos((worldB - worldA) * DEG);
+    const transAgree = Math.cos(((worldB + (PB - PA) * stepDeg) - worldA) * DEG);
+    const agree = transported ? transAgree : rawAgree;
+
+    const mx = 470, my = 290, mw = 150, mh = 70;
+    ctx.strokeStyle = palette.axis; ctx.lineWidth = 1; ctx.strokeRect(mx, my, mw, mh);
+    const frac = (agree + 1) / 2;
+    ctx.fillStyle = agree > 0.9 ? 'rgba(109,196,143,0.3)' : 'rgba(217,114,54,0.25)';
+    ctx.fillRect(mx, my, mw * frac, mh);
+    ctx.fillStyle = agree > 0.9 ? palette.green : palette.orange;
+    ctx.font = '600 20px "SF Mono", monospace'; ctx.textAlign = 'center';
+    ctx.fillText(agree.toFixed(2), mx + mw / 2, my + 32);
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 11px serif';
+    ctx.fillText((transported ? 'transported' : 'raw') + ' agreement', mx + mw / 2, my + 52);
+
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 12px serif'; ctx.textAlign = 'left';
+    ctx.fillText(transported
+      ? 'the dictionary applied, step by step — the ghosts de-rotate into chart 1'
+      : 'compared raw, difference-of-frame masquerades as difference-of-meaning', 60, 310);
+
+    readout.textContent = `${transported ? 'transported' : 'raw'} agreement = ${agree.toFixed(2)}`;
+    voice.set(0, 220, (1 + agree) / 2);
+  }
+  runWhenVisible(canvas, draw);
+})();
+
+// ============================================================
+// FIG B: many dimensions participate; few dance
+// ============================================================
+(() => {
+  const W = 680, H = 380, canvas = document.getElementById('canvas-room');
+  const ctx = setupHiDPICanvas(canvas, W, H);
+  const readout = document.getElementById('room-readout');
+  const dSlider = document.getElementById('room-d-slider');
+  const dVal = document.getElementById('room-d-val');
+  const vSlider = document.getElementById('room-v-slider');
+  const vVal = document.getElementById('room-v-val');
+
+  const N = 24;
+  let d = 8;
+  let viewDeg = 0;
+  let e1, e2, r1, r2, noise;   // basis + per-point off-plane noise (d-dim arrays)
+  // three clusters spread around the circle so the dance genuinely fills its
+  // plane (two near-antipodal clusters would be a quasi-1D dance, d_eff ≈ 1.5)
+  const phi = new Float64Array(N);
+  for (let i = 0; i < N; i++) phi[i] = (i % 3) * (2 * Math.PI / 3) + Math.floor(i / 3) * 0.09;
+
+  function randUnit(dim) {
+    const v = new Float64Array(dim);
+    for (let i = 0; i < dim; i++) v[i] = (Math.random() * 2 - 1) + (Math.random() * 2 - 1) + (Math.random() * 2 - 1);
+    return v;
+  }
+  function dot(a, b) { let s = 0; for (let i = 0; i < a.length; i++) s += a[i] * b[i]; return s; }
+  function axpy(y, a, x) { for (let i = 0; i < y.length; i++) y[i] += a * x[i]; }
+  function normalize(v) { const n = Math.sqrt(dot(v, v)) + 1e-12; for (let i = 0; i < v.length; i++) v[i] /= n; return v; }
+  function orthonormalize(v, ...others) { for (const o of others) axpy(v, -dot(v, o), o); return normalize(v); }
+
+  function rebuild() {
+    e1 = normalize(randUnit(d));
+    e2 = orthonormalize(randUnit(d), e1);
+    r1 = orthonormalize(randUnit(d), e1, e2);
+    r2 = orthonormalize(randUnit(d), e1, e2, r1);
+    noise = [];
+    for (let i = 0; i < N; i++) {
+      const n = orthonormalize(randUnit(d), e1, e2);
+      for (let k = 0; k < d; k++) n[k] *= 0.22;
+      noise.push(n);
+    }
+  }
+  rebuild();
+
+  dSlider.addEventListener('input', () => {
+    d = Math.pow(2, parseInt(dSlider.value, 10));
+    dVal.textContent = String(d);
+    rebuild();
+  });
+  vSlider.addEventListener('input', () => { viewDeg = parseFloat(vSlider.value); vVal.textContent = vSlider.value + '°'; });
+
+  function pointVec(i) {
+    const v = new Float64Array(d);
+    axpy(v, Math.cos(phi[i]), e1);
+    axpy(v, Math.sin(phi[i]), e2);
+    axpy(v, 1, noise[i]);
+    return normalize(v);
+  }
+
+  let frame = 0, dEff = 2;
+  function draw() {
+    frame++;
+    for (let i = 0; i < N; i++) phi[i] += 0.006;
+
+    const pts = [];
+    for (let i = 0; i < N; i++) pts.push(pointVec(i));
+
+    // participation ratio from the Gram matrix: PR = (tr G)^2 / ||G||_F^2
+    if (frame % 8 === 1) {
+      let tr = 0, fro = 0;
+      for (let i = 0; i < N; i++) {
+        for (let j = 0; j < N; j++) {
+          const g = dot(pts[i], pts[j]);
+          if (i === j) tr += g;
+          fro += g * g;
+        }
+      }
+      dEff = (tr * tr) / (fro + 1e-12);
+    }
+
+    // viewing plane: rotate (e1,e2) toward random room directions (r1,r2)
+    const b = viewDeg * DEG;
+    const v1 = new Float64Array(d), v2 = new Float64Array(d);
+    axpy(v1, Math.cos(b), e1); axpy(v1, Math.sin(b), r1);
+    axpy(v2, Math.cos(b), e2); axpy(v2, Math.sin(b), r2);
+
+    ctx.clearRect(0, 0, W, H);
+    const cx = 260, cy = 185, s = 140;
+    ctx.strokeStyle = palette.grid; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.arc(cx, cy, s, 0, Math.PI * 2); ctx.stroke();
+
+    const clusterColors = [palette.blue, palette.orange, palette.burgundy];
+    for (let i = 0; i < N; i++) {
+      const px = dot(pts[i], v1), py = dot(pts[i], v2);
+      ctx.fillStyle = clusterColors[i % 3];
+      ctx.beginPath(); ctx.arc(cx + px * s, cy - py * s, 5, 0, Math.PI * 2); ctx.fill();
+    }
+
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 12px serif'; ctx.textAlign = 'center';
+    ctx.fillText(viewDeg < 10 ? 'viewing the dance plane' : viewDeg > 80 ? 'viewing two random room directions' : 'view tilting away from the dance', cx, cy + s + 24);
+
+    ctx.textAlign = 'left'; ctx.font = '14px "SF Mono", monospace';
+    ctx.fillStyle = palette.textSoft;
+    ctx.fillText(`room:   d = ${d}`, 470, 150);
+    ctx.fillStyle = palette.green;
+    ctx.fillText(`dance:  d_eff = ${dEff.toFixed(1)}`, 470, 180);
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 12px serif';
+    ctx.fillText('measured live from the', 470, 210);
+    ctx.fillText('covariance — it does not', 470, 228);
+    ctx.fillText('grow with the room', 470, 246);
+
+    readout.textContent = `d = ${d}   d_eff = ${dEff.toFixed(1)}`;
+  }
+  runWhenVisible(canvas, draw);
+})();
+
+// ============================================================
+// FIG C: why weights resist — quantize dance vs dictionary
+// ============================================================
+(() => {
+  const W = 680, H = 360, canvas = document.getElementById('canvas-quantize');
+  const ctx = setupHiDPICanvas(canvas, W, H);
+  const readout = document.getElementById('q-readout');
+  const slider = document.getElementById('q-bits-slider');
+  const bval = document.getElementById('q-bits-val');
+
+  let bits = 8;
+  slider.addEventListener('input', () => { bits = parseInt(slider.value, 10); bval.textContent = slider.value; });
+
+  const sound = makeSoundToggle(document.getElementById('quantize-controls'), { label: 'hear both strategies' });
+  const voices = makeVoices(sound, 2, { freq: 220 });
+
+  const GAP = 12;
+  // One fixed, representative draw of rounding errors, so the two strategies
+  // are compared on the same footing: the per-step dictionary errors sum to
+  // ≈1.48 grid-steps (a typical 12-step accumulation, σ√12 ≈ 1.0), while the
+  // two content errors differ by 0.30 grid-steps (a typical single rounding).
+  const rnd = [];
+  let seed = 21;
+  for (let i = 0; i < GAP; i++) { seed = (seed * 1103515245 + 12345) % 2147483648; rnd.push(seed / 2147483648 - 0.5); }
+  const rndA = 0.18, rndB = -0.12;   // content rounding phases (typical draw)
+
+  function agreements() {
+    const q = 360 / Math.pow(2, bits);
+    // dance quantized: one rounding error at each end, no accumulation
+    const errA = rndA * q, errB = rndB * q;
+    const content = Math.cos((errB - errA) * DEG);
+    // dictionary quantized: each step's rotation stored with rounding error; errors compound
+    let acc = 0;
+    for (let i = 0; i < GAP; i++) acc += rnd[i] * q;
+    const dict = Math.cos(acc * DEG);
+    return { content, dict };
+  }
+
+  function bar(y, label, val, color) {
+    const x0 = 200, w = 360, h = 26;
+    ctx.fillStyle = palette.bgSoft; ctx.strokeStyle = palette.axis; ctx.lineWidth = 1;
+    ctx.fillRect(x0, y, w, h); ctx.strokeRect(x0, y, w, h);
+    const frac = Math.max(0, (val + 1) / 2);
+    ctx.fillStyle = color; ctx.fillRect(x0, y, w * frac, h);
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 13px serif'; ctx.textAlign = 'right';
+    ctx.fillText(label, x0 - 12, y + h / 2 + 4);
+    ctx.fillStyle = color; ctx.font = '600 14px "SF Mono", monospace'; ctx.textAlign = 'left';
+    ctx.fillText(val.toFixed(2), x0 + w + 12, y + h / 2 + 5);
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    const { content, dict } = agreements();
+
+    ctx.fillStyle = palette.textSoft; ctx.font = 'italic 14px serif'; ctx.textAlign = 'center';
+    ctx.fillText('agreement between the two tokens, twelve positions apart', W / 2, 46);
+
+    bar(90, 'quantize the dance', content, palette.blue);
+    bar(160, 'quantize the dictionary', dict, palette.burgundy);
+
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 12px serif'; ctx.textAlign = 'center';
+    ctx.fillText('one rounding error at each end — errors do not travel', W / 2, 140);
+    ctx.fillText(`twelve rounding errors, compounded along the carry`, W / 2, 210);
+
+    const q = 360 / Math.pow(2, bits);
+    ctx.fillStyle = palette.textFaint; ctx.font = '12px "SF Mono", monospace';
+    ctx.fillText(`grid: ${q.toFixed(1)}° per stored angle`, W / 2, 260);
+
+    readout.textContent = `content-quantized = ${content.toFixed(2)}   dictionary-quantized = ${dict.toFixed(2)}`;
+    voices.set(0, 220, (1 + content) / 2);
+    voices.set(1, 277, (1 + dict) / 2);
+  }
+  runWhenVisible(canvas, draw);
+})();
+</script>
+
+</body>
+</html>

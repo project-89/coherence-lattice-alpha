@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The von Mises circle: where 0.303 comes from — The Living Lattice</title>
+<meta name="description" content="A zero-assumptions primer: how to average angles honestly, the bell curve of the circle, and the birth certificate of R₀(K_BKT) ≈ 0.303 — the one number that threads this whole library.">
+<meta name="author" content="Michael Sharpe">
+<link rel="canonical" href="https://lattice.project89.org/primers/sections/06-von-mises.html">
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+<meta property="og:title" content="The von Mises circle: where 0.303 comes from — The Living Lattice">
+<meta property="og:description" content="Averaging angles honestly, the bell curve of the circle, and the birth certificate of the site's central number.">
+<meta property="og:url" content="https://lattice.project89.org/primers/sections/06-von-mises.html">
+<meta property="og:site_name" content="The Living Lattice">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://lattice.project89.org/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="The von Mises circle: where 0.303 comes from — The Living Lattice">
+<meta name="twitter:description" content="A zero-assumptions primer on circular statistics and the site's central constant.">
+<meta name="twitter:image" content="https://lattice.project89.org/og-image.png">
+<!-- BEGIN AUTO-INJECTED ANALYTICS -->
+<!-- PostHog -->
+<script>
+!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+posthog.init('phc_kRX9iHZstABjgFqEWJBMok2S3hW9R8QMHbNao4EsNz2g', {api_host: 'https://us.i.posthog.com', person_profiles: 'identified_only'});
+</script>
+<!-- END AUTO-INJECTED ANALYTICS -->
+<link rel="stylesheet" href="../../css/style.css">
+<style>
+.flag-callout {
+  margin: 1.6em 0; padding: 16px 20px;
+  background: rgba(195, 141, 247, 0.08);
+  border-left: 3px solid #c38df7; border-radius: 3px;
+  font-size: 14.5px; line-height: 1.55;
+}
+.flag-callout .flag-label {
+  display: inline-block; font: 700 10.5px "SF Mono", monospace;
+  color: #c38df7; text-transform: uppercase; letter-spacing: 0.1em; margin-right: 0.7em;
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<nav class="breadcrumb">
+  <a href="../index.html">&larr; primers</a>
+  <span class="sep">&middot;</span>
+  <span class="section-num">primer 06</span>
+</nav>
+
+<h1>The von Mises circle: where 0.303 comes from<span class="subtitle">How to average angles honestly, the bell curve of the circle, and the birth certificate of this library's central number</span></h1>
+
+<p class="lead">One number keeps showing up across this site: <span class="mono">0.303</span>. It marks the wall in the physics essays, gates which attention heads are alive in a transformer, and sits at the base of the fine-structure derivation. The essays tell you where it <em>works</em>; this primer tells you what it <em>is</em>. The answer needs nothing but a circle, a bag of arrows, and one honest question: <em>how do you average things that live on a circle?</em></p>
+
+<h2>1. Averaging angles is a trap</h2>
+
+<p>Suppose two compass readings: 359&deg; and 1&deg;. Both point essentially north. Add them, divide by two — the ordinary average — and you get 180&deg;: <strong>due south</strong>, the one direction neither reading remotely suggested. Nothing was wrong with the readings. The arithmetic itself is broken, because angles wrap around: 0&deg; and 360&deg; are the same place, and ordinary averaging doesn't know that.</p>
+
+<p>The fix is old and lovely. Stop treating each angle as a number and treat it as a <strong>unit arrow</strong> — a little arrow of length one pointing that way. To average, <em>add the arrows</em> head-to-tail and look at the direction of the total. Arrows near north sum to an arrow near north, no matter which side of the wrap they sit on. The circle's own geometry does the averaging for you.</p>
+
+<figure id="fig-trap">
+  <canvas id="canvas-trap" width="680" height="340"></canvas>
+  <div class="controls" id="trap-controls">
+    <div class="control">
+      <label>angle B <span class="val" id="trap-b-val">300&deg;</span></label>
+      <input type="range" id="trap-b-slider" min="300" max="420" step="1" value="300">
+    </div>
+  </div>
+  <figcaption>Angle A is fixed at 350&deg;; slide B across the wrap at 360&deg;. The dashed arrow is the arithmetic average of the two numbers — watch it swing to the far side of the circle the moment B wraps, while the solid arrow (the arrow-sum average) stays sensibly between the two readings the whole way. <span id="trap-readout" class="readout">&nbsp;</span></figcaption>
+</figure>
+
+<h2>2. The resultant: one arrow that summarizes a crowd</h2>
+
+<p>Now do it with a whole crowd of angles — a cloud of phases, in this site's language. Add all the unit arrows and divide the total by how many there are. The result — called the <strong>resultant</strong> — carries two pieces of information at once:</p>
+
+<ul style="margin: 0.4em 0 1em 0; color: var(--text-soft);">
+  <li>Its <strong>direction</strong> is the honest average: where the crowd points, collectively.</li>
+  <li>Its <strong>length</strong>, between 0 and 1, is how much the crowd <em>agrees</em>. All arrows identical: length 1. Arrows scattered evenly around the circle: they cancel, length near 0.</li>
+</ul>
+
+<p>That length is the single most reused measurement on this site, wearing different clothes each time. The alignment <span class="mono">I<sub>phase</sub></span> you met in <a href="../../foundations/sections/01-oscillators.html">Foundations 1</a> is its bond-by-bond cousin. The diversity factor <span class="mono">&rho;</span> in <a href="../../foundations/sections/02-capital.html">the capital chapter</a> is literally <em>one minus</em> a resultant length — richness as disagreement-left-in-the-system. The match meter in <a href="01-rotations.html">the rotations primer</a> was an average of cosines, which is a resultant in disguise. One idea, everywhere: <strong>add the arrows, read off the length</strong>.</p>
+
+<h2>3. The bell curve of the circle</h2>
+
+<p>Next, put noise in. Imagine an oscillator that <em>prefers</em> one direction — something pulls it there — but is constantly jostled, so at any moment it's somewhere near its preference rather than exactly on it. Sample its position many times and you get a smear: densest at the preferred direction, thinning symmetrically to either side.</p>
+
+<p>On a line, that smear would be the familiar bell curve. On a circle, its natural counterpart is called the <strong>von Mises distribution</strong>, and it has exactly one interesting knob: a <strong>concentration</strong>, written <span class="mono">K</span>. At <span class="mono">K = 0</span> there is no preference at all — the smear is spread evenly around the whole circle. As <span class="mono">K</span> grows the smear gathers into a bundle; at large <span class="mono">K</span> it is a tight, disciplined cluster. The same letter as the coupling knob in the essays is no accident: a stronger pull toward the common rhythm concentrates an oscillator's phases in exactly this way, which is why this distribution is the house probability law of a coherent lattice.</p>
+
+<figure id="fig-cloud">
+  <canvas id="canvas-cloud" width="680" height="360"></canvas>
+  <div class="controls" id="cloud-controls">
+    <div class="control">
+      <label>K (concentration) <span class="val" id="cloud-k-val">0.64</span></label>
+      <input type="range" id="cloud-k-slider" min="0" max="8" step="0.02" value="0.64">
+    </div>
+  </div>
+  <figcaption>Eighty phases drawn live from a von Mises cloud at concentration K (the cloud keeps re-sampling, so it shimmers). On the right, the same eighty unit arrows added head-to-tail: the chain wanders when the cloud is spread and marches when it agrees, and the bold arrow — the resultant — summarizes the whole crowd. The readout compares the sample's resultant length to the theoretical curve <span class="mono">R&#8320;(K)</span>: they track. <em>Sound on: a soft chord whose loudness is the resultant length — agreement made audible (a mapping, so your ear can follow the gathering).</em> <span id="cloud-readout" class="readout">&nbsp;</span></figcaption>
+</figure>
+
+<h2>4. R&#8320;(K): the agreement curve</h2>
+
+<p>Now ask the obvious question: at concentration <span class="mono">K</span>, how long is the resultant <em>on average</em>? The answer is a smooth curve, written <span class="mono">R&#8320;(K)</span>, climbing from 0 (no concentration, no agreement) toward 1 (infinite concentration, perfect lock). You watched the sample version of it in the figure above; here is the exact curve.</p>
+
+<p>If you look up the formula you will meet two functions with intimidating names — the Bessel functions <span class="mono">I&#8321;</span> and <span class="mono">I&#8320;</span>, with <span class="mono">R&#8320;(K) = I&#8321;(K)/I&#8320;(K)</span>. Their role is pure bookkeeping: <span class="mono">I&#8320;</span> totals up the probability all the way around the circle (so everything is properly normalized), and <span class="mono">I&#8321;</span> totals it up <em>weighted by each direction's agreement</em> with the preferred one. Their ratio is therefore just "average agreement of the cloud" — the same add-the-arrows number as always, computed exactly instead of by sampling. Nothing more mystical than that.</p>
+
+<figure id="fig-r0">
+  <canvas id="canvas-r0" width="680" height="330"></canvas>
+  <div class="controls" id="r0-controls">
+    <div class="control">
+      <label>K <span class="val" id="r0-k-val">0.64</span></label>
+      <input type="range" id="r0-k-slider" min="0" max="8" step="0.02" value="0.64">
+    </div>
+  </div>
+  <figcaption>The exact agreement curve <span class="mono">R&#8320;(K) = I&#8321;(K)/I&#8320;(K)</span>, computed live. The purple wall marks the critical coupling <span class="mono">K<sub>BKT</sub> = 2/&pi; &asymp; 0.6366</span>; the curve passes through it at <span class="mono">R&#8320; = 0.30320246&hellip; &asymp; 0.303</span> — the number this primer exists to introduce. <span id="r0-readout" class="readout">&nbsp;</span></figcaption>
+</figure>
+
+<h2>5. The payoff: one constant, three jobs</h2>
+
+<p>Everything above is classical circle statistics — a century old, in any textbook. This site adds one move: the physics essays argue that coherent lattices have a <em>critical coupling</em>, <span class="mono">K<sub>BKT</sub> = 2/&pi;</span>, the knife-edge between order dissolving and order holding (that argument lives in <a href="../../paradigm/sections/05-the-wall.html">The Physics of Mind &sect;05</a>). Evaluate the agreement curve right at that edge and out comes</p>
+
+<p style="text-align:center;" class="mono">R&#8320;(2/&pi;) = 0.30320246&hellip; &asymp; 0.303</p>
+
+<p>— the amount of agreement a system has at the exact moment order becomes self-sustaining. That is the number's whole identity: <strong>the agreement level at the edge of order</strong>. You then meet it working three jobs: as the wall-marker in <a href="../../paradigm/sections/05-the-wall.html">&sect;05</a>, as the threshold that decides which attention heads in a transformer are alive in <a href="../../paradigm/sections/14-one-constant.html">&sect;14</a>, and — raised to the fourth power as the starting rung of a longer chain — in <a href="../../alpha/sections/13-alpha-formula.html">the fine-structure formula</a> of the &alpha; essay.</p>
+
+<div class="flag-callout">
+  <span class="flag-label">Honest scope</span>
+  This primer teaches the statistics: resultants, the von Mises cloud, and the curve <span class="mono">R&#8320;(K)</span> — all standard, uncontroversial mathematics. What it does <em>not</em> establish is the physics: <em>why</em> the critical coupling should sit at <span class="mono">2/&pi;</span> is the argument of <a href="../../paradigm/sections/05-the-wall.html">&sect;05</a>, and how much of the &alpha; chain is derived versus conjectured is tiered honestly inside <a href="../../alpha/index.html">the &alpha; essay itself</a>. Here you should only walk away knowing exactly what kind of number 0.303 is — so that when the essays lean on it, nothing is hidden.
+</div>
+
+<h2>Where this goes</h2>
+
+<p>You now own the whole toolkit behind the site's most-used measurements: unit arrows, resultants, concentration, and the agreement curve. When any essay says "order parameter," it means a resultant length. When it says "von Mises," it means the circle's bell curve. And when it says <span class="mono">0.303</span>, it means: the agreement of the circle's bell curve, at the edge where order first holds.</p>
+
+<div class="nav-links">
+  <a href="../graphs-spectra/" class="prev">Graphs, coupling, and spectra</a>
+  <a href="../index.html" class="next">Back to primers</a>
+</div>
+
+</div>
+
+<script type="module">
+import { setupHiDPICanvas, runWhenVisible, palette, R0, K_BKT, makeSoundToggle, makeVoices } from '../../js/common.js';
+
+const TAU = Math.PI * 2;
+
+// Best–Fisher (1979) rejection sampler for von Mises(0, K).
+// Verified offline against R0(K) at K = 0.3, 2/π, 2, 6 (N = 20k, |diff| ≤ 0.007).
+function sampleVonMises(K) {
+  if (K < 1e-6) return Math.random() * TAU - Math.PI;
+  const a = 1 + Math.sqrt(1 + 4 * K * K);
+  const b = (a - Math.sqrt(2 * a)) / (2 * K);
+  const r = (1 + b * b) / (2 * b);
+  for (;;) {
+    const u1 = Math.random(), u2 = Math.random(), u3 = Math.random();
+    const z = Math.cos(Math.PI * u1);
+    const f = (1 + r * z) / (r + z);
+    const c = K * (r - f);
+    if (u2 < c * (2 - c) || u2 <= c * Math.exp(1 - c)) {
+      return (u3 < 0.5 ? -1 : 1) * Math.acos(f);
+    }
+  }
+}
+
+function arrowHead(ctx, x, y, ang, size) {
+  ctx.beginPath();
+  ctx.moveTo(x, y);
+  ctx.lineTo(x - size * Math.cos(ang - 0.42), y + size * Math.sin(ang - 0.42));
+  ctx.lineTo(x - size * Math.cos(ang + 0.42), y + size * Math.sin(ang + 0.42));
+  ctx.fill();
+}
+
+// ============================================================
+// FIG A: the averaging trap
+// ============================================================
+(() => {
+  const canvas = document.getElementById('canvas-trap');
+  const ctx = setupHiDPICanvas(canvas, 680, 340);
+  const slider = document.getElementById('trap-b-slider');
+  const bval = document.getElementById('trap-b-val');
+  const readout = document.getElementById('trap-readout');
+  const A_DEG = 350;
+  let bDeg = 300;
+  slider.addEventListener('input', () => {
+    bDeg = parseFloat(slider.value);
+    bval.textContent = (bDeg % 360) + '°';
+  });
+
+  function draw() {
+    ctx.clearRect(0, 0, 680, 340);
+    const cx = 190, cy = 170, r = 115;
+    const aRad = A_DEG * Math.PI / 180;
+    const bShown = bDeg % 360;
+    const bRad = bDeg * Math.PI / 180;
+
+    ctx.strokeStyle = palette.axis; ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.arc(cx, cy, r, 0, TAU); ctx.stroke();
+    // 0° marker
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 11px serif'; ctx.textAlign = 'left';
+    ctx.fillText('0° / 360°', cx + r + 8, cy + 4);
+
+    // the two readings
+    [[aRad, palette.blue, 'A'], [bRad, palette.orange, 'B']].forEach(([th, color, lab]) => {
+      const x = cx + Math.cos(th) * r, y = cy - Math.sin(th) * r;
+      ctx.strokeStyle = color; ctx.lineWidth = 2.5;
+      ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(x, y); ctx.stroke();
+      ctx.fillStyle = color;
+      ctx.beginPath(); ctx.arc(x, y, 6, 0, TAU); ctx.fill();
+      ctx.font = 'italic 13px serif'; ctx.textAlign = 'center';
+      ctx.fillText(lab, cx + Math.cos(th) * (r + 20), cy - Math.sin(th) * (r + 20) + 4);
+    });
+
+    // arithmetic mean of the NUMBERS — as a person with two compass
+    // readings would do it: average the wrapped values (350° and 20°),
+    // which is exactly the trap.
+    const meanDeg = (A_DEG + bShown) / 2;
+    const mRad = meanDeg * Math.PI / 180;
+    ctx.strokeStyle = palette.burgundy; ctx.lineWidth = 2; ctx.setLineDash([5, 5]);
+    ctx.beginPath(); ctx.moveTo(cx, cy);
+    ctx.lineTo(cx + Math.cos(mRad) * r * 0.8, cy - Math.sin(mRad) * r * 0.8); ctx.stroke();
+    ctx.setLineDash([]);
+
+    // arrow-sum mean
+    const sx = Math.cos(aRad) + Math.cos(bRad), sy = Math.sin(aRad) + Math.sin(bRad);
+    const resRad = Math.atan2(sy, sx);
+    const resLen = Math.hypot(sx, sy) / 2;
+    ctx.strokeStyle = palette.green; ctx.lineWidth = 3;
+    const ex = cx + Math.cos(resRad) * r * 0.8 * resLen, ey = cy - Math.sin(resRad) * r * 0.8 * resLen;
+    ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(ex, ey); ctx.stroke();
+    ctx.fillStyle = palette.green;
+    arrowHead(ctx, ex, ey, resRad, 11);
+
+    // legend + numbers
+    ctx.textAlign = 'left';
+    ctx.fillStyle = palette.textSoft; ctx.font = '13px "SF Mono", monospace';
+    ctx.fillText(`A = ${A_DEG}°   B = ${bShown}°`, 400, 90);
+    ctx.fillStyle = palette.burgundy;
+    ctx.fillText(`(A+B)/2 = ${(meanDeg % 360).toFixed(0)}°`, 400, 128);
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 12px serif';
+    ctx.fillText('the numbers averaged — dashed', 400, 146);
+    ctx.fillStyle = palette.green; ctx.font = '13px "SF Mono", monospace';
+    const resDeg = ((resRad * 180 / Math.PI) + 360) % 360;
+    ctx.fillText(`arrow-sum mean = ${resDeg.toFixed(0)}°`, 400, 186);
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 12px serif';
+    ctx.fillText('the arrows averaged — solid', 400, 204);
+
+    const wrapped = bDeg > 360;
+    ctx.fillStyle = wrapped ? palette.burgundy : palette.textFaint;
+    ctx.fillText(wrapped ? 'B has wrapped: the arithmetic mean points the wrong way' : 'slide B past 360° …', 400, 244);
+
+    readout.textContent = `arithmetic ${(meanDeg % 360).toFixed(0)}° vs arrow-sum ${resDeg.toFixed(0)}°`;
+  }
+  runWhenVisible(canvas, draw);
+})();
+
+// ============================================================
+// FIG B: live von Mises cloud + head-to-tail resultant
+// ============================================================
+(() => {
+  const canvas = document.getElementById('canvas-cloud');
+  const ctx = setupHiDPICanvas(canvas, 680, 360);
+  const slider = document.getElementById('cloud-k-slider');
+  const kval = document.getElementById('cloud-k-val');
+  const readout = document.getElementById('cloud-readout');
+  const N = 80;
+  let K = 0.64;
+  let samples = Array.from({ length: N }, () => sampleVonMises(K));
+  slider.addEventListener('input', () => {
+    K = parseFloat(slider.value);
+    kval.textContent = K.toFixed(2);
+    samples = Array.from({ length: N }, () => sampleVonMises(K));
+  });
+
+  const sound = makeSoundToggle(document.getElementById('cloud-controls'), { label: 'hear the agreement' });
+  const voices = makeVoices(sound, 3, { freq: 220 });
+
+  function draw() {
+    // living cloud: re-sample a couple of members each frame
+    for (let i = 0; i < 2; i++) samples[(Math.random() * N) | 0] = sampleVonMises(K);
+
+    ctx.clearRect(0, 0, 680, 360);
+    const cx = 170, cy = 175, r = 115;
+
+    ctx.strokeStyle = palette.axis; ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.arc(cx, cy, r, 0, TAU); ctx.stroke();
+    // preferred direction tick
+    ctx.strokeStyle = palette.grid;
+    ctx.beginPath(); ctx.moveTo(cx + r - 6, cy); ctx.lineTo(cx + r + 6, cy); ctx.stroke();
+
+    let sx = 0, sy = 0;
+    samples.forEach((th) => {
+      sx += Math.cos(th); sy += Math.sin(th);
+      ctx.fillStyle = 'rgba(217, 114, 54, 0.55)';
+      ctx.beginPath();
+      ctx.arc(cx + Math.cos(th) * r, cy - Math.sin(th) * r, 4, 0, TAU);
+      ctx.fill();
+    });
+    const Rbar = Math.hypot(sx, sy) / N;
+    const dir = Math.atan2(sy, sx);
+
+    // resultant arrow inside the circle
+    const ex = cx + Math.cos(dir) * r * Rbar, ey = cy - Math.sin(dir) * r * Rbar;
+    ctx.strokeStyle = palette.blue; ctx.lineWidth = 3.5;
+    ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(ex, ey); ctx.stroke();
+    ctx.fillStyle = palette.blue;
+    arrowHead(ctx, ex, ey, dir, 12);
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 11px serif'; ctx.textAlign = 'center';
+    ctx.fillText('the cloud, and its resultant', cx, cy + r + 24);
+
+    // head-to-tail chain on the right (scaled so a fully-agreed chain fits)
+    const chx0 = 380, chy0 = 285, sc = 2.1;
+    ctx.strokeStyle = palette.grid; ctx.lineWidth = 1;
+    ctx.strokeRect(340, 60, 320, 250);
+    let px = chx0, py = chy0;
+    ctx.strokeStyle = 'rgba(217, 114, 54, 0.5)'; ctx.lineWidth = 1.3;
+    ctx.beginPath(); ctx.moveTo(px, py);
+    samples.forEach((th) => {
+      px += Math.cos(th) * sc; py -= Math.sin(th) * sc;
+      ctx.lineTo(px, py);
+    });
+    ctx.stroke();
+    ctx.strokeStyle = palette.blue; ctx.lineWidth = 2.6;
+    ctx.beginPath(); ctx.moveTo(chx0, chy0); ctx.lineTo(px, py); ctx.stroke();
+    ctx.fillStyle = palette.blue;
+    arrowHead(ctx, px, py, Math.atan2(chy0 - py, px - chx0), 10);
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 11px serif'; ctx.textAlign = 'left';
+    ctx.fillText('the same arrows, head to tail', 352, 80);
+
+    ctx.font = '13px "SF Mono", monospace';
+    ctx.fillStyle = palette.blue;
+    ctx.fillText(`sample R̄     = ${Rbar.toFixed(3)}`, 352, 330);
+    ctx.fillStyle = palette.purple;
+    ctx.fillText(`theory R₀(K) = ${R0(K).toFixed(3)}`, 352, 350);
+
+    readout.textContent = `sample R̄ = ${Rbar.toFixed(3)}   theory R₀(${K.toFixed(2)}) = ${R0(K).toFixed(3)}`;
+
+    // sound: soft consonant chord, loudness = agreement (labeled mapping)
+    voices.set(0, 220, Rbar);
+    voices.set(1, 275, Rbar * 0.8);
+    voices.set(2, 330, Rbar * 0.65);
+  }
+  runWhenVisible(canvas, draw);
+})();
+
+// ============================================================
+// FIG C: the exact R0(K) curve with the BKT wall
+// ============================================================
+(() => {
+  const canvas = document.getElementById('canvas-r0');
+  const ctx = setupHiDPICanvas(canvas, 680, 330);
+  const slider = document.getElementById('r0-k-slider');
+  const kval = document.getElementById('r0-k-val');
+  const readout = document.getElementById('r0-readout');
+  const Kmax = 8;
+  let K = 0.64;
+  slider.addEventListener('input', () => { K = parseFloat(slider.value); kval.textContent = K.toFixed(2); });
+
+  function draw() {
+    ctx.clearRect(0, 0, 680, 330);
+    const x0 = 70, y0 = 30, w = 560, h = 240;
+    const X = (k) => x0 + (k / Kmax) * w;
+    const Y = (v) => y0 + h - v * h;
+
+    ctx.strokeStyle = palette.axis; ctx.lineWidth = 1;
+    ctx.strokeRect(x0, y0, w, h);
+
+    // y ticks — 0.303 in canon purple
+    [0, 0.303, 0.5, 1].forEach((v) => {
+      ctx.strokeStyle = palette.grid; ctx.setLineDash([2, 4]);
+      ctx.beginPath(); ctx.moveTo(x0, Y(v)); ctx.lineTo(x0 + w, Y(v)); ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle = v === 0.303 ? '#c38df7' : palette.textFaint;
+      ctx.font = 'italic 10px serif'; ctx.textAlign = 'right';
+      ctx.fillText(v.toFixed(v === 0.303 ? 3 : 1), x0 - 6, Y(v) + 3);
+    });
+
+    // the BKT wall
+    ctx.strokeStyle = '#c38df7'; ctx.lineWidth = 1.5; ctx.setLineDash([4, 4]);
+    ctx.beginPath(); ctx.moveTo(X(K_BKT), y0); ctx.lineTo(X(K_BKT), y0 + h); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = '#c38df7'; ctx.font = '11px "SF Mono", monospace'; ctx.textAlign = 'center';
+    ctx.fillText('K_BKT = 2/π', X(K_BKT), y0 - 8);
+
+    // the curve
+    ctx.strokeStyle = palette.blue; ctx.lineWidth = 2;
+    ctx.beginPath();
+    for (let i = 0; i <= 240; i++) {
+      const k = (i / 240) * Kmax;
+      const x = X(k), y = Y(R0(k));
+      i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+    }
+    ctx.stroke();
+
+    // canon dot at the wall
+    ctx.fillStyle = '#c38df7';
+    ctx.beginPath(); ctx.arc(X(K_BKT), Y(R0(K_BKT)), 4.5, 0, TAU); ctx.fill();
+
+    // live dot
+    ctx.fillStyle = palette.orange;
+    ctx.beginPath(); ctx.arc(X(K), Y(R0(K)), 5.5, 0, TAU); ctx.fill();
+
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 11px serif'; ctx.textAlign = 'center';
+    ctx.fillText('K (concentration) →', x0 + w / 2, y0 + h + 28);
+    ctx.save();
+    ctx.translate(x0 - 44, y0 + h / 2); ctx.rotate(-Math.PI / 2);
+    ctx.fillText('R₀(K) — agreement →', 0, 0);
+    ctx.restore();
+
+    readout.textContent = `R₀(${K.toFixed(2)}) = ${R0(K).toFixed(3)}   ·   at the wall: R₀(2/π) = ${R0(K_BKT).toFixed(8)}`;
+  }
+  runWhenVisible(canvas, draw);
+})();
+</script>
+
+</body>
+</html>

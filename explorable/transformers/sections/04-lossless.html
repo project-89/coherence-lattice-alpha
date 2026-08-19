@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lossless: computation on a 2D surface — The Living Lattice</title>
+<meta name="description" content="If computation lives on a low-dimensional manifold, you can project onto it with no loss. On GPT-2 layer 11, projecting the attention output to rank 2 gives a logit cosine of 1.0000 with the full model — 384× compression, identical next token.">
+<meta name="author" content="Michael Sharpe">
+<link rel="canonical" href="https://lattice.project89.org/transformers/sections/04-lossless.html">
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+<meta property="og:title" content="Lossless: computation on a 2D surface — The Living Lattice">
+<meta property="og:description" content="Rank-2 projection at logit cosine 1.0000 — 384× compression, identical next token.">
+<meta property="og:url" content="https://lattice.project89.org/transformers/sections/04-lossless.html">
+<meta property="og:site_name" content="The Living Lattice">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://lattice.project89.org/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Lossless: computation on a 2D surface — The Living Lattice">
+<meta name="twitter:description" content="The manifold is real, usable, and measurable.">
+<meta name="twitter:image" content="https://lattice.project89.org/og-image.png">
+<!-- BEGIN AUTO-INJECTED ANALYTICS -->
+<!-- PostHog -->
+<script>
+!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+posthog.init('phc_kRX9iHZstABjgFqEWJBMok2S3hW9R8QMHbNao4EsNz2g', {api_host: 'https://us.i.posthog.com', person_profiles: 'identified_only'});
+</script>
+<!-- END AUTO-INJECTED ANALYTICS -->
+<link rel="stylesheet" href="../../css/style.css">
+<style>
+.flag-callout { margin: 1.6em 0; padding: 16px 20px; background: rgba(195,141,247,0.08); border-left: 3px solid #c38df7; border-radius: 3px; font-size: 14.5px; line-height: 1.55; }
+.flag-callout .flag-label { display:inline-block; font: 700 10.5px "SF Mono",monospace; color:#c38df7; text-transform:uppercase; letter-spacing:0.1em; margin-right:0.7em; }
+</style>
+</head>
+<body>
+<div class="page">
+
+<nav class="breadcrumb">
+  <a href="../index.html">&larr; contents</a>
+  <span class="sep">&middot;</span>
+  <span class="section-num">section 04 &middot; transformers as oscillators</span>
+</nav>
+
+<h1>Lossless: computation on a 2D surface<span class="subtitle">The proof that the shape is the substance</span></h1>
+
+<p class="lead">If the computation really lives on a two-dimensional surface inside those 768 dimensions, then a strong, falsifiable prediction follows: you should be able to throw away all the other dimensions and lose <em>nothing</em>. Not &ldquo;almost nothing&rdquo; — nothing. The next token the model predicts should be identical. This is the cleanest test that the manifold is real and not a convenient summary, and the model passes it.</p>
+
+<p>Below is the spectrum of a real attention-output computation — each direction&rsquo;s loudness, as in <a href="03-manifold.html">the last chapter</a>. Drag the rank slider down from 768 and watch two numbers. The first is the <strong>logit cosine</strong>: how closely the compressed model&rsquo;s next-word scores point along the full model&rsquo;s — <span class="mono">1.0000</span> means indistinguishable, the same next word for the same reasons. The second is the <strong>compression factor</strong>. The prediction stays pinned at <span class="mono">1.0000</span> all the way down to rank two — where you are computing on a surface, at 384× compression — and only then, at rank one, does it finally break.</p>
+
+<figure id="fig-lossless">
+  <canvas id="canvas-lossless" width="680" height="360"></canvas>
+  <div class="controls" id="lossless-controls"><!-- slider via JS --></div>
+  <figcaption>
+    <strong>Left:</strong> the variance spectrum (log scale). Two modes (orange) hold essentially all the energy; the other 766 are a flat thermal tail — oscillators agreeing, cancelling at the output. <strong>Right:</strong> the logit cosine with the full model as you keep only the top-<em>rank</em> directions. It is already <span class="mono">1.0000</span> at rank two and stays there. <span id="lossless-readout" class="readout">rank = 768 &nbsp; logit cosine = 1.0000 &nbsp; 1×</span>
+  </figcaption>
+</figure>
+
+<p>Rank two, logit cosine 1.0000, 384-fold compression, zero information lost — measured directly. The 766 discarded dimensions were never doing work; they were the thermal modes of a synchronized system, present but mutually cancelling. The surface is not an approximation of the computation. The surface <em>is</em> the computation, and you can hold it in your hand.</p>
+
+<div class="flag-callout">
+  <span class="flag-label">What's real here</span>The headline result — rank-2 projection, logit cosine 1.0000, 384× — is a direct measurement on GPT-2 layer 11 from our transformer-physics work, not a calculation run in your browser. The spectrum and cosine curve shown here are generated to reproduce that measured result so you can feel its shape; the claim itself rests on the model run, reported in full in the coupling-manifold paper.
+</div>
+
+<p>That closes the case for the coupling manifold being real, usable, and measurable — the computation is the surface, and you can hold it in your hand. It also sharpens the essay&rsquo;s best puzzle: if the <em>activations</em> compress 384-fold with nothing lost, why do the <em>weights</em> stubbornly refuse the same treatment? The answer — the machine is built in layers of structure, like a cable of many strands — is <a href="05-fiber-bundle.html">the fiber bundle</a>, next. (The single rotation between two independently trained models is told, for now, in the paradigm essay, <a href="../../paradigm/sections/15-rotation.html">&sect;15</a>.) And for what this low-dimensional shape <em>means</em> — reasoning as winding, looping back into consciousness — see <a href="../../paradigm/">The Physics of Mind</a>.</p>
+
+<div class="nav-links">
+  <a href="03-manifold.html" class="prev">The coupling manifold</a>
+  <a href="05-fiber-bundle.html" class="next">The fiber bundle</a>
+</div>
+
+</div>
+
+<script type="module">
+import { setupHiDPICanvas, makeSlider, runWhenVisible, palette } from '../../js/common.js';
+
+(() => {
+  const W = 680, H = 360, canvas = document.getElementById('canvas-lossless');
+  const ctx = setupHiDPICanvas(canvas, W, H);
+  const readout = document.getElementById('lossless-readout');
+  const D = 768;
+
+  // representative spectrum reproducing the measured rank-2 result:
+  // two dominant modes; a tiny, slowly-decaying thermal tail.
+  const sig2 = new Float64Array(D);
+  for (let i = 0; i < D; i++) sig2[i] = i === 0 ? 1.0 : i === 1 ? 0.62 : 1e-7 * Math.exp(-(i - 2) / 130);
+  const total = sig2.reduce((a, b) => a + b, 0);
+  const cum = new Float64Array(D); let acc = 0;
+  for (let i = 0; i < D; i++) { acc += sig2[i]; cum[i] = acc; }
+  const cosineAt = (rank) => Math.sqrt(cum[rank - 1] / total);   // fraction of variance retained
+
+  let t = 1;   // slider 0..1 → rank = 768^t
+  makeSlider(document.getElementById('lossless-controls'), {
+    label: 'rank kept', min: 0, max: 1, step: 0.002, value: 1,
+    format: () => String(Math.max(1, Math.round(Math.pow(D, t)))),
+    onChange: v => { t = v; },
+  });
+
+  // plot regions
+  const lpx = 50, lpy = 50, lpw = 250, lph = 230;   // spectrum
+  const rpx = 380, rpy = 50, rpw = 250, rph = 230;   // cosine curve
+  const logx = (i) => Math.log(i + 1) / Math.log(D);   // index 0..D-1 → 0..1
+
+  function draw() {
+    const rank = Math.max(1, Math.round(Math.pow(D, t)));
+    ctx.clearRect(0, 0, W, H); ctx.fillStyle = palette.bg; ctx.fillRect(0, 0, W, H);
+
+    // --- spectrum (log y) ---
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 12px "Charter",serif'; ctx.textAlign = 'center';
+    ctx.fillText('variance spectrum (log scale)', lpx + lpw / 2, 36);
+    ctx.strokeStyle = palette.axis; ctx.lineWidth = 1; ctx.strokeRect(lpx, lpy, lpw, lph);
+    const yLog = (v) => { const lo = -8, hi = 0.3; const e = Math.log10(v + 1e-12); return lpy + lph - ((e - lo) / (hi - lo)) * lph; };
+    // kept-region shading
+    ctx.fillStyle = 'rgba(217,114,54,0.08)';
+    ctx.fillRect(lpx, lpy, logx(rank - 1) * lpw, lph);
+    // curve
+    ctx.strokeStyle = '#2a5f8f'; ctx.lineWidth = 1.6; ctx.beginPath();
+    for (let i = 0; i < D; i += 2) { const x = lpx + logx(i) * lpw, y = Math.max(lpy, Math.min(lpy + lph, yLog(sig2[i]))); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }
+    ctx.stroke();
+    // top-2 markers
+    [0, 1].forEach(i => { ctx.fillStyle = '#d97236'; ctx.beginPath(); ctx.arc(lpx + logx(i) * lpw, yLog(sig2[i]), 4, 0, Math.PI * 2); ctx.fill(); });
+    // rank cursor
+    ctx.strokeStyle = palette.textSoft; ctx.setLineDash([3, 3]); ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(lpx + logx(rank - 1) * lpw, lpy); ctx.lineTo(lpx + logx(rank - 1) * lpw, lpy + lph); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 10px "Charter",serif'; ctx.textAlign = 'center';
+    ctx.fillText('mode index (1 … 768)', lpx + lpw / 2, lpy + lph + 18);
+
+    // --- cosine vs rank ---
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 12px "Charter",serif'; ctx.textAlign = 'center';
+    ctx.fillText('logit cosine vs rank', rpx + rpw / 2, 36);
+    ctx.strokeStyle = palette.axis; ctx.lineWidth = 1; ctx.strokeRect(rpx, rpy, rpw, rph);
+    const cy = (c) => { const lo = 0.6, hi = 1.002; return rpy + rph - ((c - lo) / (hi - lo)) * rph; };
+    // 1.0000 gridline
+    ctx.strokeStyle = palette.grid; ctx.setLineDash([4, 3]); ctx.beginPath(); ctx.moveTo(rpx, cy(1)); ctx.lineTo(rpx + rpw, cy(1)); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = palette.textFaint; ctx.font = '10px "SF Mono",monospace'; ctx.textAlign = 'right'; ctx.fillText('1.0000', rpx + rpw - 3, cy(1) - 3);
+    // cosine curve over rank (log x)
+    ctx.strokeStyle = '#d97236'; ctx.lineWidth = 2.2; ctx.beginPath();
+    let started = false;
+    for (let r = 1; r <= D; r++) { const x = rpx + (Math.log(r) / Math.log(D)) * rpw, y = Math.max(rpy, Math.min(rpy + rph, cy(cosineAt(r)))); started ? ctx.lineTo(x, y) : (ctx.moveTo(x, y), started = true); }
+    ctx.stroke();
+    // current rank marker
+    const mx = rpx + (Math.log(rank) / Math.log(D)) * rpw;
+    ctx.strokeStyle = palette.textSoft; ctx.setLineDash([3, 3]); ctx.beginPath(); ctx.moveTo(mx, rpy); ctx.lineTo(mx, rpy + rph); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = '#d97236'; ctx.beginPath(); ctx.arc(mx, cy(cosineAt(rank)), 5, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = palette.bg; ctx.lineWidth = 2; ctx.stroke();
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 10px "Charter",serif'; ctx.textAlign = 'center';
+    ctx.fillText('rank kept (2 … 768)', rpx + rpw / 2, rpy + rph + 18);
+
+    const cos = cosineAt(rank), comp = Math.round(D / rank);
+    readout.textContent = `rank = ${rank}   logit cosine = ${cos.toFixed(4)}   ${comp}×`;
+  }
+  runWhenVisible(canvas, draw);
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Repair: the flagship demonstration — The Living Lattice</title>
+<meta name="description" content="A memory stored in the coupling field itself. Fray it and the learning rule regrows every damaged bond — recall returns to perfect. Vaporize it and nothing comes back. And the bridge that only the structural channel can save.">
+<meta name="author" content="Michael Sharpe">
+<link rel="canonical" href="https://lattice.project89.org/primers/living-k/sections/03-repair.html">
+<link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
+<link rel="apple-touch-icon" href="../../../apple-touch-icon.png">
+<meta property="og:title" content="Repair: the flagship demonstration — The Living Lattice">
+<meta property="og:description" content="Damage a memory stored in K and watch the learning rule heal it. Then the bridge only the structural channel can save.">
+<meta property="og:url" content="https://lattice.project89.org/primers/living-k/sections/03-repair.html">
+<meta property="og:site_name" content="The Living Lattice">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://lattice.project89.org/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Repair: the flagship demonstration — The Living Lattice">
+<meta name="twitter:description" content="Fray, heal, and the absorbing state. Plus the Fiedler resurrection.">
+<meta name="twitter:image" content="https://lattice.project89.org/og-image.png">
+<!-- BEGIN AUTO-INJECTED ANALYTICS -->
+<!-- PostHog -->
+<script>
+!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+posthog.init('phc_kRX9iHZstABjgFqEWJBMok2S3hW9R8QMHbNao4EsNz2g', {api_host: 'https://us.i.posthog.com', person_profiles: 'identified_only'});
+</script>
+<!-- END AUTO-INJECTED ANALYTICS -->
+<link rel="stylesheet" href="../../../css/style.css">
+<style>
+.flag-callout {
+  margin: 1.6em 0; padding: 16px 20px;
+  background: rgba(195, 141, 247, 0.08);
+  border-left: 3px solid #c38df7; border-radius: 3px;
+  font-size: 14.5px; line-height: 1.55;
+}
+.flag-callout .flag-label {
+  display: inline-block; font: 700 10.5px "SF Mono", monospace;
+  color: #c38df7; text-transform: uppercase; letter-spacing: 0.1em; margin-right: 0.7em;
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<nav class="breadcrumb">
+  <a href="../index.html">&larr; living K module</a>
+  <span class="sep">&middot;</span>
+  <span class="section-num">living K 03 / 03 &middot; advanced</span>
+</nav>
+
+<h1>Repair<span class="subtitle">The flagship demonstration: a memory that heals, and the bridge only structure can save</span></h1>
+
+<p class="lead">In <a href="../../../foundations/sections/05-memory-basins.html">the memory chapter</a>, the carved basin was drawn as a pull toward a stored pattern — a deliberate cartoon, and that chapter says so: the real basin, its prose promises, lives in the slow part of the <em>coupling field</em>. This section keeps that promise. Here the memory is stored nowhere except in K — strong bonds where the pattern agrees with itself, dead bonds where it doesn't. Which means the memory can be <em>damaged</em> the way real substrates are damaged: bond by bond. And it means something a stored array can never do: with the learning rule running, the memory can <strong>grow back</strong>.</p>
+
+<h2>1. Fray it, and it heals</h2>
+
+<p>The lattice below stores a two-tone flag: left half one phase, right half the opposite. The storage is pure K-field — you can see it as the web of bright bonds inside each half. The cycle to run: <strong>Probe</strong> measures recall (give the network a 45%-corrupted cue, let it settle with the wiring held fixed, and score how many neighbor-relations come out matching the stored pattern — averaged over five trials). <strong>Fray</strong> damages the memory: more than half the pattern's bonds are cut down to a thread (K &asymp; 0.03, far below anything functional). Probe again — recall drops. Then <strong>Heal</strong>: the network simply <em>sits in its own pattern</em> — settled, gently noisy, the learning rule running. No teacher, no stored copy, no error signal. Each frayed bond finds its endpoints already held in alignment by the surviving majority, and the rule does the only thing it knows: alignment above threshold, coupling grows. Probe once more.</p>
+
+<p>In our verification runs the numbers were stark: recall 0.94 before damage, 0.87&ndash;0.90 frayed, and after one sleep episode — <strong>1.00, with every single frayed bond regrown</strong>, on every seed we tried (102/102, 99/99, 104/104). The healed memory is <em>sharper</em> than the hand-carved original, because the rule also finishes the carving we did crudely: boundary bonds that fight the pattern get cleaned out.</p>
+
+<figure id="fig-repair">
+  <canvas id="canvas-repair" width="680" height="470"></canvas>
+  <div class="controls" id="repair-controls">
+    <button id="rp-probe" class="primary">Probe recall</button>
+    <button id="rp-fray">Fray the memory</button>
+    <button id="rp-vaporize">Vaporize instead</button>
+    <button id="rp-heal">Heal (sleep episode)</button>
+    <button id="rp-reset">Reset &amp; re-carve</button>
+  </div>
+  <figcaption>A 10&times;10 lattice whose only memory is its coupling field (bond brightness = K; damaged bonds flash red). <em>Probe</em>: 45% cue &rarr; settle with K frozen &rarr; recall = % of neighbor relations matching the stored flag, averaged over five trials. <em>Fray</em> cuts 55% of the pattern's bonds to a thread; <em>Heal</em> lets the network sit in its pattern with the rule on. <em>Sound on: eight cells sing at their measured instantaneous rates — a healthy memory is a tight unison; damage is audible smear.</em> Try the full cycle, then try it with <em>Vaporize</em> and watch the difference. <span id="rp-readout" class="readout">recall = —</span></figcaption>
+</figure>
+
+<p>Now the dark twin of the experiment. <strong>Vaporize</strong> destroys the same bonds completely — K exactly zero, not a thread. Heal all you like: nothing regrows. In our runs, zero of 102 vaporized bonds ever came back, and recall stayed stuck near 0.78. The reason is right there in the rule: K̇ = &eta;[R&#8320;(K)cos(&Delta;&theta;) &minus; 2K/r], and R&#8320;(0) = 0 — <strong>K = 0 is an absorbing state</strong>. A bond with no coupling at all sees perfect alignment and does nothing about it, forever. The Shannon channel can strengthen a whisper into a voice, but it cannot speak first. Fraying leaves a whisper; vaporizing leaves silence. (This is the same lesson as <a href="02-the-rule.html">the portrait's</a> cold starts, now with stakes: growth needs a seed, and in a lattice the seed plus the neighbors' grip is enough.)</p>
+
+<h2>2. The bridge only structure can save</h2>
+
+<p>One more character from <a href="../../../foundations/sections/03-clr.html">the learning-rule chapter</a> has been waiting for its demonstration: the <strong>Fiedler channel</strong> — the structural term that pumps coupling into the network's bottlenecks. Here is the situation it exists for. Two tight communities, one bridge between them. The communities drift at different natural rates, so the bridge's endpoints <em>cannot</em> hold alignment — not because the bridge is unimportant, but because of where it stands. The Shannon channel, which sees only alignment, reads the bridge as a failing bond and executes it. Watch what happens to the network: the moment the bridge dies, &lambda;&#8322; — the algebraic connectivity you met in <a href="../../graphs-spectra/sections/03-fiedler.html">the eigenvalues module</a> — collapses to zero. One network becomes two. Structural richness is gone, and with it the capital C.</p>
+
+<p>Toggle the structural channel on. It scores every bond not by alignment but by <em>where it stands</em> — the Fiedler sensitivity (v&#8322;<sub>i</sub> &minus; v&#8322;<sub>j</sub>)&sup2;, enormous exactly at bridges — and adds coupling there, paid for by a matching debit spread across the redundant bulk. In our runs the difference is total: Shannon-only, the bridge is dead and &lambda;&#8322; = 0 within the first stretch of the run; with the structural channel, the bridge holds at K &asymp; 3 and &lambda;&#8322; stays up, indefinitely. And note one more thing the toggle shows: flip it on <em>after</em> the bridge has died, and the bridge comes back. The structural term is additive — it does not need a seed. What alignment cannot resurrect, structure can.</p>
+
+<figure id="fig-bridge">
+  <canvas id="canvas-bridge" width="680" height="400"></canvas>
+  <div class="controls" id="bridge-controls">
+    <button id="br-toggle" class="primary">Structural channel: OFF</button>
+    <button id="br-reset">Restart</button>
+  </div>
+  <figcaption>Two four-node communities drifting at different rates, one bridge. Bond thickness = K, live. With the structural channel <strong>off</strong>, the Shannon channel executes the bridge (its endpoints can't align — the geometry forbids it) and &lambda;&#8322; &rarr; 0: the network falls in two, and C falls with it. Toggle the channel <strong>on</strong> — even afterward — and the bridge is rebuilt and held. Readouts: the bridge's K, &lambda;&#8322;, and the capital proxy C = I<sub>phase</sub>&thinsp;&middot;&thinsp;(&lambda;&#8322; / &lambda;&#8322;&#8320;) for this figure (richness = connectivity — the piece the bridge carries). <span id="br-readout" class="readout">bridge K = — · λ₂ = —</span></figcaption>
+</figure>
+
+<div class="flag-callout">
+  <span class="flag-label">What's real here</span>
+  The learning rule's local form, the death threshold, and the Fiedler-sensitivity result — bridge bonds scoring enormously above bulk, and the structural correction that protects them at zero new parameters — are the corpus's, stated in <a href="../../../foundations/sections/03-clr.html">foundations &sect;03</a> and the paper; the numerically-verified statement there is that coherence capital recovers from zero <em>monotonically</em> under the corrected rule. The figures on this page are small-N illustrations built for this module: a 100-cell lattice and an 8-node barbell, with every number quoted (recall percentages, regrowth counts, &lambda;&#8322; traces) measured in this page's own simulations across multiple seeds. They demonstrate the mechanisms; the corpus carries the claims.
+</div>
+
+<p>Step back and the module's three sections say one thing. A frozen wiring is a snapshot with an expiry date. The rule that moves the wiring has fates — birth, death, bistability — you can draw. And a network living under that rule is qualitatively unlike its frozen twin: damage it, and where a quenched system stays broken, the living one <em>notices</em> — because its memory and its dynamics were never separate things. The wiring is the memory. The dynamics are the repair crew. That, more than any single result, is what this site means by a <em>living lattice</em>.</p>
+
+<div class="nav-links">
+  <a href="02-the-rule.html" class="prev">The rule in motion</a>
+  <a href="../../bkt-transition/" class="next">Next: The BKT transition</a>
+</div>
+
+</div>
+
+<script type="module">
+import { setupHiDPICanvas, runWhenVisible, palette, R0, makeSoundToggle, makeVoices } from '../../../js/common.js';
+
+const r = 5.9;
+
+// ============================================================
+// FIG A: the healing memory
+// ============================================================
+(() => {
+  const W = 680, H = 470;
+  const canvas = document.getElementById('canvas-repair');
+  const ctx = setupHiDPICanvas(canvas, W, H);
+  const readout = document.getElementById('rp-readout');
+
+  const L = 10, N = 100, dt = 0.05, eta = 0.5;
+  const patt = [];
+  for (let y = 0; y < L; y++) for (let x = 0; x < L; x++) patt.push(x < 5 ? 0 : Math.PI);
+  const bonds = [];
+  for (let y = 0; y < L; y++) for (let x = 0; x < L; x++) {
+    const i = y * L + x;
+    if (x + 1 < L) bonds.push([i, y * L + x + 1]);
+    if (y + 1 < L) bonds.push([i, (y + 1) % L * L + x]);
+  }
+  let Ks, th, om, damagedSet, mode, healLeft, lastRecall;
+
+  function carve() {
+    Ks = bonds.map(([i, j]) => Math.cos(patt[i] - patt[j]) > 0 ? 1.6 : 0.35);
+    om = Array.from({ length: N }, () => (Math.random() - 0.5) * 0.15);
+    th = patt.map(p => p + (Math.random() - 0.5) * 0.3);
+    damagedSet = []; mode = 'idle'; healLeft = 0; lastRecall = null;
+  }
+  carve();
+
+  const sound = makeSoundToggle(document.getElementById('repair-controls'), { label: 'hear the memory' });
+  const SAMP = [11, 14, 33, 38, 55, 58, 77, 82];
+  const voices = makeVoices(sound, SAMP.length, { freq: 220 });
+  const vel = new Float64Array(SAMP.length);
+
+  function stepNet(learn, noise) {
+    const acc = new Float64Array(N);
+    for (let b = 0; b < bonds.length; b++) {
+      const i = bonds[b][0], j = bonds[b][1];
+      const s = Math.sin(th[j] - th[i]);
+      acc[i] += Ks[b] * s; acc[j] -= Ks[b] * s;
+      if (learn) {
+        const c = Math.cos(th[j] - th[i]);
+        Ks[b] = Math.max(0, Ks[b] + eta * (R0(Ks[b]) * c - 2 * Ks[b] / r) * dt);
+      }
+    }
+    SAMP.forEach((idx, k) => { vel[k] = 0.9 * vel[k] + 0.1 * (om[idx] + acc[idx]); });
+    for (let i = 0; i < N; i++) th[i] += (om[i] + acc[i]) * dt + (noise ? (Math.random() - 0.5) * noise : 0);
+  }
+
+  function scoreState(state) {
+    let ok = 0;
+    for (const [i, j] of bonds) if (Math.cos(state[i] - state[j]) * Math.cos(patt[i] - patt[j]) > 0) ok++;
+    return ok / bonds.length;
+  }
+  function probeOnce() {
+    const t2 = patt.map(p => Math.random() < 0.45 ? p : Math.random() * Math.PI * 2);
+    for (let t = 0; t < 800; t++) {
+      const acc = new Float64Array(N);
+      for (let b = 0; b < bonds.length; b++) {
+        const i = bonds[b][0], j = bonds[b][1];
+        const s = Math.sin(t2[j] - t2[i]);
+        acc[i] += Ks[b] * s; acc[j] -= Ks[b] * s;
+      }
+      for (let i = 0; i < N; i++) t2[i] += (om[i] + acc[i]) * dt;
+    }
+    return { score: scoreState(t2), state: t2 };
+  }
+
+  document.getElementById('rp-probe').addEventListener('click', () => {
+    let acc = 0, last = null;
+    for (let k = 0; k < 5; k++) { const p = probeOnce(); acc += p.score; last = p.state; }
+    lastRecall = acc / 5;
+    th = last;
+    mode = 'idle';
+  });
+  function damage(toK) {
+    damagedSet = [];
+    bonds.forEach((bd, k) => {
+      if (Ks[k] > 0.8 && Math.random() < 0.55) { Ks[k] = toK; damagedSet.push(k); }
+    });
+    lastRecall = null;
+  }
+  document.getElementById('rp-fray').addEventListener('click', () => damage(0.03));
+  document.getElementById('rp-vaporize').addEventListener('click', () => damage(0));
+  document.getElementById('rp-heal').addEventListener('click', () => {
+    th = patt.map(p => p + (Math.random() - 0.5) * 0.3);
+    mode = 'healing'; healLeft = 10000;
+  });
+  document.getElementById('rp-reset').addEventListener('click', carve);
+
+  function draw() {
+    if (mode === 'healing') {
+      const chunk = Math.min(220, healLeft);
+      for (let s = 0; s < chunk; s++) stepNet(true, 0.02);
+      healLeft -= chunk;
+      if (healLeft <= 0) mode = 'idle';
+    } else {
+      for (let s = 0; s < 3; s++) stepNet(false, 0.01);
+    }
+
+    ctx.clearRect(0, 0, W, H);
+    const cell = 36, gw = L * cell; // grid drawn with bonds between cell centers
+    const x0 = (W - gw) / 2 + 18, y0 = 30, cc = cell * 0.5;
+
+    // bonds
+    for (let b = 0; b < bonds.length; b++) {
+      const [i, j] = bonds[b];
+      const xi = x0 + (i % L) * cell + cc - cell / 2, yi = y0 + Math.floor(i / L) * cell + cc - cell / 2;
+      const xj = x0 + (j % L) * cell + cc - cell / 2, yj = y0 + Math.floor(j / L) * cell + cc - cell / 2;
+      const damaged = damagedSet.includes(b) && Ks[b] < 0.5;
+      ctx.strokeStyle = damaged
+        ? 'rgba(200, 60, 60, 0.85)'
+        : `rgba(217, 114, 54, ${Math.min(1, Ks[b] / 2.2) * 0.9 + 0.04})`;
+      ctx.lineWidth = damaged ? 1.2 : 0.5 + Math.min(1, Ks[b] / 2.2) * 3.2;
+      ctx.beginPath(); ctx.moveTo(xi, yi); ctx.lineTo(xj, yj); ctx.stroke();
+    }
+    // cells
+    for (let i = 0; i < N; i++) {
+      const x = x0 + (i % L) * cell - cell / 2 + cc, y = y0 + Math.floor(i / L) * cell - cell / 2 + cc;
+      const br = (Math.cos(th[i]) + 1) / 2;
+      ctx.fillStyle = `rgb(${40 + br * 215}, ${40 + br * 170}, ${50 + br * 80})`;
+      ctx.beginPath(); ctx.arc(x, y, 7.5, 0, Math.PI * 2); ctx.fill();
+    }
+
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 12px serif'; ctx.textAlign = 'center';
+    const regrown = damagedSet.filter(k => Ks[k] > 0.8).length;
+    ctx.fillText(
+      mode === 'healing' ? `healing — sleep episode ${Math.round(100 - healLeft / 100)}% …`
+        : damagedSet.length ? `damaged bonds: ${damagedSet.length} · regrown so far: ${regrown}`
+        : 'the memory is the web of bright bonds',
+      W / 2, y0 + gw + 12);
+
+    voices && SAMP.forEach((idx, k) => voices.set(k, 220 * (1 + vel[k] * 0.55), 1));
+
+    readout.textContent = (lastRecall === null ? 'recall = — (probe to measure)' : `recall = ${(lastRecall * 100).toFixed(0)}%`) +
+      (damagedSet.length ? ` · regrown ${regrown}/${damagedSet.length}` : '');
+  }
+
+  runWhenVisible(canvas, draw);
+})();
+
+// ============================================================
+// FIG B: the bridge and the structural channel
+// ============================================================
+(() => {
+  const W = 680, H = 400;
+  const canvas = document.getElementById('canvas-bridge');
+  const ctx = setupHiDPICanvas(canvas, W, H);
+  const readout = document.getElementById('br-readout');
+  const toggleBtn = document.getElementById('br-toggle');
+
+  const n = 8, dt = 0.05, eta = 0.5, etaS = 0.35;
+  const edges = [];
+  for (let a = 0; a < 4; a++) for (let b = a + 1; b < 4; b++) edges.push([a, b]);
+  for (let a = 4; a < 8; a++) for (let b = a + 1; b < 8; b++) edges.push([a, b]);
+  edges.push([3, 4]);
+  const BR = edges.length - 1;
+
+  let Ks, th, om, useF = false, S = null, l2 = 0, l20 = 0, l2hist = [], tick = 0;
+  function reset() {
+    Ks = edges.map(() => 1.2);
+    om = Array.from({ length: n }, (_, i) => (i < 4 ? -0.45 : 0.45) + (Math.random() - 0.5) * 0.1);
+    th = Array.from({ length: n }, () => Math.random() * Math.PI * 2);
+    S = null; l2hist = []; tick = 0; l20 = 0;
+  }
+  reset();
+  document.getElementById('br-reset').addEventListener('click', reset);
+  toggleBtn.addEventListener('click', () => {
+    useF = !useF;
+    toggleBtn.textContent = 'Structural channel: ' + (useF ? 'ON' : 'OFF');
+    toggleBtn.classList.toggle('primary', !useF);
+  });
+
+  function computeL2() {
+    const Lm = Array.from({ length: n }, () => new Float64Array(n));
+    edges.forEach(([i, j], b) => {
+      Lm[i][j] -= Ks[b]; Lm[j][i] -= Ks[b]; Lm[i][i] += Ks[b]; Lm[j][j] += Ks[b];
+    });
+    let c = 1;
+    for (let i = 0; i < n; i++) c = Math.max(c, Lm[i][i] * 2 + 1);
+    let v = Array.from({ length: n }, () => Math.random() - 0.5);
+    for (let it = 0; it < 1200; it++) {
+      const m = v.reduce((a, b) => a + b, 0) / n;
+      for (let i = 0; i < n; i++) v[i] -= m;
+      const w = new Float64Array(n);
+      for (let i = 0; i < n; i++) { w[i] = c * v[i]; for (let j = 0; j < n; j++) w[i] -= Lm[i][j] * v[j]; }
+      let nn = 0; for (let i = 0; i < n; i++) nn += w[i] * w[i];
+      nn = Math.sqrt(nn) + 1e-12;
+      v = Array.from(w, x => x / nn);
+    }
+    let num = 0;
+    for (let i = 0; i < n; i++) { let s2 = 0; for (let j = 0; j < n; j++) s2 += Lm[i][j] * v[j]; num += v[i] * s2; }
+    return { l2: Math.max(0, num), v2: v };
+  }
+
+  function step() {
+    tick++;
+    let Ip = 0;
+    edges.forEach(([i, j]) => Ip += Math.cos(th[j] - th[i]));
+    Ip = Math.max(0, Ip / edges.length);
+    if (tick % 40 === 1) {
+      const res = computeL2();
+      l2 = res.l2;
+      if (!l20) l20 = l2;
+      const sens = edges.map(([i, j]) => (res.v2[i] - res.v2[j]) * (res.v2[i] - res.v2[j]));
+      const mean = sens.reduce((a, b) => a + b, 0) / sens.length;
+      S = sens.map(s2 => s2 - mean);
+      step._Ip = Ip;
+    }
+    const acc = new Float64Array(n);
+    edges.forEach(([i, j], b) => {
+      const s = Math.sin(th[j] - th[i]);
+      acc[i] += Ks[b] * s; acc[j] -= Ks[b] * s;
+      const c = Math.cos(th[j] - th[i]);
+      let dK = eta * (R0(Ks[b]) * c - 2 * Ks[b] / r);
+      if (useF && S) dK += etaS * (step._Ip || 0) * S[b] * 4;
+      Ks[b] = Math.max(0, Ks[b] + dK * dt);
+    });
+    for (let i = 0; i < n; i++) th[i] += (om[i] + acc[i]) * dt;
+  }
+
+  const pos = [];
+  for (let i = 0; i < 4; i++) pos.push([150 + 75 * Math.cos(i * Math.PI / 2 + 0.4), 150 + 75 * Math.sin(i * Math.PI / 2 + 0.4)]);
+  for (let i = 0; i < 4; i++) pos.push([520 + 75 * Math.cos(i * Math.PI / 2 + 1.2), 150 + 75 * Math.sin(i * Math.PI / 2 + 1.2)]);
+
+  function draw() {
+    for (let s = 0; s < 6; s++) step();
+    if (tick % 24 < 6) { l2hist.push(l2); if (l2hist.length > 300) l2hist.shift(); }
+
+    ctx.clearRect(0, 0, W, H);
+    edges.forEach(([i, j], b) => {
+      ctx.strokeStyle = b === BR
+        ? (Ks[b] > 0.1 ? 'rgba(217,114,54,0.95)' : 'rgba(200,60,60,0.8)')
+        : `rgba(125,125,140,${Math.min(1, Ks[b] / 2.5) * 0.7 + 0.06})`;
+      ctx.lineWidth = 0.6 + Math.min(1, Ks[b] / 3) * 4.5;
+      ctx.beginPath(); ctx.moveTo(pos[i][0], pos[i][1]); ctx.lineTo(pos[j][0], pos[j][1]); ctx.stroke();
+    });
+    for (let i = 0; i < n; i++) {
+      const br = (Math.cos(th[i]) + 1) / 2;
+      ctx.fillStyle = `rgb(${40 + br * 215}, ${40 + br * 170}, ${50 + br * 80})`;
+      ctx.beginPath(); ctx.arc(pos[i][0], pos[i][1], 10, 0, Math.PI * 2); ctx.fill();
+    }
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 12px serif'; ctx.textAlign = 'center';
+    ctx.fillText('the bridge', 335, 130);
+
+    // λ₂ sparkline
+    const sx = 90, sy = 285, sw = 500, sh = 80;
+    ctx.strokeStyle = palette.axis; ctx.lineWidth = 1; ctx.strokeRect(sx, sy, sw, sh);
+    ctx.fillText('λ₂ — algebraic connectivity, live', sx + sw / 2, sy - 8);
+    ctx.strokeStyle = palette.blue; ctx.lineWidth = 2;
+    ctx.beginPath();
+    const lmax = Math.max(1.1, ...l2hist);
+    l2hist.forEach((v, i) => {
+      const x = sx + (i / 299) * sw, y = sy + sh - (v / lmax) * (sh - 8);
+      i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+    });
+    ctx.stroke();
+
+    let Ip = 0;
+    edges.forEach(([i, j]) => Ip += Math.cos(th[j] - th[i]));
+    Ip = Math.max(0, Ip / edges.length);
+    const C = Ip * Math.min(1, l20 ? l2 / l20 : 0);
+    readout.textContent = `bridge K = ${Ks[BR].toFixed(2)} · λ₂ = ${l2.toFixed(2)} · C = ${C.toFixed(2)}${useF ? ' · structural channel ON' : ''}`;
+  }
+
+  runWhenVisible(canvas, draw);
+})();
+</script>
+
+</body>
+</html>

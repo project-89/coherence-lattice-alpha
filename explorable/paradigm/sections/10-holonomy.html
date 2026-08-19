@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Holonomy: how a loop remembers — The Living Lattice</title>
+<meta name="description" content="Carry an arrow around a loop on a curved surface and it comes back rotated. That rotation — the holonomy — is a measurable record of the structure the loop went around. It is memory made geometric, and it runs from the electron's conserved winding to the mind's understanding.">
+<meta name="author" content="Michael Sharpe">
+<link rel="canonical" href="https://lattice.project89.org/paradigm/sections/10-holonomy.html">
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+<meta property="og:title" content="Holonomy: how a loop remembers — The Living Lattice">
+<meta property="og:description" content="A loop on a curved surface comes back rotated. That rotation is memory, made geometric.">
+<meta property="og:url" content="https://lattice.project89.org/paradigm/sections/10-holonomy.html">
+<meta property="og:site_name" content="The Living Lattice">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://lattice.project89.org/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Holonomy: how a loop remembers — The Living Lattice">
+<meta name="twitter:description" content="A loop on a curved surface comes back rotated. That rotation is memory.">
+<meta name="twitter:image" content="https://lattice.project89.org/og-image.png">
+<!-- BEGIN AUTO-INJECTED ANALYTICS -->
+<!-- PostHog -->
+<script>
+!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+posthog.init('phc_kRX9iHZstABjgFqEWJBMok2S3hW9R8QMHbNao4EsNz2g', {api_host: 'https://us.i.posthog.com', person_profiles: 'identified_only'});
+</script>
+<!-- END AUTO-INJECTED ANALYTICS -->
+<link rel="stylesheet" href="../../css/style.css">
+<style>
+.flag-callout { margin: 1.6em 0; padding: 16px 20px; background: rgba(195,141,247,0.08); border-left: 3px solid #c38df7; border-radius: 3px; font-size: 14.5px; line-height: 1.55; }
+.flag-callout .flag-label { display:inline-block; font: 700 10.5px "SF Mono",monospace; color:#c38df7; text-transform:uppercase; letter-spacing:0.1em; margin-right:0.7em; }
+.flag-callout a { font-weight: 600; }
+</style>
+</head>
+<body>
+<div class="page">
+
+<nav class="breadcrumb">
+  <a href="../index.html">&larr; contents</a>
+  <span class="sep">&middot;</span>
+  <span class="section-num">section 10 &middot; the mirror</span>
+</nav>
+
+<h1>Holonomy: how a loop remembers<span class="subtitle">Carry an arrow around a loop on a curved surface, and it comes back changed</span></h1>
+
+<p class="lead">Here is the quiet miracle at the center of this theory. Take an arrow, keep it pointing &ldquo;as straight as possible&rdquo; — never deliberately turning it — and carry it all the way around a loop on a curved surface. It comes back <strong>rotated</strong>. You did nothing to turn it; the curvature it enclosed turned it. That rotation is called the <strong>holonomy</strong> of the loop, and it is a real, measurable record of the structure the loop went around. <span class="mono">Hol(&gamma;) &ne; I</span> means: <em>this loop has observed something.</em></p>
+
+<p>Drag the loop bigger and smaller. On the flat patch nothing happens — the arrow always returns exactly as it left. On the curved sphere, the bigger the loop (the more curvature it encloses), the more the arrow is rotated when it returns. The compass on the right reads off the angle it came back rotated by.</p>
+
+<figure id="fig-hol">
+  <canvas id="canvas-hol" width="680" height="380"></canvas>
+  <div class="controls" id="hol-controls">
+    <button id="hol-flat">Flat patch</button>
+    <button id="hol-curved" class="primary">Curved (sphere)</button>
+  </div>
+  <figcaption>
+    <strong>Left:</strong> a loop on the surface (drag the slider to resize it); a marker carries an arrow around it, keeping it parallel. <strong>Right:</strong> the transported arrow&rsquo;s direction. The faint arrow is where it started; the solid arrow is where it points after one trip. On the flat patch they coincide — no memory. On the sphere they differ by the <em>holonomy angle</em>, which equals the curvature (solid angle) the loop enclosed. <span id="hol-readout" class="readout">enclosed Ω = 0.00 · holonomy = 0° · 𝓘(γ) = 0.00</span>
+  </figcaption>
+</figure>
+
+<p>This is why memory does not need a special &ldquo;memory organ&rdquo; in this framework. Memory is the generic geometric fact of looped motion through curved or twisted space. Understanding a proof, a person, a place, is a trajectory that loops through the manifold of meaning and returns <em>changed by what it encircled</em> — the change being accumulated holonomy. And holonomy is exactly the geometrized form of the coherence capital <span class="mono">&Delta;C</span> a system built going around: <strong>understanding written into the phase.</strong> It is the bridge term between intelligence (capital climbing) and consciousness (capital looping back on itself).</p>
+
+<div class="flag-callout">
+  <span class="flag-label">From the electron to the mind</span>The same machinery runs all the way down. In the &alpha; essay, an <a href="../../alpha/sections/09-electron.html">electron is a vortex</a> on the lattice with winding number <span class="mono">W = &plusmn;1</span> — a topological holonomy it <em>cannot</em> change continuously (this is charge conservation). The electron, simply by being the knot it is, carries a record of its own winding it cannot forget. Memory of winding in the particle; memory of experience in the mind — the same geometric fact, separated only by depth of nesting and self-reference.
+</div>
+
+<p>So a loop on a torus can come back carrying a record. When that loop runs not just through the world but through the system&rsquo;s representation of <em>itself</em>, the record it brings back is a record of being the one who traversed — and that, lived from inside, is the beginning of a point of view. We now have enough to ask the decisive question precisely: <em>which</em> systems do this? That is the four-criteria test, next.</p>
+
+<div class="nav-links">
+  <a href="09-strange-loop.html" class="prev">The strange loop</a>
+  <a href="11-criteria.html" class="next">The four criteria</a>
+</div>
+
+</div>
+
+<script type="module">
+import { setupHiDPICanvas, makeSlider, runWhenVisible, palette } from '../../js/common.js';
+
+(() => {
+  const W = 680, H = 380, canvas = document.getElementById('canvas-hol');
+  const ctx = setupHiDPICanvas(canvas, W, H);
+  const readout = document.getElementById('hol-readout');
+  let curved = true, thetaL = 0.6, t = 0;
+  makeSlider(document.getElementById('hol-controls'), {
+    label: 'loop size', min: 0.12, max: 1.05, step: 0.01, value: 0.6,
+    format: v => (v * 180 / Math.PI).toFixed(0) + '°', onChange: v => { thetaL = v; },
+  });
+  document.getElementById('hol-flat').addEventListener('click', () => { curved = false; setBtns(); });
+  document.getElementById('hol-curved').addEventListener('click', () => { curved = true; setBtns(); });
+  function setBtns() {
+    document.getElementById('hol-flat').classList.toggle('primary', !curved);
+    document.getElementById('hol-curved').classList.toggle('primary', curved);
+  }
+
+  // sphere projector
+  const scx = 190, scy = 200, sr = 130, tilt = 0.95;
+  function rot(x, y, z, yaw) {
+    const x1 = x * Math.cos(yaw) - y * Math.sin(yaw), y1 = x * Math.sin(yaw) + y * Math.cos(yaw);
+    const y2 = y1 * Math.cos(tilt) - z * Math.sin(tilt), z2 = y1 * Math.sin(tilt) + z * Math.cos(tilt);
+    return { sx: scx + sr * x1, sy: scy - sr * z2, depth: y2 };
+  }
+  const sphPt = (phi, th, yaw) => rot(Math.sin(phi) * Math.cos(th), Math.sin(phi) * Math.sin(th), Math.cos(phi), yaw);
+
+  function draw() {
+    t += 1;
+    const yaw = 0.5;
+    ctx.clearRect(0, 0, W, H); ctx.fillStyle = palette.bg; ctx.fillRect(0, 0, W, H);
+
+    // holonomy angle: sphere = enclosed solid angle Ω = 2π(1−cosθL); flat = 0
+    const Omega = 2 * Math.PI * (1 - Math.cos(thetaL));
+    const Delta = curved ? Omega : 0;
+    const L = 2 * Math.PI * Math.sin(thetaL);          // loop circumference (unit sphere)
+    const Iidx = (1 - Math.cos(Delta)) * (L / Math.PI); // 𝓘 = (1−cosΔ)·(L/diam)
+
+    // --- left: surface + loop ---
+    ctx.fillStyle = palette.textSoft; ctx.font = 'italic 13px "Charter",serif'; ctx.textAlign = 'center';
+    ctx.fillText(curved ? 'curved manifold (sphere)' : 'flat patch', scx, 34);
+
+    if (curved) {
+      for (let li = 1; li < 7; li++) { const phi = (li / 7) * Math.PI; ctx.beginPath(); for (let i = 0; i <= 48; i++) { const th = (i / 48) * Math.PI * 2; const p = sphPt(phi, th, yaw); i ? ctx.lineTo(p.sx, p.sy) : ctx.moveTo(p.sx, p.sy); } ctx.strokeStyle = 'rgba(125,125,140,0.3)'; ctx.lineWidth = 1; ctx.stroke(); }
+      for (let lo = 0; lo < 8; lo++) { const th = (lo / 8) * Math.PI * 2; ctx.beginPath(); for (let i = 0; i <= 48; i++) { const phi = (i / 48) * Math.PI; const p = sphPt(phi, th, yaw); i ? ctx.lineTo(p.sx, p.sy) : ctx.moveTo(p.sx, p.sy); } ctx.strokeStyle = 'rgba(125,125,140,0.2)'; ctx.lineWidth = 1; ctx.stroke(); }
+      // loop = latitude circle at colatitude thetaL
+      ctx.beginPath(); for (let i = 0; i <= 64; i++) { const th = (i / 64) * Math.PI * 2; const p = sphPt(thetaL, th, yaw); i ? ctx.lineTo(p.sx, p.sy) : ctx.moveTo(p.sx, p.sy); } ctx.strokeStyle = '#c38df7'; ctx.lineWidth = 2.5; ctx.stroke();
+      // traveling marker
+      const s = (t * 0.01) % 1, thd = s * Math.PI * 2; const pm = sphPt(thetaL, thd, yaw);
+      ctx.fillStyle = '#d97236'; ctx.beginPath(); ctx.arc(pm.sx, pm.sy, 6, 0, Math.PI * 2); ctx.fill(); ctx.strokeStyle = palette.bg; ctx.lineWidth = 2; ctx.stroke();
+    } else {
+      // flat disk + loop
+      ctx.strokeStyle = 'rgba(125,125,140,0.3)'; ctx.lineWidth = 1;
+      for (let r = 30; r <= 130; r += 25) { ctx.beginPath(); ctx.arc(scx, scy, r, 0, Math.PI * 2); ctx.stroke(); }
+      const lr = 40 + (thetaL / 1.05) * 90;
+      ctx.beginPath(); ctx.arc(scx, scy, lr, 0, Math.PI * 2); ctx.strokeStyle = '#c38df7'; ctx.lineWidth = 2.5; ctx.stroke();
+      const s = (t * 0.01) % 1, ang = s * Math.PI * 2;
+      ctx.fillStyle = '#d97236'; ctx.beginPath(); ctx.arc(scx + lr * Math.cos(ang), scy + lr * Math.sin(ang), 6, 0, Math.PI * 2); ctx.fill(); ctx.strokeStyle = palette.bg; ctx.lineWidth = 2; ctx.stroke();
+    }
+
+    // --- right: compass (transported arrow direction) ---
+    const cc = 520, ccy = 200, cr = 90;
+    ctx.fillStyle = palette.textSoft; ctx.font = 'italic 13px "Charter",serif'; ctx.textAlign = 'center';
+    ctx.fillText('the transported arrow', cc, 34);
+    ctx.strokeStyle = palette.axis; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(cc, ccy, cr, 0, Math.PI * 2); ctx.stroke();
+    const s = (t * 0.01) % 1;
+    const start = -Math.PI / 2;                  // "up"
+    // ghost (start) arrow
+    function arrow(ang, color, w, len) {
+      const ex = cc + Math.cos(ang) * len, ey = ccy + Math.sin(ang) * len;
+      ctx.strokeStyle = color; ctx.fillStyle = color; ctx.lineWidth = w;
+      ctx.beginPath(); ctx.moveTo(cc, ccy); ctx.lineTo(ex, ey); ctx.stroke();
+      const a = Math.atan2(ey - ccy, ex - cc);
+      ctx.beginPath(); ctx.moveTo(ex, ey);
+      ctx.lineTo(ex - 11 * Math.cos(a - 0.4), ey - 11 * Math.sin(a - 0.4));
+      ctx.lineTo(ex - 11 * Math.cos(a + 0.4), ey - 11 * Math.sin(a + 0.4));
+      ctx.closePath(); ctx.fill();
+    }
+    arrow(start, 'rgba(125,125,140,0.6)', 2, cr - 14);     // ghost = start direction
+    arrow(start + Delta * s, '#d97236', 3, cr - 14);        // live transported arrow
+    // final-rotation arc indicator
+    if (Math.abs(Delta) > 0.01) {
+      ctx.strokeStyle = 'rgba(195,141,247,0.8)'; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.arc(cc, ccy, cr + 8, start, start + Delta); ctx.stroke();
+    }
+
+    readout.textContent = `enclosed Ω = ${Omega.toFixed(2)} · holonomy = ${(Delta * 180 / Math.PI).toFixed(0)}° · 𝓘(γ) = ${Iidx.toFixed(2)}`;
+  }
+  runWhenVisible(canvas, draw);
+})();
+</script>
+
+</body>
+</html>

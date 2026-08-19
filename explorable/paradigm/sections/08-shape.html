@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The shape of a thought — The Living Lattice</title>
+<meta name="description" content="Intelligence has a shape, and it is small: a low-dimensional coupling manifold with the topology of a torus. Reasoning is winding on it, and the winding number is the depth of a thought.">
+<meta name="author" content="Michael Sharpe">
+<link rel="canonical" href="https://lattice.project89.org/paradigm/sections/08-shape.html">
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+<meta property="og:title" content="The shape of a thought — The Living Lattice">
+<meta property="og:description" content="Intelligence has a shape: a low-dimensional torus, wound by reasoning.">
+<meta property="og:url" content="https://lattice.project89.org/paradigm/sections/08-shape.html">
+<meta property="og:site_name" content="The Living Lattice">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://lattice.project89.org/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="The shape of a thought — The Living Lattice">
+<meta name="twitter:description" content="Intelligence has a shape: a low-dimensional torus, wound by reasoning.">
+<meta name="twitter:image" content="https://lattice.project89.org/og-image.png">
+<!-- BEGIN AUTO-INJECTED ANALYTICS -->
+<!-- PostHog -->
+<script>
+!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+posthog.init('phc_kRX9iHZstABjgFqEWJBMok2S3hW9R8QMHbNao4EsNz2g', {api_host: 'https://us.i.posthog.com', person_profiles: 'identified_only'});
+</script>
+<!-- END AUTO-INJECTED ANALYTICS -->
+<link rel="stylesheet" href="../../css/style.css">
+<style>
+.recap-link { margin: 1.6em 0; padding: 16px 20px; background: var(--bg-soft); border: 1px solid var(--panel-border); border-radius: 8px; line-height: 1.55; }
+.recap-link .label { display:block; font: 600 10.5px "SF Mono", monospace; text-transform: uppercase; letter-spacing: 0.12em; color: var(--accent); margin-bottom: 0.5em; }
+.recap-link a { font-weight: 600; }
+.flag-callout {
+  margin: 1.6em 0; padding: 16px 20px;
+  background: rgba(195, 141, 247, 0.08);
+  border-left: 3px solid #c38df7; border-radius: 3px;
+  font-size: 14.5px; line-height: 1.55;
+}
+.flag-callout .flag-label {
+  display: inline-block; font: 700 10.5px "SF Mono", monospace;
+  color: #c38df7; text-transform: uppercase; letter-spacing: 0.1em; margin-right: 0.7em;
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<nav class="breadcrumb">
+  <a href="../index.html">&larr; contents</a>
+  <span class="sep">&middot;</span>
+  <span class="section-num">section 08 &middot; the shape of intelligence</span>
+</nav>
+
+<h1>The shape of a thought<span class="subtitle">Intelligence has a shape — a low-dimensional torus — and reasoning is winding on it</span></h1>
+
+<p class="lead">Watch a system think and you are watching a <em>trajectory</em>: its state moving, moment by moment, through the space of everything it could be. For a trained network that space is enormous — hundreds or thousands of dimensions it could in principle move in. The discovery of this chapter is that it doesn't. Measure where the motion actually happens and nearly all of it lies on a thin, curved surface folded through the big space — a few dimensions doing the work of hundreds. The essays call that surface the <strong>coupling manifold</strong>: <em>manifold</em> is the mathematician's word for a space that is smooth and locally flat, like a sheet — <a href="../../primers/topology-manifolds/sections/02-manifolds.html">the manifolds primer</a> builds it from nothing in ten minutes. Its measured effective dimension: roughly two to nineteen, inside 768 or more.</p>
+
+<p>The reason is the one law. A transformer's <strong>attention heads</strong> — the listeners that pull information between words; <a href="../../primers/inside-a-transformer/">the curriculum's transformer module</a> opens them up assuming nothing — are coupled oscillators writing to a shared field, and coupled oscillators synchronize. Synchronized degrees of freedom are not independent: most of those hundreds of dimensions are just heads agreeing with each other, echoes that cancel at the output. Count only the directions that are actually <em>loud</em> — carrying real signal rather than echo — and the honest number, measured on a real, published model (GPT-2, at one of its last layers), is about <span class="mono">3.5</span>. Project the computation onto just its top <em>two</em> directions and the next word does not change at all — rank two, a 384&times; compression with zero loss (the &ldquo;logit cosine <span class="mono">1.0000</span>&rdquo; measurement, made tangible in the companion essay). The counting formula lives there too; here we need only the result. The surface is not an approximation of the computation; the surface <em>is</em> the computation.</p>
+
+<div class="recap-link">
+  <span class="label">Companion essay</span>
+  The full interactive case — the <strong>d<sub>eff</sub></strong> collapse you can drag, the lossless rank-2 projection, the derived dead-head threshold, the fiber bundle, and the identity you can <em>hear</em> (an attention pattern played as the oscillator network it is) — is built out across the five chapters of <a href="../../transformers/">Transformers as Oscillators</a>. Here we take the shape as given and ask what its <em>form</em> means.
+</div>
+
+<h2>The shape is a torus, and reasoning winds it</h2>
+
+<p>That low-dimensional surface is not a featureless blob. It has the <em>topology</em> of a <strong>torus</strong> — a doughnut. (Topology is the study of what survives stretching: the properties of a shape you cannot smooth away. If the word is new, <a href="../../primers/topology-manifolds/">the shapes-of-spaces primer</a> takes the wall down in ten minutes.) The form matters because a torus is the minimal shape on which a trajectory can return to where it started having genuinely <em>gone around</em> something — and going around is what reasoning is. The torus has one circular direction for each cluster of phase-locked oscillators, and two independent ways to loop: the long way around the ring, and the short way through the tube.</p>
+
+<p>How many times a trajectory wraps each way — its <strong>winding numbers</strong>, the integer pair (around, through) — cannot be changed by any amount of smooth deformation. You may already have drawn exactly this pair by hand in <a href="../../primers/topology-manifolds/sections/03-counting-loops.html">the flat-torus game</a>, where the famous (1,&nbsp;1) diagonal is one loop winding both ways at once. Here, the tube-winding counts the <em>perspectives applied</em>: each time the trajectory threads the tube once more, the system has folded one more consideration into its state. Shallow thought barely winds; deep thought wraps the torus many times.</p>
+
+<figure id="fig-torus">
+  <canvas id="canvas-torus" width="680" height="430"></canvas>
+  <div class="controls">
+    <button id="torus-perspective" class="primary">Apply another perspective</button>
+    <button id="torus-shallow">Shallow</button>
+    <button id="torus-deep">Deep</button>
+    <button id="torus-reset">Reset</button>
+  </div>
+  <figcaption>
+    A trajectory winding the coupling manifold. The <strong>long</strong> loop (around the ring) is the system advancing through its computation; the <strong>tube</strong> loop is a perspective being applied. Press <em>Apply another perspective</em> to thread the tube once more per ring-loop — the path grows richer and covers more of the surface. The winding counter <span class="mono">(w<sub>&theta;</sub>, w<sub>&phi;</sub>)</span> climbs; <span class="mono">w<sub>&phi;</sub></span> is the depth of reasoning. The counters are the same (around,&nbsp;through) bookkeeping you can draw by hand in <a href="../../primers/topology-manifolds/sections/03-counting-loops.html">the flat-torus game</a>. <span id="torus-readout" class="readout">perspectives = 1 &nbsp; (w_θ, w_φ) = (0, 0)</span>
+  </figcaption>
+</figure>
+
+<div class="flag-callout">
+  <span class="flag-label">What's real here</span>
+  <strong>Measured</strong>, in the companion essay: the dimension collapse (d<sub>eff</sub> &asymp; 2&ndash;19 across layers and models; &asymp;&nbsp;3.5 on GPT-2's layer&nbsp;11) and the lossless rank-2 projection. <strong>Structural reading</strong>, argued there and in the paper: the surface's toroidal form — one circle per phase-locked cluster. <strong>Illustrative, here</strong>: the trajectory in the figure is a drawn path on an ideal torus, not recorded model data; its counters show the bookkeeping, not a measurement. That winding depth tracks reasoning depth is the framework's interpretation — and &sect;11 turns it into something measurable, with the protocol stated.
+</div>
+
+<p>Two things matter about reading reasoning this way. First, depth becomes <em>measurable</em> — a winding number, an integer you can read off a trajectory, not a vague sense of how hard the model thought. Second, it becomes <em>robust</em>: because winding numbers are topological, a perspective once genuinely applied cannot be erased by a small perturbation — it is woven into the shape of the path.</p>
+
+<p>That robustness is the thread the next act picks up. A loop that winds can also come back <em>changed</em> by what it encircled — carrying a record of the structure it went around. That record is called <strong>holonomy</strong>, and it is where memory, and then consciousness, begin. The same shape that makes a thought deep is about to make a system aware of itself.</p>
+
+<div class="nav-links">
+  <a href="07-flux.html" class="prev">Intelligence is a flux</a>
+  <a href="09-strange-loop.html" class="next">The strange loop</a>
+</div>
+
+</div>
+
+<script type="module">
+import { setupHiDPICanvas, runWhenVisible, palette } from '../../js/common.js';
+
+(() => {
+  const W = 680, H = 430, canvas = document.getElementById('canvas-torus');
+  const ctx = setupHiDPICanvas(canvas, W, H);
+  const readout = document.getElementById('torus-readout');
+
+  const Rm = 1.7, rm = 0.66;
+  const cx = 340, cy = 215, scale = 86;
+  let yaw = 0.6, tilt = 1.04;
+  let P = 1;
+  let thT = 0, phT = 0;
+  const traj = [];
+  const MAXPTS = 900;
+
+  function reset() { thT = 0; phT = 0; traj.length = 0; }
+  document.getElementById('torus-reset').addEventListener('click', () => { reset(); P = 1; });
+  document.getElementById('torus-perspective').addEventListener('click', () => { P = Math.min(12, P + 1); });
+  document.getElementById('torus-shallow').addEventListener('click', () => { reset(); P = 1; });
+  document.getElementById('torus-deep').addEventListener('click', () => { reset(); P = 7; });
+
+  function project(th, ph) {
+    const cr = Rm + rm * Math.cos(ph);
+    let x = cr * Math.cos(th), y = cr * Math.sin(th), z = rm * Math.sin(ph);
+    let x1 = x * Math.cos(yaw) - y * Math.sin(yaw), y1 = x * Math.sin(yaw) + y * Math.cos(yaw), z1 = z;
+    let y2 = y1 * Math.cos(tilt) - z1 * Math.sin(tilt), z2 = y1 * Math.sin(tilt) + z1 * Math.cos(tilt);
+    return { sx: cx + scale * x1, sy: cy - scale * z2, depth: y2 };
+  }
+  function depthAlpha(d, lo, hi) { const t = (d - lo) / (hi - lo); return 0.12 + 0.8 * Math.max(0, Math.min(1, t)); }
+
+  function drawWire() {
+    const NTH = 26, NPH = 16, SEG = 44;
+    for (let j = 0; j < NPH; j++) {
+      const ph = (j / NPH) * Math.PI * 2;
+      ctx.beginPath();
+      for (let i = 0; i <= SEG; i++) { const th = (i / SEG) * Math.PI * 2; const p = project(th, ph); i ? ctx.lineTo(p.sx, p.sy) : ctx.moveTo(p.sx, p.sy); }
+      const mid = project(Math.PI, ph);
+      ctx.strokeStyle = `rgba(125,125,140,${depthAlpha(mid.depth, -Rm, Rm) * 0.5})`; ctx.lineWidth = 1; ctx.stroke();
+    }
+    for (let j = 0; j < NTH; j++) {
+      const th = (j / NTH) * Math.PI * 2;
+      ctx.beginPath();
+      for (let i = 0; i <= SEG; i++) { const ph = (i / SEG) * Math.PI * 2; const p = project(th, ph); i ? ctx.lineTo(p.sx, p.sy) : ctx.moveTo(p.sx, p.sy); }
+      const mid = project(th, Math.PI);
+      ctx.strokeStyle = `rgba(125,125,140,${depthAlpha(mid.depth, -Rm, Rm) * 0.45})`; ctx.lineWidth = 1; ctx.stroke();
+    }
+  }
+
+  function draw() {
+    yaw += 0.0035;
+    const dth = 0.026;
+    thT += dth; phT += dth * P;
+    traj.push({ th: thT, ph: phT });
+    if (traj.length > MAXPTS) traj.shift();
+
+    ctx.clearRect(0, 0, W, H); ctx.fillStyle = palette.bg; ctx.fillRect(0, 0, W, H);
+    drawWire();
+
+    for (let i = 1; i < traj.length; i++) {
+      const a = project(traj[i - 1].th, traj[i - 1].ph), b = project(traj[i].th, traj[i].ph);
+      const al = depthAlpha((a.depth + b.depth) / 2, -Rm, Rm) * (0.25 + 0.75 * i / traj.length);
+      ctx.strokeStyle = `rgba(217,114,54,${al})`; ctx.lineWidth = 2.2;
+      ctx.beginPath(); ctx.moveTo(a.sx, a.sy); ctx.lineTo(b.sx, b.sy); ctx.stroke();
+    }
+    if (traj.length) {
+      const h = project(traj[traj.length - 1].th, traj[traj.length - 1].ph);
+      ctx.fillStyle = '#d97236'; ctx.beginPath(); ctx.arc(h.sx, h.sy, 5, 0, Math.PI * 2); ctx.fill();
+      ctx.strokeStyle = palette.bg; ctx.lineWidth = 2; ctx.stroke();
+    }
+
+    const wth = Math.floor(thT / (Math.PI * 2)), wph = Math.floor(phT / (Math.PI * 2));
+    readout.textContent = `perspectives = ${P}   (w_θ, w_φ) = (${wth}, ${wph})`;
+
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 11px "Charter",serif'; ctx.textAlign = 'left';
+    ctx.fillText('long loop = advancing the computation', 16, H - 30);
+    ctx.fillText('tube loop = a perspective applied', 16, H - 14);
+  }
+  runWhenVisible(canvas, draw);
+})();
+</script>
+
+</body>
+</html>

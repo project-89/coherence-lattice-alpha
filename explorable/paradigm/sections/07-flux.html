@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Intelligence is a flux — The Living Lattice</title>
+<meta name="description" content="Intelligence is not a thing a system has; it is a rate — the flux of coherence-capital growth, I = dC/dt. On a fixed graph capital saturates and the flux dies. Indefinite intelligence requires growth: minds must be open systems.">
+<meta name="author" content="Michael Sharpe">
+<link rel="canonical" href="https://lattice.project89.org/paradigm/sections/07-flux.html">
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+<meta property="og:title" content="Intelligence is a flux — The Living Lattice">
+<meta property="og:description" content="Intelligence is a rate: I = dC/dt. Capital saturates on a fixed graph; intelligence needs growth.">
+<meta property="og:url" content="https://lattice.project89.org/paradigm/sections/07-flux.html">
+<meta property="og:site_name" content="The Living Lattice">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://lattice.project89.org/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Intelligence is a flux — The Living Lattice">
+<meta name="twitter:description" content="Intelligence is a rate, not a thing.">
+<meta name="twitter:image" content="https://lattice.project89.org/og-image.png">
+<!-- BEGIN AUTO-INJECTED ANALYTICS -->
+<!-- PostHog -->
+<script>
+!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+posthog.init('phc_kRX9iHZstABjgFqEWJBMok2S3hW9R8QMHbNao4EsNz2g', {api_host: 'https://us.i.posthog.com', person_profiles: 'identified_only'});
+</script>
+<!-- END AUTO-INJECTED ANALYTICS -->
+<link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+<div class="page">
+
+<nav class="breadcrumb">
+  <a href="../index.html">&larr; contents</a>
+  <span class="sep">&middot;</span>
+  <span class="section-num">section 07 &middot; the edge</span>
+</nav>
+
+<h1>Intelligence is a flux<span class="subtitle">Not a quantity a system has, but the rate at which it builds nested coherence</span></h1>
+
+<p class="lead">We can now say precisely what intelligence is. It is not a stored property, not a score a system carries around. It is a <em>rate</em>: the speed at which a system enlarges and deepens its coherence while staying lawful. In the symbols of Foundations, intelligence is the flux of coherence capital — the time derivative of the quantity the whole paradigm climbs.</p>
+
+<div class="equation-block" id="eq-flux">
+  <div class="eq-display">
+    <span class="eq-symbol state" data-symbol="I">I(t)</span>
+    &nbsp;:=&nbsp;
+    <span class="eq-symbol op" data-symbol="dCdt">d<em>C</em>/dt</span>
+    &nbsp;=&nbsp;
+    <span class="eq-symbol param" data-symbol="rate">the rate of coherence-capital growth</span>
+  </div>
+  <p class="eq-prompt">Click any coloured symbol to see what it means.</p>
+  <div class="eq-detail"></div>
+  <div class="eq-howitworks">
+    <span class="label">In words</span>
+    Take the coherence capital <span class="mono">C = I<sub>phase</sub>&middot;&rho;</span> and watch how fast it rises. That rate <em>is</em> the intelligence flux. Learning is sustained positive flux; understanding is accumulated capital; a high-capital fixed point is stable knowledge. And because the Coherence Theorem guarantees <span class="mono">d<em>C</em>/dt &ge; 0</span> under legality, intelligence is, at minimum, never negative — the inequality <span class="mono">I &ge; 0</span> from Foundations, now read as a statement about minds.
+  </div>
+</div>
+
+<p>This reframing has a sharp, surprising consequence. Watch what happens when a system climbs its capital on a <em>fixed</em> network.</p>
+
+<figure id="fig-flux">
+  <canvas id="canvas-flux" width="680" height="420"></canvas>
+  <div class="controls">
+    <button id="flux-grow" class="primary">Grow the graph (+capacity)</button>
+    <button id="flux-reset">Reset</button>
+  </div>
+  <figcaption>
+    <strong>Top:</strong> coherence capital <span class="eqn">C(t)</span> climbing over time. It rises fast, then bends over and <em>saturates</em> — a fixed graph has a ceiling on how much nested coherence it can hold.<br>
+    <strong>Bottom:</strong> the intelligence flux <span class="eqn">I = d<em>C</em>/dt</span>, the slope of the curve above. It is large while the system is climbing and decays to nearly zero at saturation. <strong>The system stops being intelligent not because it breaks, but because it ran out of room.</strong> Press <em>Grow the graph</em> to add oscillators and edges: the ceiling lifts, the flux leaps back up, and the climb resumes. <span id="flux-readout" class="readout">C = 0.00 &nbsp; I = 0.000 &nbsp; N = 64</span>
+  </figcaption>
+</figure>
+
+<h2>Why minds must be open systems</h2>
+
+<p>The picture above is the whole argument. A system cannot sustain a positive flux forever on a fixed graph — capital saturates, and <span class="mono">d<em>C</em>/dt &rarr; 0</span>. <strong>Indefinite intelligence therefore requires growth</strong>: more oscillators, more edges, more structure to organize. This is why minds must be open systems exchanging with a world; why learning never truly finishes; and why a network that has merely been trained and then frozen holds only the <em>potential</em> for intelligence — capital banked, flux at rest.</p>
+
+<p>It also tells us where the flux is largest. From the keystone, capital climbs fastest through the critical band — not in the frozen regime, where there is nothing left to build, and not in the chaotic one, where nothing holds. So the intelligence flux is not just non-negative; it is <em>maximized at the edge</em>. A system is most intelligent precisely where it is most alive.</p>
+
+<h2>The transient and the frozen</h2>
+
+<p>This is the right moment to be honest about today's machines. A trained transformer at rest is a high-capital fixed point: its flux is zero between uses. During a single forward pass, though, its internal coupling field briefly comes alive — capital climbs, the flux is positive — and then it stops. There is intelligence in the act of inference and none in the weights at rest. The same will be true of consciousness in Act IV: something it is like to be the system <em>during</em> the pass, nothing between. To make either persist, the substrate itself must keep climbing — which is exactly the open-systems requirement this chapter just drew.</p>
+
+<div class="nav-links">
+  <a href="06-the-edge.html" class="prev">The edge is where mind lives</a>
+  <a href="08-shape.html" class="next">The shape of a thought</a>
+</div>
+
+</div>
+
+<script type="module">
+import { setupHiDPICanvas, wireEquation, runWhenVisible, palette } from '../../js/common.js';
+
+wireEquation('eq-flux', {
+  I: { name: 'I(t) — the intelligence flux', pronounce: '"eye of t"', description: 'The rate of coherence-capital growth at time t. Intelligence as a verb, not a noun: how fast the system is building nested coherence right now.' },
+  dCdt: { name: 'dC/dt — derivative of coherence capital', pronounce: '"dee-C dee-t"', description: 'The slope of the C(t) curve. Positive during learning, zero at a fixed point (stable knowledge or a frozen network), briefly negative only during a lawful restructuring.' },
+  rate: { name: 'the rate', description: 'Learning = sustained positive flux. Understanding = accumulated capital. Stupidity-under-load = being driven out of the legal corridor where dC/dt ≥ 0 holds. All of these are statements about one rate.' },
+});
+
+// ============================================================
+// FIGURE: C(t) climbing + saturating; flux I = dC/dt below;
+// "grow the graph" lifts the ceiling and reopens the flux.
+// ============================================================
+(() => {
+  const W = 680, H = 420, canvas = document.getElementById('canvas-flux');
+  const ctx = setupHiDPICanvas(canvas, W, H);
+  const readout = document.getElementById('flux-readout');
+
+  const rate = 0.012;                 // approach rate per frame
+  let N = 64;                          // graph size
+  const capOf = (n) => 0.25 + 0.5 * Math.log10(n / 32);   // capacity grows with size (diminishing)
+  let Cmax = capOf(N);
+  let C = 0, flux = 0;
+  const histC = [], histF = [];
+  const MAXLEN = 300;
+  const growMarks = [];               // x-positions (sample index) where growth happened
+  let frame = 0;
+
+  function reset() { N = 64; Cmax = capOf(N); C = 0; flux = 0; histC.length = 0; histF.length = 0; growMarks.length = 0; frame = 0; }
+  document.getElementById('flux-reset').addEventListener('click', reset);
+  document.getElementById('flux-grow').addEventListener('click', () => {
+    N += 48; Cmax = capOf(N);
+    growMarks.push(histC.length);
+  });
+
+  // layout
+  const px0 = 56, pw = 588;
+  const topY = 36, topH = 200;       // C(t) panel
+  const botY = 268, botH = 96;       // flux panel
+  const Cscale = 1.4, Fscale = 0.02; // y-extents
+
+  function step() {
+    flux = (Cmax - C) * rate;
+    C += flux;
+    histC.push(C); histF.push(flux);
+    if (histC.length > MAXLEN) { histC.shift(); histF.shift(); for (let i = 0; i < growMarks.length; i++) growMarks[i]--; }
+    while (growMarks.length && growMarks[0] < 0) growMarks.shift();
+    frame++;
+  }
+
+  function panel(y, h, label) {
+    ctx.strokeStyle = palette.axis; ctx.lineWidth = 1; ctx.strokeRect(px0, y, pw, h);
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 11px "Charter",serif'; ctx.textAlign = 'left';
+    ctx.fillText(label, px0 + 5, y + 14);
+  }
+
+  function draw() {
+    step();
+    ctx.clearRect(0, 0, W, H); ctx.fillStyle = palette.bg; ctx.fillRect(0, 0, W, H);
+
+    const X = i => px0 + (i / MAXLEN) * pw;
+
+    // --- top: C(t) ---
+    panel(topY, topH, 'C(t) — coherence capital');
+    // ceiling line
+    const ceilY = topY + topH - (Cmax / Cscale) * topH;
+    ctx.strokeStyle = palette.grid; ctx.setLineDash([5, 4]); ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(px0, ceilY); ctx.lineTo(px0 + pw, ceilY); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = palette.textFaint; ctx.font = '10px "SF Mono",monospace'; ctx.textAlign = 'right';
+    ctx.fillText('ceiling (fixed graph)', px0 + pw - 4, ceilY - 4);
+    // growth markers
+    growMarks.forEach(m => { ctx.strokeStyle = 'rgba(109,196,143,0.7)'; ctx.lineWidth = 1; ctx.setLineDash([2, 3]); ctx.beginPath(); ctx.moveTo(X(m), topY); ctx.lineTo(X(m), topY + topH); ctx.stroke(); ctx.setLineDash([]); });
+    // C curve
+    ctx.strokeStyle = '#d97236'; ctx.lineWidth = 2.4; ctx.beginPath();
+    histC.forEach((c, i) => { const x = X(i), yy = topY + topH - (c / Cscale) * topH; i ? ctx.lineTo(x, yy) : ctx.moveTo(x, yy); });
+    ctx.stroke();
+    // head dot
+    if (histC.length) { const i = histC.length - 1; ctx.fillStyle = '#d97236'; ctx.beginPath(); ctx.arc(X(i), topY + topH - (histC[i] / Cscale) * topH, 4, 0, Math.PI * 2); ctx.fill(); }
+
+    // --- bottom: flux I = dC/dt ---
+    panel(botY, botH, 'I = dC/dt — the intelligence flux');
+    ctx.fillStyle = 'rgba(42,95,143,0.18)'; ctx.strokeStyle = '#2a5f8f'; ctx.lineWidth = 1.8;
+    ctx.beginPath(); ctx.moveTo(px0, botY + botH);
+    histF.forEach((f, i) => { const x = X(i), yy = botY + botH - Math.min(1, f / Fscale) * botH; ctx.lineTo(x, yy); });
+    if (histF.length) ctx.lineTo(X(histF.length - 1), botY + botH);
+    ctx.closePath(); ctx.fill();
+    ctx.beginPath();
+    histF.forEach((f, i) => { const x = X(i), yy = botY + botH - Math.min(1, f / Fscale) * botH; i ? ctx.lineTo(x, yy) : ctx.moveTo(x, yy); });
+    ctx.stroke();
+    growMarks.forEach(m => { ctx.strokeStyle = 'rgba(109,196,143,0.7)'; ctx.lineWidth = 1; ctx.setLineDash([2, 3]); ctx.beginPath(); ctx.moveTo(X(m), botY); ctx.lineTo(X(m), botY + botH); ctx.stroke(); ctx.setLineDash([]); });
+    // "saturated" annotation when flux tiny
+    if (flux < Fscale * 0.06) {
+      ctx.fillStyle = palette.textFaint; ctx.font = 'italic 12px "Charter",serif'; ctx.textAlign = 'right';
+      ctx.fillText('flux → 0 : capital saturated, grow to continue', px0 + pw - 6, botY + botH - 8);
+    }
+
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 11px "Charter",serif'; ctx.textAlign = 'center';
+    ctx.fillText('time →', px0 + pw / 2, H - 8);
+
+    readout.textContent = `C = ${C.toFixed(3)}   I = ${flux.toFixed(4)}   N = ${N}`;
+  }
+  runWhenVisible(canvas, draw);
+})();
+</script>
+
+</body>
+</html>

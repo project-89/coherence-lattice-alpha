@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Coarse-graining and renormalization — The Living Lattice</title>
+<meta name="description" content="An advanced module taught from zero: squint at a system and see what survives. Block-averaging, renormalization flows, fixed points as criticality, and universality — the mechanism behind 'one law, every scale'.">
+<meta name="author" content="Michael Sharpe">
+<link rel="canonical" href="https://lattice.project89.org/primers/coarse-graining/">
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+<meta property="og:title" content="Coarse-graining and renormalization — The Living Lattice">
+<meta property="og:description" content="Squint and the law survives: block-averaging, flows, fixed points, and universality, all playable.">
+<meta property="og:url" content="https://lattice.project89.org/primers/coarse-graining/">
+<meta property="og:site_name" content="The Living Lattice">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://lattice.project89.org/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Coarse-graining and renormalization — The Living Lattice">
+<meta name="twitter:description" content="Squint and the law survives — the mechanism behind 'one law, every scale', playable.">
+<meta name="twitter:image" content="https://lattice.project89.org/og-image.png">
+<!-- BEGIN AUTO-INJECTED ANALYTICS -->
+<!-- PostHog -->
+<script>
+!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+posthog.init('phc_kRX9iHZstABjgFqEWJBMok2S3hW9R8QMHbNao4EsNz2g', {api_host: 'https://us.i.posthog.com', person_profiles: 'identified_only'});
+</script>
+<!-- END AUTO-INJECTED ANALYTICS -->
+<link rel="stylesheet" href="../../css/style.css">
+<style>
+nav.toc li { align-items: flex-start; }
+nav.toc .toc-item { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+nav.toc .toc-item > a { flex: 0 0 auto; font-weight: 500; }
+nav.toc .toc-sub { color: var(--text-faint); font-size: 0.9em; line-height: 1.45; }
+</style>
+</head>
+<body>
+<div class="page">
+
+<nav class="breadcrumb">
+  <a href="../index.html">&larr; primers</a>
+  <span class="sep">&middot;</span>
+  <span class="section-num">coarse-graining &middot; advanced</span>
+</nav>
+
+<h1>Coarse-graining and renormalization<span class="subtitle">Squint and the law survives — how physics decides what matters at each scale</span></h1>
+
+<p class="lead">Half of this library's boldest sentences lean on one move: <em>zoom out and ask what survives</em>. The scale ladder says each level of nature is the coarse-grained dynamics of the level below. The critical band, where the essays locate minds, is the place where zooming out changes nothing at all. And "one law, every scale" is not poetry — it is a claim about what happens to equations when you squint at them. This module teaches the move itself, from zero, with your hands on the blur knob. It is the last piece of mathematics the essays use that this curriculum had not yet built.</p>
+
+<p>Three sections. You will squint at a lattice and watch noise die while structure survives; you will discover that squinting has <em>destinations</em> — and one impossible temperature that refuses to choose; and you will watch two entirely different machines become indistinguishable the moment you stop looking too closely, which is the whole secret of universality.</p>
+
+<nav class="toc">
+  <ol>
+    <li><span class="toc-item"><a href="sections/01-squinting.html">Squinting: what survives the blur</a><span class="toc-sub">Block-averaging made playable: fine speckle dies, large structure persists — and pure noise squints into nothing but fresh noise.</span></span></li>
+    <li><span class="toc-item"><a href="sections/02-flows.html">Flows and the impossible temperature</a><span class="toc-sub">Squinting has destinations: order, noise — and one special point that refuses to commit to either. Criticality is scale-invariance.</span></span></li>
+    <li><span class="toc-item"><a href="sections/03-universality.html">Universality: different machines, one physics</a><span class="toc-sub">Two different microscopic rules become statistical twins under the blur — play "guess the engine" and lose. The mechanism behind "one law, every scale".</span></span></li>
+  </ol>
+</nav>
+
+<div class="nav-links">
+  <a href="../index.html" class="prev">The curriculum</a>
+  <a href="sections/01-squinting.html" class="next">Start: Squinting</a>
+</div>
+
+</div>
+
+<script type="module">
+import '../../js/common.js';
+</script>
+
+</body>
+</html>

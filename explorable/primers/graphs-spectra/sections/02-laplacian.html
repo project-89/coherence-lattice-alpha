@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Laplacian: the disagreement machine — The Living Lattice</title>
+<meta name="description" content="The graph Laplacian taught by hand: paint values on a network and watch each node measure its own disagreement, then let everything slide downhill and see the wiggly patterns die first. L = D − A stated last.">
+<meta name="author" content="Michael Sharpe">
+<link rel="canonical" href="https://lattice.project89.org/primers/graphs-spectra/sections/02-laplacian.html">
+<link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
+<link rel="apple-touch-icon" href="../../../apple-touch-icon.png">
+<meta property="og:title" content="The Laplacian: the disagreement machine — The Living Lattice">
+<meta property="og:description" content="Paint values on a network, watch each node measure how far it sits from its neighbors' average, then let diffusion run and hear the wiggly modes die first.">
+<meta property="og:url" content="https://lattice.project89.org/primers/graphs-spectra/sections/02-laplacian.html">
+<meta property="og:site_name" content="The Living Lattice">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://lattice.project89.org/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="The Laplacian: the disagreement machine — The Living Lattice">
+<meta name="twitter:description" content="Paint values on a network and watch each node measure its own disagreement — then let it all slide downhill.">
+<meta name="twitter:image" content="https://lattice.project89.org/og-image.png">
+<!-- BEGIN AUTO-INJECTED ANALYTICS -->
+<!-- PostHog -->
+<script>
+!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+posthog.init('phc_kRX9iHZstABjgFqEWJBMok2S3hW9R8QMHbNao4EsNz2g', {api_host: 'https://us.i.posthog.com', person_profiles: 'identified_only'});
+</script>
+<!-- END AUTO-INJECTED ANALYTICS -->
+<link rel="stylesheet" href="../../../css/style.css">
+</head>
+<body>
+<div class="page">
+
+<nav class="breadcrumb">
+  <a href="../index.html">&larr; graphs &amp; spectra</a>
+  <span class="sep">&middot;</span>
+  <span class="section-num">section 02 / 03</span>
+</nav>
+
+<h1>The Laplacian: the disagreement machine<span class="subtitle">One simple question, asked at every node — the machine that generates every mode you met</span></h1>
+
+<p class="lead">Section 01 showed you that a network has natural wobble-patterns, each with a stiffness. This section opens the machine that produces them, and the machine is almost embarrassingly simple. Go to each node and ask one question: <em>"how far is your value from the average of your neighbors' values?"</em> That's it. That question, asked everywhere at once, is the <strong>graph Laplacian</strong> — the most important operator on this website, and (under other names) in a startling fraction of physics. You are going to operate it by hand.</p>
+
+<h2>1. Paint some values and watch the machine read them</h2>
+
+<p>Below is a little network holding a number at each node — think of it as a temperature, an opinion, a phase. <strong>Drag any node up or down</strong> to change its value. The machine responds instantly: each node gets an arrow showing which way it is being pulled and how hard. A node sitting exactly at its neighbors' average feels nothing — it is locally content. A node above its neighbors' average is pulled down; below, pulled up. The pull <em>is</em> the disagreement.</p>
+
+<figure id="fig-paint">
+  <canvas id="canvas-paint" width="680" height="400"></canvas>
+  <div class="controls" id="paint-controls">
+    <button id="pt-equal">All equal</button>
+    <button id="pt-rebel" class="primary">One rebel</button>
+    <button id="pt-tilt">Smooth tilt</button>
+    <button id="pt-checker">Checkerboard</button>
+  </div>
+  <figcaption>Drag nodes vertically to set their values (color = value). Each arrow is that node's disagreement — its distance from its neighbors' average — which is exactly the force the coupling dynamics would apply. Try the presets: <strong>All equal</strong> — every arrow vanishes; total contentment, and the machine outputs zero everywhere. <strong>One rebel</strong> — the rebel feels a strong pull, and its neighbors each feel a small opposite pull (disagreement is mutual). <strong>Smooth tilt</strong> — interior nodes sit near their neighbors' average, so a gentle gradient generates almost no force. <strong>Checkerboard</strong> — maximum mutual disagreement; every arrow is large. That contrast — smooth patterns cheap, wiggly patterns expensive — is the entire origin of the spectrum. <span id="paint-readout" class="readout">total disagreement = —</span></figcaption>
+</figure>
+
+<h2>2. Now let go: diffusion</h2>
+
+<p>The arrows are forces. What happens if every node simply slides the way its arrow points, all at once, continuously? The network relaxes: peaks sink, valleys fill, disagreement drains away, and the values flow toward uniform. This process is <strong>diffusion</strong> — it is literally how heat spreads — and on a graph, the Laplacian is its engine: <em>slide down your own disagreement</em> is the whole rule.</p>
+
+<p>But watch <em>how</em> it relaxes, because this is where section 01's modes come back and earn their keep. Any painted pattern is a recipe of the network's modes, and under diffusion <strong>each mode fades independently, at a rate given by its own eigenvalue</strong>. Wiggly, expensive modes (big &lambda;) collapse almost instantly; smooth, gentle ones (small &lambda;) linger. Run it and watch the meters:</p>
+
+<figure id="fig-diffuse">
+  <canvas id="canvas-diffuse" width="680" height="420"></canvas>
+  <div class="controls" id="diffuse-controls">
+    <button id="df-hot" class="primary">Hot spot</button>
+    <button id="df-checker">Checkerboard</button>
+    <button id="df-random">Random</button>
+  </div>
+  <figcaption>The two-cluster network from section 01, relaxing under pure diffusion. The bars track how much of each mode is present in the current pattern; each fades at its own rate — measured in this very simulation to match its eigenvalue &lambda; to within a few percent. <strong>Checkerboard</strong> is made of wiggly modes and dies almost at once. <strong>Hot spot</strong> spreads through its own cluster quickly, then drains slowly across the bridge — and the last pattern standing, every single time, is mode 1: cluster-vs-cluster, the gentlest disagreement there is. Remember that; section 03 is entirely about it. <em>Sound on: the chord again, each voice's loudness following its mode's meter — you hear the high voices vanish first and the lowest voice linger alone.</em> <span id="diffuse-readout" class="readout">—</span></figcaption>
+</figure>
+
+<h2>3. The same machine is running the whole site</h2>
+
+<p>Here is why this humble question deserves the grand treatment. The coupling dynamics you dragged around in <a href="../../../foundations/sections/01-oscillators.html">foundations chapter 1</a> — every oscillator nudged by <span class="mono">sin(&theta;<sub>j</sub> &minus; &theta;<sub>i</sub>)</span> from each neighbor — is this machine wearing a trigonometric coat. When phases are close together, <span class="mono">sin(&theta;<sub>j</sub> &minus; &theta;<sub>i</sub>) &asymp; &theta;<sub>j</sub> &minus; &theta;<sub>i</sub></span>, and "sum the sines of my neighbors' differences" becomes exactly "measure my disagreement and slide down it." <strong>Coupling is diffusion of phase.</strong> A synchronizing network is a network whose phase-disagreements are draining away — fastest along the wiggly modes, slowest along the gentle ones. That is why a lattice near sync still carries long, slow, cluster-scale phase patterns while the local jitter is long gone: you watched the reason in the figure above.</p>
+
+<p>And the modes of this machine are precisely section 01's wobble-patterns: the patterns whose disagreement points along themselves, so they relax (or ring) without changing shape. One machine, three behaviors — measure (the arrows), relax (diffusion), ring (vibration) — one spectrum underneath all of them.</p>
+
+<h2>4. The bookkeeping, last as promised</h2>
+
+<p>For completeness, since the essays write it this way: collect who-is-connected-to-whom into a table <span class="mono">A</span> (the adjacency matrix), and each node's connection count into <span class="mono">D</span> (the degree matrix). Then the Laplacian is <span class="mono">L = D &minus; A</span>, and its entry for node <em>i</em> reads: my degree times my value, minus the sum of my neighbors' values — which is just my total disagreement, the same sentence you have been dragging around this whole page. (One bookkeeping nuance you may notice in the figure: a node's <em>force</em> here is its disagreement from the neighbor <em>average</em>; the matrix entry is that disagreement scaled by how many neighbors it has. Same direction, same zeros, different unit.)</p>
+
+<h2>Where this goes</h2>
+
+<p>You now hold the machine: it measures disagreement, its modes are the shapes that keep themselves, and under relaxation the gentlest mode is always the last one alive. <a href="03-fiedler.html">Section 03</a> is about that survivor — the Fiedler mode — and why its eigenvalue &lambda;&#8322; is the number a network should watch if it wants to stay one network.</p>
+
+<div class="nav-links">
+  <a href="01-modes.html" class="prev">Modes: a network's natural wobbles</a>
+  <a href="03-fiedler.html" class="next">The Fiedler mode: the network's early warning</a>
+</div>
+
+</div>
+
+<script type="module">
+import { setupHiDPICanvas, runWhenVisible, palette, makeSoundToggle, makeVoices } from '../../../js/common.js';
+
+const FREQ_SCALE = 260;
+
+// spectrum solver (same as section 01; verified against P3/C4/P6 offline)
+function spectrum(edges, n, k) {
+  const L = Array.from({ length: n }, () => new Float64Array(n));
+  for (const e of edges) { const a = e[0], b = e[1], w = e[2] ?? 1; L[a][b] -= w; L[b][a] -= w; L[a][a] += w; L[b][b] += w; }
+  let maxdeg = 0;
+  for (let i = 0; i < n; i++) maxdeg = Math.max(maxdeg, L[i][i]);
+  const c = 2 * maxdeg + 1;
+  const found = [];
+  for (let m = 0; m < k; m++) {
+    let v = Float64Array.from({ length: n }, () => Math.random() - 0.5);
+    for (let it = 0; it < 3000; it++) {
+      for (const f of found) {
+        let d = 0;
+        for (let i = 0; i < n; i++) d += v[i] * f.v[i];
+        for (let i = 0; i < n; i++) v[i] -= d * f.v[i];
+      }
+      const w2 = new Float64Array(n);
+      for (let i = 0; i < n; i++) {
+        let Lv = 0;
+        for (let j = 0; j < n; j++) Lv += L[i][j] * v[j];
+        w2[i] = c * v[i] - Lv;
+      }
+      let norm = 0;
+      for (let i = 0; i < n; i++) norm += w2[i] * w2[i];
+      norm = Math.sqrt(norm) + 1e-12;
+      for (let i = 0; i < n; i++) v[i] = w2[i] / norm;
+    }
+    let lam = 0;
+    for (let i = 0; i < n; i++) {
+      let Lv = 0;
+      for (let j = 0; j < n; j++) Lv += L[i][j] * v[j];
+      lam += v[i] * Lv;
+    }
+    found.push({ lam: Math.max(0, lam), v });
+  }
+  found.sort((a, b) => a.lam - b.lam);
+  return found;
+}
+
+// ============================================================
+// FIG A: paint values, read the disagreement arrows
+// ============================================================
+(() => {
+  const canvas = document.getElementById('canvas-paint');
+  const ctx = setupHiDPICanvas(canvas, 680, 400);
+  const readout = document.getElementById('paint-readout');
+
+  // 3×3 grid
+  const n = 9;
+  const gi = (r, c) => r * 3 + c;
+  const edges = [];
+  for (let r = 0; r < 3; r++) for (let c = 0; c < 3; c++) {
+    if (c < 2) edges.push([gi(r, c), gi(r, c + 1)]);
+    if (r < 2) edges.push([gi(r, c), gi(r + 1, c)]);
+  }
+  const nbrs = Array.from({ length: n }, (_, i) => edges.filter(e => e.includes(i)).map(([a, b]) => a === i ? b : a));
+
+  const cx0 = 180, cy0 = 90, gap = 110;
+  const px = (i) => cx0 + (i % 3) * gap;
+  const py = (i) => cy0 + Math.floor(i / 3) * gap;
+
+  let x = new Float64Array(n);
+  const set = (vals) => { x = Float64Array.from(vals); };
+  document.getElementById('pt-equal').addEventListener('click', () => set([0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3]));
+  document.getElementById('pt-rebel').addEventListener('click', () => set([0,0,0,0,1,0,0,0,0]));
+  document.getElementById('pt-tilt').addEventListener('click', () => set([-0.8,-0.8,-0.8,0,0,0,0.8,0.8,0.8]));
+  document.getElementById('pt-checker').addEventListener('click', () => set([1,-1,1,-1,1,-1,1,-1,1]));
+  set([0,0,0,0,1,0,0,0,0]);
+
+  let dragging = -1;
+  function pointerPos(e) {
+    const rect = canvas.getBoundingClientRect();
+    return [
+      ((e.touches ? e.touches[0].clientX : e.clientX) - rect.left) * (680 / rect.width),
+      ((e.touches ? e.touches[0].clientY : e.clientY) - rect.top) * (400 / rect.height),
+    ];
+  }
+  const pyd = (i) => py(i) - x[i] * 38; // node rides its own value
+  function down(e) {
+    const [mx, my] = pointerPos(e);
+    for (let i = 0; i < n; i++) if (Math.hypot(mx - px(i), my - pyd(i)) < 26) { dragging = i; e.preventDefault(); return; }
+  }
+  function move(e) {
+    if (dragging < 0) return;
+    const [, my] = pointerPos(e);
+    x[dragging] = Math.max(-1, Math.min(1, (py(dragging) - my) / 38));
+    e.preventDefault();
+  }
+  canvas.addEventListener('pointerdown', down);
+  window.addEventListener('pointermove', move);
+  window.addEventListener('pointerup', () => { dragging = -1; });
+  canvas.addEventListener('touchstart', down, { passive: false });
+  canvas.addEventListener('touchmove', move, { passive: false });
+
+  function valColor(v) {
+    // diverging: orange (negative) ↔ faint ↔ blue (positive)
+    if (v > 0.05) return `rgba(42, 95, 143, ${0.35 + 0.65 * Math.min(1, v)})`;
+    if (v < -0.05) return `rgba(217, 114, 54, ${0.35 + 0.65 * Math.min(1, -v)})`;
+    return 'rgba(140, 135, 125, 0.5)';
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, 680, 400);
+    ctx.strokeStyle = palette.axis; ctx.lineWidth = 1.4;
+    for (const [a, b] of edges) {
+      ctx.beginPath(); ctx.moveTo(px(a), pyd(a)); ctx.lineTo(px(b), pyd(b)); ctx.stroke();
+    }
+    let energy = 0;
+    for (const [a, b] of edges) energy += 0.5 * (x[a] - x[b]) * (x[a] - x[b]);
+
+    for (let i = 0; i < n; i++) {
+      const avg = nbrs[i].reduce((s, j) => s + x[j], 0) / nbrs[i].length;
+      const dis = x[i] - avg; // my disagreement; force is −dis
+      ctx.fillStyle = valColor(x[i]);
+      ctx.beginPath(); ctx.arc(px(i), pyd(i), 17, 0, Math.PI * 2); ctx.fill();
+      ctx.strokeStyle = Math.abs(dis) < 0.03 ? palette.green : palette.axis;
+      ctx.lineWidth = Math.abs(dis) < 0.03 ? 2.5 : 1;
+      ctx.beginPath(); ctx.arc(px(i), pyd(i), 17, 0, Math.PI * 2); ctx.stroke();
+      ctx.fillStyle = palette.text; ctx.font = '11px "SF Mono", monospace'; ctx.textAlign = 'center';
+      ctx.fillText(x[i].toFixed(2), px(i), pyd(i) + 4);
+      // force arrow: up if pulled up (dis < 0), down if pulled down
+      const len = Math.min(1.2, Math.abs(dis)) * 38;
+      if (len > 3) {
+        const dir = dis > 0 ? 1 : -1; // pulled downward on screen when above average
+        const ax = px(i) + 30, ay = pyd(i);
+        ctx.strokeStyle = palette.burgundy; ctx.lineWidth = 2.5;
+        ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(ax, ay + dir * len); ctx.stroke();
+        ctx.fillStyle = palette.burgundy;
+        ctx.beginPath();
+        ctx.moveTo(ax, ay + dir * (len + 7));
+        ctx.lineTo(ax - 5, ay + dir * len);
+        ctx.lineTo(ax + 5, ay + dir * len);
+        ctx.fill();
+      }
+    }
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 12px serif'; ctx.textAlign = 'left';
+    ctx.fillText('drag a node up or down · green ring = locally content (zero force)', 160, 385);
+    readout.textContent = `total disagreement = ${energy.toFixed(2)}`;
+  }
+  runWhenVisible(canvas, draw);
+})();
+
+// ============================================================
+// FIG B: diffusion on the two-cluster network, mode meters
+// ============================================================
+(() => {
+  const canvas = document.getElementById('canvas-diffuse');
+  const ctx = setupHiDPICanvas(canvas, 680, 420);
+  const readout = document.getElementById('diffuse-readout');
+
+  const n = 12;
+  const CLUSTER_EDGES = [
+    [0,1],[1,2],[2,3],[3,4],[4,5],[5,0],[0,2],[3,5],
+    [6,7],[7,8],[8,9],[9,10],[10,11],[11,6],[6,8],[7,10],[9,11],
+  ];
+  const BRIDGE = [2, 8];
+  const EDGES = CLUSTER_EDGES.concat([BRIDGE]);
+  const POS = [];
+  for (let i = 0; i < 6; i++) {
+    const a = (i / 6) * Math.PI * 2 + Math.PI / 6;
+    POS.push([-1.05 + Math.cos(a) * 0.55, Math.sin(a) * 0.55]);
+  }
+  for (let i = 0; i < 6; i++) {
+    const a = (i / 6) * Math.PI * 2 - Math.PI / 2;
+    POS.push([1.05 + Math.cos(a) * 0.55, Math.sin(a) * 0.55]);
+  }
+  const MODES = spectrum(EDGES, n, 5);
+  const L = Array.from({ length: n }, () => new Float64Array(n));
+  for (const [a, b] of EDGES) { L[a][b] -= 1; L[b][a] -= 1; L[a][a] += 1; L[b][b] += 1; }
+
+  let x = new Float64Array(n);
+  function seed(mode) {
+    if (mode === 'hot') { x = new Float64Array(n); x[4] = 1.6; }
+    else if (mode === 'checker') x = Float64Array.from({ length: n }, (_, i) => (i % 2 ? 0.9 : -0.9));
+    else x = Float64Array.from({ length: n }, () => (Math.random() - 0.5) * 2);
+    // remove the mean so the free mode doesn't sit in the picture forever
+    const mean = x.reduce((a, b) => a + b, 0) / n;
+    for (let i = 0; i < n; i++) x[i] -= mean;
+  }
+  document.getElementById('df-hot').addEventListener('click', () => seed('hot'));
+  document.getElementById('df-checker').addEventListener('click', () => seed('checker'));
+  document.getElementById('df-random').addEventListener('click', () => seed('random'));
+  seed('hot');
+
+  const sound = makeSoundToggle(document.getElementById('diffuse-controls'), { label: 'hear it drain' });
+  const NV = 4;
+  const voices = makeVoices(sound, NV, { freq: 220 });
+
+  function draw() {
+    // diffusion steps — one small step per frame, sized so the full drain
+    // takes ~40 s: the checkerboard still dies in a couple of seconds, and
+    // the mode-1 survivor phase is long enough to actually watch
+    const dt = 0.006;
+    for (let s = 0; s < 1; s++) {
+      const nx = new Float64Array(n);
+      for (let i = 0; i < n; i++) {
+        let Lx = 0;
+        for (let j = 0; j < n; j++) Lx += L[i][j] * x[j];
+        nx[i] = x[i] - dt * Lx;
+      }
+      x = nx;
+    }
+
+    ctx.clearRect(0, 0, 680, 420);
+    const cx = 220, cy = 160, s = 105;
+    const px = (i) => cx + POS[i][0] * s;
+    const py = (i) => cy - POS[i][1] * s;
+    for (const [a, b] of EDGES) {
+      const isBridge = (a === BRIDGE[0] && b === BRIDGE[1]);
+      ctx.strokeStyle = isBridge ? palette.burgundy : palette.axis;
+      ctx.lineWidth = isBridge ? 2.4 : 1.4;
+      ctx.beginPath(); ctx.moveTo(px(a), py(a)); ctx.lineTo(px(b), py(b)); ctx.stroke();
+    }
+    for (let i = 0; i < n; i++) {
+      const v = x[i];
+      ctx.fillStyle = v > 0.03 ? `rgba(42,95,143,${0.3 + 0.7 * Math.min(1, v)})`
+        : v < -0.03 ? `rgba(217,114,54,${0.3 + 0.7 * Math.min(1, -v)})`
+        : 'rgba(140,135,125,0.45)';
+      ctx.beginPath(); ctx.arc(px(i), py(i), 10 + Math.min(6, Math.abs(v) * 5), 0, Math.PI * 2); ctx.fill();
+    }
+
+    // mode meters
+    const amps = [1, 2, 3, 4].map(m => {
+      let a = 0, nn = 0;
+      for (let i = 0; i < n; i++) { a += MODES[m].v[i] * x[i]; nn += MODES[m].v[i] * MODES[m].v[i]; }
+      return Math.abs(a) / Math.sqrt(nn);
+    });
+    const bx0 = 452, bw = 42, bh = 110, by = 220;
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 11px serif'; ctx.textAlign = 'left';
+    ctx.fillText('how much of each mode remains', bx0, by - bh - 14);
+    amps.forEach((a, i) => {
+      const xb = bx0 + i * (bw + 14);
+      const h = Math.min(1, a / 1.1) * bh;
+      ctx.fillStyle = palette.bgSoft; ctx.strokeStyle = palette.axis; ctx.lineWidth = 1;
+      ctx.fillRect(xb, by - bh, bw, bh); ctx.strokeRect(xb, by - bh, bw, bh);
+      ctx.fillStyle = i === 0 ? palette.burgundy : palette.blue;
+      if (h > 0.5) ctx.fillRect(xb, by - h, bw, h);
+      ctx.fillStyle = palette.textFaint; ctx.font = '10px "SF Mono", monospace'; ctx.textAlign = 'center';
+      ctx.fillText(`λ=${MODES[i + 1].lam.toFixed(2)}`, xb + bw / 2, by + 14);
+      ctx.fillText(`mode ${i + 1}`, xb + bw / 2, by + 27);
+      ctx.textAlign = 'left';
+    });
+
+    const total = amps.reduce((a, b) => a + b, 0);
+    let fieldMax = 0;
+    for (let i = 0; i < n; i++) fieldMax = Math.max(fieldMax, Math.abs(x[i]));
+    const survivor = fieldMax > 0.03 && amps[0] > 0.02 && amps[0] / (total + 1e-9) > 0.7;
+    ctx.fillStyle = survivor ? palette.burgundy : palette.textFaint;
+    ctx.font = 'italic 12px serif';
+    ctx.fillText(fieldMax < 0.02 ? 'uniform — disagreement fully drained' : survivor ? 'mode 1 is the last survivor, as always' : 'draining…', 452, 270);
+
+    readout.textContent = fieldMax < 0.02 ? 'flat — press a preset to re-seed'
+      : total < 0.04 ? 'alive in patterns finer than the four meters — they die fastest of all'
+      : `modes alive: ${amps.filter(a => a > 0.02).length} of 4`;
+    amps.forEach((a, i) => voices.set(i, FREQ_SCALE * Math.sqrt(MODES[i + 1].lam), Math.min(1, a * 1.4)));
+  }
+  runWhenVisible(canvas, draw);
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chladni plates: sand finds the silence — The Living Lattice</title>
+<meta name="description" content="A vibrating plate, a pinch of sand: each frequency selects a standing-wave mode, and the sand walks off the moving regions onto the quiet nodal lines. The pattern made visible.">
+<meta name="author" content="Michael Sharpe">
+<link rel="canonical" href="https://lattice.project89.org/primers/sound-workshop/sections/02-chladni.html">
+<link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
+<link rel="apple-touch-icon" href="../../../apple-touch-icon.png">
+<meta property="og:title" content="Chladni plates: sand finds the silence — The Living Lattice">
+<meta property="og:description" content="Each drive frequency selects a mode; sand walks to the quiet lines and the invisible pattern appears.">
+<meta property="og:url" content="https://lattice.project89.org/primers/sound-workshop/sections/02-chladni.html">
+<meta property="og:site_name" content="The Living Lattice">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://lattice.project89.org/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Chladni plates: sand finds the silence — The Living Lattice">
+<meta name="twitter:description" content="Standing waves, modes, and sand that walks to the quiet lines.">
+<meta name="twitter:image" content="https://lattice.project89.org/og-image.png">
+<!-- BEGIN AUTO-INJECTED ANALYTICS -->
+<!-- PostHog -->
+<script>
+!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+posthog.init('phc_kRX9iHZstABjgFqEWJBMok2S3hW9R8QMHbNao4EsNz2g', {api_host: 'https://us.i.posthog.com', person_profiles: 'identified_only'});
+</script>
+<!-- END AUTO-INJECTED ANALYTICS -->
+<link rel="stylesheet" href="../../../css/style.css">
+<style>
+.flag-callout {
+  margin: 1.6em 0; padding: 16px 20px;
+  background: rgba(195, 141, 247, 0.08);
+  border-left: 3px solid #c38df7; border-radius: 3px;
+  font-size: 14.5px; line-height: 1.55;
+}
+.flag-callout .flag-label {
+  display: inline-block; font: 700 10.5px "SF Mono", monospace;
+  color: #c38df7; text-transform: uppercase; letter-spacing: 0.1em; margin-right: 0.7em;
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<nav class="breadcrumb">
+  <a href="../index.html">&larr; sound workshop</a>
+  <span class="sep">&middot;</span>
+  <span class="section-num">workshop 02 / 04 &middot; beginner</span>
+</nav>
+
+<h1>Chladni plates: sand finds the silence<span class="subtitle">Bow a plate, sprinkle sand, and watch an invisible standing wave sign its name</span></h1>
+
+<p class="lead">In 1787 Ernst Chladni drew a violin bow down the edge of a sand-dusted brass plate, and the sand leapt into a sharp geometric figure — a star, a cross, a ring of curves — a different figure for every note he could coax out of the plate. The demonstration made him famous across Europe (Napoleon, shown it in Paris, put up a prize for the theory), and it earns its place in this workshop for one reason: it is the cleanest demonstration ever devised that <strong>a vibration is a shape</strong>. The harmonograph drew the relationship between two oscillators. The Chladni plate goes further: it shows what happens when a whole <em>surface</em> of oscillators must agree with itself.</p>
+
+<h2>Standing waves: a vibration that stays home</h2>
+
+<p>Shake one end of a rope and a wave travels away. But confine the wave — clamp the rope at both ends, or take a plate with edges — and the traveling waves fold back on themselves. At most frequencies the reflections tangle and cancel. At certain special frequencies they reinforce perfectly, and the result is a <strong>standing wave</strong>: a pattern that vibrates <em>in place</em>. Some regions swing violently up and down; between them run lines that do not move at all. Those quiet lines are called <strong>nodes</strong>.</p>
+
+<p>Each special frequency selects its own pattern — its own arrangement of moving regions and quiet lines. These patterns are the plate's <strong>modes</strong>, and they are a fixed menu set by the plate's shape alone. You cannot order off the menu: drive the plate at a mode's frequency and you get that mode's pattern, whole. Higher frequency, finer pattern.</p>
+
+<h2>The sand's job</h2>
+
+<p>The pattern is invisible — the plate's motion is far too small and fast to see. The sand is the readout. A grain sitting on a violently moving region is kicked, tossed, and shuffled at random; a grain that wanders onto a node feels nothing, and stays. Grain by grain, kick by kick, the sand random-walks its way off the loud regions and collects along the silence. <strong>The figure that appears is a map of where the wave isn't.</strong> Nobody draws it; the sand finds it.</p>
+
+<figure id="fig-chladni">
+  <canvas id="canvas-chladni" width="680" height="440"></canvas>
+  <div class="controls" id="chladni-controls">
+    <button id="mode-prev">&larr; lower mode</button>
+    <button id="mode-next" class="primary">higher mode &rarr;</button>
+    <button id="sand-reset">Re-sprinkle sand</button>
+  </div>
+  <figcaption>An ideal square plate, driven at one mode at a time. The shading is the plate's motion (slowed enormously); the pale grains are sand. Step through the modes and watch the sand abandon the moving regions and gather on the quiet lines — keep the same sand across modes to watch it <em>re-organize</em> when the pattern changes. <em>Sound on: one tone at the mode's (relative) frequency — higher modes really are higher notes; the pitch you hear and the fineness of the figure are the same number.</em> <span id="chladni-readout" class="readout">&mdash;</span></figcaption>
+</figure>
+
+<p>Two things are worth noticing as you step through the menu. First, the fundamental — the lowest mode — has <em>no</em> quiet lines in the interior at all: the whole plate breathes as one, and the only silence is the clamped rim, so that is where all the sand ends up. Every figure after that is interference signing its name. Second, some patterns at the <em>same</em> frequency come in pairs (the plate is square, so the pattern and its 90&deg;-rotated twin are equally legal), and the plate can also ring in a <em>blend</em> of the pair — the blends are where the famous diagonal figures come from. A figure you could never guess from either ingredient alone, from adding two simple patterns: that is interference, the whole trick of wave physics, drawn in sand.</p>
+
+<h2>Why this picture matters here</h2>
+
+<p>This page is the workshop's bridge into the rest of the site, because two of the library's central images are Chladni's, almost literally.</p>
+
+<p><strong>Memory.</strong> <a href="../../../foundations/sections/05-memory-basins.html">Foundations 5</a> names its central objects "the Chladni figures of thought": a <em>phase-locked mode</em> — the site's word for a concept, a memory, a stable pattern in a network of oscillators — is exactly this, a standing pattern that a vibrating medium falls into and holds. When that chapter says memory is "a carved basin" that recall "settles into," the picture to hold is the sand finding the nodal lines: nobody places the grains; the pattern is already in the physics, and the dynamics walk there.</p>
+
+<p><strong>Spectra.</strong> If you have met <a href="../../graphs-spectra/">the eigenvalues primer</a>, you have already seen this whole page once, wearing different clothes. There, a <em>network</em> had natural ways of wobbling — modes, stepped through with buttons, each with its own frequency, sounding together as a chord. The plate is the same mathematics run on a continuous sheet instead of a dozen nodes: the plate's modes are its eigenvectors, the pitch of each is its eigenvalue, and the nodal lines the sand finds are exactly the sign-change boundaries that split the network in the Fiedler figure. Drum or graph, sheet or lattice: <strong>a thing's shape fixes the menu of patterns it can hold.</strong> That single idea, scaled from a brass plate to a coupling field, is most of this library.</p>
+
+<div class="flag-callout">
+  <span class="flag-label">What's real here</span>
+  Idealizations, named: this is a <em>fixed-edge ideal membrane</em> — modes are pure <span class="mono">sin(n&pi;x)&middot;sin(m&pi;y)</span> and blends of degenerate pairs, with frequency &prop; &radic;(n&sup2;+m&sup2;). Chladni's actual plates were stiff metal with <em>free</em> edges (and often a clamped center), which shifts the frequencies and bends the figures into the curvier stars he was famous for — the mechanism (sand leaves the moving regions, collects at nodes) is identical, but do not expect this page's figures to match a YouTube plate line-for-line. The sand here is a statistical cartoon: each grain takes random steps sized by the local shaking amplitude, which reproduces the real accumulation logic without simulating a bouncing grain. And the tone you hear is the mode's <em>relative</em> frequency, scaled into a comfortable octave — the ratios are honest, the absolute pitch is a choice.
+</div>
+
+<div class="nav-links">
+  <a href="01-harmonograph.html" class="prev">The harmonograph: phase as a drawing</a>
+  <a href="03-why-the-pattern.html" class="next">Why the pattern: watching vibration flow</a>
+</div>
+
+</div>
+
+<script type="module">
+import { setupHiDPICanvas, runWhenVisible, palette, makeSoundToggle, makeVoices } from '../../../js/common.js';
+
+(() => {
+  const canvas = document.getElementById('canvas-chladni');
+  const ctx = setupHiDPICanvas(canvas, 680, 440);
+  const readout = document.getElementById('chladni-readout');
+
+  const sound = makeSoundToggle(document.getElementById('chladni-controls'), { label: 'hear the mode' });
+  const voice = makeVoices(sound, 1, { freq: 220 });
+
+  // Curated mode menu: pure (n,m) modes plus degenerate blends (mix = ±1
+  // adds/subtracts the swapped twin — the source of the diagonal figures).
+  const MODES = [
+    { n: 1, m: 1, mix: 0,  label: '(1,1) — the fundamental' },
+    { n: 2, m: 1, mix: 0,  label: '(2,1) — one quiet line' },
+    { n: 2, m: 1, mix: 1,  label: '(2,1) + (1,2) — a blend of twins' },
+    { n: 2, m: 1, mix: -1, label: '(2,1) − (1,2) — the other blend' },
+    { n: 2, m: 2, mix: 0,  label: '(2,2) — the cross' },
+    { n: 3, m: 1, mix: 1,  label: '(3,1) + (1,3) — Chladni’s curves' },
+    { n: 3, m: 1, mix: -1, label: '(3,1) − (1,3) — the diagonal cross' },
+    { n: 3, m: 2, mix: 0,  label: '(3,2) — the grid' },
+    { n: 3, m: 3, mix: 0,  label: '(3,3) — finer still' },
+  ];
+  let mi = 1; // start at (2,1): one clean line
+
+  // Signed mode field s(x,y) in [-1,1] (normalized per mode), on [0,1]^2
+  let sNorm = 1;
+  function rawField(mode, x, y) {
+    let s = Math.sin(mode.n * Math.PI * x) * Math.sin(mode.m * Math.PI * y);
+    if (mode.mix) s += mode.mix * Math.sin(mode.m * Math.PI * x) * Math.sin(mode.n * Math.PI * y);
+    return s;
+  }
+  function normalize(mode) {
+    let mx = 0;
+    for (let i = 0; i <= 40; i++) for (let j = 0; j <= 40; j++) {
+      mx = Math.max(mx, Math.abs(rawField(mode, i / 40, j / 40)));
+    }
+    sNorm = mx || 1;
+  }
+  normalize(MODES[mi]);
+  const field = (x, y) => rawField(MODES[mi], x, y) / sNorm;
+
+  function modeFreq(mode) { return Math.sqrt(mode.n * mode.n + mode.m * mode.m); }
+
+  // Sand
+  const NP = 1500;
+  const sx = new Float32Array(NP), sy = new Float32Array(NP);
+  function sprinkle() {
+    for (let i = 0; i < NP; i++) { sx[i] = 0.02 + Math.random() * 0.96; sy[i] = 0.02 + Math.random() * 0.96; }
+  }
+  sprinkle();
+
+  function stepSand() {
+    for (let pass = 0; pass < 2; pass++) {
+      for (let i = 0; i < NP; i++) {
+        const a = Math.abs(field(sx[i], sy[i]));
+        const kick = 0.0012 + 0.016 * a;
+        sx[i] += kick * (Math.random() + Math.random() - 1);
+        sy[i] += kick * (Math.random() + Math.random() - 1);
+        if (sx[i] < 0.004) sx[i] = 0.004; else if (sx[i] > 0.996) sx[i] = 0.996;
+        if (sy[i] < 0.004) sy[i] = 0.004; else if (sy[i] > 0.996) sy[i] = 0.996;
+      }
+    }
+  }
+
+  function settledFraction() {
+    let c = 0;
+    for (let i = 0; i < NP; i++) if (Math.abs(field(sx[i], sy[i])) < 0.15) c++;
+    return c / NP;
+  }
+
+  document.getElementById('mode-prev').addEventListener('click', () => {
+    mi = (mi - 1 + MODES.length) % MODES.length; normalize(MODES[mi]);
+  });
+  document.getElementById('mode-next').addEventListener('click', () => {
+    mi = (mi + 1) % MODES.length; normalize(MODES[mi]);
+  });
+  document.getElementById('sand-reset').addEventListener('click', sprinkle);
+
+  let tAnim = 0;
+  const G = 56; // plate render resolution
+  const px0 = 36, py0 = 22, pw = 396; // plate square on canvas
+
+  function draw() {
+    tAnim += 0.05 * modeFreq(MODES[mi]);
+    stepSand();
+
+    ctx.clearRect(0, 0, 680, 440);
+
+    // plate: signed field pulsing in time
+    const cell = pw / G;
+    const osc = Math.cos(tAnim);
+    for (let gy = 0; gy < G; gy++) {
+      for (let gx = 0; gx < G; gx++) {
+        const u = field((gx + 0.5) / G, (gy + 0.5) / G) * osc;
+        const b = (u + 1) / 2;
+        ctx.fillStyle = `rgb(${40 + b * 215 | 0}, ${40 + b * 170 | 0}, ${50 + b * 80 | 0})`;
+        ctx.fillRect(px0 + gx * cell, py0 + gy * cell, cell + 0.5, cell + 0.5);
+      }
+    }
+    ctx.strokeStyle = palette.axis; ctx.lineWidth = 1.5;
+    ctx.strokeRect(px0, py0, pw, pw);
+
+    // sand
+    ctx.fillStyle = 'rgba(247, 240, 220, 0.92)';
+    for (let i = 0; i < NP; i++) {
+      ctx.fillRect(px0 + sx[i] * pw - 0.9, py0 + sy[i] * pw - 0.9, 1.8, 1.8);
+    }
+
+    // right panel: mode info
+    const rx = px0 + pw + 28;
+    const mode = MODES[mi];
+    ctx.fillStyle = palette.textSoft; ctx.font = 'italic 14px "Charter", serif'; ctx.textAlign = 'left';
+    ctx.fillText('mode ' + (mi + 1) + ' of ' + MODES.length, rx, 60);
+    // label split at the em-dash so it never clips the canvas edge
+    const dash = mode.label.indexOf(' — ');
+    ctx.fillStyle = palette.text; ctx.font = '14px "SF Mono", monospace';
+    if (dash > 0) {
+      ctx.fillText(mode.label.slice(0, dash), rx, 88);
+      ctx.font = 'italic 13px "Charter", serif';
+      ctx.fillText(mode.label.slice(dash + 3), rx, 108);
+    } else {
+      ctx.fillText(mode.label, rx, 92);
+    }
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 12.5px "Charter", serif';
+    ctx.fillText('relative frequency √(n²+m²) = ' + modeFreq(mode).toFixed(2), rx, 122);
+
+    const sf = settledFraction();
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 12.5px "Charter", serif';
+    ctx.fillText('sand on the quiet lines:', rx, 168);
+    ctx.strokeStyle = palette.axis; ctx.lineWidth = 1;
+    ctx.strokeRect(rx, 180, 180, 12);
+    ctx.fillStyle = '#d97236';
+    ctx.fillRect(rx, 180, 180 * sf, 12);
+    ctx.fillStyle = palette.textSoft; ctx.font = '12px "SF Mono", monospace';
+    ctx.fillText((sf * 100).toFixed(0) + '%', rx + 188, 191);
+
+    ctx.fillStyle = palette.textFaint; ctx.font = 'italic 12px "Charter", serif';
+    ctx.fillText('bright and dark = moving', rx, 232);
+    ctx.fillText('mid-tone = quiet (nodes)', rx, 252);
+    ctx.fillText('the sand is walking off the', rx, 286);
+    ctx.fillText('loud regions, grain by grain', rx, 304);
+
+    readout.textContent = mode.label + ' · sand settled: ' + (sf * 100).toFixed(0) + '%';
+
+    // literal-ish audio: pitch tracks the mode's relative frequency
+    voice.set(0, 110 * modeFreq(mode), 0.85);
+  }
+
+  runWhenVisible(canvas, draw);
+})();
+</script>
+
+</body>
+</html>
